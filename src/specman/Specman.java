@@ -304,13 +304,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			public void actionPerformed(ActionEvent e) {
 				SchrittView schritt = hauptSequenz.findeSchritt(zuletztFokussierterText);
 				if (!(schritt instanceof CaseSchrittView)) {
-					fehler("Kein Case-Schritt ausgew�hlt");
+					fehler("Kein Case-Schritt ausgewählt");
 					return;
 				}
 				CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
 				ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
 				if (ausgewaehlterZweig == null) {
-					fehler("Kein Zweig ausgew�hlt");
+					fehler("Kein Zweig ausgewählt");
 					return;
 				}
 				ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(Specman.this, ausgewaehlterZweig);
@@ -337,7 +337,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				SchrittView schritt = hauptSequenz.findeSchritt(zuletztFokussierterText);
 				if (schritt == null) {
 					// Sollte nur der Fall sein, wenn man den Fokus im Intro oder Outro stehen hat
-					fehler("Ups - niemandem scheint das Feld zu geh�ren, in dem steht: " + zuletztFokussierterText.getText());
+					fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + zuletztFokussierterText.getText());
 					return;
 				}
 				
@@ -451,9 +451,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return bisherigerFaktor;
 	}
 	
-	/** Nicht so sch�n, aber n�tig: hier wird der Zoomfaktor in der Combobox auf einen neuen Wert aktualisiert,
+	/** Nicht so schön, aber nötig: hier wird der Zoomfaktor in der Combobox auf einen neuen Wert aktualisiert,
 	 * ohne dass dabei der AktionListener aufgerufen wird, der dann wiederum einen Eintrag im UndoManager
-	 * produzieren w�rde. Wir brauchen die Umstellung des Werts aber grade f�r Undo und Redo, wo nat�rlich
+	 * produzieren würde. Wir brauchen die Umstellung des Werts aber grade für Undo und Redo, wo natürlich
 	 * nichts neues eingetragen werden soll. Wir machen das durch Entfernen und wieder Anklemmen der Listener.
 	 */
 	private void zoomFaktorAnzeigeAktualisieren(int prozent) {
@@ -478,8 +478,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				File ausgewaehlteDatei = new File(ausgewaehlterDateiname);
 				if (!ausgewaehlteDatei.equals(diagrammDatei) && ausgewaehlteDatei.exists()) {
 					int confirmErgebnis = JOptionPane.showConfirmDialog(this,
-							"Die ausgew�hlte Datei existiert bereits.\nSoll die Datei �berschrieben werden?",
-							"Datei �berschreiben?", JOptionPane.OK_CANCEL_OPTION);
+							"Die ausgewählte Datei existiert bereits.\nSoll die Datei überschrieben werden?",
+							"Datei überschreiben?", JOptionPane.OK_CANCEL_OPTION);
 					if (confirmErgebnis == JOptionPane.CANCEL_OPTION)
 						return;
 				}
@@ -597,22 +597,22 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		contentPane.setLayout(new FormLayout("default:grow", "default, default, fill:10px:grow"));
 
 		//======== toolBar ========
-		toolbarButtonHinzufuegen(schrittAnhaengen, "einfacher-schritt", "Einfachen Schritt anh�ngen");
-		toolbarButtonHinzufuegen(whileSchrittAnhaengen, "while-schritt", "While-Schritt anh�ngen");
-		toolbarButtonHinzufuegen(whileWhileSchrittAnhaengen, "whilewhile-schritt", "While-While-Schritt anh�ngen");
-		toolbarButtonHinzufuegen(ifElseSchrittAnhaengen, "ifelse-schritt", "If-Else-Schritt anh�ngen");
-		toolbarButtonHinzufuegen(ifSchrittAnhaengen, "if-schritt", "If-Schritt anh�ngen");
-		toolbarButtonHinzufuegen(caseSchrittAnhaengen, "case-schritt", "Case-Schritt anh�ngen");
-		toolbarButtonHinzufuegen(subsequenzSchrittAnhaengen, "subsequenz-schritt", "Subsequenz anh�ngen");
-		toolbarButtonHinzufuegen(breakSchrittAnhaengen, "break-schritt", "Break anh�ngen");
-		toolbarButtonHinzufuegen(catchSchrittAnhaengen, "catch-schritt", "Catchblock anh�ngen");
-		toolbarButtonHinzufuegen(caseAnhaengen, "zweig", "Case anh�ngen");
+		toolbarButtonHinzufuegen(schrittAnhaengen, "einfacher-schritt", "Einfachen Schritt anhängen");
+		toolbarButtonHinzufuegen(whileSchrittAnhaengen, "while-schritt", "While-Schritt anhängen");
+		toolbarButtonHinzufuegen(whileWhileSchrittAnhaengen, "whilewhile-schritt", "While-While-Schritt anhängen");
+		toolbarButtonHinzufuegen(ifElseSchrittAnhaengen, "ifelse-schritt", "If-Else-Schritt anhängen");
+		toolbarButtonHinzufuegen(ifSchrittAnhaengen, "if-schritt", "If-Schritt anhängen");
+		toolbarButtonHinzufuegen(caseSchrittAnhaengen, "case-schritt", "Case-Schritt anhängen");
+		toolbarButtonHinzufuegen(subsequenzSchrittAnhaengen, "subsequenz-schritt", "Subsequenz anhängen");
+		toolbarButtonHinzufuegen(breakSchrittAnhaengen, "break-schritt", "Break anhängen");
+		toolbarButtonHinzufuegen(catchSchrittAnhaengen, "catch-schritt", "Catchblock anhängen");
+		toolbarButtonHinzufuegen(caseAnhaengen, "zweig", "Case anhängen");
 		toolBar.addSeparator();
 		toolbarButtonHinzufuegen(einfaerben, "helligkeit", "Hintergrund schattieren");
-		toolbarButtonHinzufuegen(loeschen, "loeschen", "Schritt l�schen");
+		toolbarButtonHinzufuegen(loeschen, "loeschen", "Schritt löschen");
 		toolBar.addSeparator();
-		toolbarButtonHinzufuegen(aenderungenVerfolgen, "aenderungen", "�nderungen verfolgen");
-		toolbarButtonHinzufuegen(review, "review", "F�r Review zusammenklappen");
+		toolbarButtonHinzufuegen(aenderungenVerfolgen, "aenderungen", "Änderungen verfolgen");
+		toolbarButtonHinzufuegen(review, "review", "Für Review zusammenklappen");
 		toolBar.addSeparator();
 		toolbarButtonHinzufuegen(birdsview, "birdsview", "Bird's View");
 		toolBar.add(zoom);
@@ -648,30 +648,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	static void addEdit(UndoableEdit edit) {
 		undoManager.addEdit(edit);
 	}
-	
-//	static BaseEditorToolBar toolbar;
-//	private void initJWebengineController() {
-//		// register JWebEngine for HTML content
-//		JEditorPane.registerEditorKitForContentType( "text/html", InetHtmlEditorKit.class.getName() );
-//        JEditorPane.registerEditorKitForContentType( "text/plain", "javax.swing.text.StyledEditorKit" );
-//		JTextPane.registerEditorKitForContentType( "text/html", InetHtmlEditorKit.class.getName() );
-//        JTextPane.registerEditorKitForContentType( "text/plain", "javax.swing.text.StyledEditorKit" );
-//		JTextPane dummy = new JTextPane();
-//		dummy.setEditorKit( new InetHtmlEditorKit( true ) );
-//		toolbar = new BaseEditorToolBar(dummy);
-//		getContentPane().add(toolbar.getToolbar(), CC.xywh(1, 2, 1, 1));
-//	}
-	
-//	JWordController ctrl;
-//	private void initJWordController() throws Exception {
-//		// Unterdr�ckung der Evaluierungslizenz-Warnung
-//		JWordEditorKit.licValid = true;
-//
-//		ctrl=new JWordController(false, false, false, true, null);
-//		ctrl.init(false);
-//		setJMenuBar(ctrl.getMenubar());
-//		getContentPane().add(ctrl.getToolbarPanel(), CC.xywh(1, 2, 3, 1));
-//	}
 
 	private JMenu baueDateiMenu() {
 		JMenu dateiMenu = new JMenu("Datei");

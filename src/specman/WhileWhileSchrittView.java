@@ -4,8 +4,8 @@ import specman.model.SchrittModel;
 import specman.model.WhileWhileSchrittModel;
 
 /**
- * Spezielle Anzeige einer While-Schleife mit einem abschlie�enden unteren Balken.
- * Im Nassi-Shneiderman-Standard steht in dieser Form unten noch einmal die Pr�fbedingung
+ * Spezielle Anzeige einer While-Schleife mit einem abschließenden unteren Balken.
+ * Im Nassi-Shneiderman-Standard steht in dieser Form unten noch einmal die Prüfbedingung
  * drin, aber das lassen wir mal weg. Das sieht komisch aus.
  * 
  * @author less02

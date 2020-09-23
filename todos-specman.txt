@@ -1,0 +1,34 @@
+Abschluss für Go-Live
+- Änderungsverfolgung beim Einfügen und Entfernen von Schritten / Zweigen (nicht bei Resizing)
+- Annehmen der Änderungen
+- Verwerfen der Änderungen
+- Überschneidungsfreiheit von Dreieckslinien und Text in Case/If/If-Else
+- Darstellung von Catch-Bereichen überarbeiten
+- Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
+- Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
+- Undo / Redo in Menü aufnehmen
+- Ordentliche Fehlermeldungsanzeige
+- Permanente Aktualisierung der Birdsview oder vielleicht erst mal Birdsview rausnehmen
+- Vielleicht eine kleiner Top-Inset für Schritt-Texte, um die Überschneidung mit den Labels zu verringern?
+- Doku aktualisieren
+
+
+Bugs fixen
+x Renummerierung von Folgezweigen und -schritten beim Hinzufügen / Löschen von Zweigen
+- Exception beim Undo, wenn kein Textfeld mehr fokussiert ist
+- Fokus setzen beim Entfernen des vorletzten Schritts
+- Löschen des vorletzten Zweigs erlauben
+- Abfangen des Löschens des letzten Zweigs im Case
+
+
+Auf längere Sicht - nicht notwendig für ersten Go-Live:
+- Zooming aus Undo-Liste entfernen
+- Kommentare
+- Code auf Englisch übersetzen
+- Texte internationalisieren / Sprache wählen
+- Sonst-Zweig in Cases Entfernen / Hinzufügen
+- Button-Enabling
+- Spellchecker
+- Schritte verschieben
+- Mehrere Changesets
+- Annehmen *einzelner* Änderungen

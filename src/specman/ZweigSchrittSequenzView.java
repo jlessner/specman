@@ -6,8 +6,8 @@ import javax.swing.text.JTextComponent;
 
 /**
  * SchrittSequenzView, die einen Zweig in einer Verweigung durch If, If/Else oder Case
- * repr�sentiert. �ber die normale Schritt-Sequenz hinaus hat ein Zweig einen
- * �berschriftentext, den im Kopfteil des VerzweigungsSchritts angezeigt wird.
+ * repräsentiert. Über die normale Schritt-Sequenz hinaus hat ein Zweig einen
+ * Überschriftentext, den im Kopfteil des VerzweigungsSchritts angezeigt wird.
  */
 public class ZweigSchrittSequenzView extends SchrittSequenzView {
 

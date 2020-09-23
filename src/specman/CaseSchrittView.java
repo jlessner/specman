@@ -26,7 +26,7 @@ import static specman.Specman.initialtext;
 
 public class CaseSchrittView extends VerzweigungSchrittView implements ComponentListener, FocusListener {
 	// Alle Components kriegen am Anfang einen sinnfreien Dummy und werden dann
-	// �ber die Methode layoutCojnstraintsSetzen korrekt plaziert. Damit verhindern
+	// über die Methode layoutCojnstraintsSetzen korrekt plaziert. Damit verhindern
 	// wir, dass die relativ komplizierte Positionsvergabe redundant im Code auftaucht
 	private static final CellConstraints INITIAL_DUMMY = CC.xy(1, 1);
 	

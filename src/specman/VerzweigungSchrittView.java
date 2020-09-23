@@ -9,7 +9,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 
-/** Basisklasse f�r If, If/Else und Case */
+/** Basisklasse für If, If/Else und Case */
 abstract public class VerzweigungSchrittView extends SchrittView implements ComponentListener, SpaltenContainerI {
 	JPanel panel;
 	KlappButton klappen;

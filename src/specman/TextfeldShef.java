@@ -45,10 +45,10 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
     
     static {
     	// Das hier ist ein bisschen tricky:
-    	// Die Zeile mit StyleConstants.setBackground sorgt daf�r, dass man die Hintergrundfarbe unmittelbar
+    	// Die Zeile mit StyleConstants.setBackground sorgt dafür, dass man die Hintergrundfarbe unmittelbar
     	// beim Editieren in der Oberflche sieht. Allerdings taucht sie dann nicht im abgespeicherten HTML
-    	// auf und geht auch verloren, sobald man einen Zeilenumbruch im Text einf�gt. Also braucht man noch
-    	// ein weiteres, persistentes Styling �ber ein Span-Tag, wie ich es hier gefunden habe:
+    	// auf und geht auch verloren, sobald man einen Zeilenumbruch im Text einfügt. Also braucht man noch
+    	// ein weiteres, persistentes Styling über ein Span-Tag, wie ich es hier gefunden habe:
     	// https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
         String htmlStyle = "background-color:" + getHTMLColor(Color.yellow);
         SimpleAttributeSet htmlHintergrundStyle = new SimpleAttributeSet();

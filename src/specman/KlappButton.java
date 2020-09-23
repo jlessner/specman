@@ -14,9 +14,9 @@ import java.awt.event.MouseMotionListener;
 
 /**
  * Dieser Button dient dazu, unterstrukturierte Schritte auf und zuzuklappen.
- * Daf�r w�rde man normalerweise von JToggleButton ableiten, aber leider hat diese Klasse
+ * Dafür würde man normalerweise von JToggleButton ableiten, aber leider hat diese Klasse
  * die Macke, dass man die Hintergrundfarbe im selektierten Zustand nicht individuell festlegen
- * kann. Die wollen wir aber als Indikator verwenden, ob ein Zusammenklappen entwaige �nderungen
+ * kann. Die wollen wir aber als Indikator verwenden, ob ein Zusammenklappen entwaige Änderungen
  * verbirgt oder nicht. Also basteln wir uns aus einem JButton selber einen Toggle-Button.
  * 
  * @author less02

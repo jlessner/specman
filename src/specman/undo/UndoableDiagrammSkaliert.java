@@ -7,10 +7,10 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 /**
- * Eigentlich fragw�rdig, das Umstellen des Zoomfaktors in die Undo-Liste mit aufzunehmen. Es l�st aber auf einfache Weise
- * ein Problem: wenn man �ber den {@link SpaltenResizer} Spaltenbreiten �ndert, dann werden die Spaltengr��en mit den
- * Zoomfaktoren verrechnet, um die endg�ltige Spaltenbreite zu erhalten. Nur die Spaltenbreiten�nderungen r�ckg�ngig
- * machen, die Zoomver�nderungen aber nicht, f�hrt beim Undo zu Verzerrungen der Spaltenverh�ltnisse.
+ * Eigentlich fragwürdig, das Umstellen des Zoomfaktors in die Undo-Liste mit aufzunehmen. Es löst aber auf einfache Weise
+ * ein Problem: wenn man über den {@link SpaltenResizer} Spaltenbreiten ändert, dann werden die Spaltengrößen mit den
+ * Zoomfaktoren verrechnet, um die endgültige Spaltenbreite zu erhalten. Nur die Spaltenbreitenänderungen rückgängig
+ * machen, die Zoomveränderungen aber nicht, führt beim Undo zu Verzerrungen der Spaltenverhältnisse.
  * 
  * @author LESS02
  */

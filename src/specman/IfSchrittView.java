@@ -10,11 +10,11 @@ import java.awt.*;
 import static specman.Specman.schrittHintergrund;
 
 /**
- * Im Gegensatz zum Struktogramm-Standard verwenden wird die <i>rechte</i> Seite f�r die Sequenz der
- * bedingt auszuf�hrenden Unterschritte und die linke Seite bleibt leer. Das ist vorteilhaft f�r die grafische
- * Anordnung. Z.B. kann der Fragetext linksb�ndig platziert werden.<br>
+ * Im Gegensatz zum Struktogramm-Standard verwenden wird die <i>rechte</i> Seite für die Sequenz der
+ * bedingt auszuführenden Unterschritte und die linke Seite bleibt leer. Das ist vorteilhaft für die grafische
+ * Anordnung. Z.B. kann der Fragetext linksbündig platziert werden.<br>
  * Durch die Basisklasse ist auf der rechten Seite der Else-Zweig. Der Einfachheit halber verwenden wir den
- * also hier. Kann man auch noch mal �ndern, wenn das bei generativen Auswertungen der Modelle f�r zu
+ * also hier. Kann man auch noch mal ändern, wenn das bei generativen Auswertungen der Modelle für zu
  * viel Verwirrung sorgen sollte.
  * 
  * @author less02
