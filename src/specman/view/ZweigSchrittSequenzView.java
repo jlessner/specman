@@ -1,5 +1,8 @@
-package specman;
+package specman.view;
 
+import specman.EditorI;
+import specman.SchrittID;
+import specman.TextfeldShef;
 import specman.model.ZweigSchrittSequenzModel;
 
 import javax.swing.text.JTextComponent;

@@ -1,8 +1,14 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import specman.EditorI;
+import specman.SchrittID;
+import specman.SpaltenContainerI;
+import specman.SpaltenResizer;
+import specman.Specman;
+import specman.TextfeldShef;
 import specman.model.IfElseSchrittModel;
 import specman.model.SchrittModel;
 
@@ -16,7 +22,7 @@ import java.util.List;
 
 import static specman.Specman.initialtext;
 
-class IfElseSchrittView extends VerzweigungSchrittView implements ComponentListener, SpaltenContainerI {
+public class IfElseSchrittView extends VerzweigungSchrittView implements ComponentListener, SpaltenContainerI {
 	ZweigSchrittSequenzView ifSequenz;
 	ZweigSchrittSequenzView elseSequenz;
 	boolean dreieckBisUnten = true;

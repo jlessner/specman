@@ -1,8 +1,11 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import specman.EditorI;
+import specman.SchrittID;
+import specman.Specman;
 import specman.model.BreakSchrittModel;
 import specman.model.SchrittModel;
 
@@ -10,7 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 
-class BreakSchrittView extends SchrittView {
+public class BreakSchrittView extends AbstractSchrittView {
 	
 	final JPanel panel;
 	final FormLayout layout;

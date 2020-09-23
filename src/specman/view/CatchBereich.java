@@ -1,9 +1,10 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.Specman;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -12,9 +13,9 @@ import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatchBereich extends JPanel implements KlappbarerBereichI {
+class CatchBereich extends JPanel implements KlappbarerBereichI {
 	public static final String ZEILENLAYOUT_TRENNKOPF_SICHTBAR = "fill:10px";
-	public static final String ZEILENLAYOUT_TRENNKOPF_VERBORGEN = SchrittView.ZEILENLAYOUT_INHALT_VERBORGEN;
+	public static final String ZEILENLAYOUT_TRENNKOPF_VERBORGEN = AbstractSchrittView.ZEILENLAYOUT_INHALT_VERBORGEN;
 	
 	JPanel trennkopf;
 	JPanel umgehung;
@@ -28,9 +29,9 @@ public class CatchBereich extends JPanel implements KlappbarerBereichI {
 
 	public CatchBereich() {
 		setBackground(Specman.schrittHintergrund());
-		umgehungBreite = SchrittView.SPALTENLAYOUT_UMGEHUNG_GROESSE * 2;
+		umgehungBreite = AbstractSchrittView.SPALTENLAYOUT_UMGEHUNG_GROESSE * 2;
 		bereichLayout = new FormLayout(
-				"10dlu:grow, " + SchrittView.umgehungLayout(umgehungBreite),
+				"10dlu:grow, " + AbstractSchrittView.umgehungLayout(umgehungBreite),
 				"0px, " + ZEILENLAYOUT_TRENNKOPF_VERBORGEN + ", fill:pref");
 		setLayout(bereichLayout);
 		
@@ -54,19 +55,19 @@ public class CatchBereich extends JPanel implements KlappbarerBereichI {
 	}
 
 	private void layoutInitialisieren() {
-		layout = new FormLayout("10px:grow, " + SchrittView.FORMLAYOUT_GAP);
+		layout = new FormLayout("10px:grow, " + AbstractSchrittView.FORMLAYOUT_GAP);
 		catchBloeckeContainer.setLayout(layout);
 	}
 
 	public void catchAnhaengen(CatchSchrittView schritt, FocusListener focusListener) {
-		layout.appendRow(RowSpec.decode(SchrittView.FORMLAYOUT_GAP));
+		layout.appendRow(RowSpec.decode(AbstractSchrittView.FORMLAYOUT_GAP));
 		layout.appendRow(RowSpec.decode("pref:grow"));
 		catchBloeckeContainer.add(schritt.getComponent(), CC.xy(1, (catchBloecke.size()+1) * 2));
 		
 		if (catchBloecke.size() > 0) {
 			alleGrundlinienAnschluesseEntfernen();
-			layout.appendColumn(ColumnSpec.decode(SchrittView.umgehungLayout()));
-			layout.appendColumn(ColumnSpec.decode(SchrittView.FORMLAYOUT_GAP));
+			layout.appendColumn(ColumnSpec.decode(AbstractSchrittView.umgehungLayout()));
+			layout.appendColumn(ColumnSpec.decode(AbstractSchrittView.FORMLAYOUT_GAP));
 
 			for (int i = 0; i < catchBloecke.size(); i++) {
 				alsVorgaengerImLayoutEinordnen(catchBloecke.get(i), i, catchBloecke.size() - i);
@@ -104,9 +105,9 @@ public class CatchBereich extends JPanel implements KlappbarerBereichI {
 
 	private void trennkopfSichtbarkeitAktualisieren() {
 		if (catchBloecke.size() > 0) {
-			bereichLayout.setRowSpec(1, RowSpec.decode(SchrittView.FORMLAYOUT_GAP));
+			bereichLayout.setRowSpec(1, RowSpec.decode(AbstractSchrittView.FORMLAYOUT_GAP));
 			//bereichLayout.setRowSpec(2, RowSpec.decode(ZEILENLAYOUT_TRENNKOPF_SICHTBAR));
-			bereichLayout.setRowSpec(2, RowSpec.decode(SchrittView.umgehungLayout()));
+			bereichLayout.setRowSpec(2, RowSpec.decode(AbstractSchrittView.umgehungLayout()));
 			umgehung.setVisible(true);
 		}
 		else {
@@ -160,18 +161,18 @@ public class CatchBereich extends JPanel implements KlappbarerBereichI {
 		return null;
 	}
 
-	public SchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
+	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
 		for (CatchSchrittView catchSchritt: catchBloecke) {
 			if (catchSchritt.getText() == zuletztFokussierterText)
 				return catchSchritt;
-			SchrittView schritt = catchSchritt.findeSchritt(zuletztFokussierterText);
+			AbstractSchrittView schritt = catchSchritt.findeSchritt(zuletztFokussierterText);
 			if (schritt != null)
 				return schritt;
 		}
 		return null;
 	}
 
-	public SchrittView findeEigenenSchritt(JTextComponent zuletztFokussierterText) {
+	public AbstractSchrittView findeEigenenSchritt(JTextComponent zuletztFokussierterText) {
 		for (CatchSchrittView catchSchritt: catchBloecke) {
 			if (catchSchritt.getText() == zuletztFokussierterText)
 				return catchSchritt;
@@ -179,7 +180,7 @@ public class CatchBereich extends JPanel implements KlappbarerBereichI {
 		return null;
 	}
 
-	public SchrittSequenzView findeElternSequenz(SchrittSequenzView catchBereichsElternSequenz, SchrittView kindSchritt) {
+	public SchrittSequenzView findeElternSequenz(SchrittSequenzView catchBereichsElternSequenz, AbstractSchrittView kindSchritt) {
 		for (CatchSchrittView catchSchritt: catchBloecke) {
 			if (catchSchritt == kindSchritt)
 				return catchBereichsElternSequenz;
@@ -234,13 +235,13 @@ public class CatchBereich extends JPanel implements KlappbarerBereichI {
 			catchSchritt.skalieren(prozentNeu, prozentAktuell);
 		}
 		trennkopfSichtbarkeitAktualisieren();
-		int neueUmgehungBreite = SchrittView.groesseUmrechnen(umgehungBreite, prozentNeu, prozentAktuell);
+		int neueUmgehungBreite = AbstractSchrittView.groesseUmrechnen(umgehungBreite, prozentNeu, prozentAktuell);
 		umgehungBreiteSetzen(neueUmgehungBreite);
 	}
 
 	public void umgehungBreiteSetzen(int angepassteUmgehungBreite) {
 		umgehungBreite = angepassteUmgehungBreite;
-		bereichLayout.setColumnSpec(2, ColumnSpec.decode(SchrittView.umgehungLayout(umgehungBreite)));
+		bereichLayout.setColumnSpec(2, ColumnSpec.decode(AbstractSchrittView.umgehungLayout(umgehungBreite)));
 	}
 
 	

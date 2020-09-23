@@ -1,9 +1,14 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.EditorI;
+import specman.SchrittID;
+import specman.SpaltenContainerI;
+import specman.SpaltenResizer;
+import specman.Specman;
 import specman.model.SchrittModel;
 import specman.model.WhileSchrittModel;
 
@@ -11,7 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-class SchleifenSchrittView extends SchrittView implements SpaltenContainerI {
+public class SchleifenSchrittView extends AbstractSchrittView implements SpaltenContainerI {
 	
 	final JPanel panel;
 	final JPanel linkerBalken;

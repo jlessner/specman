@@ -71,7 +71,7 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
 	JLabel schrittNummer;
 	boolean schrittNummerSichtbar = true;
 
-	TextfeldShef(String initialerText, String schrittId) {
+	public TextfeldShef(String initialerText, String schrittId) {
 		Specman.shefEditorPane.instrumentWysEditor(this, initialerText, 0);
 		
 		putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);

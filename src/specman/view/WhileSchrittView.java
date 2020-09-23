@@ -1,9 +1,11 @@
-package specman;
+package specman.view;
 
+import specman.EditorI;
+import specman.SchrittID;
 import specman.model.SchrittModel;
 import specman.model.WhileSchrittModel;
 
-class WhileSchrittView extends SchleifenSchrittView {
+public class WhileSchrittView extends SchleifenSchrittView {
 	
 	public WhileSchrittView(EditorI editor, String initialerText, SchrittSequenzView wiederholSequenz, SchrittID id) {
 		super(editor, initialerText, wiederholSequenz, id, false);

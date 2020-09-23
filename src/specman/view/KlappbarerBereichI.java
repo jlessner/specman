@@ -1,6 +1,6 @@
-package specman;
+package specman.view;
 
-public interface KlappbarerBereichI {
+interface KlappbarerBereichI {
 
 	void geklappt(boolean auf);
 

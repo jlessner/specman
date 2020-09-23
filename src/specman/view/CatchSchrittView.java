@@ -1,9 +1,12 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.EditorI;
+import specman.SchrittID;
+import specman.Specman;
 import specman.model.CatchSchrittModel;
 import specman.model.SchrittModel;
 import specman.model.SchrittSequenzModel;
@@ -17,7 +20,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.util.List;
 
-class CatchSchrittView extends SchrittView {
+public class CatchSchrittView extends AbstractSchrittView {
 	public static final int TEXTEINRUECKUNG = SubsequenzSchrittView.TEXTEINRUECKUNG;
 	
 	final JPanel schrittPanel;
@@ -160,7 +163,7 @@ class CatchSchrittView extends SchrittView {
 	}
 	
 	@Override
-	public SchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
+	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
 		return handlingSequenz.findeSchritt(zuletztFokussierterText);
 	}
 
@@ -264,19 +267,19 @@ class CatchSchrittView extends SchrittView {
 			super(sequenzBasisId);
 		}
 
-		@Override public SchrittView schrittAnhaengen(SchrittView schritt, EditorI editor) {
-			SchrittView ergebnis = super.schrittAnhaengen(schritt, editor);
+		@Override public AbstractSchrittView schrittAnhaengen(AbstractSchrittView schritt, EditorI editor) {
+			AbstractSchrittView ergebnis = super.schrittAnhaengen(schritt, editor);
 			rahmenanzeigeAnpassen();
 			return ergebnis;
 		}
 
-		@Override public SchrittView schrittZwischenschieben(SchrittView schritt, SchrittView vorgaengerSchritt, EditorI editor) {
-			SchrittView ergebnis = super.schrittZwischenschieben(schritt, vorgaengerSchritt, editor);
+		@Override public AbstractSchrittView schrittZwischenschieben(AbstractSchrittView schritt, AbstractSchrittView vorgaengerSchritt, EditorI editor) {
+			AbstractSchrittView ergebnis = super.schrittZwischenschieben(schritt, vorgaengerSchritt, editor);
 			rahmenanzeigeAnpassen();
 			return ergebnis;
 		}
 
-		@Override public int schrittEntfernen(SchrittView schritt) {
+		@Override public int schrittEntfernen(AbstractSchrittView schritt) {
 			int index = super.schrittEntfernen(schritt);
 			rahmenanzeigeAnpassen();
 			return index;
@@ -289,7 +292,7 @@ class CatchSchrittView extends SchrittView {
 
 		boolean istMinimalHandling() {
 			if (schritte.size() == 1) {
-				SchrittView ersterSchritt = schritte.get(0);
+				AbstractSchrittView ersterSchritt = schritte.get(0);
 				if (ersterSchritt instanceof EinfacherSchrittView) {
 					return true;
 				}
@@ -313,7 +316,7 @@ class CatchSchrittView extends SchrittView {
 
 		private String zeilenLayoutSchmalsterSchritt() {
 			int schmalsterSchritt = getText().getHeight() > 0 ? getText().getHeight() : 25;
-			for (SchrittView schritt: schritte) {
+			for (AbstractSchrittView schritt: schritte) {
 				if (schritt.getComponent().getHeight() > 0) { // Noch nicht gerenderte Schritte bleiben unber�cksichtigt
 					schmalsterSchritt = Math.min(schmalsterSchritt, schritt.getComponent().getHeight());
 				}

@@ -1,4 +1,4 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -21,7 +21,7 @@ import java.awt.event.MouseMotionListener;
  * 
  * @author less02
  */
-public class KlappButton extends JButton implements ActionListener, MouseMotionListener, MouseListener {
+class KlappButton extends JButton implements ActionListener, MouseMotionListener, MouseListener {
 	final FormLayout layout;
 	final int klappzeile;
 	final KlappbarerBereichI klappbarerBereich;
@@ -76,7 +76,7 @@ public class KlappButton extends JButton implements ActionListener, MouseMotionL
 		else {
 			hintergrundfarbeVonParentUebernehmen();
 		}
-		String benoetigtesZeilenLayout = isSelected() ? SchrittView.ZEILENLAYOUT_INHALT_VERBORGEN : SchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
+		String benoetigtesZeilenLayout = isSelected() ? AbstractSchrittView.ZEILENLAYOUT_INHALT_VERBORGEN : AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
 		layout.setRowSpec(klappzeile, RowSpec.decode(benoetigtesZeilenLayout));
 		klappbarerBereich.geklappt(!isSelected());
 	}

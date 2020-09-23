@@ -1,7 +1,9 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import specman.EditorI;
+import specman.SchrittID;
 import specman.model.SchrittModel;
 import specman.model.SubsequenzSchrittModel;
 
@@ -9,7 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-class SubsequenzSchrittView extends SchrittView {
+public class SubsequenzSchrittView extends AbstractSchrittView {
 	public static final int TEXTEINRUECKUNG = 18;
 	
 	final JPanel panel;

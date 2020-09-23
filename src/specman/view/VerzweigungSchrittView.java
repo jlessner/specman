@@ -1,6 +1,10 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.layout.FormLayout;
+import specman.EditorI;
+import specman.SchrittID;
+import specman.SpaltenContainerI;
+import specman.Specman;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +14,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 
 /** Basisklasse für If, If/Else und Case */
-abstract public class VerzweigungSchrittView extends SchrittView implements ComponentListener, SpaltenContainerI {
+abstract public class VerzweigungSchrittView extends AbstractSchrittView implements ComponentListener, SpaltenContainerI {
 	JPanel panel;
 	KlappButton klappen;
 	FormLayout panelLayout;

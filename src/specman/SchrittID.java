@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Die ID eines Schrittes ist aus mehreren laufenden Nummern aufgebaut, die der üblichen Notation wie 1.19.7 entsprechen
+ * Die ID eines Schrittes ist aus mehreren laufenden Nummern aufgebaut, die der Ã¼blichen Notation wie 1.19.7 entsprechen
  */
 public class SchrittID {
 	List<Integer> nummern = new ArrayList<Integer>();
@@ -40,13 +40,5 @@ public class SchrittID {
 		naechsteNummern[naechsteNummern.length-1] = 0;
 		return new SchrittID(naechsteNummern);
 	}
-	
-	public static void main(String[] args) {
-		SchrittID id = new SchrittID(1, 19, 7);
-		System.out.println(id);
-		System.out.println(id.naechsteID());
-		System.out.println(id.naechsteEbene());
-	}
-	
 	
 }

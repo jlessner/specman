@@ -1,5 +1,9 @@
-package specman;
+package specman.view;
 
+import specman.EditorI;
+import specman.SchrittID;
+import specman.Specman;
+import specman.TextfeldShef;
 import specman.model.Aenderungsmarkierung;
 import specman.model.BreakSchrittModel;
 import specman.model.CaseSchrittModel;
@@ -20,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-abstract public class SchrittView implements FocusListener, KlappbarerBereichI {
+abstract public class AbstractSchrittView implements FocusListener, KlappbarerBereichI {
 	public static final int LINIENBREITE = 2;
 	public static final String FORMLAYOUT_GAP = LINIENBREITE + "px";
 	public static final String ZEILENLAYOUT_INHALT_SICHTBAR = "fill:pref:grow";
@@ -32,11 +36,11 @@ abstract public class SchrittView implements FocusListener, KlappbarerBereichI {
 	protected final TextfeldShef text;
 	protected SchrittID id;
 	 
-	public SchrittView(EditorI editor) {
+	public AbstractSchrittView(EditorI editor) {
 		this(editor, null, (SchrittID) null);
 	}
 
-	public SchrittView(EditorI editor, String initialerText, SchrittID id) {
+	public AbstractSchrittView(EditorI editor, String initialerText, SchrittID id) {
 		this.id = id;
 		this.text = new TextfeldShef(initialerText, id != null ? id.toString() : null);
 		text.addFocusListener(editor);
@@ -105,7 +109,7 @@ abstract public class SchrittView implements FocusListener, KlappbarerBereichI {
 
 	abstract public SchrittModel generiereModel(boolean formatierterText);
 	
-	public static SchrittView baueSchrittView(EditorI editor, SchrittModel model) {
+	public static AbstractSchrittView baueSchrittView(EditorI editor, SchrittModel model) {
 		if (model instanceof WhileWhileSchrittModel) {
 			return new WhileWhileSchrittView(editor, (WhileWhileSchrittModel) model);
 		}
@@ -137,7 +141,7 @@ abstract public class SchrittView implements FocusListener, KlappbarerBereichI {
 
 	public void zusammenklappenFuerReview() {}
 	
-	protected String ersteZeileExtraieren() {
+	public String ersteZeileExtraieren() {
 		String[] zeilen = text.getPlainText().split("\n");
 		for (String zeile: zeilen) {
 			String getrimmteZeile = zeile.trim();
@@ -166,16 +170,16 @@ abstract public class SchrittView implements FocusListener, KlappbarerBereichI {
 		return null;
 	}
 
-	public SchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
+	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
 		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
-			SchrittView schritt = unterSequenz.findeSchritt(zuletztFokussierterText);
+			AbstractSchrittView schritt = unterSequenz.findeSchritt(zuletztFokussierterText);
 			if (schritt != null)
 				return schritt;
 		}
 		return null;
 	}
 
-	public SchrittSequenzView findeElternSequenz(SchrittView kindSchritt) {
+	public SchrittSequenzView findeElternSequenz(AbstractSchrittView kindSchritt) {
 		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
 			SchrittSequenzView elternSequenz = unterSequenz.findeElternSequenz(kindSchritt);
 			if (elternSequenz != null)
@@ -248,4 +252,5 @@ abstract public class SchrittView implements FocusListener, KlappbarerBereichI {
 		return "fill:" + groesse + "px";
 	}
 
+	public void requestFocus() { text.requestFocus(); }
 }

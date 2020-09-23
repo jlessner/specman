@@ -1,17 +1,17 @@
 package specman.undo;
 
-import specman.SchrittView;
+import specman.view.AbstractSchrittView;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import java.awt.*;
 
 public class UndoableSchrittEingefaerbt extends AbstractUndoableInteraktion {
-	private final SchrittView schritt;
+	private final AbstractSchrittView schritt;
 	private final Color alteHintergrundfarbe;
 	private final Color neueHintergrundfarbe;
 	
-	public UndoableSchrittEingefaerbt(SchrittView schritt, Color alteHintergrundfarbe, Color neueHintergrundfarbe) {
+	public UndoableSchrittEingefaerbt(AbstractSchrittView schritt, Color alteHintergrundfarbe, Color neueHintergrundfarbe) {
 		this.schritt = schritt;
 		this.alteHintergrundfarbe = alteHintergrundfarbe;
 		this.neueHintergrundfarbe = neueHintergrundfarbe;

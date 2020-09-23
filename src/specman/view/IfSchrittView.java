@@ -1,7 +1,11 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import specman.EditorI;
+import specman.SchrittID;
+import specman.Specman;
+import specman.TextfeldShef;
 import specman.model.IfSchrittModel;
 import specman.model.SchrittModel;
 

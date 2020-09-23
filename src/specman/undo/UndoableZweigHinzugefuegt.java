@@ -1,8 +1,8 @@
 package specman.undo;
 
-import specman.CaseSchrittView;
+import specman.view.CaseSchrittView;
 import specman.EditorI;
-import specman.ZweigSchrittSequenzView;
+import specman.view.ZweigSchrittSequenzView;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;

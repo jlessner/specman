@@ -1,10 +1,14 @@
-package specman;
+package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.EditorI;
+import specman.SchrittID;
+import specman.SpaltenResizer;
+import specman.Specman;
 import specman.geometry.LineIntersect;
 import specman.model.CaseSchrittModel;
 import specman.model.SchrittModel;

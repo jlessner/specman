@@ -1,10 +1,12 @@
-package specman;
+package specman.view;
 
+import specman.EditorI;
+import specman.SchrittID;
 import specman.model.SchrittModel;
 
 import java.awt.*;
 
-public class EinfacherSchrittView extends SchrittView {
+public class EinfacherSchrittView extends AbstractSchrittView {
 
 	public EinfacherSchrittView(EditorI editor) {
 		this(editor, null, (SchrittID) null);
