@@ -1,0 +1,33 @@
+package specman.undo;
+
+import specman.CaseSchrittView;
+import specman.EditorI;
+import specman.ZweigSchrittSequenzView;
+
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+
+public class UndoableZweigHinzugefuegt extends AbstractUndoableInteraktion {
+	final ZweigSchrittSequenzView zweig;
+	final CaseSchrittView caseSchritt;
+	final EditorI editor;
+	int zweigIndex;
+
+	public UndoableZweigHinzugefuegt
+		(EditorI editor, ZweigSchrittSequenzView zweig, CaseSchrittView caseSchritt) {
+		this.editor = editor;
+		this.caseSchritt = caseSchritt;
+		this.zweig = zweig;
+	}
+
+	@Override
+	public void undo() throws CannotUndoException {
+		zweigIndex = caseSchritt.zweigEntfernen(editor, zweig);
+	}
+
+	@Override
+	public void redo() throws CannotRedoException {
+		caseSchritt.zweigHinzufuegen(editor, zweig, zweigIndex);
+	}
+
+}
