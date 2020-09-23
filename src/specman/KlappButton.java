@@ -28,12 +28,12 @@ public class KlappButton extends JButton implements ActionListener, MouseMotionL
 	final JComponent parent;
 	
 	public KlappButton(KlappbarerBereichI klappbarerBereich, JComponent parent, FormLayout layout, int klappzeile) {
-		super(new ImageIcon("images/struktogramm/minus.png"));
+		super(new ImageIcon("images/minus.png"));
 		this.parent = parent;
 		this.layout = layout;
 		this.klappzeile = klappzeile;
 		this.klappbarerBereich = klappbarerBereich;
-		setSelectedIcon(new ImageIcon("images/struktogramm/plus.png"));
+		setSelectedIcon(new ImageIcon("images/plus.png"));
 		setMargin(new Insets(0, 0, 0, 0));
 		setOpaque(true);
 		hintergrundfarbeVonParentUebernehmen();
@@ -54,11 +54,11 @@ public class KlappButton extends JButton implements ActionListener, MouseMotionL
 	}
 	
 	/**
-	 * Diese etwas eigenartige �bernahme der Hintergrundfarbe stellt sicher, dass es nicht
-	 * zu unerwarteten Farbeffekten kommt. Ist der Parent n�mlich z.B. nur wei�, weil die
+	 * Diese etwas eigenartige Übernahme der Hintergrundfarbe stellt sicher, dass es nicht
+	 * zu unerwarteten Farbeffekten kommt. Ist der Parent nämlich z.B. nur weis, weil die
 	 * Farbe aus dem Farbschema des Look & Feels kommt, dann wird der Button auf Basis
 	 * dieser Farbe nicht unbedingt in gleicher Farbe angezeigt. Also bauen wir eine neue
-	 * Farbe aus der �bernahme der RGB-Werte. Dann klappt es auf jeden Fall
+	 * Farbe aus der Übernahme der RGB-Werte. Dann klappt es auf jeden Fall
 	 */
 	private void hintergrundfarbeVonParentUebernehmen() {
 		setBackground(new Color(parent.getBackground().getRGB()));
@@ -86,9 +86,9 @@ public class KlappButton extends JButton implements ActionListener, MouseMotionL
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// Wenn die Sequenz zugeklappt ist, lassen wir den Aufklapp-Button dauerhaft angezeigt
-		// Der unbedarfte User erkennt auf diese Weise leichter, wo er dr�cken muss, um den
+		// Der unbedarfte User erkennt auf diese Weise leichter, wo er drücken muss, um den
 		// Inhalt zu sehen. Wenn die Sequenz aufgeklappt ist, zeigen wir den Button nur an,
-		// wenn die Maus an der richtigen Stelle steht. Sonst st�ren im aufgeklappten Zustand
+		// wenn die Maus an der richtigen Stelle steht. Sonst stören im aufgeklappten Zustand
 		// die vielen Button-Icons das Erscheinungsbild des Diagramms
 		if (!isSelected()) {
 			boolean mausUeberKlappenButton = getBounds().contains(e.getPoint());
@@ -96,9 +96,9 @@ public class KlappButton extends JButton implements ActionListener, MouseMotionL
 		}
 	}
 
-	/** Sorgt daf�r, dass der Button auch verschwindet, wenn man ihn (und seinen Container)
-	 * �ber den oberen oder linken Rand verl�sst. Dann kriegt man n�mlich kein mouseMoved
-	 * mehr mit der Info, dass die Maus nicht mehr �ber dem Button steht */
+	/** Sorgt dafür, dass der Button auch verschwindet, wenn man ihn (und seinen Container)
+	 * über den oberen oder linken Rand verlässt. Dann kriegt man nämlich kein mouseMoved
+	 * mehr mit der Info, dass die Maus nicht mehr über dem Button steht */
 	@Override public void mouseExited(MouseEvent e) {
 		if (!isSelected())
 			setVisible(false);
