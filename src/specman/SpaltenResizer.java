@@ -2,26 +2,34 @@ package specman;
 
 import specman.undo.UndoableSpaltenbreiteAngepasst;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 public class SpaltenResizer extends JPanel {
 	Integer dragX;
 	final SpaltenContainerI container;
 	final int spalte;
+	static Cursor leftRightCursor;
 
 	public SpaltenResizer(SpaltenContainerI container, EditorI editor) {
 		this(container, 0, editor);
 	}
 
 	public SpaltenResizer(SpaltenContainerI container, int spalte, EditorI editor) {
+		Cursor leftRightCursor = createLeftRightCursor();
 		this.container = container;
 		this.spalte = spalte;
 		setOpaque(false);
-		setCursor(new Cursor(com.sun.glass.ui.Cursor.CURSOR_RESIZE_LEFTRIGHT));
+		//setCursor(new Cursor(com.sun.glass.ui.Cursor.CURSOR_RESIZE_LEFTRIGHT));
+		setCursor(leftRightCursor);
 		addMouseListener(new MouseAdapter() {
 			@Override public void mouseReleased(MouseEvent e) {
 				if (dragX != null) {
@@ -40,6 +48,34 @@ public class SpaltenResizer extends JPanel {
 				editor.vertikalLinieSetzen(dragX, SpaltenResizer.this);
 			}
 		});
+	}
+
+	/** Einen eigenen Cursor bauen ist etwas komplizierter als man denkt, wenn man vermeiden möchte, dass Java das
+	 * vorgefertigte Icon wild skaliert. Man muss also vorher über {@link Toolkit#getBestCursorSize(int, int)}
+	 * feststellen, wie groß ein Cursorbild sein muss (meistens 32x32 oder 64x64). Dann legt man sich ein entsprechend
+	 * großes, leeres, transparentes Bild an und schreibt das Cursor-Icon dort oben rechts hinein. Den Hotspot
+	 * bilden wir aus Höhe und Breite des Icons.
+	 * <p>
+	 * Der Tipp stammt im Kern aus https://stackoverflow.com/questions/2620188/how-to-set-custom-size-for-cursor-in-swing */
+	private Cursor createLeftRightCursor() {
+		if (leftRightCursor == null) {
+			Dimension bestCursorSize = Toolkit.getDefaultToolkit().getBestCursorSize(0, 0);
+			ImageIcon icon = new ImageIcon(bestCursorSize.width <= 32
+					? "images/left-right-cursor-32.png"
+					: "images/left-right-cursor.png");
+			if (icon.getImage() != null) {
+				System.out.println(bestCursorSize);
+				final BufferedImage bufferedImage = new BufferedImage( bestCursorSize.width, bestCursorSize.height, BufferedImage.TYPE_INT_ARGB );
+				final Graphics graphic = bufferedImage.getGraphics();
+				graphic.drawImage(icon.getImage(), 0, 0, null);
+				Point hotSpot = new Point(icon.getIconWidth()/2, icon.getIconHeight()/2);
+				leftRightCursor = Toolkit.getDefaultToolkit().createCustomCursor(bufferedImage, hotSpot, "Left-Right-Cursor");
+			}
+			else {
+				leftRightCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+			}
+		}
+		return leftRightCursor;
 	}
 
 }
