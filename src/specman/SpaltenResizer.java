@@ -54,15 +54,16 @@ public class SpaltenResizer extends JPanel {
 	 * vorgefertigte Icon wild skaliert. Man muss also vorher über {@link Toolkit#getBestCursorSize(int, int)}
 	 * feststellen, wie groß ein Cursorbild sein muss (meistens 32x32 oder 64x64). Dann legt man sich ein entsprechend
 	 * großes, leeres, transparentes Bild an und schreibt das Cursor-Icon dort oben rechts hinein. Den Hotspot
-	 * bilden wir aus Höhe und Breite des Icons.
+	 * bilden wir aus Höhe und Breite des Icons. Wir haben für alle Fälle auch noch zwei verschieden große Bilder parat.
 	 * <p>
 	 * Der Tipp stammt im Kern aus https://stackoverflow.com/questions/2620188/how-to-set-custom-size-for-cursor-in-swing */
 	private Cursor createLeftRightCursor() {
 		if (leftRightCursor == null) {
 			Dimension bestCursorSize = Toolkit.getDefaultToolkit().getBestCursorSize(0, 0);
-			ImageIcon icon = new ImageIcon(bestCursorSize.width <= 32
-					? "images/left-right-cursor-32.png"
-					: "images/left-right-cursor.png");
+			ImageIcon icon = new ImageIcon("images/left-right-cursor.png");
+			if (icon.getImage() == null || icon.getIconWidth() > bestCursorSize.width) {
+				icon = new ImageIcon("images/left-right-cursor-32.png");
+			}
 			if (icon.getImage() != null) {
 				System.out.println(bestCursorSize);
 				final BufferedImage bufferedImage = new BufferedImage( bestCursorSize.width, bestCursorSize.height, BufferedImage.TYPE_INT_ARGB );
