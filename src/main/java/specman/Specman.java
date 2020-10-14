@@ -21,6 +21,7 @@ import specman.view.CatchSchrittView;
 import specman.view.SchrittSequenzView;
 import specman.view.ZweigSchrittSequenzView;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -628,8 +629,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
+	public static ImageIcon readImageIcon(String iconBasename) {
+		String resource = "images/" + iconBasename + ".png";
+		try {
+			Image image = ImageIO.read(ClassLoader.getSystemResource(resource));
+			if (image == null) {
+				throw new IllegalArgumentException("Can't load image icon " + resource);
+			}
+			return new ImageIcon(image);
+		}
+		catch(IOException iox) {
+			iox.printStackTrace();
+			throw new IllegalArgumentException("Error reading image icon " + resource + ": " + iox.getMessage());
+		}
+	}
+
 	private void toolbarButtonHinzufuegen(AbstractButton button, String iconBasename, String tooltip) {
-		button.setIcon(new ImageIcon("images/" + iconBasename + ".png"));
+		button.setIcon(readImageIcon(iconBasename));
 		button.setMargin(new Insets(0, 0, 0, 0));
 		button.setToolTipText(tooltip);
 		toolBar.add(button);

@@ -60,11 +60,11 @@ public class SpaltenResizer extends JPanel {
 	private Cursor createLeftRightCursor() {
 		if (leftRightCursor == null) {
 			Dimension bestCursorSize = Toolkit.getDefaultToolkit().getBestCursorSize(0, 0);
-			ImageIcon icon = new ImageIcon("images/left-right-cursor.png");
-			if (icon.getImage() == null || icon.getIconWidth() > bestCursorSize.width) {
-				icon = new ImageIcon("images/left-right-cursor-32.png");
-			}
-			if (icon.getImage() != null) {
+			try {
+				ImageIcon icon = Specman.readImageIcon("left-right-cursor");
+				if (icon.getIconWidth() > bestCursorSize.width) {
+					icon = Specman.readImageIcon("left-right-cursor-32");
+				}
 				System.out.println(bestCursorSize);
 				final BufferedImage bufferedImage = new BufferedImage( bestCursorSize.width, bestCursorSize.height, BufferedImage.TYPE_INT_ARGB );
 				final Graphics graphic = bufferedImage.getGraphics();
@@ -72,7 +72,7 @@ public class SpaltenResizer extends JPanel {
 				Point hotSpot = new Point(icon.getIconWidth()/2, icon.getIconHeight()/2);
 				leftRightCursor = Toolkit.getDefaultToolkit().createCustomCursor(bufferedImage, hotSpot, "Left-Right-Cursor");
 			}
-			else {
+			catch(Exception x) {
 				leftRightCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
 			}
 		}

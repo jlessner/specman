@@ -2,6 +2,7 @@ package specman.view;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.Specman;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -28,12 +29,12 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
 	final JComponent parent;
 	
 	public KlappButton(KlappbarerBereichI klappbarerBereich, JComponent parent, FormLayout layout, int klappzeile) {
-		super(new ImageIcon("images/minus.png"));
+		super(Specman.readImageIcon("minus"));
 		this.parent = parent;
 		this.layout = layout;
 		this.klappzeile = klappzeile;
 		this.klappbarerBereich = klappbarerBereich;
-		setSelectedIcon(new ImageIcon("images/plus.png"));
+		setSelectedIcon(Specman.readImageIcon("plus"));
 		setMargin(new Insets(0, 0, 0, 0));
 		setOpaque(true);
 		hintergrundfarbeVonParentUebernehmen();
