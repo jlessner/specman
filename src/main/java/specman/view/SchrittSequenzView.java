@@ -7,7 +7,7 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.TextfeldShef;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 import specman.model.SchrittSequenzModel;
 
 import javax.swing.*;
@@ -54,11 +54,11 @@ public class SchrittSequenzView {
 	
 	public SchrittSequenzView(EditorI editor, SchrittSequenzModel model) {
 		this(model.id);
-		for (SchrittModel schritt : model.schritte) {
+		for (AbstractSchrittModel schritt : model.schritte) {
 			AbstractSchrittView schrittView = AbstractSchrittView.baueSchrittView(editor, schritt);
 			schrittAnhaengen(schrittView, editor);
 		}
-		for (SchrittModel catchSchritt : model.catchBloecke) {
+		for (AbstractSchrittModel catchSchritt : model.catchBloecke) {
 			CatchSchrittView schrittView = (CatchSchrittView) AbstractSchrittView.baueSchrittView(editor, catchSchritt);
 			catchAnhaengen(schrittView, editor);
 		}

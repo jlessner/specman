@@ -7,7 +7,7 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.model.BreakSchrittModel;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +70,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public SchrittModel generiereModel(boolean formatierterText) {
+	public AbstractSchrittModel generiereModel(boolean formatierterText) {
 		BreakSchrittModel model = new BreakSchrittModel();
 		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
 		model.id = id;

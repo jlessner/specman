@@ -8,7 +8,7 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.model.CatchSchrittModel;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 import specman.model.SchrittSequenzModel;
 
 import javax.swing.*;
@@ -239,7 +239,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public SchrittModel generiereModel(boolean formatierterText) {
+	public AbstractSchrittModel generiereModel(boolean formatierterText) {
 		CatchSchrittModel model = new CatchSchrittModel();
 		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
 		model.id = id;

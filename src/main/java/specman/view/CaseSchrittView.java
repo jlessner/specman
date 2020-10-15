@@ -11,7 +11,7 @@ import specman.SpaltenResizer;
 import specman.Specman;
 import specman.geometry.LineIntersect;
 import specman.model.CaseSchrittModel;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 import specman.model.ZweigSchrittSequenzModel;
 
 import javax.swing.text.JTextComponent;
@@ -217,7 +217,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	@Override
-	public SchrittModel generiereModel(boolean formatierterText) {
+	public AbstractSchrittModel generiereModel(boolean formatierterText) {
 		CaseSchrittModel model = new CaseSchrittModel();
 		model.id = id;
 		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);

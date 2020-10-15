@@ -7,7 +7,7 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.TextfeldShef;
 import specman.model.IfSchrittModel;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 
 import java.awt.*;
 
@@ -97,7 +97,7 @@ public class IfSchrittView extends IfElseSchrittView {
 	}
 
 	@Override
-	public SchrittModel generiereModel(boolean formatierterText) {
+	public AbstractSchrittModel generiereModel(boolean formatierterText) {
 		IfSchrittModel model = new IfSchrittModel();
 		model.id = id;
 		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);

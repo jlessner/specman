@@ -1,4 +1,4 @@
 package specman.model;
 
-public class BreakSchrittModel extends SchrittModel {
+public class BreakSchrittModel extends AbstractSchrittModel {
 }

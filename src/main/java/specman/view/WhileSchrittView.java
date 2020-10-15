@@ -2,7 +2,7 @@ package specman.view;
 
 import specman.EditorI;
 import specman.SchrittID;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 import specman.model.WhileSchrittModel;
 
 public class WhileSchrittView extends SchleifenSchrittView {
@@ -24,7 +24,7 @@ public class WhileSchrittView extends SchleifenSchrittView {
 	}
 	
 	@Override
-	public SchrittModel generiereModel(boolean formatierterText) {
+	public AbstractSchrittModel generiereModel(boolean formatierterText) {
 		WhileSchrittModel model = new WhileSchrittModel();
 		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
 		model.id = id;

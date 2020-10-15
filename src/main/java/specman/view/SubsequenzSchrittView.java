@@ -4,7 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.EditorI;
 import specman.SchrittID;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 import specman.model.SubsequenzSchrittModel;
 
 import javax.swing.*;
@@ -103,7 +103,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public SchrittModel generiereModel(boolean formatierterText) {
+	public AbstractSchrittModel generiereModel(boolean formatierterText) {
 		SubsequenzSchrittModel model = new SubsequenzSchrittModel();
 		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
 		model.id = id;

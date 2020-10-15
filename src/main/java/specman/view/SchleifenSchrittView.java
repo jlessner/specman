@@ -9,7 +9,7 @@ import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 import specman.model.WhileSchrittModel;
 
 import javax.swing.*;
@@ -167,7 +167,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	}
 
 	@Override
-	public SchrittModel generiereModel(boolean formatierterText) {
+	public AbstractSchrittModel generiereModel(boolean formatierterText) {
 		WhileSchrittModel model = new WhileSchrittModel();
 		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
 		model.id = id;

@@ -7,14 +7,14 @@ import java.util.List;
 
 public class SchrittSequenzModel {
 	public SchrittID id;
-	public List<SchrittModel> schritte;
-	public List<SchrittModel> catchBloecke;
+	public List<AbstractSchrittModel> schritte;
+	public List<AbstractSchrittModel> catchBloecke;
 	public boolean catchBloeckeZugeklappt;
 	public int catchBloeckeUmgehungBreite;
 
 	public SchrittSequenzModel() {
-		this.schritte = new ArrayList<SchrittModel>();
-		this.catchBloecke = new ArrayList<SchrittModel>();
+		this.schritte = new ArrayList<AbstractSchrittModel>();
+		this.catchBloecke = new ArrayList<AbstractSchrittModel>();
 	}
 
 }

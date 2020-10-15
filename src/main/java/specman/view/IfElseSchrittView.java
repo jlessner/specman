@@ -10,7 +10,7 @@ import specman.SpaltenResizer;
 import specman.Specman;
 import specman.TextfeldShef;
 import specman.model.IfElseSchrittModel;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -219,7 +219,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 
 	@Override
-	public SchrittModel generiereModel(boolean formatierterText) {
+	public AbstractSchrittModel generiereModel(boolean formatierterText) {
 		IfElseSchrittModel model = new IfElseSchrittModel();
 		model.id = id;
 		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);

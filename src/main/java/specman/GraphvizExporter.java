@@ -3,7 +3,7 @@ package specman;
 import org.apache.commons.lang.StringUtils;
 import specman.model.IfElseSchrittModel;
 import specman.model.IfSchrittModel;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 import specman.model.SchrittSequenzModel;
 import specman.model.SubsequenzSchrittModel;
 import specman.model.WhileSchrittModel;
@@ -62,7 +62,7 @@ public class GraphvizExporter {
 	}
 	
 	private List<Haken> sequenzExportieren(SchrittSequenzModel sequenz, List<Haken> obereAnschluesse) throws IOException {
-		for (SchrittModel schritt: sequenz.schritte) {
+		for (AbstractSchrittModel schritt: sequenz.schritte) {
 			String schrittExportName = "schritt_" + schritt.id.toString().replace(".", "_");
 			if (schritt instanceof WhileSchrittModel) {
 				WhileSchrittModel whileSchritt = (WhileSchrittModel)schritt;
@@ -154,11 +154,11 @@ public class GraphvizExporter {
 		return liste;
 	}
 
-	private String textFuerAktivitaetsboxAufbereiten(SchrittModel schritt ) {
+	private String textFuerAktivitaetsboxAufbereiten(AbstractSchrittModel schritt ) {
 		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.text, "");
 	}
 
-	private String textFuerBedingungAufbereiten(SchrittModel schritt) {
+	private String textFuerBedingungAufbereiten(AbstractSchrittModel schritt) {
 		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.text, "\t\t\t\t\t\t");
 	}
 

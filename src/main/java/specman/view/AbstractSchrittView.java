@@ -8,9 +8,10 @@ import specman.model.Aenderungsmarkierung;
 import specman.model.BreakSchrittModel;
 import specman.model.CaseSchrittModel;
 import specman.model.CatchSchrittModel;
+import specman.model.EinfacherSchrittModel;
 import specman.model.IfElseSchrittModel;
 import specman.model.IfSchrittModel;
-import specman.model.SchrittModel;
+import specman.model.AbstractSchrittModel;
 import specman.model.SubsequenzSchrittModel;
 import specman.model.TextMitAenderungsmarkierungen;
 import specman.model.WhileSchrittModel;
@@ -107,9 +108,9 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		text.schrittnummerAnzeigen(sichtbar);
 	}
 
-	abstract public SchrittModel generiereModel(boolean formatierterText);
+	abstract public AbstractSchrittModel generiereModel(boolean formatierterText);
 	
-	public static AbstractSchrittView baueSchrittView(EditorI editor, SchrittModel model) {
+	public static AbstractSchrittView baueSchrittView(EditorI editor, AbstractSchrittModel model) {
 		if (model instanceof WhileWhileSchrittModel) {
 			return new WhileWhileSchrittView(editor, (WhileWhileSchrittModel) model);
 		}
@@ -134,7 +135,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		if (model instanceof CatchSchrittModel) {
 			return new CatchSchrittView(editor, (CatchSchrittModel) model);
 		}
-		return new EinfacherSchrittView(editor, model);
+		return new EinfacherSchrittView(editor, (EinfacherSchrittModel)model);
 	}
 
 	public void geklappt(boolean auf) {}
