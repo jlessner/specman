@@ -11,7 +11,9 @@ import specman.model.SchrittSequenzModel;
 public class JacksonTest {
 
 	@Test
-	void test() throws Exception {
+	/** Jackson kann Typinformation im JSON unterbringen, so dass die Deserialisierung
+	 * auch mit Objekten abgeleiteter Klassen klar kommt */
+	void testDeserializationWithDerivedTypes() throws Exception {
 		SchrittSequenzModel model = new SchrittSequenzModel();
 		IfElseSchrittModel ifelse = new IfElseSchrittModel();
 		model.schritte.add(ifelse);
