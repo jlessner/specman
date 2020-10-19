@@ -5,11 +5,12 @@ import specman.SchrittID;
 public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 	public final ZweigSchrittSequenzModel_V001 ifSequenz;
 	public final ZweigSchrittSequenzModel_V001 elseSequenz;
-	public float ifBreitenanteil;
+	public final float ifBreitenanteil;
 
 	@Deprecated public IfElseSchrittModel_V001() {  // For Jackson only
 		this.ifSequenz = new ZweigSchrittSequenzModel_V001();
 		this.elseSequenz = new ZweigSchrittSequenzModel_V001();
+		this.ifBreitenanteil = 0.0f;
 	}
 
 	public IfElseSchrittModel_V001(

@@ -3,6 +3,16 @@ package specman.model.v001;
 import java.util.List;
 
 public class TextMitAenderungsmarkierungen_V001 {
-	public String text;
-	public List<Aenderungsmarkierung_V001> aenderungen;
+	public final String text;
+	public final List<Aenderungsmarkierung_V001> aenderungen;
+
+	@Deprecated public TextMitAenderungsmarkierungen_V001() { // For Jackson only
+		text = null;
+		aenderungen = null;
+	}
+
+	public TextMitAenderungsmarkierungen_V001(String text, List<Aenderungsmarkierung_V001> aenderungen) {
+		this.text = text;
+		this.aenderungen = aenderungen;
+	}
 }

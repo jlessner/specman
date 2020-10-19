@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CaseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
-	public ZweigSchrittSequenzModel_V001 sonstSequenz;
-	public List<ZweigSchrittSequenzModel_V001> caseSequenzen;
-	public ArrayList<Float> spaltenbreitenAnteile;
+	public final ZweigSchrittSequenzModel_V001 sonstSequenz;
+	public final List<ZweigSchrittSequenzModel_V001> caseSequenzen;
+	public final ArrayList<Float> spaltenbreitenAnteile;
 
 	public CaseSchrittModel_V001(
 			SchrittID id,
@@ -23,7 +23,11 @@ public class CaseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		this.spaltenbreitenAnteile = spaltenbreitenAnteile;
 	}
 
-	@Deprecated public CaseSchrittModel_V001() {} // For Jackson only
+	@Deprecated public CaseSchrittModel_V001() { // For Jackson only
+		sonstSequenz = null;
+		caseSequenzen = null;
+		spaltenbreitenAnteile = null;
+	}
 
 	public void caseHinzufuegen(ZweigSchrittSequenzModel_V001 sequenz) {
 		caseSequenzen.add(sequenz);

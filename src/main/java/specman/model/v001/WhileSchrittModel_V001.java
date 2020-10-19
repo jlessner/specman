@@ -3,11 +3,13 @@ package specman.model.v001;
 import specman.SchrittID;
 
 public class WhileSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
-	public SchrittSequenzModel_V001 wiederholSequenz;
-	public int balkenbreite;
+	public final SchrittSequenzModel_V001 wiederholSequenz;
+	public final int balkenbreite;
 
-	@Deprecated
-	public WhileSchrittModel_V001() {} // For Jackson only
+	@Deprecated public WhileSchrittModel_V001() { // For Jackson only
+		wiederholSequenz = null;
+		balkenbreite = 0;
+	}
 
 	public WhileSchrittModel_V001(
 		SchrittID id,

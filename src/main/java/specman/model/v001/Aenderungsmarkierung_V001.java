@@ -1,9 +1,10 @@
 package specman.model.v001;
 
 public class Aenderungsmarkierung_V001 {
-	int von, bis;
+	final int von, bis;
 	
-	public Aenderungsmarkierung_V001() {
+	@Deprecated public Aenderungsmarkierung_V001() { // For Jackson only
+		von = bis = 0;
 	}
 	
 	public Aenderungsmarkierung_V001(int von, int bis) {

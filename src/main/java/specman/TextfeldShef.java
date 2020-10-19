@@ -125,19 +125,20 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
 	}
 
 	public TextMitAenderungsmarkierungen_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
-		TextMitAenderungsmarkierungen_V001 ergebnis = new TextMitAenderungsmarkierungen_V001();
+		String text;
+		List<Aenderungsmarkierung_V001> aenderungen = null;
 		if (formatierterText) {
-			// Wenn wir die Zeilenumbr�che nicht rausnehmen, dann entstehen sp�ter beim Laden u.U.
-			// Leerzeichen an Zeilenenden, die im urspr�nglichen Text nicht drin waren. Das ist doof,
+			// Wenn wir die Zeilenumbrüche nicht rausnehmen, dann entstehen später beim Laden u.U.
+			// Leerzeichen an Zeilenenden, die im ursprünglichen Text nicht drin waren. Das ist doof,
 			// weil dann die separat abgespeicherten Textintervalle der Aenderungsmarkierungen
 			// nicht mehr passen.
-			ergebnis.text = getText().replace("\n", "");
-			ergebnis.aenderungen = findeAenderungsmarkierungen(false);
+			text = getText().replace("\n", "");
+			aenderungen = findeAenderungsmarkierungen(false);
 		}
 		else {
-			ergebnis.text = getPlainText().replace("\n", " ").trim();
+			text = getPlainText().replace("\n", " ").trim();
 		}
-		return ergebnis;
+		return new TextMitAenderungsmarkierungen_V001(text, aenderungen);
 	}
 
 	public String getPlainText() {
