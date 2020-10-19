@@ -19,7 +19,7 @@
       "@type":"java.util.ArrayList",
       "@items":[
         {
-          "@type":"specman.model.SchrittModel",
+          "@type":"specman.model.EinfacherSchrittModel",
           "id":{
             "nummern":{
               "@type":"java.util.ArrayList",
@@ -67,7 +67,7 @@
               "@type":"java.util.ArrayList",
               "@items":[
                 {
-                  "@type":"specman.model.SchrittModel",
+                  "@type":"specman.model.EinfacherSchrittModel",
                   "id":{
                     "nummern":{
                       "@type":"java.util.ArrayList",
@@ -92,7 +92,7 @@
                   "farbe":-1
                 },
                 {
-                  "@type":"specman.model.SchrittModel",
+                  "@type":"specman.model.EinfacherSchrittModel",
                   "id":{
                     "nummern":{
                       "@type":"java.util.ArrayList",
@@ -117,7 +117,7 @@
                   "farbe":-1
                 },
                 {
-                  "@type":"specman.model.SchrittModel",
+                  "@type":"specman.model.EinfacherSchrittModel",
                   "id":{
                     "nummern":{
                       "@type":"java.util.ArrayList",
@@ -200,7 +200,7 @@
                       "@type":"java.util.ArrayList",
                       "@items":[
                         {
-                          "@type":"specman.model.SchrittModel",
+                          "@type":"specman.model.EinfacherSchrittModel",
                           "id":{
                             "nummern":{
                               "@type":"java.util.ArrayList",
@@ -229,7 +229,7 @@
                           "farbe":-1
                         },
                         {
-                          "@type":"specman.model.SchrittModel",
+                          "@type":"specman.model.EinfacherSchrittModel",
                           "id":{
                             "nummern":{
                               "@type":"java.util.ArrayList",
@@ -291,7 +291,7 @@
                   "farbe":-1
                 },
                 {
-                  "@type":"specman.model.SchrittModel",
+                  "@type":"specman.model.EinfacherSchrittModel",
                   "id":{
                     "nummern":{
                       "@type":"java.util.ArrayList",
@@ -316,7 +316,7 @@
                   "farbe":-1
                 },
                 {
-                  "@type":"specman.model.SchrittModel",
+                  "@type":"specman.model.EinfacherSchrittModel",
                   "id":{
                     "nummern":{
                       "@type":"java.util.ArrayList",
@@ -372,7 +372,7 @@
                       "@type":"java.util.ArrayList",
                       "@items":[
                         {
-                          "@type":"specman.model.SchrittModel",
+                          "@type":"specman.model.EinfacherSchrittModel",
                           "id":{
                             "nummern":{
                               "@type":"java.util.ArrayList",
@@ -434,7 +434,7 @@
                   "farbe":-1
                 },
                 {
-                  "@type":"specman.model.SchrittModel",
+                  "@type":"specman.model.EinfacherSchrittModel",
                   "id":{
                     "nummern":{
                       "@type":"java.util.ArrayList",
@@ -459,7 +459,7 @@
                   "farbe":-1
                 },
                 {
-                  "@type":"specman.model.SchrittModel",
+                  "@type":"specman.model.EinfacherSchrittModel",
                   "id":{
                     "nummern":{
                       "@type":"java.util.ArrayList",
