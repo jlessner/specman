@@ -1,12 +1,12 @@
-package specman.model;
+package specman.model.v001;
 
-public class Aenderungsmarkierung {
+public class Aenderungsmarkierung_V001 {
 	int von, bis;
 	
-	public Aenderungsmarkierung() {
+	public Aenderungsmarkierung_V001() {
 	}
 	
-	public Aenderungsmarkierung(int von, int bis) {
+	public Aenderungsmarkierung_V001(int von, int bis) {
 		this.von = von;
 		this.bis = bis;
 	}

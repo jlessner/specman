@@ -6,8 +6,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.model.BreakSchrittModel;
-import specman.model.AbstractSchrittModel;
+import specman.model.v001.BreakSchrittModel_V001;
+import specman.model.v001.AbstractSchrittModel_V001;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +49,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 		g.drawLine(0,  dreieckSpitzeY, dreieckBasisX, hoehe);
 	}
 	
-	public BreakSchrittView(EditorI editor, BreakSchrittModel model) {
+	public BreakSchrittView(EditorI editor, BreakSchrittModel_V001 model) {
 		this(editor, model.inhalt.text, model.id);
 		setBackground(new Color(model.farbe));
 	}
@@ -70,11 +70,12 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public AbstractSchrittModel generiereModel(boolean formatierterText) {
-		BreakSchrittModel model = new BreakSchrittModel();
-		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
-		model.id = id;
-		model.farbe = getBackground().getRGB();
+	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
+		BreakSchrittModel_V001 model = new BreakSchrittModel_V001(
+			id,
+			getTextMitAenderungsmarkierungen(formatierterText),
+			getBackground().getRGB()
+		);
 		return model;
 	}
 

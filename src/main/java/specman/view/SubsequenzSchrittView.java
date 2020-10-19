@@ -4,8 +4,8 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.EditorI;
 import specman.SchrittID;
-import specman.model.AbstractSchrittModel;
-import specman.model.SubsequenzSchrittModel;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.SubsequenzSchrittModel_V001;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +48,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		this(editor, initialerText, einschrittigeInitialsequenz(editor, id.naechsteEbene()), id);
 	}
 
-	public SubsequenzSchrittView(EditorI editor, SubsequenzSchrittModel model) {
+	public SubsequenzSchrittView(EditorI editor, SubsequenzSchrittModel_V001 model) {
 		this(editor, model.inhalt.text, new SchrittSequenzView(editor, model.subsequenz), model.id);
 		setBackground(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
@@ -103,13 +103,13 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public AbstractSchrittModel generiereModel(boolean formatierterText) {
-		SubsequenzSchrittModel model = new SubsequenzSchrittModel();
-		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
-		model.id = id;
-		model.farbe = getBackground().getRGB();
-		model.subsequenz = subsequenz.generiereSchittSequenzModel(formatierterText);
-		model.zugeklappt = klappen.isSelected();
+	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
+		SubsequenzSchrittModel_V001 model = new SubsequenzSchrittModel_V001(
+			id,
+			getTextMitAenderungsmarkierungen(formatierterText),
+			getBackground().getRGB(),
+			klappen.isSelected(),
+			subsequenz.generiereSchittSequenzModel(formatierterText));
 		return model;
 	}
 

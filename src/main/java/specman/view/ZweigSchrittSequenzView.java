@@ -3,7 +3,7 @@ package specman.view;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.TextfeldShef;
-import specman.model.ZweigSchrittSequenzModel;
+import specman.model.v001.ZweigSchrittSequenzModel_V001;
 
 import javax.swing.text.JTextComponent;
 
@@ -16,7 +16,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	TextfeldShef ueberschrift;
 	
-	public ZweigSchrittSequenzView(EditorI editor, ZweigSchrittSequenzModel model) {
+	public ZweigSchrittSequenzView(EditorI editor, ZweigSchrittSequenzModel_V001 model) {
 		super(editor, model);
 		ueberschriftInitialisieren(editor, model.ueberschrift != null ? model.ueberschrift.text : null);
 	}
@@ -37,15 +37,14 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		ueberschrift.skalieren(prozentNeu, prozentAktuell);
 	}
 
-	public ZweigSchrittSequenzModel generiereZweigSchrittSequenzModel(boolean formatierterText) {
-		ZweigSchrittSequenzModel model = (ZweigSchrittSequenzModel)super.generiereSchittSequenzModel(formatierterText);
-		model.ueberschrift = ueberschrift.getTextMitAenderungsmarkierungen(formatierterText);
+	public ZweigSchrittSequenzModel_V001 generiereZweigSchrittSequenzModel(boolean formatierterText) {
+		ZweigSchrittSequenzModel_V001 model = new ZweigSchrittSequenzModel_V001(
+				sequenzBasisId,
+				catchBereich.klappen.isSelected(),
+				catchBereich.umgehungBreite,
+				ueberschrift.getTextMitAenderungsmarkierungen(formatierterText));
+		populateModel(model, formatierterText);
 		return model;
-	}
-
-	@Override
-	protected ZweigSchrittSequenzModel newModel() {
-		return new ZweigSchrittSequenzModel();
 	}
 
 	public boolean hatUeberschrift(JTextComponent textComponent) {

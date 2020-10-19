@@ -10,9 +10,9 @@ import specman.SchrittID;
 import specman.SpaltenResizer;
 import specman.Specman;
 import specman.geometry.LineIntersect;
-import specman.model.CaseSchrittModel;
-import specman.model.AbstractSchrittModel;
-import specman.model.ZweigSchrittSequenzModel;
+import specman.model.v001.CaseSchrittModel_V001;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.ZweigSchrittSequenzModel_V001;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -60,13 +60,13 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		     })));
 	}
 	
-	private static List<ZweigSchrittSequenzView> caseSequenzenAufbauen(EditorI editor, List<ZweigSchrittSequenzModel> model) {
+	private static List<ZweigSchrittSequenzView> caseSequenzenAufbauen(EditorI editor, List<ZweigSchrittSequenzModel_V001> model) {
 		return model.stream()
 				.map(sequenzModel -> new ZweigSchrittSequenzView(editor, sequenzModel))
 				.collect(Collectors.toList());
 	}
 	
-	public CaseSchrittView(EditorI editor, CaseSchrittModel model) {
+	public CaseSchrittView(EditorI editor, CaseSchrittModel_V001 model) {
 		this(editor, model.inhalt.text, model.id,
 			new ZweigSchrittSequenzView(editor, model.sonstSequenz),
 			caseSequenzenAufbauen(editor, model.caseSequenzen));
@@ -217,15 +217,15 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	@Override
-	public AbstractSchrittModel generiereModel(boolean formatierterText) {
-		CaseSchrittModel model = new CaseSchrittModel();
-		model.id = id;
-		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
-		model.farbe = getBackground().getRGB();
-		model.sonstSequenz = sonstSequenz.generiereZweigSchrittSequenzModel(formatierterText);
+	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
+		CaseSchrittModel_V001 model = new CaseSchrittModel_V001(
+			id,
+			getTextMitAenderungsmarkierungen(formatierterText),
+			getBackground().getRGB(),
+			klappen.isSelected(),
+			sonstSequenz.generiereZweigSchrittSequenzModel(formatierterText),
+			new ArrayList<Float>(spaltenbreitenAnteileBerechnen(spaltenbreitenErmitteln())));
 		caseSequenzen.forEach(sequenz -> model.caseHinzufuegen(sequenz.generiereZweigSchrittSequenzModel(formatierterText)));
-		model.zugeklappt = klappen.isSelected();
-		model.spaltenbreitenAnteile = new ArrayList<Float>(spaltenbreitenAnteileBerechnen(spaltenbreitenErmitteln()));
 		return model;
 	}
 

@@ -4,18 +4,18 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.TextfeldShef;
-import specman.model.Aenderungsmarkierung;
-import specman.model.BreakSchrittModel;
-import specman.model.CaseSchrittModel;
-import specman.model.CatchSchrittModel;
-import specman.model.EinfacherSchrittModel;
-import specman.model.IfElseSchrittModel;
-import specman.model.IfSchrittModel;
-import specman.model.AbstractSchrittModel;
-import specman.model.SubsequenzSchrittModel;
-import specman.model.TextMitAenderungsmarkierungen;
-import specman.model.WhileSchrittModel;
-import specman.model.WhileWhileSchrittModel;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.BreakSchrittModel_V001;
+import specman.model.v001.CaseSchrittModel_V001;
+import specman.model.v001.CatchSchrittModel_V001;
+import specman.model.v001.EinfacherSchrittModel_V001;
+import specman.model.v001.IfElseSchrittModel_V001;
+import specman.model.v001.IfSchrittModel_V001;
+import specman.model.v001.SubsequenzSchrittModel_V001;
+import specman.model.v001.TextMitAenderungsmarkierungen_V001;
+import specman.model.v001.WhileSchrittModel_V001;
+import specman.model.v001.WhileWhileSchrittModel_V001;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -69,15 +69,15 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return text.getText();
 	}
 
-	protected void setAenderungsmarkierungen(List<Aenderungsmarkierung> aenderungen) {
+	protected void setAenderungsmarkierungen(List<Aenderungsmarkierung_V001> aenderungen) {
 		text.setAenderungsmarkierungen(aenderungen);
 	}
 
-	public List<Aenderungsmarkierung> findeAenderungsmarkierungen() {
+	public List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen() {
 		return text.findeAenderungsmarkierungen(false);
 	}
 	
-	protected TextMitAenderungsmarkierungen getTextMitAenderungsmarkierungen(boolean formatierterText) {
+	protected TextMitAenderungsmarkierungen_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
 		return text.getTextMitAenderungsmarkierungen(formatierterText);
 	}
 
@@ -108,34 +108,34 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		text.schrittnummerAnzeigen(sichtbar);
 	}
 
-	abstract public AbstractSchrittModel generiereModel(boolean formatierterText);
+	abstract public AbstractSchrittModel_V001 generiereModel(boolean formatierterText);
 	
-	public static AbstractSchrittView baueSchrittView(EditorI editor, AbstractSchrittModel model) {
-		if (model instanceof WhileWhileSchrittModel) {
-			return new WhileWhileSchrittView(editor, (WhileWhileSchrittModel) model);
+	public static AbstractSchrittView baueSchrittView(EditorI editor, AbstractSchrittModel_V001 model) {
+		if (model instanceof WhileWhileSchrittModel_V001) {
+			return new WhileWhileSchrittView(editor, (WhileWhileSchrittModel_V001) model);
 		}
-		if (model instanceof WhileSchrittModel) {
-			return new WhileSchrittView(editor, (WhileSchrittModel) model);
+		if (model instanceof WhileSchrittModel_V001) {
+			return new WhileSchrittView(editor, (WhileSchrittModel_V001) model);
 		}
-		if (model instanceof IfElseSchrittModel) {
-			return new IfElseSchrittView(editor, (IfElseSchrittModel) model);
+		if (model instanceof IfElseSchrittModel_V001) {
+			return new IfElseSchrittView(editor, (IfElseSchrittModel_V001) model);
 		}
-		if (model instanceof IfSchrittModel) {
-			return new IfSchrittView(editor, (IfSchrittModel) model);
+		if (model instanceof IfSchrittModel_V001) {
+			return new IfSchrittView(editor, (IfSchrittModel_V001) model);
 		}
-		if (model instanceof CaseSchrittModel) {
-			return new CaseSchrittView(editor, (CaseSchrittModel) model);
+		if (model instanceof CaseSchrittModel_V001) {
+			return new CaseSchrittView(editor, (CaseSchrittModel_V001) model);
 		}
-		if (model instanceof SubsequenzSchrittModel) {
-			return new SubsequenzSchrittView(editor, (SubsequenzSchrittModel) model);
+		if (model instanceof SubsequenzSchrittModel_V001) {
+			return new SubsequenzSchrittView(editor, (SubsequenzSchrittModel_V001) model);
 		}
-		if (model instanceof BreakSchrittModel) {
-			return new BreakSchrittView(editor, (BreakSchrittModel) model);
+		if (model instanceof BreakSchrittModel_V001) {
+			return new BreakSchrittView(editor, (BreakSchrittModel_V001) model);
 		}
-		if (model instanceof CatchSchrittModel) {
-			return new CatchSchrittView(editor, (CatchSchrittModel) model);
+		if (model instanceof CatchSchrittModel_V001) {
+			return new CatchSchrittView(editor, (CatchSchrittModel_V001) model);
 		}
-		return new EinfacherSchrittView(editor, (EinfacherSchrittModel)model);
+		return new EinfacherSchrittView(editor, (EinfacherSchrittModel_V001)model);
 	}
 
 	public void geklappt(boolean auf) {}

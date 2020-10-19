@@ -9,8 +9,8 @@ import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.model.AbstractSchrittModel;
-import specman.model.WhileSchrittModel;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.WhileSchrittModel_V001;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +68,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		this(editor, null, einschrittigeInitialsequenz(editor, id.naechsteEbene()), id, false);
 	}
 
-	public SchleifenSchrittView(EditorI editor, WhileSchrittModel model, boolean mitUnteremBalken) {
+	public SchleifenSchrittView(EditorI editor, WhileSchrittModel_V001 model, boolean mitUnteremBalken) {
 		this(editor, model.inhalt.text, new SchrittSequenzView(editor, model.wiederholSequenz), model.id, mitUnteremBalken);
 		setBackground(new Color(model.farbe));
 		balkenbreiteSetzen(model.balkenbreite);
@@ -167,13 +167,14 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	}
 
 	@Override
-	public AbstractSchrittModel generiereModel(boolean formatierterText) {
-		WhileSchrittModel model = new WhileSchrittModel();
-		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
-		model.id = id;
-		model.farbe = getBackground().getRGB();
-		model.wiederholSequenz = wiederholSequenz.generiereSchittSequenzModel(formatierterText);
-		model.zugeklappt = klappen.isSelected();
+	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
+		WhileSchrittModel_V001 model = new WhileSchrittModel_V001(
+			id,
+			getTextMitAenderungsmarkierungen(formatierterText),
+			getBackground().getRGB(),
+			klappen.isSelected(),
+			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
+			0);
 		return model;
 	}
 

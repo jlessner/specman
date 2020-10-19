@@ -2,8 +2,8 @@ package specman.view;
 
 import specman.EditorI;
 import specman.SchrittID;
-import specman.model.AbstractSchrittModel;
-import specman.model.WhileWhileSchrittModel;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.WhileWhileSchrittModel_V001;
 
 /**
  * Spezielle Anzeige einer While-Schleife mit einem abschließenden unteren Balken.
@@ -22,7 +22,7 @@ public class WhileWhileSchrittView extends SchleifenSchrittView {
 		this(editor, initialwrText, einschrittigeInitialsequenz(editor, id.naechsteEbene()), id);
 	}
 
-	public WhileWhileSchrittView(EditorI editor, WhileWhileSchrittModel model) {
+	public WhileWhileSchrittView(EditorI editor, WhileWhileSchrittModel_V001 model) {
 		super(editor, model, true);
 	}
 
@@ -31,14 +31,14 @@ public class WhileWhileSchrittView extends SchleifenSchrittView {
 	}
 	
 	@Override
-	public AbstractSchrittModel generiereModel(boolean formatierterText) {
-		WhileWhileSchrittModel model = new WhileWhileSchrittModel();
-		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
-		model.id = id;
-		model.farbe = getBackground().getRGB();
-		model.wiederholSequenz = wiederholSequenz.generiereSchittSequenzModel(formatierterText);
-		model.zugeklappt = klappen.isSelected();
-		model.balkenbreite = linkerBalken.getWidth();
+	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
+		WhileWhileSchrittModel_V001 model = new WhileWhileSchrittModel_V001(
+			id,
+			getTextMitAenderungsmarkierungen(formatierterText),
+			getBackground().getRGB(),
+			klappen.isSelected(),
+			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
+			linkerBalken.getWidth());
 		return model;
 	}
 

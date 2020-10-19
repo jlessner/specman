@@ -7,8 +7,8 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.TextfeldShef;
-import specman.model.AbstractSchrittModel;
-import specman.model.SchrittSequenzModel;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.SchrittSequenzModel_V001;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -52,13 +52,13 @@ public class SchrittSequenzView {
 		panel.add(catchBereich, CC.xy(1, 2));
 	}
 	
-	public SchrittSequenzView(EditorI editor, SchrittSequenzModel model) {
+	public SchrittSequenzView(EditorI editor, SchrittSequenzModel_V001 model) {
 		this(model.id);
-		for (AbstractSchrittModel schritt : model.schritte) {
+		for (AbstractSchrittModel_V001 schritt : model.schritte) {
 			AbstractSchrittView schrittView = AbstractSchrittView.baueSchrittView(editor, schritt);
 			schrittAnhaengen(schrittView, editor);
 		}
-		for (AbstractSchrittModel catchSchritt : model.catchBloecke) {
+		for (AbstractSchrittModel_V001 catchSchritt : model.catchBloecke) {
 			CatchSchrittView schrittView = (CatchSchrittView) AbstractSchrittView.baueSchrittView(editor, catchSchritt);
 			catchAnhaengen(schrittView, editor);
 		}
@@ -368,22 +368,27 @@ public class SchrittSequenzView {
 		return catchBereich.findeElternSequenz(this, kindSchritt);
 	}
 
-	public SchrittSequenzModel generiereSchittSequenzModel(boolean formatierterText) {
-		SchrittSequenzModel model = newModel();
-		model.id = sequenzBasisId;
-		model.catchBloeckeZugeklappt = catchBereich.klappen.isSelected();
-		model.catchBloeckeUmgehungBreite = catchBereich.umgehungBreite;
+	public SchrittSequenzModel_V001 generiereSchittSequenzModel(boolean formatierterText) {
+		SchrittSequenzModel_V001 model = new SchrittSequenzModel_V001(
+			sequenzBasisId,
+			catchBereich.klappen.isSelected(),
+			catchBereich.umgehungBreite
+		);
+		populateModel(model, formatierterText);
+		return model;
+	}
+
+	protected void populateModel(SchrittSequenzModel_V001 model, boolean formatierterText) {
 		for (AbstractSchrittView view : schritte) {
 			model.schritte.add(view.generiereModel(formatierterText));
 		}
 		for (CatchSchrittView view : catchBereich.catchBloecke) {
 			model.catchBloecke.add(view.generiereModel(formatierterText));
 		}
-		return model;
 	}
 
-	protected SchrittSequenzModel newModel() {
-		return new SchrittSequenzModel();
+	protected SchrittSequenzModel_V001 newModel() {
+		return new SchrittSequenzModel_V001();
 	}
 	
 	public boolean enthaeltAenderungsmarkierungen() {

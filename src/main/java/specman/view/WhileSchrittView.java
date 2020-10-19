@@ -2,8 +2,8 @@ package specman.view;
 
 import specman.EditorI;
 import specman.SchrittID;
-import specman.model.AbstractSchrittModel;
-import specman.model.WhileSchrittModel;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.WhileSchrittModel_V001;
 
 public class WhileSchrittView extends SchleifenSchrittView {
 	
@@ -15,7 +15,7 @@ public class WhileSchrittView extends SchleifenSchrittView {
 		this(editor, initialerText, einschrittigeInitialsequenz(editor, id.naechsteEbene()), id);
 	}
 
-	public WhileSchrittView(EditorI editor, WhileSchrittModel model) {
+	public WhileSchrittView(EditorI editor, WhileSchrittModel_V001 model) {
 		super(editor, model, false);
 	}
 
@@ -24,14 +24,14 @@ public class WhileSchrittView extends SchleifenSchrittView {
 	}
 	
 	@Override
-	public AbstractSchrittModel generiereModel(boolean formatierterText) {
-		WhileSchrittModel model = new WhileSchrittModel();
-		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
-		model.id = id;
-		model.farbe = getBackground().getRGB();
-		model.wiederholSequenz = wiederholSequenz.generiereSchittSequenzModel(formatierterText);
-		model.zugeklappt = klappen.isSelected();
-		model.balkenbreite = linkerBalken.getWidth();
+	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
+		WhileSchrittModel_V001 model = new WhileSchrittModel_V001(
+			id,
+			getTextMitAenderungsmarkierungen(formatierterText),
+			getBackground().getRGB(),
+			klappen.isSelected(),
+			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
+			linkerBalken.getWidth());
 		return model;
 	}
 

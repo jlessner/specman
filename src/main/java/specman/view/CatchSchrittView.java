@@ -7,9 +7,9 @@ import com.jgoodies.forms.layout.RowSpec;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.model.CatchSchrittModel;
-import specman.model.AbstractSchrittModel;
-import specman.model.SchrittSequenzModel;
+import specman.model.v001.CatchSchrittModel_V001;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.SchrittSequenzModel_V001;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -32,7 +32,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	KlappButton klappen;
 	boolean breakAngekoppelt;
 
-	public CatchSchrittView(EditorI editor, String initialerText, SchrittID id, SchrittSequenzModel handlingModel) {
+	public CatchSchrittView(EditorI editor, String initialerText, SchrittID id, SchrittSequenzModel_V001 handlingModel) {
 		super(editor, initialerText, id);
 		schrittPanel = new JPanel();
 		schrittPanel.setBackground(Color.black);
@@ -112,7 +112,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 			handlingSequenz.rahmenanzeigeAnpassen();
 	}
 
-	public CatchSchrittView(EditorI editor, CatchSchrittModel model) {
+	public CatchSchrittView(EditorI editor, CatchSchrittModel_V001 model) {
 		this(editor, model.inhalt.text, model.id, model.handlingSequenz);
 		setBackground(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
@@ -239,14 +239,14 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public AbstractSchrittModel generiereModel(boolean formatierterText) {
-		CatchSchrittModel model = new CatchSchrittModel();
-		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
-		model.id = id;
-		model.farbe = getBackground().getRGB();
-		model.handlingSequenz = handlingSequenz.generiereSchittSequenzModel(formatierterText);
-		model.zugeklappt = klappen.isSelected();
-		model.breakAngekoppelt = breakAngekoppelt;
+	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
+		CatchSchrittModel_V001 model = new CatchSchrittModel_V001(
+			id,
+			getTextMitAenderungsmarkierungen(formatierterText),
+			getBackground().getRGB(),
+			klappen.isSelected(),
+			handlingSequenz.generiereSchittSequenzModel(formatierterText),
+			breakAngekoppelt);
 		return model;
 	}
 
@@ -259,7 +259,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 		
 		public HandlingSchrittSequenz() { super(); }
 
-		public HandlingSchrittSequenz(EditorI editor, SchrittSequenzModel model) {
+		public HandlingSchrittSequenz(EditorI editor, SchrittSequenzModel_V001 model) {
 			super(editor, model);
 		}
 

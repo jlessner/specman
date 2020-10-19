@@ -1,12 +1,7 @@
 package specman;
 
 import org.apache.commons.lang.StringUtils;
-import specman.model.IfElseSchrittModel;
-import specman.model.IfSchrittModel;
-import specman.model.AbstractSchrittModel;
-import specman.model.SchrittSequenzModel;
-import specman.model.SubsequenzSchrittModel;
-import specman.model.WhileSchrittModel;
+import specman.model.v001.*;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -21,7 +16,7 @@ public class GraphvizExporter {
 		out = new PrintStream(exportDateiname);
 	}
 
-	public void export(SchrittSequenzModel model) throws IOException {
+	public void export(SchrittSequenzModel_V001 model) throws IOException {
 		out.println(
 				"digraph G {\n" +
 				"  graph [fontname = \"Helvetica-Oblique\", fontsize = 10];\n" +
@@ -57,15 +52,15 @@ public class GraphvizExporter {
 		return (s.length() == 1) ? "" : s.substring(0, s.length()-1) + "]";
 	}
 
-	private List<Haken> sequenzExportieren(SchrittSequenzModel sequenz, Haken obererAnschluss) throws IOException {
+	private List<Haken> sequenzExportieren(SchrittSequenzModel_V001 sequenz, Haken obererAnschluss) throws IOException {
 		return sequenzExportieren(sequenz, hakenliste(obererAnschluss));
 	}
 	
-	private List<Haken> sequenzExportieren(SchrittSequenzModel sequenz, List<Haken> obereAnschluesse) throws IOException {
-		for (AbstractSchrittModel schritt: sequenz.schritte) {
+	private List<Haken> sequenzExportieren(SchrittSequenzModel_V001 sequenz, List<Haken> obereAnschluesse) throws IOException {
+		for (AbstractSchrittModel_V001 schritt: sequenz.schritte) {
 			String schrittExportName = "schritt_" + schritt.id.toString().replace(".", "_");
-			if (schritt instanceof WhileSchrittModel) {
-				WhileSchrittModel whileSchritt = (WhileSchrittModel)schritt;
+			if (schritt instanceof WhileSchrittModel_V001) {
+				WhileSchrittModel_V001 whileSchritt = (WhileSchrittModel_V001)schritt;
 				Haken whileBeginnAnschluss = new Haken(schrittExportName + "_begin");
 				Haken whileEndAnschluss = new Haken(schrittExportName + "_end");
 				out.println(
@@ -80,9 +75,9 @@ public class GraphvizExporter {
 				verbinden(obereAnschluesse, whileBeginnAnschluss);
 				obereAnschluesse = hakenliste(whileEndAnschluss);
 			}
-			if (schritt instanceof SubsequenzSchrittModel) {
+			if (schritt instanceof SubsequenzSchrittModel_V001) {
 				// Machen wir grafisch erst mal genau wie einen While-Schritt
-				SubsequenzSchrittModel subsequenzSchritt = (SubsequenzSchrittModel)schritt;
+				SubsequenzSchrittModel_V001 subsequenzSchritt = (SubsequenzSchrittModel_V001)schritt;
 				Haken subBeginnAnschluss = new Haken(schrittExportName + "_begin");
 				Haken subEndAnschluss = new Haken(schrittExportName + "_end");
 				out.println(
@@ -97,8 +92,8 @@ public class GraphvizExporter {
 				verbinden(obereAnschluesse, subBeginnAnschluss);
 				obereAnschluesse = hakenliste(subEndAnschluss);
 			}
-			else if (schritt instanceof IfElseSchrittModel) {
-				IfElseSchrittModel ifSchritt = (IfElseSchrittModel)schritt;
+			else if (schritt instanceof IfElseSchrittModel_V001) {
+				IfElseSchrittModel_V001 ifSchritt = (IfElseSchrittModel_V001)schritt;
 				out.println(
 						schrittExportName + "[label=\"" + textFuerBedingungAufbereiten(schritt) + "\"\n" +
 						"shape = diamond; style=filled; fillcolor=gray94; fixedsize=shape; height=0.3; width=0.3 ]");
@@ -111,8 +106,8 @@ public class GraphvizExporter {
 				gewichtUebernehmen(elseHaken, letzteUnterschritteElseSequenz);
 				obereAnschluesse = hakenliste(letzteUnterschritteIfSequenz, letzteUnterschritteElseSequenz);
 			}
-			else if (schritt instanceof IfSchrittModel) {
-				IfSchrittModel ifSchritt = (IfSchrittModel)schritt;
+			else if (schritt instanceof IfSchrittModel_V001) {
+				IfSchrittModel_V001 ifSchritt = (IfSchrittModel_V001)schritt;
 				out.println(
 						schrittExportName + "[label=\"" + textFuerBedingungAufbereiten(schritt) + "\"\n" +
 						"shape = diamond; style=filled; fillcolor=gray94; fixedsize=shape; height=0.3; width=0.3 ]");
@@ -154,11 +149,11 @@ public class GraphvizExporter {
 		return liste;
 	}
 
-	private String textFuerAktivitaetsboxAufbereiten(AbstractSchrittModel schritt ) {
+	private String textFuerAktivitaetsboxAufbereiten(AbstractSchrittModel_V001 schritt ) {
 		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.text, "");
 	}
 
-	private String textFuerBedingungAufbereiten(AbstractSchrittModel schritt) {
+	private String textFuerBedingungAufbereiten(AbstractSchrittModel_V001 schritt) {
 		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.text, "\t\t\t\t\t\t");
 	}
 

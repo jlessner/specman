@@ -35,12 +35,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.cedarsoftware</groupId>
-            <artifactId>json-io</artifactId>
-            <version>4.12.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.9.9</version>
@@ -76,7 +70,13 @@
 	        <version>5.4.0</version>
 	        <scope>test</scope>
 	    </dependency>
-	    
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>1.4.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

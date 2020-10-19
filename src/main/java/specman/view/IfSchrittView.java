@@ -6,8 +6,8 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.TextfeldShef;
-import specman.model.IfSchrittModel;
-import specman.model.AbstractSchrittModel;
+import specman.model.v001.IfSchrittModel_V001;
+import specman.model.v001.AbstractSchrittModel_V001;
 
 import java.awt.*;
 
@@ -39,7 +39,7 @@ public class IfSchrittView extends IfElseSchrittView {
 			new ZweigSchrittSequenzView(editor, id.naechsteEbene(), TextfeldShef.right("Ja")));
 	}
 	
-	public IfSchrittView(EditorI editor, IfSchrittModel model) {
+	public IfSchrittView(EditorI editor, IfSchrittModel_V001 model) {
 		this(editor, model.inhalt.text, model.id,
 			new ZweigSchrittSequenzView(editor, new SchrittID(), ""),
 			new ZweigSchrittSequenzView(editor, model.ifSequenz));
@@ -97,14 +97,14 @@ public class IfSchrittView extends IfElseSchrittView {
 	}
 
 	@Override
-	public AbstractSchrittModel generiereModel(boolean formatierterText) {
-		IfSchrittModel model = new IfSchrittModel();
-		model.id = id;
-		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
-		model.farbe = getBackground().getRGB();
-		model.ifSequenz = elseSequenz.generiereZweigSchrittSequenzModel(formatierterText);
-		model.leerBreite = ifSequenz.ueberschrift.getWidth();
-		model.zugeklappt = klappen.isSelected();
+	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
+		IfSchrittModel_V001 model = new IfSchrittModel_V001(
+			id,
+			getTextMitAenderungsmarkierungen(formatierterText),
+			getBackground().getRGB(),
+			klappen.isSelected(),
+			elseSequenz.generiereZweigSchrittSequenzModel(formatierterText),
+			ifSequenz.ueberschrift.getWidth());
 		return model;
 	}
 	

@@ -1,13 +1,14 @@
 package specman;
 
-import com.cedarsoftware.util.io.JsonReader;
-import com.cedarsoftware.util.io.JsonWriter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
-import specman.model.SchrittSequenzModel;
-import specman.model.StruktogrammModel;
+import specman.model.ModelEnvelope;
+import specman.model.v001.SchrittSequenzModel_V001;
+import specman.model.v001.StruktogrammModel_V001;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
@@ -49,6 +50,7 @@ import java.util.Map;
  * @author User #3
  */
 public class Specman extends JFrame implements EditorI, SpaltenContainerI {
+	public static final String SPECMAN_VERSION = "0.0.1";
 	private static final String PROJEKTDATEI_EXTENSION = ".nsd";
 	private static final BasicStroke GESTRICHELTE_LINIE =
 			new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 1.0f, new float[] {10.0f, 10.0f }, 0f);
@@ -492,17 +494,33 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 				setDiagrammDatei(new File(ausgewaehlterDateiname));
 			}
-			StruktogrammModel model = generiereStruktogrammModel(true);
-			FileOutputStream ausgabedatei = new FileOutputStream(diagrammDatei);
-			JsonWriter writer = new JsonWriter(ausgabedatei, jsonioConfig());
-			writer.write(model);
-			writer.close();
-			undoManager.discardAllEdits(); // Kann man sich dr�ber streiten ;-)
-		} catch (FileNotFoundException e) {
+			StruktogrammModel_V001 model = generiereStruktogrammModel(true);
+			ModelEnvelope wrappedModel = wrapModel(model);
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.enableDefaultTyping();
+			byte[] json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(wrappedModel);
+			FileOutputStream fos = new FileOutputStream(diagrammDatei);
+			fos.write(json);
+			fos.close();
+
+			undoManager.discardAllEdits(); // Kann man sich drüber streiten ;-)
+
+		} catch (JsonProcessingException jpx) {
+			jpx.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	private ModelEnvelope wrapModel(StruktogrammModel_V001 model) {
+		ModelEnvelope envelope = new ModelEnvelope();
+		envelope.model = model;
+		envelope.modelType = model.getClass().getName();
+		envelope.specmanVersion = SPECMAN_VERSION;
+		return envelope;
+	}
+
 	private void diagrammLaden() {
 		try {
 			File verzeichnis = (diagrammDatei != null) ? diagrammDatei.getParentFile() : null;
@@ -511,9 +529,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 				postInitSchritte = new ArrayList<AbstractSchrittView>();
 				setDiagrammDatei(fileChooser.getSelectedFile());
-				FileInputStream eingabedatei = new FileInputStream(diagrammDatei);
-				StruktogrammModel model = (StruktogrammModel) JsonReader.jsonToJava(eingabedatei, jsonioConfig());
-				eingabedatei.close();
+
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.enableDefaultTyping();
+				ModelEnvelope envelope = objectMapper.readValue(diagrammDatei, ModelEnvelope.class);
+				StruktogrammModel_V001 model = (StruktogrammModel_V001)envelope.model;
+
 				zoomFaktor = model.zoomFaktor;
 				zoomFaktorAnzeigeAktualisieren(zoomFaktor);
 				diagrammbreite = model.breite;
@@ -539,12 +560,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		for (AbstractSchrittView schritt: postInitSchritte) {
 			schritt.nachinitialisieren();
 		}
-	}
-
-	private Map<String, Object> jsonioConfig() {
-		Map<String, Object> jsonioConfig = new HashMap<String, Object>();
-		jsonioConfig.put(JsonWriter.PRETTY_PRINT, "true");
-		return jsonioConfig;
 	}
 
 	private void diagrammbreiteSetzen(int breite) {
@@ -716,19 +731,19 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		instance = new Specman();
 	}
 
-	public StruktogrammModel generiereStruktogrammModel(boolean formatierterText) {
-		StruktogrammModel model = new StruktogrammModel();
-		model.name = getName();
-		model.zoomFaktor = zoomFaktor;
-		model.breite = diagrammbreite;
-		model.intro = intro.getText();
-		model.outro = outro.getText();
-		model.hauptSequenz = hauptSequenz.generiereSchittSequenzModel(formatierterText);
+	public StruktogrammModel_V001 generiereStruktogrammModel(boolean formatierterText) {
+		StruktogrammModel_V001 model = new StruktogrammModel_V001(
+			getName(),
+			diagrammbreite,
+			zoomFaktor,
+			hauptSequenz.generiereSchittSequenzModel(formatierterText),
+			intro.getText(),
+			outro.getText());
 		return model;
 	}
 	
 	public void diagrammExportieren() {
-		SchrittSequenzModel model = hauptSequenz.generiereSchittSequenzModel(false);
+		SchrittSequenzModel_V001 model = hauptSequenz.generiereSchittSequenzModel(false);
 		try {
 			new GraphvizExporter("export.gv").export(model);
 		}

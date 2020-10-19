@@ -2,8 +2,7 @@ package specman.view;
 
 import specman.EditorI;
 import specman.SchrittID;
-import specman.model.AbstractSchrittModel;
-import specman.model.EinfacherSchrittModel;
+import specman.model.v001.EinfacherSchrittModel_V001;
 
 import java.awt.*;
 
@@ -17,7 +16,7 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 		super(editor, initialerText, id);
 	}
 	
-	public EinfacherSchrittView(EditorI editor, EinfacherSchrittModel model) {
+	public EinfacherSchrittView(EditorI editor, EinfacherSchrittModel_V001 model) {
 		this(editor, model.inhalt.text, model.id);
 		setBackground(new Color(model.farbe));
 	}
@@ -28,11 +27,12 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public EinfacherSchrittModel generiereModel(boolean formatierterText) {
-		EinfacherSchrittModel model = new EinfacherSchrittModel();
-		model.inhalt = getTextMitAenderungsmarkierungen(formatierterText);
-		model.id = id;
-		model.farbe = getBackground().getRGB();
+	public EinfacherSchrittModel_V001 generiereModel(boolean formatierterText) {
+		EinfacherSchrittModel_V001 model = new EinfacherSchrittModel_V001(
+			id,
+			getTextMitAenderungsmarkierungen(formatierterText),
+			getBackground().getRGB()
+		);
 		return model;
 	}
 

@@ -7,16 +7,14 @@ import java.util.List;
  * Die ID eines Schrittes ist aus mehreren laufenden Nummern aufgebaut, die der üblichen Notation wie 1.19.7 entsprechen
  */
 public class SchrittID {
-	List<Integer> nummern = new ArrayList<Integer>();
+	public final List<Integer> nummern = new ArrayList<Integer>();
+
+	public SchrittID() {} // For Jackson only
 
 	public SchrittID(Integer... nummern) {
 		for (int nummer: nummern) {
 			this.nummern.add(nummer);
 		}
-	}
-	
-	public SchrittID(List<Integer> nummern) {
-		this.nummern = nummern;
 	}
 	
 	@Override

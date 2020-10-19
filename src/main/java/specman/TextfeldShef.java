@@ -1,7 +1,7 @@
 package specman;
 
-import specman.model.Aenderungsmarkierung;
-import specman.model.TextMitAenderungsmarkierungen;
+import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -119,13 +119,13 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
 		}
 	}
 
-	public void setText(TextMitAenderungsmarkierungen inhalt) {
+	public void setText(TextMitAenderungsmarkierungen_V001 inhalt) {
 		setPlainText(inhalt.text);
 		setAenderungsmarkierungen(inhalt.aenderungen);
 	}
 
-	public TextMitAenderungsmarkierungen getTextMitAenderungsmarkierungen(boolean formatierterText) {
-		TextMitAenderungsmarkierungen ergebnis = new TextMitAenderungsmarkierungen();
+	public TextMitAenderungsmarkierungen_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
+		TextMitAenderungsmarkierungen_V001 ergebnis = new TextMitAenderungsmarkierungen_V001();
 		if (formatierterText) {
 			// Wenn wir die Zeilenumbr�che nicht rausnehmen, dann entstehen sp�ter beim Laden u.U.
 			// Leerzeichen an Zeilenenden, die im urspr�nglichen Text nicht drin waren. Das ist doof,
@@ -175,8 +175,8 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
 			schrittNummer.repaint();
 	}
 	
-	public List<Aenderungsmarkierung> findeAenderungsmarkierungen(boolean nurErste) {
-		List<Aenderungsmarkierung> ergebnis = new ArrayList<Aenderungsmarkierung>();
+	public List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen(boolean nurErste) {
+		List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<Aenderungsmarkierung_V001>();
 		StyledDocument doc = (StyledDocument)getDocument();
 		for (Element e: doc.getRootElements()) {
 			findeAenderungsmarkierungen(e, ergebnis, nurErste);
@@ -186,9 +186,9 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
 		return ergebnis;
 	}
 
-	private void findeAenderungsmarkierungen(Element e, List<Aenderungsmarkierung> ergebnis, boolean nurErste) {
+	private void findeAenderungsmarkierungen(Element e, List<Aenderungsmarkierung_V001> ergebnis, boolean nurErste) {
 		if (elementHatAenderungshintergrund(e)) {
-			ergebnis.add(new Aenderungsmarkierung(e.getStartOffset(), e.getEndOffset()));
+			ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset(), e.getEndOffset()));
 			if (ergebnis.size() > 0 && nurErste)
 				return;
 		}
@@ -207,7 +207,7 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
 		return (backgroundColorValue != null && backgroundColorValue.toString().equals(INDIKATOR_GELB));
 	}
 
-	public void setAenderungsmarkierungen(List<Aenderungsmarkierung> aenderungen) {
+	public void setAenderungsmarkierungen(List<Aenderungsmarkierung_V001> aenderungen) {
 		//TODO JL: Brauchen wir aktuell nicht mehr. Das war n�tig, weil die Hintergrundfarbe nicht
 		// im abgespeicherten HTML erhalten blieb. Das ist jetzt dank des Tricks aus
 		// https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
