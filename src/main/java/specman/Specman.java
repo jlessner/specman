@@ -720,7 +720,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 	
 	private static Specman instance;
-	
+
+	@Deprecated
+	/** Use the {@link EditorI} interface instead. */
 	public static Specman instance() { return instance; }
 	
 	public boolean aenderungenVerfolgen() {
