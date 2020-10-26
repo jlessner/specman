@@ -1,0 +1,460 @@
+{
+  "specmanVersion" : "0.0.1",
+  "modelType" : "specman.model.v001.StruktogrammModel_V001",
+  "model" : {
+    "name" : "frame0",
+    "breite" : 715,
+    "zoomFaktor" : 120,
+    "hauptSequenz" : {
+      "id" : {
+        "nummern" : [ "java.util.ArrayList", [ 0 ] ]
+      },
+      "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.SubsequenzSchrittModel_V001", {
+        "id" : {
+          "nummern" : [ "java.util.ArrayList", [ 1 ] ]
+        },
+        "inhalt" : {
+          "text" : "<html>  <head>      </head>  <body>    <h2>      <b><font size=\"5\">Versionsverwaltungsmaske anzeigen</font></b>    </h2>  </body></html>",
+          "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        },
+        "farbe" : -986896,
+        "zugeklappt" : false,
+        "subsequenz" : {
+          "id" : {
+            "nummern" : [ "java.util.ArrayList", [ 1, 0 ] ]
+          },
+          "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 1, 1 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Der USER w&#228;hlt im Men&#252; Allgemein &#61664; Global Format Administration den     Men&#252;punkt <b>Local GAAP Versionsmanagement</b> aus. Der Men&#252;punkt ist     nur sichtbar, wenn der USER das Recht ViewIDA innehat.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 1, 2 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System zeigt die Maske zur Verwaltung von Versionssichtbarkeiten an     (siehe Screenshot unten).Hat ein anderer Benutzer die Maske bereits     ge&#246;ffnet, fragt das System zun&#228;chst, ob es die Maske nur im Lesemodus     &#246;ffnen soll.Das Auswahlfeld <b>Erfassungschema</b> listet alle     Erfassungsschemata mit ausw&#228;hlbaren Versionen in absteigender     alphabetischer Reihenfolge auf. Initial ist das erste Erfassungsschema     ausgew&#228;hlt.    <div>      Die Buttons und Eingabefelder sind genau bei folgenden Bedingungen aktiv       und werden nach jeder Interaktion aktualisiert:    </div>    <div>      <table border=\"1\" width=\"100%\">        <tr>          <td>            <b>Button / Feld</b>          </td>          <td>            <b>Bedingung</b>          </td>        </tr>        <tr>          <td>            Sichtbar ab/bis letzte &#196;nderung in Versionstabelle          </td>          <td>            <ul>              <li>                Es liegen keine oder beide Freigaben vor (beide hei&#223;t:                 abgeschlossener, fr&#252;herer Freigabeprozess) und              </li>              <li>                Der USER hat das Recht EditIDA inne und              </li>              <li>                Die Maske wurde im Schreibmodus ge&#246;ffnet              </li>            </ul>          </td>        </tr>        <tr>          <td>                      </td>          <td>                      </td>        </tr>        <tr>          <td>                      </td>          <td>                      </td>        </tr>        <tr>          <td>                      </td>          <td>                      </td>        </tr>        <tr>          <td>                      </td>          <td>                      </td>        </tr>        <tr>          <td>                      </td>          <td>                      </td>        </tr>        <tr>          <td>                      </td>          <td>                      </td>        </tr>      </table>    </div>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ] ] ],
+          "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+          "catchBloeckeZugeklappt" : false,
+          "catchBloeckeUmgehungBreite" : 73
+        }
+      } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
+        "id" : {
+          "nummern" : [ "java.util.ArrayList", [ 2 ] ]
+        },
+        "inhalt" : {
+          "text" : "<html>  <head>      </head>  <body>    <h2>      <b><font size=\"5\">Ggf. Versionen anzeigen</font></b>    </h2>  </body></html>",
+          "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        },
+        "farbe" : -986896,
+        "zugeklappt" : false,
+        "subsequenz" : {
+          "id" : {
+            "nummern" : [ "java.util.ArrayList", [ 2, 0 ] ]
+          },
+          "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 2, 1 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER die f&#252;r ein Erfassungsschema verf&#252;gbaren IDA-Versionen     sehen, w&#228;hlt er das entsprechende Schema im Auswahlfeld <b>Erfassungschema</b>     aus.<i>Bedingungen, unter denen das Auswahlfeld aktiv ist, siehe Schritt     1.1</i>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 2, 2 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System listet alle IDA-Versionen auf, die mit der Schemagruppe des     ausgew&#228;hlten Erfassungsschemas verkn&#252;pft sind. Liegt f&#252;r eine Version     bereits eine Versionssichtbarkeit im ausgew&#228;hlten Erfassungsschema vor,     zeigt das System in den entsprechenden Spalten der Tabelle den     Sichtbarkeitszeitraum und die letzte &#196;nderung des Zeitraums an. Wo diese     Datumsbereiche abweichen, ist die Zeile mit einem &#8222;X&#8220; in der Spalte <b>zur     Freigabe</b> markiert. Daran ist f&#252;r den USER erkennbar, dass die letzten     &#196;nderungen noch nicht freigegeben sind.Die Tabelle ist absteigend nach <i>g&#252;ltig     ab</i> der IDA-Versionen sortiert.<i>Designanmerkung: man kann technisch     auch nach versionKey sortieren, wenn das einfacher ist. Das ergibt     dieselbe Reihenfolge.</i>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 2, 3 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Liegen f&#252;r das Erfassungsschema Freigaben f&#252;r Versionssichtbarkeiten vor,     zeigt das System USER und Zeitpunkte in den entsprechenden Feldern im     Bereich <b>Freigabe</b> an.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ] ] ],
+          "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+          "catchBloeckeZugeklappt" : false,
+          "catchBloeckeUmgehungBreite" : 51
+        }
+      } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
+        "id" : {
+          "nummern" : [ "java.util.ArrayList", [ 3 ] ]
+        },
+        "inhalt" : {
+          "text" : "<html>  <head>      </head>  <body>    <h2>      <b><font size=\"5\">Ggf. &#196;nderungen speichern</font></b>    </h2>  </body></html>",
+          "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        },
+        "farbe" : -986896,
+        "zugeklappt" : false,
+        "subsequenz" : {
+          "id" : {
+            "nummern" : [ "java.util.ArrayList", [ 3, 0 ] ]
+          },
+          "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 3, 1 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Ggf. &#196;nderungen speichern  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 3, 2 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Weichen die Angaben in den Spalten <b>sichtbar ab/bis letzte &#196;nderung</b>     jetzt von den Daten in den Spalten <b>sichtbar ab/bis</b> ab, setzt das     System eine Markierung in die Spalte <b>zur Freigabe</b>. Andernfalls     entfernt es eine ggf. vorhandene Markierung.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 3, 3 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Der USER dr&#252;ckt Speichern.Bedingungen, unter denen der Button <b>Speichern</b>     aktiv ist, siehe Schritt 1.1  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 3, 4 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    <div>      Das System stellt sicher, dass    </div>    <ul>      <li>        In jeder Zeile entweder sowohl <b>sichtbar ab letzte &#196;nderung</b>         als auch <b>sichtbar bis letzte &#196;nderung</b> angegeben sind oder         beide Felder leer sind un      </li>      <li>        Dass alle Eingaben g&#252;ltige Datumswerte darstellen un      </li>      <li>        Dass kein <b>sichtbar ab letzte &#196;nderung</b> gr&#246;&#223;er ist als das         jeweils zugeh&#246;rige <b>sichtbar bis letzte &#196;nderung</b>      </li>    </ul>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.BreakSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 3, 5 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    <b>Exception: Felder nicht korrekt gef&#252;llt</b>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 3, 6 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System speichert die &#196;nderungen und legt dabei ggf. neue     Versionssichtbarkeiten an oder l&#246;scht vorhandene nach folgenden Kriterien     pro Zeile der Versionstabelle:    <ul>      <li>        <b>sichtbar ab/bis</b> und <b>sichtbar ab/bis letzte &#196;nderung</b>         vorhanden und ungleich<br>&#61664; Update      </li>      <li>        <b>sichtbar ab/bis</b> und <b>sichtbar ab/bis letzte &#196;nderung</b>         vorhanden und identisch<br>&#61664; Keine Aktion      </li>      <li>        <b>sichtbar ab/bis</b> vorhanden, <b>sichtbar ab/bis letzte &#196;nderung</b>         leer<br>&#61664; L&#246;schung      </li>      <li>        <b>sichtbar ab/bis</b> leer, <b>sichtbar ab/bis letzte &#196;nderung</b>         vorhanden<br>&#61664; Neuanlage      </li>    </ul>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 3, 7 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Hat sich in Schritt 3.6 mindestens eine &#196;nderung ergeben, vermerkt das     System die Aktion &#8220;Speichern&#8221; mit einem Logeintrag im &#196;nderungsprotokoll  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 3, 8 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Liegen aus einem fr&#252;heren Freigabeprozess noch Freigaben vor, l&#246;scht das     System diese und legt ein Backup f&#252;r eine etwaige sp&#228;tere     Wiederherstellung an (siehe Schritt ).<i>Hinweis: l&#228;ge nur eine 1.     Freigabe aus einem laufenden Freigabeprozess vor, w&#228;ren Eingaben und     Speichern gar nicht m&#246;glich gewesen. Siehe Schritt 1.1</i>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ] ] ],
+          "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+          "catchBloeckeZugeklappt" : false,
+          "catchBloeckeUmgehungBreite" : 51
+        }
+      } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
+        "id" : {
+          "nummern" : [ "java.util.ArrayList", [ 4 ] ]
+        },
+        "inhalt" : {
+          "text" : "<html>  <head>      </head>  <body>    <h2>      <b><font size=\"5\">Ggf. &#196;nderungen verwerfen</font></b>    </h2>  </body></html>",
+          "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        },
+        "farbe" : -986896,
+        "zugeklappt" : false,
+        "subsequenz" : {
+          "id" : {
+            "nummern" : [ "java.util.ArrayList", [ 4, 0 ] ]
+          },
+          "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 4, 1 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Hat der USER &#196;nderungen der Sichtbarkeitszeitr&#228;ume vorgenommen, die er     nicht speichern m&#246;chte, dr&#252;ckt er den Button <b>Verwerfen</b>.<i>Bedingungen,     unter denen der Button <b>Verwerfen</b> aktiv ist, siehe Schritt 1.1</i>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 4, 2 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System stellt in der Tabelle wieder den Zustand vor den &#196;nderungen her.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ] ] ],
+          "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+          "catchBloeckeZugeklappt" : false,
+          "catchBloeckeUmgehungBreite" : 51
+        }
+      } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
+        "id" : {
+          "nummern" : [ "java.util.ArrayList", [ 5 ] ]
+        },
+        "inhalt" : {
+          "text" : "<html>  <head>      </head>  <body>    <h2>      <b><font size=\"5\">Ggf. 1. Freigabe erteilen</font></b>    </h2>  </body></html>",
+          "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        },
+        "farbe" : -986896,
+        "zugeklappt" : false,
+        "subsequenz" : {
+          "id" : {
+            "nummern" : [ "java.util.ArrayList", [ 5, 0 ] ]
+          },
+          "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 5, 1 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER f&#252;r gespeicherte &#196;nderungen der Sichtbarkeitszeitr&#228;ume     einen Freigabeprozess initiieren, dr&#252;ckt er den Button <b>Freigeben</b>     f&#252;r die 1. Freigabe.<i>Bedingungen, unter denen der Button <b>Freigeben</b>     aktiv ist, siehe Schritt 1.1. &#220;berblick Freigabeprozess siehe     Gesch&#228;ftsregeln.</i>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 5, 2 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Liegen noch ungespeicherte &#196;nderungen in der Versionstabelle vor, f&#252;hrt     das System zun&#228;chst Essenzschritt 3 aus.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 5, 3 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System vermerkt den aktuell angemeldeten USER und den aktuellen     Zeitpunkt in der 1. Freigabe und aktualisiert die entsprechenden Felder im     Bereich <b>Freigabe</b>.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 5, 4 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System vermerkt die Aktion &#8220;1. Freigabe&#8221; mit einem Logeintrag im     &#196;nderungsprotokoll  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ] ] ],
+          "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+          "catchBloeckeZugeklappt" : false,
+          "catchBloeckeUmgehungBreite" : 51
+        }
+      } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
+        "id" : {
+          "nummern" : [ "java.util.ArrayList", [ 6 ] ]
+        },
+        "inhalt" : {
+          "text" : "<html>  <head>      </head>  <body>    <h2>      <b><font size=\"5\">Ggf. 2. Freigabe erteilen</font></b>    </h2>  </body></html>",
+          "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        },
+        "farbe" : -986896,
+        "zugeklappt" : false,
+        "subsequenz" : {
+          "id" : {
+            "nummern" : [ "java.util.ArrayList", [ 6, 0 ] ]
+          },
+          "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 6, 1 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER einen laufenden Freigabeprozess abschlie&#223;en, dr&#252;ckt er den     Button <b>Freigeben</b> f&#252;r die 2. Freigabe.<i>Bedingungen, unter     denen der Button <b>Freigeben</b> aktiv ist, siehe Schritt 1.1. &#220;berblick     Freigabeprozess siehe Gesch&#228;ftsregeln.</i>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 6, 2 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System vermerkt den aktuell angemeldeten USER und den aktuellen     Zeitpunkt in der 2. Freigabe und aktualisiert die entsprechenden Felder im     Bereich <b>Freigabe</b>.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 6, 3 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System &#252;bernimmt alle <b>sichtbar ab/bis letzte &#196;nderung</b>     nach <b>sichtbar ab/bis</b>.<i>Hinweis: obwohl der Freigabeprozess damit     abgeschlossen ist, bleiben 1. und 2. Freigabe zu Informationenzwecken bis     zur n&#228;chsten &#196;nderung von Sichtbarkeiten erhalten (siehe Schritt 3.5). <b>Sichtbar     ab/bis letzte &#196;nderung</b> bleiben ebenfalls erhalten, um daran     sp&#228;ter L&#246;schungen erkennen zu k&#246;nnen (siehe Schritt 3.4).</i>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 6, 4 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System entfernt alle Markierungen in der Spalte zur Freigabe  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 6, 5 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Liegt ein Backup &#228;lterer Freigaben vor, l&#246;scht das System dieses.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 6, 6 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System vermerkt die Aktion &#8220;2. Freigabe&#8221; mit einem Logeintrag im     &#196;nderungsprotokoll  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ] ] ],
+          "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+          "catchBloeckeZugeklappt" : false,
+          "catchBloeckeUmgehungBreite" : 51
+        }
+      } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
+        "id" : {
+          "nummern" : [ "java.util.ArrayList", [ 7 ] ]
+        },
+        "inhalt" : {
+          "text" : "<html>  <head>      </head>  <body>    <h2>      Ggf. Freigabe zur&#252;cksetzen    </h2>  </body></html>",
+          "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        },
+        "farbe" : -986896,
+        "zugeklappt" : false,
+        "subsequenz" : {
+          "id" : {
+            "nummern" : [ "java.util.ArrayList", [ 7, 0 ] ]
+          },
+          "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 7, 1 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER einen laufenden Freigabeprozess abbrechen, dr&#252;ckt er den     Button <b>Freigabe zur&#252;cksetzen</b>.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 7, 2 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System l&#246;scht die 1. Freigabe  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 7, 3 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System &#252;bernimmt alle <b>sichtbar ab/bis</b> nach <b>sichtbar     ab/bis letzte &#196;nderung</b>. D.h. etwaige, noch nicht freigegebene     &#196;nderungen werden verworfen und jegliche &#196;nderungsmarkierungen in der     Spalte <b>zur Freigabe</b> verschwinden.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 7, 4 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Liegt ein Backup &#228;lterer Freigaben vor (siehe Schritt 3.7), stellt das     System daraus die 1. und 2. Freigabe zu Informationszwecken wieder her und     entfernt das Backup.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 7, 5 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    Das System vermerkt die Aktion &#8220;Freigabe zur&#252;cknehmen&#8221; mit einem     Logeintrag im &#196;nderungsprotokoll  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ] ] ],
+          "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+          "catchBloeckeZugeklappt" : false,
+          "catchBloeckeUmgehungBreite" : 51
+        }
+      } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
+        "id" : {
+          "nummern" : [ "java.util.ArrayList", [ 8 ] ]
+        },
+        "inhalt" : {
+          "text" : "<html>  <head>      </head>  <body>    <h2>      Ggf. &#196;nderungshistorie anzeigen    </h2>  </body></html>",
+          "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        },
+        "farbe" : -986896,
+        "zugeklappt" : false,
+        "subsequenz" : {
+          "id" : {
+            "nummern" : [ "java.util.ArrayList", [ 8, 0 ] ]
+          },
+          "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 8, 1 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER die &#196;nderungshistorie der Versionssichtbarkeiten f&#252;r das     ausgew&#228;hlte Erfassungsschema einsehen, dr&#252;ck er den Button <b>&#196;nderungshistorie     anzeigen</b>.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+            "id" : {
+              "nummern" : [ "java.util.ArrayList", [ 8, 2 ] ]
+            },
+            "inhalt" : {
+              "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER die &#196;nderungshistorie der Versionssichtbarkeiten f&#252;r das     ausgew&#228;hlte Erfassungsschema einsehen, dr&#252;ck er den Button     &#196;nderungshistorie anzeigen.  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+            },
+            "farbe" : -1
+          } ] ] ],
+          "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+          "catchBloeckeZugeklappt" : false,
+          "catchBloeckeUmgehungBreite" : 51
+        }
+      } ] ] ],
+      "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+      "catchBloeckeZugeklappt" : false,
+      "catchBloeckeUmgehungBreite" : 42
+    },
+    "intro" : "<html>\n  <head>\n    \n  </head>\n  <body>\n    <h1>\n      UC-001 Versionssichtbarkeit f&#252;r Erfassungsschemata pflegen\n    </h1>\n    <h2>\n      Beschreibung\n    </h2>\n    <p>\n      Ein USER kann f&#252;r jedes Erfassungsschema mit ausw&#228;hlbaren Versionen die \n      Sichtbarkeit der verf&#252;gbaren IDA-Versionen festlegen. Im Gegensatz zur \n      l&#252;cken- und &#252;berschneidungsfreien Historie der IDA-Versionen (implizit \n      &#252;ber <i>g&#252;ltig ab</i>), erlauben die separat erfassten \n      Sichtbarkeiten &#252;berlappende Zeitr&#228;ume. Bei der Neuanlage von Bilanzen \n      kann der Benutzer ggf. auf dieser Basis aus verschiedenen Versionen \n      ausw&#228;hlen (siehe UC-??? und Hintergrund-Information in den \n      Gesch&#228;ftsregeln).\n    </p>\n    <p>\n      <i><font size=\"3\">Anmerkung: Stand 12.2018 erlauben nur Local GAAP \n      Schemata die Auswahl von Versionen, sodass auch die Pflege von \n      Versionssichtbarkeiten auf Local GAAP Schemata beschr&#228;nkt ist. Die Maske \n      ist entsprechend beschriftet.</font></i>\n    </p>\n    <h2>\n      Ausl&#246;ser, Vorbedingung\n    </h2>\n    <p>\n      Der USER m&#246;chte die Sichtbarkeit von IDA-Versionen f&#252;r Schemata mit \n      ausw&#228;hlbaren Versionen festlegen und w&#228;hlt den entsprechenden Punkt im \n      Allgemeinmen&#252; aus.\n    </p>\n    <h2>\n      Resultat(e), Nachbedingung\n    </h2>\n    <p>\n      Es liegen neue Versionssichtbarkeiten vor. Ggf. wurde ein \n      Freigabeprozess initiiert oder abgeschlossen.\n    </p>\n  </body>\n</html>\n",
+    "outro" : "<html>\n  <head>\n    \n  </head>\n  <body>\n    <div>\n      \n    </div>\n    <h2>\n      Screenshot Versionsmanagement\n    </h2>\n    <h2>\n      \n    </h2>\n  </body>\n</html>\n"
+  }
+}
