@@ -3,8 +3,8 @@
   "modelType" : "specman.model.v001.StruktogrammModel_V001",
   "model" : {
     "name" : "frame0",
-    "breite" : 884,
-    "zoomFaktor" : 120,
+    "breite" : 1105,
+    "zoomFaktor" : 150,
     "hauptSequenz" : {
       "id" : {
         "nummern" : [ "java.util.ArrayList", [ 0 ] ]
@@ -37,14 +37,20 @@
               "nummern" : [ "java.util.ArrayList", [ 1, 2 ] ]
             },
             "inhalt" : {
-              "text" : "<html>  <head>      </head>  <body>    Das System zeigt die Maske zur Verwaltung von Versionssichtbarkeiten an     (siehe Screenshot unten).Hat ein anderer Benutzer die Maske bereits     ge&#246;ffnet, fragt das System zun&#228;chst, ob es die Maske nur im Lesemodus     &#246;ffnen soll.Das Auswahlfeld <b>Erfassungschema</b> listet alle     Erfassungsschemata mit ausw&#228;hlbaren Versionen in absteigender     alphabetischer Reihenfolge auf. Initial ist das erste Erfassungsschema     ausgew&#228;hlt.    <div>      Die Buttons und Eingabefelder sind genau bei folgenden Bedingungen aktiv       und werden nach jeder Interaktion aktualisiert:    </div>    <div>      <table border=\"1\" width=\"100%\">        <tr>          <td>            <b>Button / Feld</b>          </td>          <td>            <b>Bedingung</b>          </td>        </tr>        <tr>          <td>            <b>Sichtbar ab/bis letzte &#196;nderung</b> in Versionstabelle          </td>          <td>            <ul>              <li>                Es liegen keine oder beide Freigaben vor (beide hei&#223;t:                 abgeschlossener, fr&#252;herer Freigabeprozess) und              </li>              <li>                Der USER hat das Recht EditIDA inne und              </li>              <li>                Die Maske wurde im Schreibmodus ge&#246;ffnet              </li>            </ul>          </td>        </tr>        <tr>          <td>            <b>Speichern</b>          </td>          <td>            Es liegen ungespeicherte &#196;nderungen in der Versionstabelle vor.          </td>        </tr>        <tr>          <td>            <b>Verwerfen</b>          </td>          <td>            Wie <b>Speichern</b>          </td>        </tr>        <tr>          <td>            <b>Freigeben</b> 1          </td>          <td>            <ul>              <li>                Es liegen gespeicherte oder ungespeicherte letzte &#196;nderungen                 vor und              </li>              <li>                Es liegt noch keine 1. Freigabe vor und              </li>              <li>                Der USER hat das Recht ApproveIDA1 inne und              </li>              <li>                Die Maske wurde im Schreibmodus ge&#246;ffnet              </li>            </ul>                      </td>        </tr>        <tr>          <td>            <b>Freigeben</b> 2          </td>          <td>            <ul>              <li>                Es liegt bereits eine 1. Freigabe vor und              </li>              <li>                Der angemeldete USER ist ein anderer als derjenige, der die 1.                 Freigabe erteilt hat und              </li>              <li>                Der USER hat das Recht ApproveIDA2 inne und              </li>              <li>                Die Maske wurde im Schreibmodus ge&#246;ffnet              </li>            </ul>                      </td>        </tr>        <tr>          <td>            <b>Freigabe </b>z<b>ur&#252;cknehmen</b>          </td>          <td>            <ul>              <li>                Es liegen keine ungespeicherten &#196;nderungen in der                 Versionstabelle vor un              </li>              <li>                Es liegt eine 1. aber keine 2. Freigabe vor un              </li>              <li>                Der USER hat das Recht ApproveIDA1 oder ApproveIDA2 inne un              </li>              <li>                Die Maske wurde im Schreibmodus ge&#246;ffnet              </li>            </ul>                      </td>        </tr>        <tr>          <td>            <b>Erfassungsschema</b>          </td>          <td>            <div>              Es liegen keine ungespeicherten &#196;nderungen in der               Versionstabelle vor            </div>          </td>        </tr>      </table>    </div>  </body></html>",
-              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              "text" : "<html>  <head>      </head>  <body>    Das System zeigt die Maske zur Verwaltung von Versionssichtbarkeiten an     (siehe Screenshot unten).Hat ein anderer Benutzer die Maske bereits     ge&#246;ffnet, fragt das System zun&#228;chst, ob es die Maske nur im Lesemodus     &#246;ffnen soll.Das Auswahlfeld <b>Erfassungschema</b> listet alle     Erfassungsschemata mit ausw&#228;hlbaren Versionen in absteigender     alphabetischer Reihenfolge auf. Initial ist das erste Erfassungsschema     ausgew&#228;hlt.    <div>      Die Buttons und Eingabefelder sind genau bei folgenden Bedingungen aktiv       und werden nach jeder Interaktion aktualisiert:    </div>    <div>      <table border=\"1\" width=\"100%\">        <tr>          <td>            <b>Button / Feld</b>          </td>          <td>            <b>Bedingung</b>          </td>        </tr>        <tr>          <td>            <b>Sichtbar ab/bis letzte &#196;nderung</b> in Versionstabelle          </td>          <td>            <ul>              <li>                Es liegen keine oder beide Freigaben vor (beide hei&#223;t:                 abgeschlossener, fr&#252;herer Freigabeprozess) und              </li>              <li>                Der USER hat das Recht EditIDA inne und              </li>              <li>                Die Maske wurde im Schreibmodus ge&#246;ffnet              </li>            </ul>          </td>        </tr>        <tr>          <td>            <b>Speichern</b>          </td>          <td>            Es liegen ungespeicherte &#196;nderungen in der Versionstabelle vor.          </td>        </tr>        <tr>          <td>            <b>Verwerfen</b>          </td>          <td>            Wie <b>Speichern</b>          </td>        </tr>        <tr>          <td>            <b>Freigeben</b> 1          </td>          <td>            <ul>              <li>                Es liegen gespeicherte oder ungespeicherte letzte &#196;nderungen                 vor und              </li>              <li>                Es liegt noch keine 1. Freigabe vor und              </li>              <li>                Der USER hat das Recht ApproveIDA1 inne und              </li>              <li>                Die Maske wurde im Schreibmodus ge&#246;ffnet              </li>            </ul>          </td>        </tr>        <tr>          <td>            <b>Freigeben</b> 2          </td>          <td>            <ul>              <li>                Es liegt bereits eine 1. Freigabe vor und              </li>              <li>                Der angemeldete USER ist ein anderer als derjenige, der die 1.                 Freigabe erteilt hat und              </li>              <li>                Der USER hat das Recht ApproveIDA2 inne und              </li>              <li>                Die Maske wurde im Schreibmodus ge&#246;ffnet              </li>            </ul>          </td>        </tr>        <tr>          <td>            <b>Freigabe </b>z<b>ur&#252;cknehmen</b>          </td>          <td>            <ul>              <li>                Es liegen keine ungespeicherten &#196;nderungen in der                 Versionstabelle vor un              </li>              <li>                Es liegt eine 1. aber keine 2. Freigabe vor un              </li>              <li>                Der USER hat das Recht ApproveIDA1 oder ApproveIDA2 inne un              </li>              <li>                Die Maske wurde im Schreibmodus ge&#246;ffnet              </li>            </ul>          </td>        </tr>        <tr>          <td>            <b>Erfassungsschema</b>          </td>          <td>            <div>              Es liegen keine ungespeicherten &#196;nderungen in der               Versionstabelle vor            </div>          </td>        </tr>        <tr>          <td>            <span style=\"background-color: #ffff00\">&#196;nderungshistorie anzeigen</span>          </td>          <td>            <div>              <span style=\"background-color: #ffff00\">Immer aktiv</span>            </div>          </td>        </tr>      </table>    </div>    <div>          </div>    <div>      <i>Designanmerkung: Schemata mit ausw&#228;hlbaren Versionen = Flag       versionsSelectable gesetzt.</i>    </div>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ {
+                "von" : 1652,
+                "bis" : 1678
+              }, {
+                "von" : 1679,
+                "bis" : 1690
+              } ] ]
             },
             "farbe" : -1
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 72
+          "catchBloeckeUmgehungBreite" : 112
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -90,7 +96,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 49
+          "catchBloeckeUmgehungBreite" : 76
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -165,8 +171,11 @@
               "nummern" : [ "java.util.ArrayList", [ 3, 7 ] ]
             },
             "inhalt" : {
-              "text" : "<html>  <head>      </head>  <body>    Hat sich in Schritt 3.6 mindestens eine &#196;nderung ergeben, vermerkt das     System die Aktion &#8220;Speichern&#8221; mit einem Logeintrag im &#196;nderungsprotokoll  </body></html>",
-              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color: #ffff00\">Hat sich in Schritt 3.6 mindestens     eine &#196;nderung ergeben, vermerkt das System die Aktion &#8220;Speichern&#8221; mit     einem Logeintrag im &#196;nderungsprotokoll</span>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ {
+                "von" : 1,
+                "bis" : 144
+              } ] ]
             },
             "farbe" : -1
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
@@ -181,7 +190,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 49
+          "catchBloeckeUmgehungBreite" : 76
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -218,7 +227,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 49
+          "catchBloeckeUmgehungBreite" : 76
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -266,14 +275,17 @@
               "nummern" : [ "java.util.ArrayList", [ 5, 4 ] ]
             },
             "inhalt" : {
-              "text" : "<html>  <head>      </head>  <body>    Das System vermerkt die Aktion &#8220;1. Freigabe&#8221; mit einem Logeintrag im     &#196;nderungsprotokoll  </body></html>",
-              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color: #ffff00\">Das System vermerkt die Aktion &#8220;1.     Freigabe&#8221; mit einem Logeintrag im &#196;nderungsprotokoll</span>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ {
+                "von" : 1,
+                "bis" : 88
+              } ] ]
             },
             "farbe" : -1
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 49
+          "catchBloeckeUmgehungBreite" : 76
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -339,14 +351,17 @@
               "nummern" : [ "java.util.ArrayList", [ 6, 6 ] ]
             },
             "inhalt" : {
-              "text" : "<html>  <head>      </head>  <body>    Das System vermerkt die Aktion &#8220;2. Freigabe&#8221; mit einem Logeintrag im     &#196;nderungsprotokoll  </body></html>",
-              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color: #ffff00\">Das System vermerkt die Aktion &#8220;2.     Freigabe&#8221; mit einem Logeintrag im &#196;nderungsprotokoll</span>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ {
+                "von" : 1,
+                "bis" : 88
+              } ] ]
             },
             "farbe" : -1
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 49
+          "catchBloeckeUmgehungBreite" : 76
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -403,22 +418,28 @@
               "nummern" : [ "java.util.ArrayList", [ 7, 5 ] ]
             },
             "inhalt" : {
-              "text" : "<html>  <head>      </head>  <body>    Das System vermerkt die Aktion &#8220;Freigabe zur&#252;cknehmen&#8221; mit einem     Logeintrag im &#196;nderungsprotokoll  </body></html>",
-              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color: #ffff00\">Das System vermerkt die Aktion     &#8220;Freigabe zur&#252;cknehmen&#8221; mit einem Logeintrag im &#196;nderungsprotokoll</span>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ {
+                "von" : 1,
+                "bis" : 98
+              } ] ]
             },
             "farbe" : -1
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 49
+          "catchBloeckeUmgehungBreite" : 76
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
           "nummern" : [ "java.util.ArrayList", [ 8 ] ]
         },
         "inhalt" : {
-          "text" : "<html>  <head>      </head>  <body>    <h2>      Ggf. &#196;nderungshistorie anzeigen    </h2>  </body></html>",
-          "aenderungen" : [ "java.util.ArrayList", [ ] ]
+          "text" : "<html>  <head>      </head>  <body>    <h2>      <span style=\"background-color: #ffff00\">Ggf. &#196;nderungshistorie anzeigen</span>    </h2>  </body></html>",
+          "aenderungen" : [ "java.util.ArrayList", [ {
+            "von" : 1,
+            "bis" : 32
+          } ] ]
         },
         "farbe" : -986896,
         "zugeklappt" : false,
@@ -431,8 +452,17 @@
               "nummern" : [ "java.util.ArrayList", [ 8, 1 ] ]
             },
             "inhalt" : {
-              "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER die &#196;nderungshistorie der Versionssichtbarkeiten f&#252;r das     ausgew&#228;hlte Erfassungsschema einsehen, dr&#252;ck er den Button <b>&#196;nderungshistorie     anzeigen</b>.  </body></html>",
-              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color: #ffff00\">M&#246;chte der USER die     &#196;nderungshistorie der Versionssichtbarkeiten f&#252;r das ausgew&#228;hlte     Erfassungsschema einsehen, dr&#252;ck er den Button <b>&#196;nderungshistorie     anzeigen</b>.</span>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ {
+                "von" : 1,
+                "bis" : 133
+              }, {
+                "von" : 133,
+                "bis" : 159
+              }, {
+                "von" : 159,
+                "bis" : 160
+              } ] ]
             },
             "farbe" : -1
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
@@ -440,21 +470,24 @@
               "nummern" : [ "java.util.ArrayList", [ 8, 2 ] ]
             },
             "inhalt" : {
-              "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER die &#196;nderungshistorie der Versionssichtbarkeiten f&#252;r das     ausgew&#228;hlte Erfassungsschema einsehen, dr&#252;ck er den Button     &#196;nderungshistorie anzeigen.  </body></html>",
-              "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color: #ffff00\">Das System zeigt in einem     separaten Fenster alle Logeintr&#228;ge f&#252;r die &#196;nderung der     Versionssichtbarkeiten des ausgew&#228;hlten Erfassungsschemas an. Die Anzeige     erfolgt in zeitlich aufsteigender Reihenfolge.</span>  </body></html>",
+              "aenderungen" : [ "java.util.ArrayList", [ {
+                "von" : 1,
+                "bis" : 203
+              } ] ]
             },
             "farbe" : -1
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 49
+          "catchBloeckeUmgehungBreite" : 76
         }
       } ] ] ],
       "catchBloecke" : [ "java.util.ArrayList", [ ] ],
       "catchBloeckeZugeklappt" : false,
-      "catchBloeckeUmgehungBreite" : 41
+      "catchBloeckeUmgehungBreite" : 51
     },
-    "intro" : "<html>\n  <head>\n    \n  </head>\n  <body>\n    <h1>\n      UC-001 Versionssichtbarkeit f&#252;r Erfassungsschemata pflegen\n    </h1>\n    <h2>\n      Beschreibung\n    </h2>\n    <p>\n      Ein USER kann f&#252;r jedes Erfassungsschema mit ausw&#228;hlbaren Versionen die \n      Sichtbarkeit der verf&#252;gbaren IDA-Versionen festlegen. Im Gegensatz zur \n      l&#252;cken- und &#252;berschneidungsfreien Historie der IDA-Versionen (implizit \n      &#252;ber <i>g&#252;ltig ab</i>), erlauben die separat erfassten \n      Sichtbarkeiten &#252;berlappende Zeitr&#228;ume. Bei der Neuanlage von Bilanzen \n      kann der Benutzer ggf. auf dieser Basis aus verschiedenen Versionen \n      ausw&#228;hlen (siehe UC-??? und Hintergrund-Information in den \n      Gesch&#228;ftsregeln).\n    </p>\n    <p>\n      <i><font size=\"3\">Anmerkung: Stand 12.2018 erlauben nur Local GAAP \n      Schemata die Auswahl von Versionen, sodass auch die Pflege von \n      Versionssichtbarkeiten auf Local GAAP Schemata beschr&#228;nkt ist. Die Maske \n      ist entsprechend beschriftet.</font></i>\n    </p>\n    <h2>\n      Ausl&#246;ser, Vorbedingung\n    </h2>\n    <p>\n      Der USER m&#246;chte die Sichtbarkeit von IDA-Versionen f&#252;r Schemata mit \n      ausw&#228;hlbaren Versionen festlegen und w&#228;hlt den entsprechenden Punkt im \n      Allgemeinmen&#252; aus.\n    </p>\n    <h2>\n      Resultat(e), Nachbedingung\n    </h2>\n    <p>\n      Es liegen neue Versionssichtbarkeiten vor. Ggf. wurde ein \n      Freigabeprozess initiiert oder abgeschlossen.\n    </p>\n  </body>\n</html>\n",
-    "outro" : "<html>\n  <head>\n    \n  </head>\n  <body>\n    <div>\n      \n    </div>\n    <h2>\n      Gesch&#228;ftsregeln\n    </h2>\n    <div>\n      Hintergrund zur Funktionalit&#228;t:\n    </div>\n    <div>\n      Bei der Erstellung einer neuen Bilanz muss der Benutzer ein Schema \n      ausw&#228;hlen, welches den Aufbau dieser Bilanz bestimmt. Der Aufbau \n      beschreibt f&#252;r ein Schema, welche Positionen es gibt und in welcher \n      Reihenfolgen die Positionen dargestellt werden etc. Diese Aufbauten \n      liegen in unterschiedlichen Versionen vor, was erreicht wird, in dem sie \n      Teil von IDA-Versionen sind. Bei der Neuanlage einer Bilanz muss die \n      Frage beantwortet werden, welchem Aufbau die Bilanz gen&#252;gen soll. F&#252;r \n      Local-GAAP-Schemata kann man &#252;ber die in diesem Usecase verwalteten \n      Versionssichtbarkeiten daf&#252;r sorgen, dass mehrere gleichzeitig sichtbare \n      IDA-Versionen zur Verf&#252;gung stehen. Bei interaktiver Anlage muss der \n      Benutzer dann aus diesen ausw&#228;hlen. Bei Anlage &#252;ber Webservices ist das \n      noch offen.\n    </div>\n    <div>\n      \n    </div>\n    <div>\n      Das Prinzip eines zweistufen Freigabeprozesses taucht auch in anderen \n      Teilen der Applikation auf, allerdings ist der Prozess hier etwas \n      anders. Das folgende Diagramm stellt den Vorgang im &#220;berblick dar\n    </div>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-04.png\" width=\"839\" height=\"716\">\n      \n    </h2>\n    <h2>\n      Screenshot Versionsmanagement\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-01.png\">\n      \n    </h2>\n    <h2>\n      Screenshot &#196;nderungshistorie\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-02.png\" width=\"511\" height=\"356\">\n      \n    </h2>\n    <h2>\n      Fachklassenmodell\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-03.png\">\n      \n    </h2>\n  </body>\n</html>\n"
+    "intro" : "<html>\n  <head>\n    \n  </head>\n  <body>\n    <h1>\n      UC-001 Versionssichtbarkeit f&#252;r Erfassungsschemata pflegen\n    </h1>\n    <h2>\n      Dokumentenhistorie / UC-Lifecycle\n    </h2>\n    <table border=\"1\" width=\"100%\">\n      <tr>\n        <td>\n          <b>Version </b>\n        </td>\n        <td>\n          <b>Aktivit&#228;t </b>\n        </td>\n        <td>\n          <b>Autor </b>\n        </td>\n        <td>\n          <b>Datum </b>\n        </td>\n        <td>\n          <div>\n            <b>Folgeaktion/ </b>\n          </div>\n          <div>\n            <b>Ergebnis</b>\n          </div>\n        </td>\n      </tr>\n      <tr>\n        <td>\n          0.7\n        </td>\n        <td>\n          Erg&#228;nzung aus Abnahmetest: Blockierung gegen konkurrierende \n          &#196;nderungen\n        </td>\n        <td>\n          J. Le&#223;ner\n        </td>\n        <td>\n          23.01.2019\n        </td>\n        <td>\n          Review GF\n        </td>\n      </tr>\n      <tr>\n        <td>\n          0.8\n        </td>\n        <td>\n          Detailanpassung nach Abnahmetest\n        </td>\n        <td>\n          J. Le&#223;ner\n        </td>\n        <td>\n          25.01.2019\n        </td>\n        <td>\n          Review GF\n        </td>\n      </tr>\n      <tr>\n        <td>\n          0.9\n        </td>\n        <td>\n          GLOBALF_ERSTE-392 - Letzte Freigabe wiederherstellen\n        </td>\n        <td>\n          J. Le&#223;ner\n        </td>\n        <td>\n          29.01.2019\n        </td>\n        <td>\n          Review GF\n        </td>\n      </tr>\n      <tr>\n        <td>\n          <span style=\"background-color: #ffff00\">1.0</span>\n        </td>\n        <td>\n          <span style=\"background-color: #ffff00\">GLOBALF_ERSTE-436: \n          &#196;nderungsprotokol</span>\n        </td>\n        <td>\n          <span style=\"background-color: #ffff00\">J. Le&#223;ner</span>\n        </td>\n        <td>\n          <span style=\"background-color: #ffff00\">12.12.2019</span>\n        </td>\n        <td>\n          <span style=\"background-color: #ffff00\">Review GF</span>\n        </td>\n      </tr>\n    </table>\n    <h2>\n      Beschreibung\n    </h2>\n    <p>\n      Ein USER kann f&#252;r jedes Erfassungsschema mit ausw&#228;hlbaren Versionen die \n      Sichtbarkeit der verf&#252;gbaren IDA-Versionen festlegen. Im Gegensatz zur \n      l&#252;cken- und &#252;berschneidungsfreien Historie der IDA-Versionen (implizit \n      &#252;ber <i>g&#252;ltig ab</i>), erlauben die separat erfassten \n      Sichtbarkeiten &#252;berlappende Zeitr&#228;ume. Bei der Neuanlage von Bilanzen \n      kann der Benutzer ggf. auf dieser Basis aus verschiedenen Versionen \n      ausw&#228;hlen (siehe UC-??? und Hintergrund-Information in den \n      Gesch&#228;ftsregeln).\n    </p>\n    <p>\n      <i><font size=\"3\">Anmerkung: Stand 12.2018 erlauben nur Local GAAP \n      Schemata die Auswahl von Versionen, sodass auch die Pflege von \n      Versionssichtbarkeiten auf Local GAAP Schemata beschr&#228;nkt ist. Die Maske \n      ist entsprechend beschriftet.</font></i>\n    </p>\n    <h2>\n      Ausl&#246;ser, Vorbedingung\n    </h2>\n    <p>\n      Der USER m&#246;chte die Sichtbarkeit von IDA-Versionen f&#252;r Schemata mit \n      ausw&#228;hlbaren Versionen festlegen und w&#228;hlt den entsprechenden Punkt im \n      Allgemeinmen&#252; aus.\n    </p>\n    <h2>\n      Resultat(e), Nachbedingung\n    </h2>\n    <p>\n      Es liegen neue Versionssichtbarkeiten vor. Ggf. wurde ein \n      Freigabeprozess initiiert oder abgeschlossen.\n    </p>\n  </body>\n</html>\n",
+    "outro" : "<html>\n  <head>\n    \n  </head>\n  <body>\n    <div>\n      \n    </div>\n    <h2>\n      Gesch&#228;ftsregeln\n    </h2>\n    <div>\n      Hintergrund zur Funktionalit&#228;t:\n    </div>\n    <div>\n      Bei der Erstellung einer neuen Bilanz muss der Benutzer ein Schema \n      ausw&#228;hlen, welches den Aufbau dieser Bilanz bestimmt. Der Aufbau \n      beschreibt f&#252;r ein Schema, welche Positionen es gibt und in welcher \n      Reihenfolgen die Positionen dargestellt werden etc. Diese Aufbauten \n      liegen in unterschiedlichen Versionen vor, was erreicht wird, in dem sie \n      Teil von IDA-Versionen sind. Bei der Neuanlage einer Bilanz muss die \n      Frage beantwortet werden, welchem Aufbau die Bilanz gen&#252;gen soll. F&#252;r \n      Local-GAAP-Schemata kann man &#252;ber die in diesem Usecase verwalteten \n      Versionssichtbarkeiten daf&#252;r sorgen, dass mehrere gleichzeitig sichtbare \n      IDA-Versionen zur Verf&#252;gung stehen. Bei interaktiver Anlage muss der \n      Benutzer dann aus diesen ausw&#228;hlen. Bei Anlage &#252;ber Webservices ist das \n      noch offen.\n    </div>\n    <div>\n      \n    </div>\n    <div>\n      Das Prinzip eines zweistufen Freigabeprozesses taucht auch in anderen \n      Teilen der Applikation auf, allerdings ist der Prozess hier etwas \n      anders. Das folgende Diagramm stellt den Vorgang im &#220;berblick dar\n    </div>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-04.png\" width=\"839\" height=\"716\">\n      \n    </h2>\n    <h2>\n      Screenshot Versionsmanagement\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-01.png\">\n      \n    </h2>\n    <h2>\n      Screenshot &#196;nderungshistorie\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-02.png\" width=\"511\" height=\"356\">\n      \n    </h2>\n    <h2>\n      Fachklassenmodell\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-03.png\">\n    </h2>\n  </body>\n</html>\n"
   }
 }
