@@ -4,6 +4,7 @@ import specman.view.AbstractSchrittView;
 import specman.view.SchrittSequenzView;
 
 import java.awt.event.FocusListener;
+import java.io.File;
 
 /**
  * This interface represents the current struktogramm editor and is supposed to
@@ -16,4 +17,6 @@ public interface EditorI extends FocusListener {
 	void vertikalLinieSetzen(int x, SpaltenResizer spaltenResizer);
 
 	SchrittSequenzView findeElternSequenz(AbstractSchrittView schrittView);
+
+	void diagrammLaden(File diagramFile);
 }

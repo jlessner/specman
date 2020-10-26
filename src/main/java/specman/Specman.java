@@ -36,15 +36,11 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author User #3
@@ -68,8 +64,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	Integer dragX;
 	File diagrammDatei;
 	List<AbstractSchrittView> postInitSchritte;
+	RecentFiles recentFiles;
 	
 	public Specman() throws Exception {
+		recentFiles = new RecentFiles(this);
+
 		initComponents();
 		
 		initShefController();
@@ -504,6 +503,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			fos.write(json);
 			fos.close();
 
+			recentFiles.add(diagrammDatei);
 			undoManager.discardAllEdits(); // Kann man sich drüber streiten ;-)
 
 		} catch (JsonProcessingException jpx) {
@@ -522,35 +522,39 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	private void diagrammLaden() {
-		try {
 			File verzeichnis = (diagrammDatei != null) ? diagrammDatei.getParentFile() : null;
 			JFileChooser fileChooser = new JFileChooser(verzeichnis);
 			fileChooser.setFileFilter(new FileNameExtensionFilter("Nassi Diagramme", "nsd"));
 			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-				postInitSchritte = new ArrayList<AbstractSchrittView>();
-				setDiagrammDatei(fileChooser.getSelectedFile());
-
-				ObjectMapper objectMapper = new ObjectMapper();
-				objectMapper.enableDefaultTyping();
-				ModelEnvelope envelope = objectMapper.readValue(diagrammDatei, ModelEnvelope.class);
-				StruktogrammModel_V001 model = (StruktogrammModel_V001)envelope.model;
-
-				zoomFaktor = model.zoomFaktor;
-				zoomFaktorAnzeigeAktualisieren(zoomFaktor);
-				diagrammbreite = model.breite;
-				intro.setPlainText(model.intro);
-				outro.setPlainText(model.outro);
-				setName(model.name);
-				hauptSequenz = new SchrittSequenzView(this, model.hauptSequenz);
-				hauptSequenzInitialisieren();
-				neueSchritteNachinitialisieren();
-				undoManager.discardAllEdits();
+				diagrammLaden(fileChooser.getSelectedFile());
 			}
+	}
+
+	public void diagrammLaden(File diagramFile) {
+		try {
+			postInitSchritte = new ArrayList<AbstractSchrittView>();
+			setDiagrammDatei(diagramFile);
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.enableDefaultTyping();
+			ModelEnvelope envelope = objectMapper.readValue(diagrammDatei, ModelEnvelope.class);
+			StruktogrammModel_V001 model = (StruktogrammModel_V001)envelope.model;
+
+			zoomFaktor = model.zoomFaktor;
+			zoomFaktorAnzeigeAktualisieren(zoomFaktor);
+			diagrammbreite = model.breite;
+			intro.setPlainText(model.intro);
+			outro.setPlainText(model.outro);
+			setName(model.name);
+			hauptSequenz = new SchrittSequenzView(this, model.hauptSequenz);
+			hauptSequenzInitialisieren();
+			neueSchritteNachinitialisieren();
+			undoManager.discardAllEdits();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void schrittFuerNachinitialisierungRegistrieren(AbstractSchrittView schritt) {
 		postInitSchritte.add(schritt);
@@ -613,6 +617,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		speichern = new JMenuItem("Speichern");
 		speichernUnter = new JMenuItem("Speichern unter...");
 		laden = new JMenuItem("Laden");
+
 		export = new JMenuItem("Exportieren");
 		//======== this ========
 		Container contentPane = getContentPane();
@@ -689,6 +694,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JMenu baueDateiMenu() {
 		JMenu dateiMenu = new JMenu("Datei");
 		dateiMenu.add(laden);
+		dateiMenu.add(recentFiles.menu());
 		dateiMenu.add(speichern);		
 		dateiMenu.add(speichernUnter);		
 		dateiMenu.add(export);
