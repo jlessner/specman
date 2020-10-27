@@ -21,11 +21,12 @@ public class RecentFiles {
     RecentFiles(EditorI editor) {
         this.editor = editor;
         this.menu = new JMenu("Zuletzt geladen");
+        this.recentFiles = readLastFilesFromPreferences();
         populateMenuFromPreferences();
     }
 
     private void populateMenuFromPreferences() {
-        recentFiles = readLastFilesFromPreferences();
+        menu.removeAll();
         for (File lastFile: recentFiles) {
             JMenuItem item = new JMenuItem(lastFile.getName());
             item.setToolTipText(lastFile.getAbsolutePath());
@@ -61,6 +62,7 @@ public class RecentFiles {
             recentFiles.remove(MAX_FILES);
         }
         writeRecentFilesToPreferences(recentFiles);
+        populateMenuFromPreferences();
     }
 
     private void writeRecentFilesToPreferences(List<File> recentFiles) {

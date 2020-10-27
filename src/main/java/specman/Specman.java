@@ -523,13 +523,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	private void diagrammLaden() {
-			File verzeichnis = (diagrammDatei != null) ? diagrammDatei.getParentFile() : null;
-			JFileChooser fileChooser = new JFileChooser(verzeichnis);
-			fileChooser.setFileFilter(new FileNameExtensionFilter("Nassi Diagramme", "nsd"));
-			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-				diagrammLaden(fileChooser.getSelectedFile());
-				recentFiles.add(fileChooser.getSelectedFile());
-			}
+		File verzeichnis = (diagrammDatei != null) ? diagrammDatei.getParentFile() : null;
+		JFileChooser fileChooser = new JFileChooser(verzeichnis);
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Nassi Diagramme", "nsd"));
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			diagrammLaden(fileChooser.getSelectedFile());
+		}
 	}
 
 	public void diagrammLaden(File diagramFile) {
@@ -551,6 +550,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			hauptSequenz = new SchrittSequenzView(this, model.hauptSequenz);
 			hauptSequenzInitialisieren();
 			neueSchritteNachinitialisieren();
+			recentFiles.add(diagramFile);
 			undoManager.discardAllEdits();
 		} catch (IOException e) {
 			e.printStackTrace();

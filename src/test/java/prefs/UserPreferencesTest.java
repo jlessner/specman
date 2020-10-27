@@ -7,10 +7,10 @@ import java.util.prefs.Preferences;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PrefTest {
+public class UserPreferencesTest {
 
     @Test
-    void tesPrefs() {
+    void testWriteAndReadPreferences() {
         String PREF_NAME = "pref";
         String PREF_VALUE = "value";
         Preferences prefsWrite = Preferences.userNodeForPackage(Specman.class);
