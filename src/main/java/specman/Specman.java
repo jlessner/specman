@@ -38,6 +38,7 @@ import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -652,7 +653,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public static ImageIcon readImageIcon(String iconBasename) {
 		String resource = "images/" + iconBasename + ".png";
 		try {
-			Image image = ImageIO.read(ClassLoader.getSystemResource(resource));
+			URL imageURL = Specman.class.getClassLoader().getResource(resource);
+			Image image = ImageIO.read(imageURL);
 			if (image == null) {
 				throw new IllegalArgumentException("Can't load image icon " + resource);
 			}

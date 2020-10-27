@@ -74,7 +74,7 @@
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
-            <version>1.4.0</version>
+            <version>1.2.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -90,7 +90,18 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <mainClass>specman.Specman</mainClass>
+                </configuration>
+            </plugin>
+
         </plugins>
+
     </build>
 
 </project>
