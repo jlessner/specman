@@ -528,6 +528,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			fileChooser.setFileFilter(new FileNameExtensionFilter("Nassi Diagramme", "nsd"));
 			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 				diagrammLaden(fileChooser.getSelectedFile());
+				recentFiles.add(fileChooser.getSelectedFile());
 			}
 	}
 
@@ -617,7 +618,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		zoom.setMaximumSize(new Dimension(65, 20));
 		speichern = new JMenuItem("Speichern");
 		speichernUnter = new JMenuItem("Speichern unter...");
-		laden = new JMenuItem("Laden");
+		laden = new JMenuItem("Laden...");
 
 		export = new JMenuItem("Exportieren");
 		//======== this ========
