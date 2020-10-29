@@ -68,6 +68,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	RecentFiles recentFiles;
 	
 	public Specman() throws Exception {
+		setApplicationIcon();
+
 		recentFiles = new RecentFiles(this);
 
 		initComponents();
@@ -120,7 +122,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		// die schon etwas im Undo-Manager hinterlassen.
 		undoManager.discardAllEdits();
 	}
-	
+
+	private void setApplicationIcon() {
+		setIconImage(readImageIcon("specman").getImage());
+	}
+
 	@Override
 	public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
 		diagrammbreite += vergroesserung;
