@@ -1,5 +1,7 @@
-package specman;
+package specman.textfield;
 
+import specman.EditorI;
+import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
@@ -27,7 +29,7 @@ import java.util.List;
 
 import static specman.Specman.schrittHintergrund;
 
-public class TextfeldShef extends JEditorPane implements ComponentListener, KeyListener {
+public class TextfieldShef extends JEditorPane implements ComponentListener, KeyListener {
 	public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE = Color.LIGHT_GRAY;
 	public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
 	public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
@@ -71,7 +73,7 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
 	JLabel schrittNummer;
 	boolean schrittNummerSichtbar = true;
 
-	public TextfeldShef(String initialerText, String schrittId) {
+	public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
 		Specman.shefEditorPane.instrumentWysEditor(this, initialerText, 0);
 		
 		putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
@@ -90,12 +92,12 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
 			this.addComponentListener(this);
 		}
 		
-		if (Specman.instance() != null)
-			skalieren(Specman.instance().zoomFaktor, 100);
+		if (editor != null)
+			skalieren(editor.getZoomFactor(), 100);
 	}
 
-	TextfeldShef() {
-		this(null, null);
+	public TextfieldShef() {
+		this(null, null, null);
 	}
 
 	public void setId(String id) {
@@ -300,6 +302,8 @@ public class TextfeldShef extends JEditorPane implements ComponentListener, KeyL
 		if (schrittNummer != null) {
 			schrittNummer.setFont(labelFont.deriveFont((float)SCHRITTNR_FONTSIZE * prozentNeu / 100));
 		}
+		ImageScaler imageScaler = new ImageScaler(prozentNeu, prozentAktuell);
+		setText(imageScaler.scaleImages(getText()));
 	}
 
 	public List<Line2D.Double> getRechteZeilenraender() {

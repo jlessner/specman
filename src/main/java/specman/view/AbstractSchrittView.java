@@ -3,7 +3,7 @@ package specman.view;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.TextfeldShef;
+import specman.textfield.TextfieldShef;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.BreakSchrittModel_V001;
@@ -34,7 +34,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	
 	protected static final List<SchrittSequenzView> KEINE_SEQUENZEN = new ArrayList<SchrittSequenzView>();
 
-	protected final TextfeldShef text;
+	protected final TextfieldShef text;
 	protected SchrittID id;
 	 
 	public AbstractSchrittView(EditorI editor) {
@@ -43,7 +43,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	public AbstractSchrittView(EditorI editor, String initialerText, SchrittID id) {
 		this.id = id;
-		this.text = new TextfeldShef(initialerText, id != null ? id.toString() : null);
+		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
 		text.addFocusListener(editor);
 		text.addFocusListener(this);
 	}

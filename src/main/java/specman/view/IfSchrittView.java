@@ -5,7 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.TextfeldShef;
+import specman.textfield.TextfieldShef;
 import specman.model.v001.IfSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 
@@ -36,7 +36,7 @@ public class IfSchrittView extends IfElseSchrittView {
 	public IfSchrittView(EditorI editor, String initialerString, SchrittID id) {
 		this(editor, initialerString, id,
 			new ZweigSchrittSequenzView(editor, id.naechsteID().naechsteEbene(), ""),
-			new ZweigSchrittSequenzView(editor, id.naechsteEbene(), TextfeldShef.right("Ja")));
+			new ZweigSchrittSequenzView(editor, id.naechsteEbene(), TextfieldShef.right("Ja")));
 	}
 	
 	public IfSchrittView(EditorI editor, IfSchrittModel_V001 model) {

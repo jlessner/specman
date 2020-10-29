@@ -9,6 +9,7 @@ import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import specman.model.ModelEnvelope;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
+import specman.textfield.TextfieldShef;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
@@ -58,7 +59,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	JPanel hauptSequenzContainer;
 	SpaltenResizer breitenAnpasser;
 	JScrollPane scrollPane;
-	TextfeldShef intro, outro;
+	TextfieldShef intro, outro;
 	FormLayout hauptlayout;
 	int diagrammbreite = 400;
 	int zoomFaktor = 100;
@@ -104,11 +105,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		breitenAnpasser.setOpaque(true);
 		arbeitsbereich.add(breitenAnpasser, CC.xy(3, 3));
 
-		intro = new TextfeldShef();
+		intro = new TextfieldShef();
 		intro.setOpaque(false);
 		arbeitsbereich.add(intro, CC.xy(2, 2));
 		
-		outro = new TextfeldShef();
+		outro = new TextfieldShef();
 		outro.setOpaque(false);
 		arbeitsbereich.add(outro, CC.xy(2, 4));
 		
@@ -682,7 +683,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolBar.add(button);
 	}
 	
-	static HTMLEditorPane shefEditorPane;
+	public static HTMLEditorPane shefEditorPane;
 	static UndoManager undoManager;
 	
 	private void initShefController() throws Exception {
@@ -794,13 +795,16 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	
 	public static String initialtext(String text) {
 		return (instance() != null && instance().aenderungenVerfolgen()) ?
-				"<span style=\"background-color:" + TextfeldShef.INDIKATOR_GELB + "\">" + text + "</span>" :
+				"<span style=\"background-color:" + TextfieldShef.INDIKATOR_GELB + "\">" + text + "</span>" :
 				text;
 	}
 	
 	public static Color schrittHintergrund() {
 		return (instance() != null && instance().aenderungenVerfolgen()) ?
-			TextfeldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Color.white;
+			TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Color.white;
 	}
-	
+
+	@Override public int getZoomFactor() {
+		return zoomFaktor;
+	}
 }

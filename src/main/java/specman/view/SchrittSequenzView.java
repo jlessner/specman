@@ -6,7 +6,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.TextfeldShef;
+import specman.textfield.TextfieldShef;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 
@@ -102,14 +102,14 @@ public class SchrittSequenzView {
 	}
 
 	public AbstractSchrittView ifElseSchrittAnhaengen(EditorI editor) {
-		String initialerText = TextfeldShef.center("If-Else-" + (schritte.size()+1));
+		String initialerText = TextfieldShef.center("If-Else-" + (schritte.size()+1));
 		IfElseSchrittView schritt = new IfElseSchrittView(editor, initialerText, naechsteSchrittID());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittAnhaengen(schritt, editor);
 	}
 
 	public AbstractSchrittView ifSchrittAnhaengen(EditorI editor) {
-		String initialerText = TextfeldShef.center("If-Else-" + (schritte.size()+1));
+		String initialerText = TextfieldShef.center("If-Else-" + (schritte.size()+1));
 		IfSchrittView schritt = new IfSchrittView(editor, initialerText, naechsteSchrittID());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittAnhaengen(schritt, editor);
@@ -187,7 +187,7 @@ public class SchrittSequenzView {
 
 	public AbstractSchrittView ifElseSchrittZwischenschieben(JTextComponent zuletztFokussierterText, EditorI editor) {
 		AbstractSchrittView vorgaengerSchritt = findeEigenenSchritt(zuletztFokussierterText);
-		String initialerText = TextfeldShef.center("Neue Bedingung " + (schritte.size()+1));
+		String initialerText = TextfieldShef.center("Neue Bedingung " + (schritte.size()+1));
 		IfElseSchrittView schritt = new IfElseSchrittView(editor, initialerText, vorgaengerSchritt.folgeIDInGleicherSequenz());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittZwischenschieben(schritt, vorgaengerSchritt, editor);
@@ -195,7 +195,7 @@ public class SchrittSequenzView {
 
 	public AbstractSchrittView ifSchrittZwischenschieben(JTextComponent zuletztFokussierterText, EditorI editor) {
 		AbstractSchrittView vorgaengerSchritt = findeEigenenSchritt(zuletztFokussierterText);
-		String initialerText = TextfeldShef.center("Neue Bedingung " + (schritte.size()+1));
+		String initialerText = TextfieldShef.center("Neue Bedingung " + (schritte.size()+1));
 		IfSchrittView schritt = new IfSchrittView(editor, initialerText, vorgaengerSchritt.folgeIDInGleicherSequenz());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittZwischenschieben(schritt, vorgaengerSchritt, editor);

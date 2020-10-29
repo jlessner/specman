@@ -2,7 +2,7 @@ package specman.view;
 
 import specman.EditorI;
 import specman.SchrittID;
-import specman.TextfeldShef;
+import specman.textfield.TextfieldShef;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 
 import javax.swing.text.JTextComponent;
@@ -14,7 +14,7 @@ import javax.swing.text.JTextComponent;
  */
 public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
-	TextfeldShef ueberschrift;
+	TextfieldShef ueberschrift;
 	
 	public ZweigSchrittSequenzView(EditorI editor, ZweigSchrittSequenzModel_V001 model) {
 		super(editor, model);
@@ -27,7 +27,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	}
 
 	private void ueberschriftInitialisieren(EditorI editor, String initialerText) {
-		ueberschrift = new TextfeldShef(initialerText, null);
+		ueberschrift = new TextfieldShef(editor, initialerText, null);
 		ueberschrift.addFocusListener(editor);
 	}
 

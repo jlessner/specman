@@ -19,4 +19,5 @@ public interface EditorI extends FocusListener {
 	SchrittSequenzView findeElternSequenz(AbstractSchrittView schrittView);
 
 	void diagrammLaden(File diagramFile);
+  int getZoomFactor();
 }

@@ -8,7 +8,7 @@ import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.TextfeldShef;
+import specman.textfield.TextfieldShef;
 import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 
@@ -62,7 +62,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	public IfElseSchrittView(EditorI editor, String initialerText, SchrittID id) {
 		this(editor, initialerText, id,
 			new ZweigSchrittSequenzView(editor, id.naechsteEbene(), initialtext("Ja")),
-			new ZweigSchrittSequenzView(editor, id.naechsteID().naechsteEbene(), TextfeldShef.right("Nein")));
+			new ZweigSchrittSequenzView(editor, id.naechsteID().naechsteEbene(), TextfieldShef.right("Nein")));
 	}
 	
 	protected static FormLayout createPanelLayout() {
