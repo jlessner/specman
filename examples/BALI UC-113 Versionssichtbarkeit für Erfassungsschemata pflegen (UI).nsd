@@ -3,7 +3,7 @@
   "modelType" : "specman.model.v001.StruktogrammModel_V001",
   "model" : {
     "name" : "frame0",
-    "breite" : 938,
+    "breite" : 936,
     "zoomFaktor" : 120,
     "hauptSequenz" : {
       "id" : {
@@ -50,7 +50,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 62
+          "catchBloeckeUmgehungBreite" : 59
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -96,7 +96,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 38
+          "catchBloeckeUmgehungBreite" : 35
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -190,7 +190,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 38
+          "catchBloeckeUmgehungBreite" : 35
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -227,7 +227,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 38
+          "catchBloeckeUmgehungBreite" : 35
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -285,7 +285,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 38
+          "catchBloeckeUmgehungBreite" : 35
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -361,7 +361,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 62
+          "catchBloeckeUmgehungBreite" : 59
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -428,7 +428,7 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 62
+          "catchBloeckeUmgehungBreite" : 59
         }
       } ], [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
@@ -474,14 +474,14 @@
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
-          "catchBloeckeUmgehungBreite" : 67
+          "catchBloeckeUmgehungBreite" : 64
         }
       } ] ] ],
       "catchBloecke" : [ "java.util.ArrayList", [ ] ],
       "catchBloeckeZugeklappt" : false,
-      "catchBloeckeUmgehungBreite" : 38
+      "catchBloeckeUmgehungBreite" : 36
     },
     "intro" : "<html>\n  <head>\n    \n  </head>\n  <body>\n    <h1>\n      UC-001 Versionssichtbarkeit f&#252;r Erfassungsschemata pflegen\n    </h1>\n    <h2>\n      Dokumentenhistorie / UC-Lifecycle\n    </h2>\n    <table border=\"1\" cellspacing=\"0\" cellpadding=\"3\" width=\"100%\">\n      <tr>\n        <td>\n          <b>Version </b>\n        </td>\n        <td>\n          <b>Aktivit&#228;t </b>\n        </td>\n        <td>\n          <b>Autor </b>\n        </td>\n        <td>\n          <b>Datum </b>\n        </td>\n        <td>\n          <div>\n            <b>Folgeaktion/ </b>\n          </div>\n          <div>\n            <b>Ergebnis</b>\n          </div>\n        </td>\n      </tr>\n      <tr>\n        <td>\n          0.7\n        </td>\n        <td>\n          Erg&#228;nzung aus Abnahmetest: Blockierung gegen konkurrierende \n          &#196;nderungen\n        </td>\n        <td>\n          J. Le&#223;ner\n        </td>\n        <td>\n          23.01.2019\n        </td>\n        <td>\n          Review GF\n        </td>\n      </tr>\n      <tr>\n        <td>\n          0.8\n        </td>\n        <td>\n          Detailanpassung nach Abnahmetest\n        </td>\n        <td>\n          J. Le&#223;ner\n        </td>\n        <td>\n          25.01.2019\n        </td>\n        <td>\n          Review GF\n        </td>\n      </tr>\n      <tr>\n        <td>\n          0.9\n        </td>\n        <td>\n          GLOBALF_ERSTE-392 - Letzte Freigabe wiederherstellen\n        </td>\n        <td>\n          J. Le&#223;ner\n        </td>\n        <td>\n          29.01.2019\n        </td>\n        <td>\n          Review GF\n        </td>\n      </tr>\n      <tr>\n        <td>\n          <span style=\"background-color: #ffff00\">1.0</span>\n        </td>\n        <td>\n          <span style=\"background-color: #ffff00\">GLOBALF_ERSTE-436: \n          &#196;nderungsprotokol</span>\n        </td>\n        <td>\n          <span style=\"background-color: #ffff00\">J. Le&#223;ner</span>\n        </td>\n        <td>\n          <span style=\"background-color: #ffff00\">12.12.2019</span>\n        </td>\n        <td>\n          <span style=\"background-color: #ffff00\">Review GF</span>\n        </td>\n      </tr>\n    </table>\n    <h2>\n      Beschreibung\n    </h2>\n    <p>\n      Ein USER kann f&#252;r jedes Erfassungsschema mit ausw&#228;hlbaren Versionen die \n      Sichtbarkeit der verf&#252;gbaren IDA-Versionen festlegen. Im Gegensatz zur \n      l&#252;cken- und &#252;berschneidungsfreien Historie der IDA-Versionen (implizit \n      &#252;ber <i>g&#252;ltig ab</i>), erlauben die separat erfassten \n      Sichtbarkeiten &#252;berlappende Zeitr&#228;ume. Bei der Neuanlage von Bilanzen \n      kann der Benutzer ggf. auf dieser Basis aus verschiedenen Versionen \n      ausw&#228;hlen (siehe UC-??? und Hintergrund-Information in den \n      Gesch&#228;ftsregeln).\n    </p>\n    <p>\n      <i><font size=\"3\">Anmerkung: Stand 12.2018 erlauben nur Local GAAP \n      Schemata die Auswahl von Versionen, sodass auch die Pflege von \n      Versionssichtbarkeiten auf Local GAAP Schemata beschr&#228;nkt ist. Die Maske \n      ist entsprechend beschriftet.</font></i>\n    </p>\n    <h2>\n      Ausl&#246;ser, Vorbedingung\n    </h2>\n    <p>\n      Der USER m&#246;chte die Sichtbarkeit von IDA-Versionen f&#252;r Schemata mit \n      ausw&#228;hlbaren Versionen festlegen und w&#228;hlt den entsprechenden Punkt im \n      Allgemeinmen&#252; aus.\n    </p>\n    <h2>\n      Resultat(e), Nachbedingung\n    </h2>\n    <p>\n      Es liegen neue Versionssichtbarkeiten vor. Ggf. wurde ein \n      Freigabeprozess initiiert oder abgeschlossen.\n    </p>\n  </body>\n</html>\n",
-    "outro" : "<html>\n  <head>\n    \n  </head>\n  <body>\n    <div>\n      \n    </div>\n    <h2>\n      Gesch&#228;ftsregeln\n    </h2>\n    <div>\n      Hintergrund zur Funktionalit&#228;t:\n    </div>\n    <div>\n      Bei der Erstellung einer neuen Bilanz muss der Benutzer ein Schema \n      ausw&#228;hlen, welches den Aufbau dieser Bilanz bestimmt. Der Aufbau \n      beschreibt f&#252;r ein Schema, welche Positionen es gibt und in welcher \n      Reihenfolgen die Positionen dargestellt werden etc. Diese Aufbauten \n      liegen in unterschiedlichen Versionen vor, was erreicht wird, in dem sie \n      Teil von IDA-Versionen sind. Bei der Neuanlage einer Bilanz muss die \n      Frage beantwortet werden, welchem Aufbau die Bilanz gen&#252;gen soll. F&#252;r \n      Local-GAAP-Schemata kann man &#252;ber die in diesem Usecase verwalteten \n      Versionssichtbarkeiten daf&#252;r sorgen, dass mehrere gleichzeitig sichtbare \n      IDA-Versionen zur Verf&#252;gung stehen. Bei interaktiver Anlage muss der \n      Benutzer dann aus diesen ausw&#228;hlen. Bei Anlage &#252;ber Webservices ist das \n      noch offen.\n    </div>\n    <div>\n      \n    </div>\n    <div>\n      Das Prinzip eines zweistufen Freigabeprozesses taucht auch in anderen \n      Teilen der Applikation auf, allerdings ist der Prozess hier etwas \n      anders. Das folgende Diagramm stellt den Vorgang im &#220;berblick dar\n    </div>\n    <h2 align=\"center\">\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-04.png\" width=\"100%\" height=\"579\">\n      \n    </h2>\n    <h2>\n      Screenshot Versionsmanagement\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-01.png\" width=\"926\" height=\"634\">\n      \n    </h2>\n    <h2>\n      Screenshot &#196;nderungshistorie\n    </h2>\n    <h2>\n      <img src=\"https://github.com/jlessner/specman/blob/master/examples/BALI%20UC-113-Image-02.png?raw=true\" width=\"918\" height=\"501\">\n      \n    </h2>\n    <h2>\n      Fachklassenmodell\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-03.png\" width=\"912\" height=\"931\">\n    </h2>\n  </body>\n</html>\n"
+    "outro" : "<html>\n  <head>\n    \n  </head>\n  <body>\n    <div>\n      \n    </div>\n    <h2>\n      Gesch&#228;ftsregeln\n    </h2>\n    <div>\n      Hintergrund zur Funktionalit&#228;t:\n    </div>\n    <div>\n      Bei der Erstellung einer neuen Bilanz muss der Benutzer ein Schema \n      ausw&#228;hlen, welches den Aufbau dieser Bilanz bestimmt. Der Aufbau \n      beschreibt f&#252;r ein Schema, welche Positionen es gibt und in welcher \n      Reihenfolgen die Positionen dargestellt werden etc. Diese Aufbauten \n      liegen in unterschiedlichen Versionen vor, was erreicht wird, in dem sie \n      Teil von IDA-Versionen sind. Bei der Neuanlage einer Bilanz muss die \n      Frage beantwortet werden, welchem Aufbau die Bilanz gen&#252;gen soll. F&#252;r \n      Local-GAAP-Schemata kann man &#252;ber die in diesem Usecase verwalteten \n      Versionssichtbarkeiten daf&#252;r sorgen, dass mehrere gleichzeitig sichtbare \n      IDA-Versionen zur Verf&#252;gung stehen. Bei interaktiver Anlage muss der \n      Benutzer dann aus diesen ausw&#228;hlen. Bei Anlage &#252;ber Webservices ist das \n      noch offen.\n    </div>\n    <div>\n      \n    </div>\n    <div>\n      Das Prinzip eines zweistufen Freigabeprozesses taucht auch in anderen \n      Teilen der Applikation auf, allerdings ist der Prozess hier etwas \n      anders. Das folgende Diagramm stellt den Vorgang im &#220;berblick dar\n    </div>\n    <h2 align=\"center\">\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-04.png\" width=\"636\" height=\"608\">\n      \n    </h2>\n    <h2>\n      Screenshot Versionsmanagement\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-01.png\" width=\"920\" height=\"622\">\n      \n    </h2>\n    <h2>\n      Screenshot &#196;nderungshistorie\n    </h2>\n    <h2>\n      <img src=\"https://github.com/jlessner/specman/blob/master/examples/BALI%20UC-113-Image-02.png?raw=true\" width=\"909\" height=\"487\">\n      \n    </h2>\n    <h2>\n      Fachklassenmodell\n    </h2>\n    <h2>\n      <img src=\"https://raw.githubusercontent.com/jlessner/specman/master/examples/BALI%20UC-113-Image-03.png\" width=\"917\" height=\"928\">\n    </h2>\n  </body>\n</html>\n"
   }
 }

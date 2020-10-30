@@ -1,36 +1,45 @@
 package specman.textfield;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Aufbau einer Image-Referenz in HTML, Reihenfolge der Attribute ist beliebig
- * <img height="300" vspace="1" border="1" hspace="1" width="300" alt="alt text" src="image.png" align="top">
- * Regulärer Ausdruck zum Suchen: "<img [^>]+>"
- * Darin lassen sich Höhe und Breite wiederum durch reguläre Ausdrücke finden.
- * Wenn Höhe und/oder Breite nicht angegeben sind, machen wir keine Skalierung
+ * Resizing of image tags in HTML by adapting height and width attribute values
+ * The image tags are identified by a regular expression and so are the
+ * two relevant attribute values within the tag. If height or width of the
+ * image are not specified, there is no scaling applied.
  */
 public class ImageScaler {
+  Pattern IMAGE_LINK_PATTERN = Pattern.compile("<img ([^>]+)>");
+  Pattern SIZE_ATTRIBUTE_PATTERN = Pattern.compile("(height|width)=\"([\\d]+)\"");
+
   private final int percentNew;
   private final int percentCurrent;
+  private final float scaleFactor;
 
   public ImageScaler(int percentNew, int percentCurrent) {
     this.percentNew = percentNew;
     this.percentCurrent = percentCurrent;
+    this.scaleFactor = (float)percentNew / (float)percentCurrent;
   }
 
   public String scaleImages(String html) {
-    Pattern imageLinkPattern = Pattern.compile("(<img ([^>]+)>)");
-    Matcher matcher = imageLinkPattern.matcher(html);
-    return matcher.replaceAll(this::scalingReplacer);
+    Matcher matcher = IMAGE_LINK_PATTERN.matcher(html);
+    return matcher.replaceAll(this::scaleSizeAttributesInImageTag);
   }
 
-  private String scalingReplacer(MatchResult matchResult) {
-    System.out.println(matchResult.group(0));
-    return null;
+  private String scaleSizeAttributesInImageTag(MatchResult matchResult) {
+    String imageTag = matchResult.group();
+    Matcher sizeMatcher = SIZE_ATTRIBUTE_PATTERN.matcher(imageTag);
+    String resizedImageTag = sizeMatcher.replaceAll(this::scaleSizeAttribute);
+    return resizedImageTag;
   }
 
+  private String scaleSizeAttribute(MatchResult matchResult) {
+    String attribute = matchResult.group(1);
+    int attributeValue = Integer.parseInt(matchResult.group(2));
+    int scaledValue = (int)(attributeValue * scaleFactor);
+    return String.format("%s=\"%d\"", attribute, scaledValue);
+  }
 }

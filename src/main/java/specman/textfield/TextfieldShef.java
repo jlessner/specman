@@ -93,7 +93,7 @@ public class TextfieldShef extends JEditorPane implements ComponentListener, Key
 		}
 		
 		if (editor != null)
-			skalieren(editor.getZoomFactor(), 100);
+			skalieren(editor.getZoomFactor(), 0);
 	}
 
 	public TextfieldShef() {
@@ -302,8 +302,13 @@ public class TextfieldShef extends JEditorPane implements ComponentListener, Key
 		if (schrittNummer != null) {
 			schrittNummer.setFont(labelFont.deriveFont((float)SCHRITTNR_FONTSIZE * prozentNeu / 100));
 		}
-		ImageScaler imageScaler = new ImageScaler(prozentNeu, prozentAktuell);
-		setText(imageScaler.scaleImages(getText()));
+		// prozentAktuell = 0 ist ein Indikator für initiales Laden. Da brauchen wir nur den Font
+		// anpassen. Die Bilder stehen bereits entsprechend des im Modell abgespeicherten Zoomfaktors
+		// skaliert im HTML.
+		if (prozentAktuell != 0 && prozentNeu != prozentAktuell) {
+			ImageScaler imageScaler = new ImageScaler(prozentNeu, prozentAktuell);
+			setText(imageScaler.scaleImages(getText()));
+		}
 	}
 
 	public List<Line2D.Double> getRechteZeilenraender() {
