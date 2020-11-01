@@ -28,6 +28,8 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
@@ -52,7 +54,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private static final String PROJEKTDATEI_EXTENSION = ".nsd";
 	private static final BasicStroke GESTRICHELTE_LINIE =
 			new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 1.0f, new float[] {10.0f, 10.0f }, 0f);
-	
+
 	JTextComponent zuletztFokussierterText;
 	SchrittSequenzView hauptSequenz;
 	JPanel arbeitsbereich;
@@ -72,6 +74,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		setApplicationIcon();
 
 		recentFiles = new RecentFiles(this);
+		undoManager = new SpecmanUndoManager(this);
 
 		initComponents();
 		
@@ -105,11 +108,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		breitenAnpasser.setOpaque(true);
 		arbeitsbereich.add(breitenAnpasser, CC.xy(3, 3));
 
-		intro = new TextfieldShef();
+		intro = new TextfieldShef(this);
 		intro.setOpaque(false);
 		arbeitsbereich.add(intro, CC.xy(2, 2));
 		
-		outro = new TextfieldShef();
+		outro = new TextfieldShef(this);
 		outro.setOpaque(false);
 		arbeitsbereich.add(outro, CC.xy(2, 4));
 		
@@ -512,8 +515,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			fos.close();
 
 			recentFiles.add(diagrammDatei);
-			undoManager.discardAllEdits(); // Kann man sich drüber streiten ;-)
-
+			undoManager.discardAllEdits();
 		} catch (JsonProcessingException jpx) {
 			jpx.printStackTrace();
 		} catch (IOException e) {
@@ -683,11 +685,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolBar.add(button);
 	}
 	
-	public static HTMLEditorPane shefEditorPane;
-	static UndoManager undoManager;
-	
-	private void initShefController() throws Exception {
-		undoManager = new UndoManager();
+	HTMLEditorPane shefEditorPane;
+	UndoManager undoManager;
+
+    @Override
+    public void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation) {
+        shefEditorPane.instrumentWysEditor(ed, initialText, orientation);
+    }
+
+    private void initShefController() throws Exception {
 		shefEditorPane = new HTMLEditorPane(undoManager);
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(baueDateiMenu());
@@ -699,8 +705,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		getContentPane().add(shefEditorPane.getFormatToolBar(), CC.xywh(1, 2, 1, 1));
 	}
 
-	static void addEdit(UndoableEdit edit) {
-		undoManager.addEdit(edit);
+	@Override
+	public void addEdit(UndoableEdit edit) {
+    	undoManager.addEdit(edit);
 	}
 
 	private JMenu baueDateiMenu() {

@@ -2,16 +2,12 @@ package specman;
 
 import specman.undo.UndoableSpaltenbreiteAngepasst;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 public class SpaltenResizer extends JPanel {
 	Integer dragX;
@@ -32,12 +28,12 @@ public class SpaltenResizer extends JPanel {
 		setCursor(leftRightCursor);
 		addMouseListener(new MouseAdapter() {
 			@Override public void mouseReleased(MouseEvent e) {
-				if (dragX != null) {
-					int ermoeglichteVeraenderung = container.spaltenbreitenAnpassenNachMausDragging(e.getX(), spalte);
-					Specman.addEdit(new UndoableSpaltenbreiteAngepasst(container, ermoeglichteVeraenderung, spalte));
-					dragX = null;
-					editor.vertikalLinieSetzen(0, null);
-				}
+			if (dragX != null) {
+				int ermoeglichteVeraenderung = container.spaltenbreitenAnpassenNachMausDragging(e.getX(), spalte);
+				editor.addEdit(new UndoableSpaltenbreiteAngepasst(container, ermoeglichteVeraenderung, spalte));
+				dragX = null;
+				editor.vertikalLinieSetzen(0, null);
+			}
 			}
 
 		});

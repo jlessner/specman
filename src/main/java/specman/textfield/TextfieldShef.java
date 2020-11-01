@@ -74,7 +74,7 @@ public class TextfieldShef extends JEditorPane implements ComponentListener, Key
 	boolean schrittNummerSichtbar = true;
 
 	public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
-		Specman.shefEditorPane.instrumentWysEditor(this, initialerText, 0);
+		editor.instrumentWysEditor(this, initialerText, 0);
 		
 		putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 		setFont(font);
@@ -96,8 +96,8 @@ public class TextfieldShef extends JEditorPane implements ComponentListener, Key
 			skalieren(editor.getZoomFactor(), 0);
 	}
 
-	public TextfieldShef() {
-		this(null, null, null);
+	public TextfieldShef(EditorI editor) {
+		this(editor, null, null);
 	}
 
 	public void setId(String id) {
