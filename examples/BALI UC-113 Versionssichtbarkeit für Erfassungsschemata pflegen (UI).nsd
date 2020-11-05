@@ -157,18 +157,106 @@
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
             "farbe" : -1
-          } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
+          } ], [ "specman.model.v001.CaseSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 6 ] ]
             },
             "inhalt" : {
-              "text" : "<html>  <head>      </head>  <body>    Das System speichert die &#196;nderungen und legt dabei ggf. neue     Versionssichtbarkeiten an oder l&#246;scht vorhandene nach folgenden Kriterien     pro Zeile der Versionstabelle:    <ul>      <li>        <b>sichtbar ab/bis</b> und <b>sichtbar ab/bis letzte &#196;nderung</b>         vorhanden und ungleich<br>&#61664; Update      </li>      <li>        <b>sichtbar ab/bis</b> und <b>sichtbar ab/bis letzte &#196;nderung</b>         vorhanden und identisch<br>&#61664; Keine Aktion      </li>      <li>        <b>sichtbar ab/bis</b> vorhanden, <b>sichtbar ab/bis letzte &#196;nderung</b>         leer<br>&#61664; L&#246;schung      </li>      <li>        <b>sichtbar ab/bis</b> leer, <b>sichtbar ab/bis letzte &#196;nderung</b>         vorhanden<br>&#61664; Neuanlage      </li>    </ul>  </body></html>",
+              "text" : "<html>  <head>      </head>  <body>    <div>      \tDas System speichert die &#196;nderungen und legt dabei ggf. neue    </div>    <div>      \tVersionssichtbarkeiten an oder l&#246;scht vorhandene nach    </div>    <div>      \tfolgenden Kriterien pro Zeile der    </div>    <div>      \tVersionstabelle:    </div>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "zugeklappt" : false,
+            "sonstSequenz" : {
+              "id" : {
+                "nummern" : [ "java.util.ArrayList", [ 3, 6, 0 ] ]
+              },
+              "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+                "id" : {
+                  "nummern" : [ "java.util.ArrayList", [ 3, 6, 1 ] ]
+                },
+                "inhalt" : {
+                  "text" : "<html>  <head>      </head>  <body>    Keine Aktion  </body></html>",
+                  "aenderungen" : [ "java.util.ArrayList", [ ] ]
+                },
+                "farbe" : -1
+              } ] ] ],
+              "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+              "catchBloeckeZugeklappt" : false,
+              "catchBloeckeUmgehungBreite" : 61,
+              "ueberschrift" : {
+                "text" : "<html>  <head>      </head>  <body>    <b>sichtbar ab/bis</b> und <b>sichtbar ab/bis letzte &#196;nderung</b>     vorhanden und identisch  </body></html>",
+                "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              }
+            },
+            "caseSequenzen" : [ "java.util.ArrayList", [ {
+              "id" : {
+                "nummern" : [ "java.util.ArrayList", [ 3, 7, 0 ] ]
+              },
+              "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+                "id" : {
+                  "nummern" : [ "java.util.ArrayList", [ 3, 7, 1 ] ]
+                },
+                "inhalt" : {
+                  "text" : "<html>  <head>      </head>  <body>    Update  </body></html>",
+                  "aenderungen" : [ "java.util.ArrayList", [ ] ]
+                },
+                "farbe" : -1
+              } ] ] ],
+              "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+              "catchBloeckeZugeklappt" : false,
+              "catchBloeckeUmgehungBreite" : 61,
+              "ueberschrift" : {
+                "text" : "<html>  <head>      </head>  <body>    <b>sichtbar ab/bis</b> und <b>sichtbar ab/bis letzte &#196;nderung</b>     vorhanden und ungleich  </body></html>",
+                "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              }
+            }, {
+              "id" : {
+                "nummern" : [ "java.util.ArrayList", [ 3, 8, 0 ] ]
+              },
+              "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+                "id" : {
+                  "nummern" : [ "java.util.ArrayList", [ 3, 8, 1 ] ]
+                },
+                "inhalt" : {
+                  "text" : "<html>  <head>      </head>  <body>    L&#246;schung  </body></html>",
+                  "aenderungen" : [ "java.util.ArrayList", [ ] ]
+                },
+                "farbe" : -1
+              } ] ] ],
+              "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+              "catchBloeckeZugeklappt" : false,
+              "catchBloeckeUmgehungBreite" : 61,
+              "ueberschrift" : {
+                "text" : "<html>  <head>      </head>  <body>    <b>sichtbar ab/bis</b> vorhanden, <b>sichtbar ab/bis letzte &#196;nderung</b>     leer  </body></html>",
+                "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              }
+            }, {
+              "id" : {
+                "nummern" : [ "java.util.ArrayList", [ 3, 9, 0 ] ]
+              },
+              "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
+                "id" : {
+                  "nummern" : [ "java.util.ArrayList", [ 3, 9, 1 ] ]
+                },
+                "inhalt" : {
+                  "text" : "<html>  <head>      </head>  <body>    Neuanlage  </body></html>",
+                  "aenderungen" : [ "java.util.ArrayList", [ ] ]
+                },
+                "farbe" : -1
+              } ] ] ],
+              "catchBloecke" : [ "java.util.ArrayList", [ ] ],
+              "catchBloeckeZugeklappt" : false,
+              "catchBloeckeUmgehungBreite" : 51,
+              "ueberschrift" : {
+                "text" : "<html>  <head>      </head>  <body>    <b>sichtbar ab/bis</b> leer, <b>sichtbar ab/bis letzte &#196;nderung</b>     vorhanden  </body></html>",
+                "aenderungen" : [ "java.util.ArrayList", [ ] ]
+              }
+            } ] ],
+            "spaltenbreitenAnteile" : [ 0.1980728, 0.2987152, 0.24946466, 0.24732333 ]
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
-              "nummern" : [ "java.util.ArrayList", [ 3, 7 ] ]
+              "nummern" : [ "java.util.ArrayList", [ 3, 10 ] ]
             },
             "inhalt" : {
               "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color: #ffff00\">Hat sich in Schritt 3.6 mindestens     eine &#196;nderung ergeben, vermerkt das System die Aktion &#8220;Speichern&#8221; mit     einem Logeintrag im &#196;nderungsprotokoll</span>  </body></html>",
@@ -180,7 +268,7 @@
             "farbe" : -56
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
-              "nummern" : [ "java.util.ArrayList", [ 3, 8 ] ]
+              "nummern" : [ "java.util.ArrayList", [ 3, 11 ] ]
             },
             "inhalt" : {
               "text" : "<html>  <head>      </head>  <body>    Liegen aus einem fr&#252;heren Freigabeprozess noch Freigaben vor, l&#246;scht das     System diese und legt ein Backup f&#252;r eine etwaige sp&#228;tere     Wiederherstellung an (siehe Schritt ).<i>Hinweis: l&#228;ge nur eine 1.     Freigabe aus einem laufenden Freigabeprozess vor, w&#228;ren Eingaben und     Speichern gar nicht m&#246;glich gewesen. Siehe Schritt 1.1</i>  </body></html>",
