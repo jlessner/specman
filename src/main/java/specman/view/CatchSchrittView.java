@@ -153,7 +153,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public Component getComponent() {
+	public JComponent getComponent() {
 		return schrittPanel;
 	}
 

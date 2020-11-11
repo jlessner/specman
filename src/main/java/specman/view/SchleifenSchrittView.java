@@ -113,7 +113,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	}
 
 	@Override
-	public Component getComponent() {
+	public JComponent getComponent() {
 		return panel;
 	}
 

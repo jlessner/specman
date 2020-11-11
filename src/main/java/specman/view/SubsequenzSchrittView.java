@@ -65,7 +65,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public Component getComponent() {
+	public JComponent getComponent() {
 		return panel;
 	}
 

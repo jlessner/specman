@@ -17,6 +17,7 @@ import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
 
+import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -89,7 +90,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return text.getBackground();
 	}
 
-	abstract public Component getComponent();
+	abstract public JComponent getComponent();
 
 	public JTextComponent getText() {
 		return text;

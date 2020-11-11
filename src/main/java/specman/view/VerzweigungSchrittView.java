@@ -53,7 +53,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	}
 	
 	@Override
-	public Component getComponent() {
+	public JComponent getComponent() {
 		return panel;
 	}
 
