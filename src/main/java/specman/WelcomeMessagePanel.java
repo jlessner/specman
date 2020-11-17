@@ -16,6 +16,9 @@ public class WelcomeMessagePanel extends JLabel {
         + "drag the mouse to the position where you want to place the step. Alternatively "
         + "just click the button from the steps palette to add a step below the one "
         + "focused by the text cursor."
+        + "<p>"
+        + "As soon as you have started your work you can change the diagramm width by "
+        + "clicking on its right border and dragging it left or right."
         + "</i></html>");
     setOpaque(true);
     setForeground(Color.gray);
