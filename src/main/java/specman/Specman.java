@@ -28,8 +28,6 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
@@ -50,6 +48,7 @@ import java.util.List;
  * @author User #3
  */
 public class Specman extends JFrame implements EditorI, SpaltenContainerI {
+	public static final int INITIAL_DIAGRAMM_WIDTH = 700;
 	public static final String SPECMAN_VERSION = "0.0.1";
 	private static final String PROJEKTDATEI_EXTENSION = ".nsd";
 	private static final BasicStroke GESTRICHELTE_LINIE =
@@ -63,13 +62,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	JScrollPane scrollPane;
 	TextfieldShef intro, outro;
 	FormLayout hauptlayout;
-	int diagrammbreite = 400;
+	int diagrammbreite = INITIAL_DIAGRAMM_WIDTH;
 	int zoomFaktor = 100;
 	Integer dragX;
 	File diagrammDatei;
 	List<AbstractSchrittView> postInitSchritte;
 	RecentFiles recentFiles;
-	
+	private WelcomeMessagePanel welcomeMessage;
+
 	public Specman() throws Exception {
 		setApplicationIcon();
 
@@ -98,15 +98,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		};
 		
-		hauptlayout = new FormLayout("10px, 400px, " + AbstractSchrittView.FORMLAYOUT_GAP, "10px, fill:pref, fill:default, fill:pref");
+		hauptlayout = new FormLayout(
+				"10px, " + INITIAL_DIAGRAMM_WIDTH + "px, " + AbstractSchrittView.FORMLAYOUT_GAP,
+				"10px, fill:pref, fill:default, fill:pref");
 		arbeitsbereich.setLayout(hauptlayout);
 		arbeitsbereich.setBackground(new Color(247, 247, 253));
-		hauptSequenzInitialisieren();
-
-		breitenAnpasser = new SpaltenResizer(this, this);
-		breitenAnpasser.setBackground(Color.BLACK);
-		breitenAnpasser.setOpaque(true);
-		arbeitsbereich.add(breitenAnpasser, CC.xy(3, 3));
+		displayWelcomeMessage();
 
 		intro = new TextfieldShef(this);
 		intro.setOpaque(false);
@@ -118,13 +115,36 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		
 		scrollPane.setViewportView(arbeitsbereich);
 		actionListenerHinzufuegen();
-		setSize(800, 600);
+		setInitialWindowSizeAndScreenCenteredLocation();
 		setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		// Falls jemand nicht aufgepasst hat und beim Initialisieren irgendwelche Funktionen verwendet hat,
 		// die schon etwas im Undo-Manager hinterlassen.
 		undoManager.discardAllEdits();
+	}
+
+	private void setInitialWindowSizeAndScreenCenteredLocation() {
+		setSize(1100, 700);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		int w = this.getSize().width;
+		int h = this.getSize().height;
+		int x = (dim.width-w)/2;
+		int y = (dim.height-h)/2;
+		this.setLocation(x, y);
+	}
+
+	private void displayWelcomeMessage() {
+		welcomeMessage = new WelcomeMessagePanel();
+		arbeitsbereich.add(welcomeMessage, CC.xy(2, 3));
+	}
+
+	private void dropWelcomeMessage() {
+		if (welcomeMessage != null) {
+			arbeitsbereich.remove(welcomeMessage);
+			welcomeMessage = null;
+			hauptSequenzInitialisieren();
+		}
 	}
 
 	private void setApplicationIcon() {
@@ -157,6 +177,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private void hauptSequenzInitialisieren() {
 		if (hauptSequenzContainer != null) {
 			arbeitsbereich.remove(hauptSequenzContainer);
+		}
+		else {
+			breitenAnpasser = new SpaltenResizer(this, this);
+			breitenAnpasser.setBackground(Color.BLACK);
+			breitenAnpasser.setOpaque(true);
+			arbeitsbereich.add(breitenAnpasser, CC.xy(3, 3));
 		}
 		hauptSequenzContainer = hauptSequenz.getContainer();
 		// Rundherum schwarze Linie au�er rechts. Da kommt stattdessen der breitenAnpasser hin
@@ -195,6 +221,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		schrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				dropWelcomeMessage();
 				AbstractSchrittView schritt;
 				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
 				if (sequenz != null)
@@ -210,6 +237,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt;
+				dropWelcomeMessage();
 				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
 				if (sequenz != null)
 					schritt = sequenz.whileSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
@@ -224,6 +252,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt;
+				dropWelcomeMessage();
 				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
 				if (sequenz != null)
 					schritt = sequenz.whileWhileSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
@@ -238,6 +267,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt;
+				dropWelcomeMessage();
 				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
 				if (sequenz != null)
 					schritt = sequenz.ifElseSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
@@ -252,6 +282,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt;
+				dropWelcomeMessage();
 				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
 				if (sequenz != null)
 					schritt = sequenz.ifSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
@@ -266,6 +297,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt;
+				dropWelcomeMessage();
 				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
 				if (sequenz != null)
 					schritt = sequenz.caseSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
@@ -280,6 +312,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt;
+				dropWelcomeMessage();
 				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
 				if (sequenz != null)
 					schritt = sequenz.subsequenzSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
@@ -294,6 +327,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt;
+				dropWelcomeMessage();
 				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
 				if (sequenz != null)
 					schritt = sequenz.breakSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
@@ -308,6 +342,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt;
+				dropWelcomeMessage();
 				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
 				if (sequenz != null)
 					schritt = sequenz.catchSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
@@ -321,6 +356,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		caseAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				dropWelcomeMessage();
 				AbstractSchrittView schritt = hauptSequenz.findeSchritt(zuletztFokussierterText);
 				if (!(schritt instanceof CaseSchrittView)) {
 					fehler("Kein Case-Schritt ausgewählt");
@@ -542,6 +578,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	public void diagrammLaden(File diagramFile) {
 		try {
+			dropWelcomeMessage();
 			postInitSchritte = new ArrayList<AbstractSchrittView>();
 			setDiagrammDatei(diagramFile);
 
