@@ -1,9 +1,6 @@
 package specman;
 
-import specman.EditorI;
-import specman.SchrittID;
-import specman.Specman;
-import specman.model.v001.AbstractSchrittModel_V001;
+import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -24,7 +21,7 @@ public class WelcomeMessagePanel extends JLabel {
     setForeground(Color.gray);
     setBackground(new Color(230, 230, 240));
     setBorder(new CompoundBorder(
-        new LineBorder(Color.BLACK, 2),
+        new LineBorder(Color.BLACK, AbstractSchrittView.LINIENBREITE),
         new EmptyBorder(15, 15, 15, 15)));
   }
 }
