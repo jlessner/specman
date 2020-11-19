@@ -3,7 +3,6 @@ package specman.view;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-import specman.BorderTestFrame2;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -45,8 +44,8 @@ public class SchrittSequenzView {
 		panel.setBackground(Specman.schrittHintergrund());
 		this.sequenzBasisId = sequenzBasisId;
 		sequenzBereich = new JPanel();
-		//sequenzBereich.setBackground(Color.black);
-		sequenzBereich.setBackground(Color.white); // Nur um zu schauen, wie dekorierte Schritte ohne Trennlinien aussehen
+		sequenzBereich.setBackground(Color.black);
+		//sequenzBereich.setBackground(Color.white); // Nur um zu schauen, wie dekorierte Schritte ohne Trennlinien aussehen
 		sequenzbereichLayout = new FormLayout("10px:grow");
 		sequenzBereich.setLayout(sequenzbereichLayout);
 		panel.add(sequenzBereich, CC.xy(1, 1));
@@ -163,7 +162,8 @@ public class SchrittSequenzView {
 
 	private JComponent decorate(AbstractSchrittView schritt) {
 		JComponent c = schritt.getComponent();
-		return new RoundedBorderDecorator(c);
+		return c;
+		//return new RoundedBorderDecorator(c);
 	}
 
 	private AbstractSchrittView catchAnhaengen(CatchSchrittView schritt, EditorI editor) {

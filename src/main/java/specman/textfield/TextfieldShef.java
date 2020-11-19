@@ -106,13 +106,13 @@ public class TextfieldShef implements ComponentListener, KeyListener {
       schrittNummer = null;
     }
 
-//    setLayout(new FormLayout("0px,10px:grow,0px", "fill:pref:grow"));
-//    add(editorPane, CC.xy(2, 1));
-//    editorPane.setBorder(new EmptyBorder(3, 3, 3, 3));
+    insetPanel.setLayout(new FormLayout("0px,10px:grow,0px", "fill:pref:grow"));
+    insetPanel.add(editorPane, CC.xy(2, 1));
+    editorPane.setBorder(new EmptyBorder(3, 3, 3, 3));
 
-    insetPanel.setLayout(new FormLayout("10px,10px:grow,10px", "1px,fill:pref:grow,1px"));
-    insetPanel.add(editorPane, CC.xy(2, 2));
-    editorPane.setBorder(new EmptyBorder(2, 0, 2, 0));
+//    insetPanel.setLayout(new FormLayout("10px,10px:grow,10px", "1px,fill:pref:grow,1px"));
+//    insetPanel.add(editorPane, CC.xy(2, 2));
+//    editorPane.setBorder(new EmptyBorder(2, 0, 2, 0));
 
     if (editor != null) {
       skalieren(editor.getZoomFactor(), 0);
