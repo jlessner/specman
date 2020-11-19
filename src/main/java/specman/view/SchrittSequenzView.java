@@ -183,9 +183,9 @@ public class SchrittSequenzView {
 //		c.setBorder(new LineBorder(Color.green.brighter(), 10));
 
 		BorderTestFrame2.FramePanel frame = new BorderTestFrame2.FramePanel(c);
+		return frame;
 
 //		return c;
-		return frame;
 	}
 
 	private AbstractSchrittView catchAnhaengen(CatchSchrittView schritt, EditorI editor) {

@@ -1,5 +1,6 @@
 package specman.textfield;
 
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.EditorI;
 import specman.Specman;
@@ -7,10 +8,12 @@ import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -100,8 +103,13 @@ public class TextfieldShef2 extends JPanel implements ComponentListener, KeyList
       schrittNummer = null;
     }
 
-    setLayout(new FormLayout("3px,10px:grow,3px", "3px,fill:pref:grow,3px"));
-    add(editorPane);
+//    setLayout(new FormLayout("0px,10px:grow,0px", "fill:pref:grow"));
+//    add(editorPane, CC.xy(2, 1));
+//    editorPane.setBorder(new EmptyBorder(3, 3, 3, 3));
+
+    setLayout(new FormLayout("10px,10px:grow,10px", "1px,fill:pref:grow,1px"));
+    add(editorPane, CC.xy(2, 2));
+    editorPane.setBorder(new EmptyBorder(2, 0, 2, 0));
 
     if (editor != null) {
       skalieren(editor.getZoomFactor(), 0);
@@ -114,7 +122,11 @@ public class TextfieldShef2 extends JPanel implements ComponentListener, KeyList
 
   @Override public void setBackground(Color bg) {
     super.setBackground(bg);
-    editorPane.setBackground(bg);
+    // Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
+    // im Konstruktor einen Aufruf von setBackground vornimmt.
+    if (editorPane != null) {
+      editorPane.setBackground(bg);
+    }
   }
 
   public void setId(String id) {
@@ -178,7 +190,11 @@ public class TextfieldShef2 extends JPanel implements ComponentListener, KeyList
   public void componentResized(ComponentEvent e) {
     Dimension schrittnummerGroesse = schrittNummer.getPreferredSize();
     if (schrittNummerSichtbar)
-      schrittNummer.setBounds(getWidth() - schrittnummerGroesse.width, 0, schrittnummerGroesse.width, schrittnummerGroesse.height - 2);
+      schrittNummer.setBounds(
+          editorPane.getWidth() - schrittnummerGroesse.width,
+          0,
+          schrittnummerGroesse.width,
+          schrittnummerGroesse.height - 2);
     else
       schrittNummer.setBounds(0, 0, 0, 0);
   }
@@ -315,7 +331,7 @@ public class TextfieldShef2 extends JPanel implements ComponentListener, KeyList
   @Override public void keyReleased(KeyEvent e) {}
 
   public void skalieren(int prozentNeu, int prozentAktuell) {
-    setFont(font.deriveFont((float)FONTSIZE * prozentNeu / 100));
+    editorPane.setFont(font.deriveFont((float)FONTSIZE * prozentNeu / 100));
     if (schrittNummer != null) {
       schrittNummer.setFont(labelFont.deriveFont((float)SCHRITTNR_FONTSIZE * prozentNeu / 100));
     }
@@ -374,4 +390,16 @@ public class TextfieldShef2 extends JPanel implements ComponentListener, KeyList
     return "<div align='center'>" + Specman.initialtext(text) + "</div>";
   }
 
+  public String getText() {
+    return editorPane.getText();
+  }
+
+  public JTextComponent getTextComponent() {
+    return editorPane;
+  }
+
+  // TODO JL: genau soetwas hier müssen wir ändern. Die Margins müssen vom Panel aufgenommen werden!
+  public void setMargin(Insets insets) {
+    editorPane.setMargin(insets);
+  }
 }

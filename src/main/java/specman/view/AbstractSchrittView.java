@@ -16,6 +16,7 @@ import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
+import specman.textfield.TextfieldShef2;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -35,7 +36,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	
 	protected static final List<SchrittSequenzView> KEINE_SEQUENZEN = new ArrayList<SchrittSequenzView>();
 
-	protected final TextfieldShef text;
+	protected final TextfieldShef2 text;
 	protected SchrittID id;
 	 
 	public AbstractSchrittView(EditorI editor) {
@@ -44,9 +45,9 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	public AbstractSchrittView(EditorI editor, String initialerText, SchrittID id) {
 		this.id = id;
-		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
-		text.addFocusListener(editor);
-		text.addFocusListener(this);
+		this.text = new TextfieldShef2(editor, initialerText, id != null ? id.toString() : null);
+		text.getTextComponent().addFocusListener(editor);
+		text.getTextComponent().addFocusListener(this);
 	}
 	
 	public void setId(SchrittID id) {
@@ -93,7 +94,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	abstract public JComponent getComponent();
 
 	public JTextComponent getText() {
-		return text;
+		return text.getTextComponent();
 	}
 
 	public boolean isStrukturiert() { return false; }
@@ -238,7 +239,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public boolean enthaelt(JTextComponent zuletztFokussierterText) {
-		return text == zuletztFokussierterText;
+		return text.getTextComponent() == zuletztFokussierterText;
 	}
 	
 	static int groesseUmrechnen(int groesse, int prozentNeu, int prozentAktuell) {
@@ -254,5 +255,5 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return "fill:" + groesse + "px";
 	}
 
-	public void requestFocus() { text.requestFocus(); }
+	public void requestFocus() { text.getTextComponent().requestFocus(); }
 }

@@ -35,7 +35,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		this.subsequenz = wiederholSequenz;
 		panel.add(wiederholSequenz.getContainer(), CC.xy(1, 3));
 		
-		klappen = new KlappButton(this, text, layout, 3);
+		klappen = new KlappButton(this, text.getTextComponent(), layout, 3);
 	}
 
 	private static SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {

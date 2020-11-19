@@ -1,5 +1,6 @@
 package specman.view;
 
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import specman.Specman;
