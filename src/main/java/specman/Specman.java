@@ -28,8 +28,6 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
@@ -110,11 +108,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		intro = new TextfieldShef(this);
 		intro.setOpaque(false);
-		arbeitsbereich.add(intro, CC.xy(2, 2));
+		arbeitsbereich.add(intro.asJComponent(), CC.xy(2, 2));
 		
 		outro = new TextfieldShef(this);
 		outro.setOpaque(false);
-		arbeitsbereich.add(outro, CC.xy(2, 4));
+		arbeitsbereich.add(outro.asJComponent(), CC.xy(2, 4));
 		
 		scrollPane.setViewportView(arbeitsbereich);
 		actionListenerHinzufuegen();

@@ -7,9 +7,9 @@ import specman.BorderTestFrame2;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.textfield.TextfieldShef;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
+import specman.textfield.TextfieldShef;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -163,29 +163,7 @@ public class SchrittSequenzView {
 
 	private JComponent decorate(AbstractSchrittView schritt) {
 		JComponent c = schritt.getComponent();
-
-//		c.setBorder(new CompoundBorder(
-//				new LineBorder(Color.white, 10),
-//				new ExperimentalRoundedBorder(15)));
-
-//		c.setBorder(
-//				new CompoundBorder(
-//						new LineBorder(Color.lightGray, 10),
-//							new CompoundBorder(
-//							new ExperimentalRoundedBorder(30),
-//							new LineBorder(Color.orange, 10)
-//							)));
-
-//		c.setBorder(new ExperimentalRoundedBorder2(30));
-
-//		c.setBorder(new ExperimentalDotBorder());
-
-//		c.setBorder(new LineBorder(Color.green.brighter(), 10));
-
-		BorderTestFrame2.FramePanel frame = new BorderTestFrame2.FramePanel(c);
-		return frame;
-
-//		return c;
+		return new RoundedBorderDecorator(c);
 	}
 
 	private AbstractSchrittView catchAnhaengen(CatchSchrittView schritt, EditorI editor) {

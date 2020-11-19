@@ -3,7 +3,6 @@ package specman.view;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.textfield.TextfieldShef;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.BreakSchrittModel_V001;
@@ -16,7 +15,7 @@ import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
-import specman.textfield.TextfieldShef2;
+import specman.textfield.TextfieldShef;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -36,7 +35,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	
 	protected static final List<SchrittSequenzView> KEINE_SEQUENZEN = new ArrayList<SchrittSequenzView>();
 
-	protected final TextfieldShef2 text;
+	protected final TextfieldShef text;
 	protected SchrittID id;
 	 
 	public AbstractSchrittView(EditorI editor) {
@@ -45,9 +44,9 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	public AbstractSchrittView(EditorI editor, String initialerText, SchrittID id) {
 		this.id = id;
-		this.text = new TextfieldShef2(editor, initialerText, id != null ? id.toString() : null);
-		text.getTextComponent().addFocusListener(editor);
-		text.getTextComponent().addFocusListener(this);
+		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
+		text.addFocusListener(editor);
+		text.addFocusListener(this);
 	}
 	
 	public void setId(SchrittID id) {
@@ -255,5 +254,5 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return "fill:" + groesse + "px";
 	}
 
-	public void requestFocus() { text.getTextComponent().requestFocus(); }
+	public void requestFocus() { text.requestFocus(); }
 }
