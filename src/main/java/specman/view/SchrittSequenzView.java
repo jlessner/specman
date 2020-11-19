@@ -3,6 +3,7 @@ package specman.view;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.BorderTestFrame2;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -11,8 +12,6 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
@@ -46,7 +45,8 @@ public class SchrittSequenzView {
 		panel.setBackground(Specman.schrittHintergrund());
 		this.sequenzBasisId = sequenzBasisId;
 		sequenzBereich = new JPanel();
-		sequenzBereich.setBackground(Color.black);
+		//sequenzBereich.setBackground(Color.black);
+		sequenzBereich.setBackground(Color.white); // Nur um zu schauen, wie dekorierte Schritte ohne Trennlinien aussehen
 		sequenzbereichLayout = new FormLayout("10px:grow");
 		sequenzBereich.setLayout(sequenzbereichLayout);
 		panel.add(sequenzBereich, CC.xy(1, 1));
@@ -155,19 +155,37 @@ public class SchrittSequenzView {
 			sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		}
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
-		sequenzBereich.add(wrap(schritt), CC.xy(1, schritte.size() * 2 + 1));
+		sequenzBereich.add(decorate(schritt), CC.xy(1, schritte.size() * 2 + 1));
 		schritte.add(schritt);
 		letzterSchrittWirdHoehenverbraucher();
 		return schritt;
 	}
 
-	private JComponent wrap(AbstractSchrittView schritt) {
+	private JComponent decorate(AbstractSchrittView schritt) {
 		JComponent c = schritt.getComponent();
-		c.setBorder(new CompoundBorder(
-				new LineBorder(Color.white, 10),
-				new ExperimentalRoundedBorder(15)));
-		//c.setBorder(new LineBorder(Color.white, 10));
-		return c;
+
+//		c.setBorder(new CompoundBorder(
+//				new LineBorder(Color.white, 10),
+//				new ExperimentalRoundedBorder(15)));
+
+//		c.setBorder(
+//				new CompoundBorder(
+//						new LineBorder(Color.lightGray, 10),
+//							new CompoundBorder(
+//							new ExperimentalRoundedBorder(30),
+//							new LineBorder(Color.orange, 10)
+//							)));
+
+//		c.setBorder(new ExperimentalRoundedBorder2(30));
+
+//		c.setBorder(new ExperimentalDotBorder());
+
+//		c.setBorder(new LineBorder(Color.green.brighter(), 10));
+
+		BorderTestFrame2.FramePanel frame = new BorderTestFrame2.FramePanel(c);
+
+//		return c;
+		return frame;
 	}
 
 	private AbstractSchrittView catchAnhaengen(CatchSchrittView schritt, EditorI editor) {
@@ -254,7 +272,7 @@ public class SchrittSequenzView {
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
 
-		sequenzBereich.add(wrap(schritt), CC.xy(1, i * 2 + 1));
+		sequenzBereich.add(decorate(schritt), CC.xy(1, i * 2 + 1));
 
 		for (int n = i; n < schritte.size(); n++) {
 			AbstractSchrittView nachfolger = schritte.get(n);
