@@ -4,6 +4,7 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.EinfacherSchrittModel_V001;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class EinfacherSchrittView extends AbstractSchrittView {
@@ -22,9 +23,7 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public Component getComponent() {
-		return text;
-	}
+	public JComponent getComponent() { return text.asJComponent(); }
 
 	@Override
 	public EinfacherSchrittModel_V001 generiereModel(boolean formatierterText) {

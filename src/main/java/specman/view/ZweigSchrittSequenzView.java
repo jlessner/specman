@@ -2,8 +2,8 @@ package specman.view;
 
 import specman.EditorI;
 import specman.SchrittID;
-import specman.textfield.TextfieldShef;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
+import specman.textfield.TextfieldShef;
 
 import javax.swing.text.JTextComponent;
 
@@ -48,7 +48,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	}
 
 	public boolean hatUeberschrift(JTextComponent textComponent) {
-		return ueberschrift == textComponent;
+		return ueberschrift.getTextComponent() == textComponent;
 	}
 	
 	public SchrittID naechsteNachbarSequenzID() {

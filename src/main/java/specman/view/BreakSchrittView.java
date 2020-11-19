@@ -34,7 +34,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 				ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
 		
-		panel.add(text, CC.xy(2, 1));
+		panel.add(text.asJComponent(), CC.xy(2, 1));
 	}
 
 	private void dreieckZeichnen(Graphics2D g) {
@@ -65,7 +65,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public Component getComponent() {
+	public JComponent getComponent() {
 		return panel;
 	}
 

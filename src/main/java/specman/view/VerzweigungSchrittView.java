@@ -33,8 +33,12 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		//createPanelLayout(caseInitialtexte.length);
 		panel.setLayout(panelLayout);
 		panel.addComponentListener(this);
-		
-		klappen = new KlappButton(this, text, panelLayout, 4);
+
+		// TODO JL: Die Platzierung des Klappbuttons muss neu gebaut werden. Weder das Textfeld noch
+		// das Hauptpanel sind geeignet, weil diese ein Formlayout haben. Allerdings dürfte sich das
+		// Problem erledigen, wenn die Aktogramm-Darstellung kommt. Dann ist links oben gar kein Text
+		// mehr und somit Platz für den Klapp-Button.
+		klappen = new KlappButton(this, text.getTextComponent(), panelLayout, 4);
 		klappen.addComponentListener(new ComponentAdapter() {
 			// Kleine Sch�nheitsgeschichte: Der Klapp-Button liegt �ber der linken Dreieckslinie.
 			// Wenn der Button durch Mausbewegungen verschwindet, m�ssen wir daf�r sorgen, das dort,
@@ -53,7 +57,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	}
 	
 	@Override
-	public Component getComponent() {
+	public JComponent getComponent() {
 		return panel;
 	}
 

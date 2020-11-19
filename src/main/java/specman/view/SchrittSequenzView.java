@@ -6,9 +6,9 @@ import com.jgoodies.forms.layout.RowSpec;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.textfield.TextfieldShef;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
+import specman.textfield.TextfieldShef;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -45,6 +45,7 @@ public class SchrittSequenzView {
 		this.sequenzBasisId = sequenzBasisId;
 		sequenzBereich = new JPanel();
 		sequenzBereich.setBackground(Color.black);
+		//sequenzBereich.setBackground(Color.white); // Nur um zu schauen, wie dekorierte Schritte ohne Trennlinien aussehen
 		sequenzbereichLayout = new FormLayout("10px:grow");
 		sequenzBereich.setLayout(sequenzbereichLayout);
 		panel.add(sequenzBereich, CC.xy(1, 1));
@@ -153,10 +154,16 @@ public class SchrittSequenzView {
 			sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		}
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
-		sequenzBereich.add(schritt.getComponent(), CC.xy(1, schritte.size() * 2 + 1));
+		sequenzBereich.add(decorate(schritt), CC.xy(1, schritte.size() * 2 + 1));
 		schritte.add(schritt);
 		letzterSchrittWirdHoehenverbraucher();
 		return schritt;
+	}
+
+	private JComponent decorate(AbstractSchrittView schritt) {
+		JComponent c = schritt.getComponent();
+		return c;
+		//return new RoundedBorderDecorator(c);
 	}
 
 	private AbstractSchrittView catchAnhaengen(CatchSchrittView schritt, EditorI editor) {
@@ -242,8 +249,8 @@ public class SchrittSequenzView {
 
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
-		
-		sequenzBereich.add(schritt.getComponent(), CC.xy(1, i * 2 + 1));
+
+		sequenzBereich.add(decorate(schritt), CC.xy(1, i * 2 + 1));
 
 		for (int n = i; n < schritte.size(); n++) {
 			AbstractSchrittView nachfolger = schritte.get(n);

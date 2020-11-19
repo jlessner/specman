@@ -41,7 +41,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 				(LINIENBREITE * 2) + "px, " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", pref:grow, 0px");
 		schrittPanel.setLayout(layout);
 		
-		schrittPanel.add(text, CC.xy(2, 2));
+		schrittPanel.add(text.asJComponent(), CC.xy(2, 2));
 		
 		dreiecksPanel = new JPanel() {
 			@Override
@@ -153,7 +153,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public Component getComponent() {
+	public JComponent getComponent() {
 		return schrittPanel;
 	}
 

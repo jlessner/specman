@@ -5,9 +5,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.textfield.TextfieldShef;
 import specman.model.v001.IfSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.textfield.TextfieldShef;
 
 import java.awt.*;
 

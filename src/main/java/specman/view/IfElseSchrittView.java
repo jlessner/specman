@@ -8,9 +8,9 @@ import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.textfield.TextfieldShef;
 import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.textfield.TextfieldShef;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -33,7 +33,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		this.ifSequenz = pIfSequenz;
 		this.elseSequenz = pElseSequenz;
 		
-		panel.add(text, CC.xywh(1, 1, 3, 1));
+		panel.add(text.asJComponent(), CC.xywh(1, 1, 3, 1));
 
 		ifBedingungAnlegen(ifSequenz);
 		elseBedingungAnlegen(elseSequenz);
@@ -73,7 +73,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 
 	protected void elseBedingungAnlegen(ZweigSchrittSequenzView elseSequenz) {
 		elseSequenz.ueberschrift.addFocusListener(this);
-		panel.add(elseSequenz.ueberschrift, CC.xywh(2, 2, 2, 1));
+		panel.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 2, 2, 1));
 		elseSequenz.ueberschrift.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -112,14 +112,14 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	
 	private void layoutAnTexteFuerIfElseBedingungenAnpassen(boolean volleBreiteBenoetigt) {
 		dreieckBisUnten = !volleBreiteBenoetigt;
-		panelLayout.setConstraints(elseSequenz.ueberschrift,
+		panelLayout.setConstraints(elseSequenz.ueberschrift.asJComponent(),
 				volleBreiteBenoetigt ? CC.xywh(3, 2, 1, 1) : CC.xywh(2, 2, 2, 1));
 		Specman.instance().diagrammAktualisieren(null);
 	}
 	
 	protected void ifBedingungAnlegen(ZweigSchrittSequenzView ifSequenz) {
 		ifSequenz.ueberschrift.addFocusListener(this);
-		panel.add(ifSequenz.ueberschrift, CC.xy(1, 2));
+		panel.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1, 2));
 		ifSequenz.ueberschrift.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {

@@ -3,7 +3,6 @@ package specman.view;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.textfield.TextfieldShef;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.BreakSchrittModel_V001;
@@ -16,7 +15,9 @@ import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
+import specman.textfield.TextfieldShef;
 
+import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -89,10 +90,10 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return text.getBackground();
 	}
 
-	abstract public Component getComponent();
+	abstract public JComponent getComponent();
 
 	public JTextComponent getText() {
-		return text;
+		return text.getTextComponent();
 	}
 
 	public boolean isStrukturiert() { return false; }
@@ -237,7 +238,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public boolean enthaelt(JTextComponent zuletztFokussierterText) {
-		return text == zuletztFokussierterText;
+		return text.getTextComponent() == zuletztFokussierterText;
 	}
 	
 	static int groesseUmrechnen(int groesse, int prozentNeu, int prozentAktuell) {
