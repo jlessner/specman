@@ -26,6 +26,8 @@ import javax.swing.text.html.HTML;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Line2D;
@@ -35,7 +37,7 @@ import java.util.List;
 
 import static specman.Specman.schrittHintergrund;
 
-public class TextfieldShef2 extends JPanel implements ComponentListener, KeyListener {
+public class TextfieldShef2 implements ComponentListener, KeyListener {
   public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE = Color.LIGHT_GRAY;
   public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
   public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
@@ -77,11 +79,13 @@ public class TextfieldShef2 extends JPanel implements ComponentListener, KeyList
   }
 
 
+  private final JPanel insetPanel;
   private final JEditorPane editorPane;
   private final JLabel schrittNummer;
   boolean schrittNummerSichtbar = true;
 
   public TextfieldShef2(EditorI editor, String initialerText, String schrittId) {
+    insetPanel = new JPanel();
     editorPane = new JEditorPane();
     editor.instrumentWysEditor(editorPane, initialerText, 0);
     editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
@@ -107,8 +111,8 @@ public class TextfieldShef2 extends JPanel implements ComponentListener, KeyList
 //    add(editorPane, CC.xy(2, 1));
 //    editorPane.setBorder(new EmptyBorder(3, 3, 3, 3));
 
-    setLayout(new FormLayout("10px,10px:grow,10px", "1px,fill:pref:grow,1px"));
-    add(editorPane, CC.xy(2, 2));
+    insetPanel.setLayout(new FormLayout("10px,10px:grow,10px", "1px,fill:pref:grow,1px"));
+    insetPanel.add(editorPane, CC.xy(2, 2));
     editorPane.setBorder(new EmptyBorder(2, 0, 2, 0));
 
     if (editor != null) {
@@ -120,8 +124,8 @@ public class TextfieldShef2 extends JPanel implements ComponentListener, KeyList
     this(editor, null, null);
   }
 
-  @Override public void setBackground(Color bg) {
-    super.setBackground(bg);
+  public void setBackground(Color bg) {
+    insetPanel.setBackground(bg);
     // Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
     // im Konstruktor einen Aufruf von setBackground vornimmt.
     if (editorPane != null) {
@@ -401,5 +405,21 @@ public class TextfieldShef2 extends JPanel implements ComponentListener, KeyList
   // TODO JL: genau soetwas hier müssen wir ändern. Die Margins müssen vom Panel aufgenommen werden!
   public void setMargin(Insets insets) {
     editorPane.setMargin(insets);
+  }
+
+  public Color getBackground() {
+    return editorPane.getBackground();
+  }
+
+  public JComponent asJComponent() {
+    return insetPanel;
+  }
+
+  public int getX() { return insetPanel.getX(); }
+
+  public int getHeight() { return insetPanel.getHeight(); }
+
+  public void addFocusListener(FocusListener focusListener) {
+    editorPane.addFocusListener(focusListener);
   }
 }

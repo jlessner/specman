@@ -42,7 +42,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			List<ZweigSchrittSequenzView> caseSequenzen) {
 		super(editor, initialerText, id, createPanelLayout(caseSequenzen.size()));
 		
-		panel.add(text, INITIAL_DUMMY);
+		panel.add(text.asJComponent(), INITIAL_DUMMY);
 
 		sonstFallAnlegen(sonstSequenz);
 		casesAnlegen(caseSequenzen);
@@ -320,7 +320,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	private void layoutConstraintsSetzen() {
-		panelLayout.setConstraints(text, CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1));
+		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1));
 		panelLayout.setConstraints(sonstSequenz.ueberschrift, CC.xy(1, 2));
 		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 4));
 		for (int i = 0; i < caseSequenzen.size(); i++) {

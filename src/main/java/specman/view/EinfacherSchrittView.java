@@ -23,9 +23,7 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() {
-		return text;
-	}
+	public JComponent getComponent() { return text.asJComponent(); }
 
 	@Override
 	public EinfacherSchrittModel_V001 generiereModel(boolean formatierterText) {

@@ -33,7 +33,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		this.ifSequenz = pIfSequenz;
 		this.elseSequenz = pElseSequenz;
 		
-		panel.add(text, CC.xywh(1, 1, 3, 1));
+		panel.add(text.asJComponent(), CC.xywh(1, 1, 3, 1));
 
 		ifBedingungAnlegen(ifSequenz);
 		elseBedingungAnlegen(elseSequenz);
