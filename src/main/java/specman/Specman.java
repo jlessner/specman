@@ -412,13 +412,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 
-		switchBorder.addActionListener(new ActionListener() {
+		toggleBorderType.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt = hauptSequenz.findeSchritt(zuletztFokussierterText);
 				if (schritt != null) {
 					SchrittSequenzView sequenz = hauptSequenz.findeElternSequenz(schritt);
-					sequenz.switchBorder(schritt);
+					sequenz.toggleBorderType(schritt);
 					diagrammAktualisieren(schritt);
 					// TODO JL: Undo hinzufügen
 				}
@@ -668,7 +668,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		caseAnhaengen = new JButton();
 		einfaerben = new JButton();
 		loeschen = new JButton();
-		switchBorder = new JButton();
+		toggleBorderType = new JButton();
 		review = new JButton();
 		birdsview = new JButton();
 		aenderungenVerfolgen = new JToggleButton();
@@ -700,7 +700,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolBar.addSeparator();
 		toolbarButtonHinzufuegen(einfaerben, "helligkeit", "Hintergrund schattieren");
 		toolbarButtonHinzufuegen(loeschen, "loeschen", "Schritt löschen");
-		toolbarButtonHinzufuegen(switchBorder, "switch-border", "Rahmen umschalten");
+		toolbarButtonHinzufuegen(toggleBorderType, "switch-border", "Rahmen umschalten");
 		toolBar.addSeparator();
 		toolbarButtonHinzufuegen(aenderungenVerfolgen, "aenderungen", "Änderungen verfolgen");
 		toolbarButtonHinzufuegen(review, "review", "Für Review zusammenklappen");
@@ -785,7 +785,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JButton caseAnhaengen;
 	private JButton einfaerben;
 	private JButton loeschen;
-	private JButton switchBorder;
+	private JButton toggleBorderType;
 	private JButton review;
 	private JButton birdsview;
 	private JComboBox<ZoomFaktor> zoom;

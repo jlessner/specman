@@ -453,7 +453,7 @@ public class SchrittSequenzView {
 		catchBereich.skalieren(prozentNeu, prozentAktuell);
 	}
 
-	public void switchBorder(AbstractSchrittView schritt) {
+	public void toggleBorderType(AbstractSchrittView schritt) {
 		int stepIndex = stepIndex(schritt);
 		JComponent currentStepComponent = schritt.getComponent();
 		Component[] sequenceChildren = sequenzBereich.getComponents();
@@ -461,7 +461,7 @@ public class SchrittSequenzView {
 		for (componentIndex = 0; componentIndex < sequenceChildren.length; componentIndex++) {
 			if (sequenceChildren[componentIndex] == currentStepComponent) {
 				sequenzBereich.remove(componentIndex);
-				JComponent switchedStepComponent = schritt.switchBorderType();
+				JComponent switchedStepComponent = schritt.toggleBorderType();
 				CellConstraints constraints = constraints4step(stepIndex);
 				sequenzBereich.add(switchedStepComponent, constraints, componentIndex);
 				return;

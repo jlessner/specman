@@ -418,4 +418,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
   public Rectangle getBounds() { return insetPanel.getBounds(); }
 
+  public void updateDecorationInsets(boolean indentForDecoration) {
+    insetPanel.updateDecorationInsets(indentForDecoration);
+  }
 }

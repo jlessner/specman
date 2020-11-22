@@ -261,17 +261,24 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	public void requestFocus() { text.requestFocus(); }
 
-	public JComponent switchBorderType() {
+	public JComponent toggleBorderType() {
+		JComponent toggleResult;
 		if (roundedBorderDecorator == null) {
 			JComponent coreComponent = getComponent();
 			roundedBorderDecorator = new RoundedBorderDecorator(coreComponent);
-			return roundedBorderDecorator;
+			toggleResult = roundedBorderDecorator;
 		}
 		else {
 			JComponent coreComponent = roundedBorderDecorator.getDecoratedComponent();
 			roundedBorderDecorator.remove(coreComponent);
 			roundedBorderDecorator = null;
-			return coreComponent;
+			toggleResult = coreComponent;
 		}
+		updateTextfieldDecorationInsets(roundedBorderDecorator != null);
+		return toggleResult;
+	}
+
+	private void updateTextfieldDecorationInsets(boolean indentForDecoration) {
+		text.updateDecorationInsets(indentForDecoration);
 	}
 }

@@ -1,7 +1,9 @@
 package specman.textfield;
 
 import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -32,6 +34,8 @@ import java.awt.*;
  */
 public class InsetPanel extends JPanel {
     private static final int JEDITORPANE_DEFAULT_BORDER_THICKNESS = 3;
+    private static final int LEFTRIGHT_INSET_FOR_DECORATION = 10;
+    private static final int TOPBOTTOM_INSET_FOR_DECORATION = 1;
 
     private FormLayout layout;
     private EmptyBorder border;
@@ -40,18 +44,22 @@ public class InsetPanel extends JPanel {
     InsetPanel(JEditorPane editorPane) {
         this.editorPane = editorPane;
         this.layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
-        this.border = new EmptyBorder(
+        setEditorBorder(
                 JEDITORPANE_DEFAULT_BORDER_THICKNESS,
                 JEDITORPANE_DEFAULT_BORDER_THICKNESS,
                 JEDITORPANE_DEFAULT_BORDER_THICKNESS,
                 JEDITORPANE_DEFAULT_BORDER_THICKNESS);
         setLayout(layout);
-        editorPane.setBorder(border);
 
 //    setLayout(new FormLayout("10px,10px:grow,10px", "1px,fill:pref:grow,1px"));
 //    setBorder(new EmptyBorder(2, 0, 2, 0));
 
         add(editorPane, CC.xy(2, 2));
+    }
+
+    private void setEditorBorder(int top, int left, int bottom, int right) {
+        this.border = new EmptyBorder(top, left, bottom, right);
+        editorPane.setBorder(border);
     }
 
     public void setLeftInset(int px) {
@@ -66,5 +74,26 @@ public class InsetPanel extends JPanel {
         insets.right = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
         border = new EmptyBorder(insets);
         editorPane.setBorder(border);
+    }
+
+    public void updateDecorationInsets(boolean indentForDecoration) {
+        int leftRightIndention = indentForDecoration ? LEFTRIGHT_INSET_FOR_DECORATION : 0;
+        ColumnSpec indentionColumnSpec = ColumnSpec.decode(leftRightIndention + "px");
+        layout.setColumnSpec(1, indentionColumnSpec);
+        layout.setColumnSpec(3, indentionColumnSpec);
+
+        int topBottomIndention = indentForDecoration ? TOPBOTTOM_INSET_FOR_DECORATION : 0;
+        RowSpec indentionRowSpec = RowSpec.decode(topBottomIndention + "px");
+        layout.setRowSpec(1, indentionRowSpec);
+        layout.setRowSpec(3, indentionRowSpec);
+
+        int topBottomBorderThickness = indentForDecoration
+            ? JEDITORPANE_DEFAULT_BORDER_THICKNESS - TOPBOTTOM_INSET_FOR_DECORATION
+            : JEDITORPANE_DEFAULT_BORDER_THICKNESS;
+        setEditorBorder(
+                topBottomBorderThickness,
+                JEDITORPANE_DEFAULT_BORDER_THICKNESS,
+                topBottomBorderThickness,
+                JEDITORPANE_DEFAULT_BORDER_THICKNESS);
     }
 }
