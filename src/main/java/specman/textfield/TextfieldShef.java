@@ -78,14 +78,14 @@ public class TextfieldShef implements ComponentListener, KeyListener {
   }
 
 
-  private final JPanel insetPanel;
+  private final InsetPanel insetPanel;
   private final JEditorPane editorPane;
   private final JLabel schrittNummer;
   boolean schrittNummerSichtbar = true;
 
   public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
-    insetPanel = new JPanel();
     editorPane = new JEditorPane();
+    insetPanel = new InsetPanel(editorPane);
     editor.instrumentWysEditor(editorPane, initialerText, 0);
     editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
     editorPane.setFont(font);
@@ -105,14 +105,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     else {
       schrittNummer = null;
     }
-
-    insetPanel.setLayout(new FormLayout("0px,10px:grow,0px", "fill:pref:grow"));
-    insetPanel.add(editorPane, CC.xy(2, 1));
-    editorPane.setBorder(new EmptyBorder(3, 3, 3, 3));
-
-//    insetPanel.setLayout(new FormLayout("10px,10px:grow,10px", "1px,fill:pref:grow,1px"));
-//    insetPanel.add(editorPane, CC.xy(2, 2));
-//    editorPane.setBorder(new EmptyBorder(2, 0, 2, 0));
 
     if (editor != null) {
       skalieren(editor.getZoomFactor(), 0);
@@ -397,8 +389,9 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
   public JTextComponent getTextComponent() { return editorPane; }
 
-  // TODO JL: genau soetwas hier müssen wir ändern. Die Margins müssen vom Panel aufgenommen werden!
-  public void setMargin(Insets insets) { editorPane.setMargin(insets); }
+  public void setLeftInset(int px) { insetPanel.setLeftInset(px); }
+
+  public void setRightInset(int px) { insetPanel.setRightInset(px); }
 
   public Color getBackground() { return editorPane.getBackground(); }
 

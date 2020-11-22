@@ -74,7 +74,8 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	public void componentResized(ComponentEvent e) {
 		double textEinrueckung = texteinrueckungNeuberechnen();
 //		berechneHoeheFuerVollstaendigUnberuehrtenText();
-		text.setMargin(new Insets(0, (int)textEinrueckung, 0, (int)textEinrueckung));
+		text.setLeftInset((int)textEinrueckung);
+		text.setRightInset((int)textEinrueckung);
 		panel.repaint(); // Sorgt daf�r, dass das umplazierte Textfeld und alles andere auf dem Panel sofort neu gezeichnet wird
 	}
 

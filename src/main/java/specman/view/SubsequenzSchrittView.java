@@ -22,7 +22,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	public SubsequenzSchrittView(EditorI editor, String initialerText, SchrittSequenzView wiederholSequenz, SchrittID id) {
 		super(editor, initialerText, id);
 		
-		text.setMargin(new Insets(0, TEXTEINRUECKUNG, 0, 0));
+		text.setLeftInset(TEXTEINRUECKUNG);
 
 		panel = new JPanel();
 		panel.setBackground(Color.black);
