@@ -36,6 +36,8 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		panel.add(wiederholSequenz.getContainer(), CC.xy(1, 3));
 		
 		klappen = new KlappButton(this, text.getTextComponent(), layout, 3);
+
+		//roundedBorderDecorator = new RoundedBorderDecorator(panel);
 	}
 
 	private static SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
@@ -65,9 +67,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() {
-		return panel;
-	}
+	public JComponent getComponent() { return decorated(panel); }
 
 	@Override
 	public boolean isStrukturiert() {

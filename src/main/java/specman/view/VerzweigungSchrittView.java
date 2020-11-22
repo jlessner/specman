@@ -57,9 +57,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	}
 	
 	@Override
-	public JComponent getComponent() {
-		return panel;
-	}
+	public JComponent getComponent() { return decorated(panel); }
 
 	@Override
 	public boolean isStrukturiert() {

@@ -65,9 +65,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() {
-		return panel;
-	}
+	public JComponent getComponent() { return decorated(panel); }
 
 	@Override
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {

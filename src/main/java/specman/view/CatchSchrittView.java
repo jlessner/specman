@@ -153,9 +153,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() {
-		return schrittPanel;
-	}
+	public JComponent getComponent() { return decorated(schrittPanel); }
 
 	@Override
 	public SchrittSequenzView findeSequenz(JTextComponent zuletztFokussierterText) {

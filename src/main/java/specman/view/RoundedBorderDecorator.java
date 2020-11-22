@@ -13,6 +13,8 @@ public class RoundedBorderDecorator extends JPanel {
   private static final int INNER_BORDERLINE_WIDTH = 2;
   private static final int ARC_SIZE = 25;
 
+  private final JComponent decoratedComponent;
+
   public RoundedBorderDecorator(JComponent componentToDecorate) {
     setBackground(Color.white);
     String layoutInsetSpec = (INSET + INNER_BORDERLINE_WIDTH) + "px";
@@ -20,6 +22,7 @@ public class RoundedBorderDecorator extends JPanel {
         layoutInsetSpec + ",10px:grow," + layoutInsetSpec,
         layoutInsetSpec + ",fill:pref:grow," + layoutInsetSpec));
     add(componentToDecorate, CC.xy(2, 2));
+    decoratedComponent = componentToDecorate;
   }
 
   @Override
@@ -71,4 +74,6 @@ public class RoundedBorderDecorator extends JPanel {
     path.append(inner, false);
     g2d.fill(path);
   }
+
+  public JComponent getDecoratedComponent() { return decoratedComponent; }
 }

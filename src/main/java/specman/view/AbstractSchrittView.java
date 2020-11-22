@@ -37,6 +37,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	protected final TextfieldShef text;
 	protected SchrittID id;
+	protected RoundedBorderDecorator roundedBorderDecorator;
 	 
 	public AbstractSchrittView(EditorI editor) {
 		this(editor, null, (SchrittID) null);
@@ -91,6 +92,10 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	abstract public JComponent getComponent();
+
+	protected JComponent decorated(JComponent core) {
+		return roundedBorderDecorator != null ? roundedBorderDecorator : core;
+	}
 
 	public JTextComponent getText() {
 		return text.getTextComponent();
@@ -255,4 +260,18 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public void requestFocus() { text.requestFocus(); }
+
+	public JComponent switchBorderType() {
+		if (roundedBorderDecorator == null) {
+			JComponent coreComponent = getComponent();
+			roundedBorderDecorator = new RoundedBorderDecorator(coreComponent);
+			return roundedBorderDecorator;
+		}
+		else {
+			JComponent coreComponent = roundedBorderDecorator.getDecoratedComponent();
+			roundedBorderDecorator.remove(coreComponent);
+			roundedBorderDecorator = null;
+			return coreComponent;
+		}
+	}
 }

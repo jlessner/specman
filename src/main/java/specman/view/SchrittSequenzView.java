@@ -1,6 +1,7 @@
 package specman.view;
 
 import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import specman.EditorI;
@@ -142,28 +143,31 @@ public class SchrittSequenzView {
 	}
 
 	private void letzterSchrittWirdHoehenverbraucher() {
-		for (int i = 0; i < schritte.size() - 1; i++) {
-			sequenzbereichLayout.setRowSpec(i*2 + 1, RowSpec.decode(ZEILENLAYOUT_SCHRITT));
+		for (int i = 0; i < schritte.size(); i++) {
+			sequenzbereichLayout.setRowSpec(i*2 + 1, rowspec4step(i));
 		}
-		sequenzbereichLayout.setRowSpec((schritte.size()-1)*2 + 1, RowSpec.decode(ZEILENLAYOUT_LETZTER_SCHRITT));
 	}
-	
+
+	private RowSpec rowspec4step(int stepIndex) {
+		return (stepIndex == schritte.size()-1)
+			? RowSpec.decode(ZEILENLAYOUT_LETZTER_SCHRITT)
+			: RowSpec.decode(ZEILENLAYOUT_SCHRITT);
+	}
+
+	private CellConstraints constraints4step(int stepIndex) {
+		return CC.xy(1, stepIndex * 2 + 1);
+	}
+
 	public AbstractSchrittView schrittAnhaengen(final AbstractSchrittView schritt, EditorI editor) {
 		schritt.schrittnummerSichtbarkeitSetzen(schrittnummernSichtbar);
 		if (schritte.size() != 0) {
 			sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		}
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
-		sequenzBereich.add(decorate(schritt), CC.xy(1, schritte.size() * 2 + 1));
+		sequenzBereich.add(schritt.getComponent(), constraints4step(schritte.size()));
 		schritte.add(schritt);
 		letzterSchrittWirdHoehenverbraucher();
 		return schritt;
-	}
-
-	private JComponent decorate(AbstractSchrittView schritt) {
-		JComponent c = schritt.getComponent();
-		return c;
-		//return new RoundedBorderDecorator(c);
 	}
 
 	private AbstractSchrittView catchAnhaengen(CatchSchrittView schritt, EditorI editor) {
@@ -237,24 +241,30 @@ public class SchrittSequenzView {
 		return catchAnhaengen(schritt, editor);
 	}
 
+	private int stepIndex(AbstractSchrittView schritt) {
+		int i = 0;
+		for (AbstractSchrittView vorgaenger: schritte) {
+			if (vorgaenger == schritt) {
+				return i;
+			}
+			i++;
+		}
+		throw new IllegalArgumentException("Step " + schritt + " is not part of sequenz " + this);
+	}
+
 	public AbstractSchrittView schrittZwischenschieben(AbstractSchrittView schritt, AbstractSchrittView vorgaengerSchritt, EditorI editor) {
 		schritt.schrittnummerSichtbarkeitSetzen(schrittnummernSichtbar);
 		
-		int i = 1;
-		for (AbstractSchrittView vorgaenger: schritte) {
-			if (vorgaenger == vorgaengerSchritt)
-				break;
-			i++;
-		}
+		int i = stepIndex(vorgaengerSchritt) + 1;
 
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
 
-		sequenzBereich.add(decorate(schritt), CC.xy(1, i * 2 + 1));
+		sequenzBereich.add(schritt.getComponent(), constraints4step(i));
 
 		for (int n = i; n < schritte.size(); n++) {
 			AbstractSchrittView nachfolger = schritte.get(n);
-			sequenzbereichLayout.setConstraints(nachfolger.getComponent(), CC.xy(1, (n+1) * 2 + 1));
+			sequenzbereichLayout.setConstraints(nachfolger.getComponent(), constraints4step(n+1));
 		}
 
 		schritte.add(i, schritt);
@@ -443,4 +453,20 @@ public class SchrittSequenzView {
 		catchBereich.skalieren(prozentNeu, prozentAktuell);
 	}
 
+	public void switchBorder(AbstractSchrittView schritt) {
+		int stepIndex = stepIndex(schritt);
+		JComponent currentStepComponent = schritt.getComponent();
+		Component[] sequenceChildren = sequenzBereich.getComponents();
+		int componentIndex;
+		for (componentIndex = 0; componentIndex < sequenceChildren.length; componentIndex++) {
+			if (sequenceChildren[componentIndex] == currentStepComponent) {
+				sequenzBereich.remove(componentIndex);
+				JComponent switchedStepComponent = schritt.switchBorderType();
+				CellConstraints constraints = constraints4step(stepIndex);
+				sequenzBereich.add(switchedStepComponent, constraints, componentIndex);
+				return;
+			}
+		}
+		throw new IllegalArgumentException("Schritt " + schritt + " is not part of " + this);
+	}
 }
