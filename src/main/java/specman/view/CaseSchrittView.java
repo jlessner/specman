@@ -13,6 +13,7 @@ import specman.geometry.LineIntersect;
 import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
+import specman.textfield.Indentions;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -331,4 +332,14 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		}
 	}
 
+	@Override
+	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
+		super.updateTextfieldDecorationIndentions(indentions);
+		Indentions defaultCaseIndentions = indentions.withRight(false).withTop(false);
+		sonstSequenz.updateTextfieldDecorationIndentions(defaultCaseIndentions);
+		Indentions caseIndentions = defaultCaseIndentions.withLeft(false);
+		caseSequenzen
+			.stream()
+			.forEach(caseSequence -> caseSequence.updateTextfieldDecorationIndentions(caseIndentions));
+	}
 }
