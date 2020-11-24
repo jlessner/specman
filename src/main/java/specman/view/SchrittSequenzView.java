@@ -9,6 +9,7 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
+import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 
 import javax.swing.*;
@@ -471,4 +472,23 @@ public class SchrittSequenzView {
 		}
 		throw new IllegalArgumentException("Schritt " + schritt + " is not part of " + this);
 	}
+
+    public void updateTextfieldDecorationIndentions(Indentions lastStepIndention) {
+		Indentions stepIndentions = lastStepIndention.withBottom(false);
+		int s;
+		for (s = 0; s < schritte.size() - 1; s++) {
+			forwardTextfieldDecorationIndentions(s, stepIndentions);
+		}
+		if (s < schritte.size()) {
+			forwardTextfieldDecorationIndentions(s, lastStepIndention);
+		}
+    }
+
+    private void forwardTextfieldDecorationIndentions(int substepIndex, Indentions indentions) {
+		AbstractSchrittView substep = schritte.get(substepIndex);
+		if (!substep.isDecorated()) {
+			substep.updateTextfieldDecorationIndentions(indentions);
+		}
+	}
+
 }

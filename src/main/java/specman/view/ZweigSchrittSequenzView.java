@@ -3,6 +3,7 @@ package specman.view;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
+import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 
 import javax.swing.text.JTextComponent;
@@ -54,5 +55,10 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	public SchrittID naechsteNachbarSequenzID() {
 		return sequenzBasisId.naechsteID();
 	}
-	
+
+	@Override
+	public void updateTextfieldDecorationIndentions(Indentions indentions) {
+		super.updateTextfieldDecorationIndentions(indentions);
+		ueberschrift.updateDecorationIndentions(indentions);
+	}
 }

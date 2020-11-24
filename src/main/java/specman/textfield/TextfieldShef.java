@@ -1,14 +1,11 @@
 package specman.textfield;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
 import specman.EditorI;
 import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -418,7 +415,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
   public Rectangle getBounds() { return insetPanel.getBounds(); }
 
-  public void updateDecorationInsets(boolean indentForDecoration) {
-    insetPanel.updateDecorationInsets(indentForDecoration);
+  public void updateDecorationIndentions(Indentions indentForDecoration) {
+    insetPanel.updateDecorationIndentions(indentForDecoration);
   }
 }

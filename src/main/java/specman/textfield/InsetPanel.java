@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
+
 /** Diese Klasse löst ein ärgerliches Grafikproblem in Swing:
  * Wenn sich ein Textfeld im Randbereich eines Schritts mit abgerundeten Ecke befinden, dann
  * muss es ein wenig eingerückt werden, damit der editierbare Bereich nicht unter der Abrundung
@@ -33,9 +35,6 @@ import java.awt.*;
  * situationsbedingt beide Techniken mischen.
  */
 public class InsetPanel extends JPanel {
-    private static final int JEDITORPANE_DEFAULT_BORDER_THICKNESS = 3;
-    private static final int LEFTRIGHT_INSET_FOR_DECORATION = 10;
-    private static final int TOPBOTTOM_INSET_FOR_DECORATION = 1;
 
     private FormLayout layout;
     private EmptyBorder border;
@@ -50,10 +49,6 @@ public class InsetPanel extends JPanel {
                 JEDITORPANE_DEFAULT_BORDER_THICKNESS,
                 JEDITORPANE_DEFAULT_BORDER_THICKNESS);
         setLayout(layout);
-
-//    setLayout(new FormLayout("10px,10px:grow,10px", "1px,fill:pref:grow,1px"));
-//    setBorder(new EmptyBorder(2, 0, 2, 0));
-
         add(editorPane, CC.xy(2, 2));
     }
 
@@ -76,24 +71,16 @@ public class InsetPanel extends JPanel {
         editorPane.setBorder(border);
     }
 
-    public void updateDecorationInsets(boolean indentForDecoration) {
-        int leftRightIndention = indentForDecoration ? LEFTRIGHT_INSET_FOR_DECORATION : 0;
-        ColumnSpec indentionColumnSpec = ColumnSpec.decode(leftRightIndention + "px");
-        layout.setColumnSpec(1, indentionColumnSpec);
-        layout.setColumnSpec(3, indentionColumnSpec);
+    public void updateDecorationIndentions(Indentions indentions) {
+        layout.setRowSpec(1, indentions.topInset());
+        layout.setRowSpec(3, indentions.bottomInset());
+        layout.setColumnSpec(1, indentions.leftInset());
+        layout.setColumnSpec(3, indentions.rightInset());
 
-        int topBottomIndention = indentForDecoration ? TOPBOTTOM_INSET_FOR_DECORATION : 0;
-        RowSpec indentionRowSpec = RowSpec.decode(topBottomIndention + "px");
-        layout.setRowSpec(1, indentionRowSpec);
-        layout.setRowSpec(3, indentionRowSpec);
-
-        int topBottomBorderThickness = indentForDecoration
-            ? JEDITORPANE_DEFAULT_BORDER_THICKNESS - TOPBOTTOM_INSET_FOR_DECORATION
-            : JEDITORPANE_DEFAULT_BORDER_THICKNESS;
         setEditorBorder(
-                topBottomBorderThickness,
-                JEDITORPANE_DEFAULT_BORDER_THICKNESS,
-                topBottomBorderThickness,
-                JEDITORPANE_DEFAULT_BORDER_THICKNESS);
+                indentions.topBorder(),
+                indentions.leftBorder(),
+                indentions.bottomBorder(),
+                indentions.rightBorder());
     }
 }

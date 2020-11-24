@@ -6,6 +6,7 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
+import specman.textfield.Indentions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -114,6 +115,12 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 			klappen.isSelected(),
 			subsequenz.generiereSchittSequenzModel(formatierterText));
 		return model;
+	}
+
+	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
+		super.updateTextfieldDecorationIndentions(indentions);
+		Indentions substepIndentions = indentions.withTop(false).withRight(false);
+		subsequenz.updateTextfieldDecorationIndentions(substepIndentions);
 	}
 
 }

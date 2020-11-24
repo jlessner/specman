@@ -13,6 +13,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StrukturierterSchrittModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
+import specman.textfield.Indentions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -182,5 +183,11 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		return model;
 	}
 
-
+	@Override
+	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
+		super.updateTextfieldDecorationIndentions(indentions.withLeft(false));
+		// Subsequence does not need consideration because the loop panel forms
+		// an additional border shielding the inner steps from any rounded border
+		// decorarions outside.
+	}
 }

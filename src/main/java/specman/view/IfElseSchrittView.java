@@ -10,6 +10,7 @@ import specman.SpaltenResizer;
 import specman.Specman;
 import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 
 import javax.swing.text.JTextComponent;
@@ -262,5 +263,12 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 			elseSequenz.hatUeberschrift(textComponent);
 	}
 
-	
+	@Override
+	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
+		super.updateTextfieldDecorationIndentions(indentions);
+		Indentions ifIndentions = indentions.withRight(false).withTop(false);
+		ifSequenz.updateTextfieldDecorationIndentions(ifIndentions);
+		Indentions elseIndentions = ifIndentions.withLeft(false);
+		elseSequenz.updateTextfieldDecorationIndentions(elseIndentions);
+	}
 }

@@ -15,6 +15,7 @@ import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
+import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 
 import javax.swing.*;
@@ -277,11 +278,14 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 			roundedBorderDecorator = null;
 			toggleResult = coreComponent;
 		}
-		updateTextfieldDecorationInsets(roundedBorderDecorator != null);
+		Indentions indentions = new Indentions(isDecorated());
+		updateTextfieldDecorationIndentions(indentions);
 		return toggleResult;
 	}
 
-	private void updateTextfieldDecorationInsets(boolean indentForDecoration) {
-		text.updateDecorationInsets(indentForDecoration);
+	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
+		text.updateDecorationIndentions(indentions);
 	}
+
+	public boolean isDecorated() { return roundedBorderDecorator != null; }
 }
