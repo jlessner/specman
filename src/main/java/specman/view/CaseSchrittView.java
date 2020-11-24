@@ -67,7 +67,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 	
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, CaseSchrittModel_V001 model) {
-		this(editor, parent, model.inhalt.text, model.id);
+		this(editor, parent, model.inhalt.text, model.id, model.caseSequenzen.size());
 		initCases(
 				editor,
 				new ZweigSchrittSequenzView(editor, this, model.sonstSequenz),

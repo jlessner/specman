@@ -22,9 +22,11 @@ public interface EditorI extends FocusListener {
 
 	void diagrammLaden(File diagramFile);
 
-  	int getZoomFactor();
+	int getZoomFactor();
 
 	void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation);
 
 	void addEdit(UndoableEdit edit);
+
+	void diagrammAktualisieren(AbstractSchrittView schrittImFokus);
 }

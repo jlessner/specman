@@ -14,6 +14,7 @@ import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
 import specman.undo.UndoableSchrittHinzugefuegt;
+import specman.undo.UndoableToggleStepBorder;
 import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigHinzugefuegt;
 import specman.view.AbstractSchrittView;
@@ -228,8 +229,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt = sequenz.einfachenSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
 				else
 					schritt = hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
-				addEdit(new UndoableSchrittHinzugefuegt(schritt, sequenz!= null ? sequenz : hauptSequenz));
-				diagrammAktualisieren(schritt);
+
+				newStepPostInit(schritt, sequenz);
 			}
 		});
 		
@@ -243,8 +244,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt = sequenz.whileSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
 				else
 					schritt = hauptSequenz.whileSchrittAnhaengen(Specman.this);
-				addEdit(new UndoableSchrittHinzugefuegt(schritt, sequenz!= null ? sequenz : hauptSequenz));
-				diagrammAktualisieren(schritt);
+				newStepPostInit(schritt, sequenz);
 			}
 		});
 		
@@ -258,8 +258,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt = sequenz.whileWhileSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
 				else
 					schritt = hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
-				addEdit(new UndoableSchrittHinzugefuegt(schritt, sequenz!= null ? sequenz : hauptSequenz));
-				diagrammAktualisieren(schritt);
+				newStepPostInit(schritt, sequenz);
 			}
 		});
 		
@@ -273,8 +272,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt = sequenz.ifElseSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
 				else
 					schritt = hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
-				addEdit(new UndoableSchrittHinzugefuegt(schritt, sequenz!= null ? sequenz : hauptSequenz));
-				diagrammAktualisieren(schritt);
+				newStepPostInit(schritt, sequenz);
 			}
 		});
 		
@@ -288,8 +286,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt = sequenz.ifSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
 				else
 					schritt = hauptSequenz.ifSchrittAnhaengen(Specman.this);
-				addEdit(new UndoableSchrittHinzugefuegt(schritt, sequenz!= null ? sequenz : hauptSequenz));
-				diagrammAktualisieren(schritt);
+				newStepPostInit(schritt, sequenz);
 			}
 		});
 		
@@ -303,8 +300,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt = sequenz.caseSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
 				else
 					schritt = hauptSequenz.caseSchrittAnhaengen(Specman.this);
-				addEdit(new UndoableSchrittHinzugefuegt(schritt, sequenz!= null ? sequenz : hauptSequenz));
-				diagrammAktualisieren(schritt);
+				newStepPostInit(schritt, sequenz);
 			}
 		});
 		
@@ -318,8 +314,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt = sequenz.subsequenzSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
 				else
 					schritt = hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
-				addEdit(new UndoableSchrittHinzugefuegt(schritt, sequenz!= null ? sequenz : hauptSequenz));
-				diagrammAktualisieren(schritt);
+				newStepPostInit(schritt, sequenz);
 			}
 		});
 		
@@ -333,8 +328,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt = sequenz.breakSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
 				else
 					schritt = hauptSequenz.breakSchrittAnhaengen(Specman.this);
-				addEdit(new UndoableSchrittHinzugefuegt(schritt, sequenz!= null ? sequenz : hauptSequenz));
-				diagrammAktualisieren(schritt);
+				newStepPostInit(schritt, sequenz);
 			}
 		});
 		
@@ -348,8 +342,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt = sequenz.catchSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
 				else
 					schritt = hauptSequenz.catchSchrittAnhaengen(Specman.this);
-				addEdit(new UndoableSchrittHinzugefuegt(schritt, sequenz!= null ? sequenz : hauptSequenz));
-				diagrammAktualisieren(schritt);
+				newStepPostInit(schritt, sequenz);
 			}
 		});
 		
@@ -370,6 +363,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 				ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(Specman.this, ausgewaehlterZweig);
 				addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
+				schritt.skalieren(zoomFaktor, 100);
 				diagrammAktualisieren(schritt);
 			}
 		});
@@ -419,8 +413,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				if (schritt != null) {
 					SchrittSequenzView sequenz = hauptSequenz.findeElternSequenz(schritt);
 					sequenz.toggleBorderType(schritt);
+					addEdit(new UndoableToggleStepBorder(Specman.this, schritt, sequenz));
 					diagrammAktualisieren(schritt);
-					// TODO JL: Undo hinzufügen
 				}
 			}
 		});
@@ -634,9 +628,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	
 	public void diagrammAktualisieren(AbstractSchrittView schrittImFokus) {
 		hauptSequenzContainer.setVisible(false);
-		if (schrittImFokus != null) {
-			schrittImFokus.skalieren(zoomFaktor, 100);
-		}
 		// Folgende Zeile forciert ein Relayouting, falls z.B. nur eine manuelle Breiten�nderung
 		// einer If-Else-Spaltenteilung stattgefunden hat.
 		diagrammbreiteSetzen(diagrammbreite-1);
@@ -652,7 +643,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 	}
-	
+
+	private void newStepPostInit(AbstractSchrittView newStep, SchrittSequenzView sequenz) {
+		addEdit(new UndoableSchrittHinzugefuegt(newStep, sequenz != null ? sequenz : hauptSequenz));
+		newStep.skalieren(zoomFaktor, 100);
+		diagrammAktualisieren(newStep);
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		toolBar = new JToolBar();
