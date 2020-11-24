@@ -14,22 +14,22 @@ import specman.model.v001.WhileWhileSchrittModel_V001;
  */
 public class WhileWhileSchrittView extends SchleifenSchrittView {
 	
-	public WhileWhileSchrittView(EditorI editor, String initialwrText, SchrittSequenzView wiederholSequenz, SchrittID id) {
-		super(editor, initialwrText, wiederholSequenz, id, true);
+	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
+		super(editor, parent, initialerText, id, true);
+		if (withDefaultContent) {
+			initWiederholsequenz(einschrittigeInitialsequenz(editor, id));
+		}
 	}
 
-	public WhileWhileSchrittView(EditorI editor, String initialwrText, SchrittID id) {
-		this(editor, initialwrText, einschrittigeInitialsequenz(editor, id.naechsteEbene()), id);
+	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialwrText, SchrittID id) {
+		this(editor, parent, initialwrText, id, true);
 	}
 
-	public WhileWhileSchrittView(EditorI editor, WhileWhileSchrittModel_V001 model) {
-		super(editor, model, true);
+	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, WhileWhileSchrittModel_V001 model) {
+		super(editor, parent, model, true);
+		initWiederholsequenzFromModel(editor, model);
 	}
 
-	public WhileWhileSchrittView(EditorI editor) {
-		this(editor, null, (SchrittID) null);
-	}
-	
 	@Override
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
 		WhileWhileSchrittModel_V001 model = new WhileWhileSchrittModel_V001(

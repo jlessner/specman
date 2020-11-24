@@ -607,7 +607,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			outro.setPlainText(model.outro);
 			outro.skalieren(zoomFaktor, 0);
 			setName(model.name);
-			hauptSequenz = new SchrittSequenzView(this, model.hauptSequenz);
+			hauptSequenz = new SchrittSequenzView(this, null, model.hauptSequenz);
 			hauptSequenzInitialisieren();
 			neueSchritteNachinitialisieren();
 			recentFiles.add(diagramFile);

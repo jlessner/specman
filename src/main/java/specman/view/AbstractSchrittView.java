@@ -37,19 +37,22 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	protected final TextfieldShef text;
 	protected SchrittID id;
+	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	 
-	public AbstractSchrittView(EditorI editor) {
-		this(editor, null, (SchrittID) null);
+	@Deprecated
+	public AbstractSchrittView(EditorI editor, String initialerText, SchrittID id) {
+		this(editor, null, initialerText, id);
 	}
 
-	public AbstractSchrittView(EditorI editor, String initialerText, SchrittID id) {
+	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
 		this.id = id;
 		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
+		this.parent = parent;
 		text.addFocusListener(editor);
 		text.addFocusListener(this);
 	}
-	
+
 	public void setId(SchrittID id) {
 		this.id = id;
 		text.setId(id.toString());
@@ -116,32 +119,32 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	abstract public AbstractSchrittModel_V001 generiereModel(boolean formatierterText);
 	
-	public static AbstractSchrittView baueSchrittView(EditorI editor, AbstractSchrittModel_V001 model) {
+	public static AbstractSchrittView baueSchrittView(EditorI editor, SchrittSequenzView parent, AbstractSchrittModel_V001 model) {
 		if (model instanceof WhileWhileSchrittModel_V001) {
-			return new WhileWhileSchrittView(editor, (WhileWhileSchrittModel_V001) model);
+			return new WhileWhileSchrittView(editor, parent, (WhileWhileSchrittModel_V001) model);
 		}
 		if (model instanceof WhileSchrittModel_V001) {
-			return new WhileSchrittView(editor, (WhileSchrittModel_V001) model);
+			return new WhileSchrittView(editor, parent, (WhileSchrittModel_V001) model);
 		}
 		if (model instanceof IfElseSchrittModel_V001) {
-			return new IfElseSchrittView(editor, (IfElseSchrittModel_V001) model);
+			return new IfElseSchrittView(editor, parent, (IfElseSchrittModel_V001) model);
 		}
 		if (model instanceof IfSchrittModel_V001) {
-			return new IfSchrittView(editor, (IfSchrittModel_V001) model);
+			return new IfSchrittView(editor, parent, (IfSchrittModel_V001) model);
 		}
 		if (model instanceof CaseSchrittModel_V001) {
-			return new CaseSchrittView(editor, (CaseSchrittModel_V001) model);
+			return new CaseSchrittView(editor, parent, (CaseSchrittModel_V001) model);
 		}
 		if (model instanceof SubsequenzSchrittModel_V001) {
-			return new SubsequenzSchrittView(editor, (SubsequenzSchrittModel_V001) model);
+			return new SubsequenzSchrittView(editor, parent, (SubsequenzSchrittModel_V001) model);
 		}
 		if (model instanceof BreakSchrittModel_V001) {
 			return new BreakSchrittView(editor, (BreakSchrittModel_V001) model);
 		}
 		if (model instanceof CatchSchrittModel_V001) {
-			return new CatchSchrittView(editor, (CatchSchrittModel_V001) model);
+			return new CatchSchrittView(editor, parent, (CatchSchrittModel_V001) model);
 		}
-		return new EinfacherSchrittView(editor, (EinfacherSchrittModel_V001)model);
+		return new EinfacherSchrittView(editor, parent, (EinfacherSchrittModel_V001)model);
 	}
 
 	public void geklappt(boolean auf) {}

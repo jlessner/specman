@@ -10,6 +10,8 @@ import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.SchrittSequenzModel_V001;
+import specman.model.v001.StrukturierterSchrittModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 
 import javax.swing.*;
@@ -22,12 +24,12 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	final JPanel linkerBalken;
 	final JPanel untererBalken;
 	final KlappButton klappen;
-	final SchrittSequenzView wiederholSequenz;
 	final FormLayout layout;
+	SchrittSequenzView wiederholSequenz;
 	int balkenbreite;
 
-	public SchleifenSchrittView(EditorI editor, String initialerText, SchrittSequenzView wiederholSequenz, SchrittID id, boolean mitUnteremBalken) {
-		super(editor, initialerText, id);
+	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean mitUnteremBalken) {
+		super(editor, parent, initialerText, id);
 		panel = new JPanel();
 		panel.setBackground(Color.black);
 		balkenbreite = SPALTENLAYOUT_UMGEHUNG_GROESSE;
@@ -38,9 +40,6 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		
 		panel.add(text.asJComponent(), CC.xywh(2, 1, 2, 1));
 
-		this.wiederholSequenz = wiederholSequenz;
-		panel.add(wiederholSequenz.getContainer(), CC.xy(3, 3));
-		
 		linkerBalken = new JPanel();
 		linkerBalken.setLayout(null);
 		linkerBalken.setBackground(Specman.schrittHintergrund());
@@ -64,21 +63,28 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		klappen = new KlappButton(this, linkerBalken, layout, 3);
 	}
 
-	public SchleifenSchrittView(EditorI editor, SchrittID id) {
-		this(editor, null, einschrittigeInitialsequenz(editor, id.naechsteEbene()), id, false);
+	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id) {
+		this(editor, parent, null, id, false);
+		initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
 	}
 
-	public SchleifenSchrittView(EditorI editor, WhileSchrittModel_V001 model, boolean mitUnteremBalken) {
-		this(editor, model.inhalt.text, new SchrittSequenzView(editor, model.wiederholSequenz), model.id, mitUnteremBalken);
+	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, WhileSchrittModel_V001 model, boolean mitUnteremBalken) {
+		this(editor, parent, model.inhalt.text, model.id, mitUnteremBalken);
+		initWiederholsequenzFromModel(editor, model);
+	}
+
+	protected void initWiederholsequenzFromModel(EditorI editor, WhileSchrittModel_V001 model) {
+		initWiederholsequenz(new SchrittSequenzView(editor, this, model.wiederholSequenz));
 		setBackground(new Color(model.farbe));
 		balkenbreiteSetzen(model.balkenbreite);
 		klappen.init(model.zugeklappt);;
 	}
 
-	public SchleifenSchrittView(EditorI editor) {
-		this(editor, (SchrittID) null);
+	protected void initWiederholsequenz(SchrittSequenzView wiederholSequenz) {
+		this.wiederholSequenz = wiederholSequenz;
+		panel.add(wiederholSequenz.getContainer(), CC.xy(3, 3));
 	}
-	
+
 	@Override
 	public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
 		int angepassteBalkenBreite = linkerBalken.getWidth() + vergroesserung;
@@ -92,8 +98,8 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		layout.setColumnSpec(1, ColumnSpec.decode(balkenbreite + "px"));
 	}
 
-	protected static SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
-		SchrittSequenzView sequenz = new SchrittSequenzView(id);
+	protected SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
+		SchrittSequenzView sequenz = new SchrittSequenzView(this, id);
 		sequenz.einfachenSchrittAnhaengen(editor);
 		return sequenz;
 	}

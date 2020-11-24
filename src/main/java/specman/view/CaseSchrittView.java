@@ -37,39 +37,41 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	ZweigSchrittSequenzView sonstSequenz;
 	List<ZweigSchrittSequenzView> caseSequenzen;
 
-	public CaseSchrittView(EditorI editor, String initialerText, SchrittID id,
-			ZweigSchrittSequenzView sonstSequenz,
-			List<ZweigSchrittSequenzView> caseSequenzen) {
-		super(editor, initialerText, id, createPanelLayout(caseSequenzen.size()));
-		
+	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, int numCases) {
+		super(editor, parent, initialerText, id, createPanelLayout(numCases));
 		panel.add(text.asJComponent(), INITIAL_DUMMY);
+	}
 
+	protected void initCases(EditorI editor, ZweigSchrittSequenzView sonstSequenz, List<ZweigSchrittSequenzView> caseSequenzen) {
 		sonstFallAnlegen(sonstSequenz);
 		casesAnlegen(caseSequenzen);
-		
 		layoutConstraintsSetzen();
 		spaltenResizerAnlegen(editor);
 	}
 
-	public CaseSchrittView(EditorI editor, String initialerText, SchrittID id) {
-		this(editor, initialerText, id,
-			 new ZweigSchrittSequenzView(editor, id.naechsteEbene(), initialtext("Sonst")),
-		     new ArrayList<ZweigSchrittSequenzView>(Arrays.asList(new ZweigSchrittSequenzView[] {
-		    	new ZweigSchrittSequenzView(editor, id.naechsteID().naechsteEbene(), initialtext("Fall 1")),
-		    	new ZweigSchrittSequenzView(editor, id.naechsteID().naechsteID().naechsteEbene(), initialtext("Fall 2"))
-		     })));
+	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
+		this(editor, parent, initialerText, id, 2);
+		initCases(
+				editor,
+				new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), initialtext("Sonst")),
+				new ArrayList<ZweigSchrittSequenzView>(Arrays.asList(new ZweigSchrittSequenzView[] {
+						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), initialtext("Fall 1")),
+						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), initialtext("Fall 2"))
+				})));
 	}
 	
-	private static List<ZweigSchrittSequenzView> caseSequenzenAufbauen(EditorI editor, List<ZweigSchrittSequenzModel_V001> model) {
+	private List<ZweigSchrittSequenzView> caseSequenzenAufbauen(EditorI editor, List<ZweigSchrittSequenzModel_V001> model) {
 		return model.stream()
-				.map(sequenzModel -> new ZweigSchrittSequenzView(editor, sequenzModel))
+				.map(sequenzModel -> new ZweigSchrittSequenzView(editor, this, sequenzModel))
 				.collect(Collectors.toList());
 	}
 	
-	public CaseSchrittView(EditorI editor, CaseSchrittModel_V001 model) {
-		this(editor, model.inhalt.text, model.id,
-			new ZweigSchrittSequenzView(editor, model.sonstSequenz),
-			caseSequenzenAufbauen(editor, model.caseSequenzen));
+	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, CaseSchrittModel_V001 model) {
+		this(editor, parent, model.inhalt.text, model.id);
+		initCases(
+				editor,
+				new ZweigSchrittSequenzView(editor, this, model.sonstSequenz),
+				caseSequenzenAufbauen(editor, model.caseSequenzen));
 		setBackground(new Color(model.farbe));
 		spaltenbreitenAnteileSetzen(model.spaltenbreitenAnteile);
 		klappen.init(model.zugeklappt);
@@ -291,7 +293,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	
 	public ZweigSchrittSequenzView neuenZweigHinzufuegen(EditorI editor, ZweigSchrittSequenzView linkerNachbar) {
 		int linkerNachbarIndex = caseSequenzen.indexOf(linkerNachbar);
-		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, linkerNachbar.naechsteNachbarSequenzID(), "Fall " + (linkerNachbarIndex+2));
+		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), "Fall " + (linkerNachbarIndex+2));
 		neuerZweig.einfachenSchrittAnhaengen(editor);
 		zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
 		return neuerZweig;

@@ -19,8 +19,8 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	KlappButton klappen;
 	FormLayout panelLayout;
 
-	public VerzweigungSchrittView(EditorI editor, String initialerText, SchrittID id, FormLayout panelLayout) {
-		super(editor, initialerText, id);
+	public VerzweigungSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, FormLayout panelLayout) {
+		super(editor, parent, initialerText, id);
 		this.panelLayout = panelLayout;
 		panel = new JPanel() {
 			@Override

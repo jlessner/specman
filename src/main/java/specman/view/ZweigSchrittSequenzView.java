@@ -16,13 +16,13 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	TextfieldShef ueberschrift;
 	
-	public ZweigSchrittSequenzView(EditorI editor, ZweigSchrittSequenzModel_V001 model) {
-		super(editor, model);
+	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, ZweigSchrittSequenzModel_V001 model) {
+		super(editor, parent, model);
 		ueberschriftInitialisieren(editor, model.ueberschrift != null ? model.ueberschrift.text : null);
 	}
 
-	public ZweigSchrittSequenzView(EditorI editor, SchrittID sequenzBasisId, String initialerText) {
-		super(sequenzBasisId);
+	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, String initialerText) {
+		super(parent, sequenzBasisId);
 		ueberschriftInitialisieren(editor, initialerText);
 	}
 

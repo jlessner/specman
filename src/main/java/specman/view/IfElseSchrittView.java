@@ -27,44 +27,46 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	ZweigSchrittSequenzView elseSequenz;
 	boolean dreieckBisUnten = true;
 	
-	public IfElseSchrittView(EditorI editor, String initialerText, SchrittID id,
-			ZweigSchrittSequenzView pIfSequenz, ZweigSchrittSequenzView pElseSequenz) {
-		super(editor, initialerText, id, createPanelLayout());
-		this.ifSequenz = pIfSequenz;
-		this.elseSequenz = pElseSequenz;
-		
+	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
+		super(editor, parent, initialerText, id, createPanelLayout());
 		panel.add(text.asJComponent(), CC.xywh(1, 1, 3, 1));
-
-		ifBedingungAnlegen(ifSequenz);
-		elseBedingungAnlegen(elseSequenz);
-
-		panel.add(ifSequenz.getContainer(), CC.xy(1, 4));
-		panel.add(elseSequenz.getContainer(), CC.xy(3, 4));
-
 		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 4));
-		
 		text.addFocusListener(new FocusAdapter() {
 			@Override public void focusLost(FocusEvent e) {
 				berechneHoeheFuerVollstaendigUnberuehrtenText();
 			}
 		});
+		if(withDefaultContent) {
+			initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), initialtext("Ja")));
+			initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), TextfieldShef.right("Nein")));
+		}
 	}
 
-	public IfElseSchrittView(EditorI editor, IfElseSchrittModel_V001 model) {
-		this(editor, model.inhalt.text, model.id,
-			new ZweigSchrittSequenzView(editor, model.ifSequenz),
-			new ZweigSchrittSequenzView(editor, model.elseSequenz));
+	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, IfElseSchrittModel_V001 model) {
+		this(editor, parent, model.inhalt.text, model.id, false);
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
+		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.elseSequenz));
 		setBackground(new Color(model.farbe));
 		ifBreitenanteilSetzen(model.ifBreitenanteil);
 		klappen.init(model.zugeklappt);
 	}
 
-	public IfElseSchrittView(EditorI editor, String initialerText, SchrittID id) {
-		this(editor, initialerText, id,
-			new ZweigSchrittSequenzView(editor, id.naechsteEbene(), initialtext("Ja")),
-			new ZweigSchrittSequenzView(editor, id.naechsteID().naechsteEbene(), TextfieldShef.right("Nein")));
+	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
+		this(editor, parent, initialerText, id, true);
 	}
-	
+
+	protected void initIfSequenz(ZweigSchrittSequenzView pIfSequenz) {
+		this.ifSequenz = pIfSequenz;
+		ifBedingungAnlegen(ifSequenz);
+		panel.add(ifSequenz.getContainer(), CC.xy(1, 4));
+	}
+
+	protected void initElseSequenz(ZweigSchrittSequenzView pElseSequenz) {
+		this.elseSequenz = pElseSequenz;
+		elseBedingungAnlegen(elseSequenz);
+		panel.add(elseSequenz.getContainer(), CC.xy(3, 4));
+	}
+
 	protected static FormLayout createPanelLayout() {
 		return new FormLayout(
 				"10px:grow, " + FORMLAYOUT_GAP + ", 10px:grow",

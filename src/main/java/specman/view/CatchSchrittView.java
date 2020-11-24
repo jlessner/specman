@@ -32,8 +32,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 	KlappButton klappen;
 	boolean breakAngekoppelt;
 
-	public CatchSchrittView(EditorI editor, String initialerText, SchrittID id, SchrittSequenzModel_V001 handlingModel) {
-		super(editor, initialerText, id);
+	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, SchrittSequenzModel_V001 handlingModel) {
+		super(editor, parent, initialerText, id);
 		schrittPanel = new JPanel();
 		schrittPanel.setBackground(Color.black);
 		layout = new FormLayout(
@@ -72,10 +72,10 @@ public class CatchSchrittView extends AbstractSchrittView {
 		});
 
 		if (handlingModel != null) {
-			handlingSequenz = new HandlingSchrittSequenz(editor, handlingModel);
+			handlingSequenz = new HandlingSchrittSequenz(editor, this, handlingModel);
 		}
 		else {
-			handlingSequenz = new HandlingSchrittSequenz(id.naechsteEbene());
+			handlingSequenz = new HandlingSchrittSequenz(this, id.naechsteEbene());
 			handlingSequenz.einfachenSchrittAnhaengen(editor);
 			schrittnummerSichtbarkeitSetzen(false);
 		}
@@ -112,8 +112,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 			handlingSequenz.rahmenanzeigeAnpassen();
 	}
 
-	public CatchSchrittView(EditorI editor, CatchSchrittModel_V001 model) {
-		this(editor, model.inhalt.text, model.id, model.handlingSequenz);
+	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, CatchSchrittModel_V001 model) {
+		this(editor, parent, model.inhalt.text, model.id, model.handlingSequenz);
 		setBackground(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
 		breakAngekoppelt = model.breakAngekoppelt;
@@ -121,8 +121,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 		editor.schrittFuerNachinitialisierungRegistrieren(this);
 	}
 
-	public CatchSchrittView(EditorI editor, String initialerText) {
-		this(editor, initialerText, null, null);
+	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText) {
+		this(editor, parent, initialerText, null, null);
 	}
 	
 	@Override
@@ -255,14 +255,12 @@ public class CatchSchrittView extends AbstractSchrittView {
 	 */
 	private class HandlingSchrittSequenz extends SchrittSequenzView {
 		
-		public HandlingSchrittSequenz() { super(); }
-
-		public HandlingSchrittSequenz(EditorI editor, SchrittSequenzModel_V001 model) {
-			super(editor, model);
+		public HandlingSchrittSequenz(EditorI editor, AbstractSchrittView parent, SchrittSequenzModel_V001 model) {
+			super(editor, parent, model);
 		}
 
-		public HandlingSchrittSequenz(SchrittID sequenzBasisId) {
-			super(sequenzBasisId);
+		public HandlingSchrittSequenz(AbstractSchrittView parent, SchrittID sequenzBasisId) {
+			super(parent, sequenzBasisId);
 		}
 
 		@Override public AbstractSchrittView schrittAnhaengen(AbstractSchrittView schritt, EditorI editor) {

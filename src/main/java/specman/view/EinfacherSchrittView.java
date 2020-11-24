@@ -9,16 +9,12 @@ import java.awt.*;
 
 public class EinfacherSchrittView extends AbstractSchrittView {
 
-	public EinfacherSchrittView(EditorI editor) {
-		this(editor, null, (SchrittID) null);
-	}
-
-	public EinfacherSchrittView(EditorI editor, String initialerText, SchrittID id) {
+	public EinfacherSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
 		super(editor, initialerText, id);
 	}
 	
-	public EinfacherSchrittView(EditorI editor, EinfacherSchrittModel_V001 model) {
-		this(editor, model.inhalt.text, model.id);
+	public EinfacherSchrittView(EditorI editor, SchrittSequenzView parent, EinfacherSchrittModel_V001 model) {
+		this(editor, parent, model.inhalt.text, model.id);
 		setBackground(new Color(model.farbe));
 	}
 

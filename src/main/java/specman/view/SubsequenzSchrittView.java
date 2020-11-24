@@ -16,12 +16,12 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	
 	final JPanel panel;
 	final KlappButton klappen;
-	final SchrittSequenzView subsequenz;
 	final FormLayout layout;
+	SchrittSequenzView subsequenz;
 
-	public SubsequenzSchrittView(EditorI editor, String initialerText, SchrittSequenzView wiederholSequenz, SchrittID id) {
-		super(editor, initialerText, id);
-		
+	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
+		super(editor, parent, initialerText, id);
+
 		text.setLeftInset(TEXTEINRUECKUNG);
 
 		panel = new JPanel();
@@ -29,37 +29,40 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		layout = new FormLayout("10dlu:grow",
 				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
-		
+
 		panel.add(text.asJComponent(), CC.xy(1, 1));
 
-		this.subsequenz = wiederholSequenz;
-		panel.add(wiederholSequenz.getContainer(), CC.xy(1, 3));
-		
 		klappen = new KlappButton(this, text.getTextComponent(), layout, 3);
 
 		//roundedBorderDecorator = new RoundedBorderDecorator(panel);
+
+		if (withDefaultContent) {
+			initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
+		}
 	}
 
-	private static SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
-		SchrittSequenzView sequenz = new SchrittSequenzView(id);
-		sequenz.einfachenSchrittAnhaengen(editor);
-		return sequenz;
-	}
-	
-	public SubsequenzSchrittView(EditorI editor, String initialerText, SchrittID id) {
-		this(editor, initialerText, einschrittigeInitialsequenz(editor, id.naechsteEbene()), id);
+	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
+		this(editor, parent, initialerText, id, true);
 	}
 
-	public SubsequenzSchrittView(EditorI editor, SubsequenzSchrittModel_V001 model) {
-		this(editor, model.inhalt.text, new SchrittSequenzView(editor, model.subsequenz), model.id);
+	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, SubsequenzSchrittModel_V001 model) {
+		this(editor, parent, model.inhalt.text, model.id, false);
+		initSubsequenz(new SchrittSequenzView(editor, this, model.subsequenz));
 		setBackground(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
 	}
 
-	public SubsequenzSchrittView(EditorI editor, String initialerText) {
-		this(editor, initialerText, (SchrittID) null);
+	private SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
+		SchrittSequenzView sequenz = new SchrittSequenzView(this, id);
+		sequenz.einfachenSchrittAnhaengen(editor);
+		return sequenz;
 	}
-	
+
+	protected void initSubsequenz(SchrittSequenzView subsequenz) {
+		this.subsequenz = subsequenz;
+		panel.add(subsequenz.getContainer(), CC.xy(1, 3));
+	}
+
 	@Override
 	public void setId(SchrittID id) {
 		super.setId(id);

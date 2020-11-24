@@ -24,28 +24,28 @@ import static specman.Specman.schrittHintergrund;
  * @author less02
  */
 public class IfSchrittView extends IfElseSchrittView {
-
 	int ifBreite;
 	
-	public IfSchrittView(EditorI editor, String initialerString, SchrittID id, ZweigSchrittSequenzView pIfSequenz, ZweigSchrittSequenzView pElseSequenz) {
-		super(editor, initialerString, id, pIfSequenz, pElseSequenz);
-		ifSequenz.sequenzBereich.setBackground(schrittHintergrund());
+	public IfSchrittView(EditorI editor, SchrittSequenzView parent, String initialerString, SchrittID id) {
+		super(editor, parent, initialerString, id, false);
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), ""));
+		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), TextfieldShef.right("Ja")));
 		ifBreite = SPALTENLAYOUT_UMGEHUNG_GROESSE * Specman.instance().zoomFaktor() / 100;
 	}
 
-	public IfSchrittView(EditorI editor, String initialerString, SchrittID id) {
-		this(editor, initialerString, id,
-			new ZweigSchrittSequenzView(editor, id.naechsteID().naechsteEbene(), ""),
-			new ZweigSchrittSequenzView(editor, id.naechsteEbene(), TextfieldShef.right("Ja")));
-	}
-	
-	public IfSchrittView(EditorI editor, IfSchrittModel_V001 model) {
-		this(editor, model.inhalt.text, model.id,
-			new ZweigSchrittSequenzView(editor, new SchrittID(), ""),
-			new ZweigSchrittSequenzView(editor, model.ifSequenz));
+	public IfSchrittView(EditorI editor, SchrittSequenzView parent, IfSchrittModel_V001 model) {
+		super(editor, parent, model.inhalt.text, model.id, false);
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), ""));
+		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		setBackground(new Color(model.farbe));
 		ifBreiteSetzen(model.leerBreite);
 		klappen.init(model.zugeklappt);;
+	}
+
+	@Override
+	protected void initIfSequenz(ZweigSchrittSequenzView pIfSequenz) {
+		super.initIfSequenz(pIfSequenz);
+		ifSequenz.sequenzBereich.setBackground(schrittHintergrund());
 	}
 
 	@Override
