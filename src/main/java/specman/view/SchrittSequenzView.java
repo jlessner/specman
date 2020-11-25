@@ -135,7 +135,7 @@ public class SchrittSequenzView {
 
 	public AbstractSchrittView breakSchrittAnhaengen(EditorI editor) {
 		String initialerText = initialtext("<b>Exception " + (schritte.size()+1) + "<b>");
-		BreakSchrittView schritt = new BreakSchrittView(editor, initialerText, naechsteSchrittID());
+		BreakSchrittView schritt = new BreakSchrittView(editor, this, initialerText, naechsteSchrittID());
 		return schrittAnhaengen(schritt, editor);
 	}
 
@@ -233,7 +233,7 @@ public class SchrittSequenzView {
 	public AbstractSchrittView breakSchrittZwischenschieben(JTextComponent zuletztFokussierterText, EditorI editor) {
 		AbstractSchrittView vorgaengerSchritt = findeEigenenSchritt(zuletztFokussierterText);
 		String initialerText = initialtext("<b>Exception " + (schritte.size()+1) + "<b>");
-		BreakSchrittView schritt = new BreakSchrittView(editor, initialerText, vorgaengerSchritt.folgeIDInGleicherSequenz());
+		BreakSchrittView schritt = new BreakSchrittView(editor, this, initialerText, vorgaengerSchritt.folgeIDInGleicherSequenz());
 		return schrittZwischenschieben(schritt, vorgaengerSchritt, editor);
 	}
 
@@ -491,4 +491,14 @@ public class SchrittSequenzView {
 		}
 	}
 
+	public AbstractSchrittView findFirstDecoratedParent() {
+		SchrittSequenzView sequenz = this;
+		while(sequenz.parent != null) {
+			if (sequenz.parent.isDecorated()) {
+				return sequenz.parent;
+			}
+			sequenz = sequenz.parent.parent;
+		}
+		return null;
+	}
 }

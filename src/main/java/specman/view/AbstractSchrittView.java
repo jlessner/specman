@@ -41,11 +41,6 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	 
-	@Deprecated
-	public AbstractSchrittView(EditorI editor, String initialerText, SchrittID id) {
-		this(editor, null, initialerText, id);
-	}
-
 	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
 		this.id = id;
 		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
@@ -140,7 +135,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 			return new SubsequenzSchrittView(editor, parent, (SubsequenzSchrittModel_V001) model);
 		}
 		if (model instanceof BreakSchrittModel_V001) {
-			return new BreakSchrittView(editor, (BreakSchrittModel_V001) model);
+			return new BreakSchrittView(editor, parent, (BreakSchrittModel_V001) model);
 		}
 		if (model instanceof CatchSchrittModel_V001) {
 			return new CatchSchrittView(editor, parent, (CatchSchrittModel_V001) model);
@@ -278,8 +273,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 			roundedBorderDecorator = null;
 			toggleResult = coreComponent;
 		}
-		Indentions indentions = new Indentions(isDecorated());
-		updateTextfieldDecorationIndentions(indentions);
+		updateTextfieldDecorationIndentions();
 		return toggleResult;
 	}
 
@@ -287,5 +281,17 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		text.updateDecorationIndentions(indentions);
 	}
 
+	public void updateTextfieldDecorationIndentions() {
+		Indentions indentions = new Indentions(isDecorated());
+		updateTextfieldDecorationIndentions(indentions);
+	}
+
 	public boolean isDecorated() { return roundedBorderDecorator != null; }
+
+	public void initInheritedTextFieldIndentions() {
+		AbstractSchrittView decoratedParent = parent.findFirstDecoratedParent();
+		if (decoratedParent != null) {
+			decoratedParent.updateTextfieldDecorationIndentions();
+		}
+	}
 }

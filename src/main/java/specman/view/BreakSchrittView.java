@@ -19,8 +19,8 @@ public class BreakSchrittView extends AbstractSchrittView {
 	final FormLayout layout;
 	CatchSchrittView zielSchritt;
 
-	public BreakSchrittView(EditorI editor, String initialerText, SchrittID id) {
-		super(editor, initialerText, id);
+	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
+		super(editor, parent, initialerText, id);
 		panel = new JPanel() {
 			@Override
 			public void paint(Graphics g) {
@@ -37,6 +37,11 @@ public class BreakSchrittView extends AbstractSchrittView {
 		panel.add(text.asJComponent(), CC.xy(2, 1));
 	}
 
+	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, BreakSchrittModel_V001 model) {
+		this(editor, parent, model.inhalt.text, model.id);
+		setBackground(new Color(model.farbe));
+	}
+
 	private void dreieckZeichnen(Graphics2D g) {
 		int hoehe = panel.getHeight();
 		int dreieckSpitzeY = hoehe / 2;
@@ -47,15 +52,6 @@ public class BreakSchrittView extends AbstractSchrittView {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 		g.drawLine(dreieckBasisX,  0,  0,  dreieckSpitzeY);
 		g.drawLine(0,  dreieckSpitzeY, dreieckBasisX, hoehe);
-	}
-	
-	public BreakSchrittView(EditorI editor, BreakSchrittModel_V001 model) {
-		this(editor, model.inhalt.text, model.id);
-		setBackground(new Color(model.farbe));
-	}
-
-	public BreakSchrittView(EditorI editor, String initialerText) {
-		this(editor, initialerText, (SchrittID) null);
 	}
 	
 	@Override

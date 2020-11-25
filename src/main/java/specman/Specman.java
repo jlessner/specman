@@ -647,6 +647,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private void newStepPostInit(AbstractSchrittView newStep, SchrittSequenzView sequenz) {
 		addEdit(new UndoableSchrittHinzugefuegt(newStep, sequenz != null ? sequenz : hauptSequenz));
 		newStep.skalieren(zoomFaktor, 100);
+		newStep.initInheritedTextFieldIndentions();
 		diagrammAktualisieren(newStep);
 	}
 
