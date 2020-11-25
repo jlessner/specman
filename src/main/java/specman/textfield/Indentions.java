@@ -2,6 +2,9 @@ package specman.textfield;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.view.RoundedBorderDecorationStyle;
+
+import static specman.view.RoundedBorderDecorationStyle.None;
 
 public class Indentions {
     public static final int JEDITORPANE_DEFAULT_BORDER_THICKNESS = 3;
@@ -10,8 +13,8 @@ public class Indentions {
 
     final boolean top, left, bottom, right;
 
-    public Indentions(boolean ident) {
-        top = left = bottom = right = ident;
+    public Indentions(RoundedBorderDecorationStyle style) {
+        top = left = bottom = right = (style != None);
     }
 
     public Indentions(boolean top, boolean left, boolean bottom, boolean right) {

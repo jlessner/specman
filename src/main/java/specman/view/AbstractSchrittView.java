@@ -27,6 +27,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static specman.view.RoundedBorderDecorationStyle.Co;
+import static specman.view.RoundedBorderDecorationStyle.Full;
+import static specman.view.RoundedBorderDecorationStyle.None;
+
 abstract public class AbstractSchrittView implements FocusListener, KlappbarerBereichI {
 	public static final int LINIENBREITE = 2;
 	public static final String FORMLAYOUT_GAP = LINIENBREITE + "px";
@@ -265,6 +269,8 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		if (roundedBorderDecorator == null) {
 			JComponent coreComponent = getComponent();
 			roundedBorderDecorator = new RoundedBorderDecorator(coreComponent);
+			boolean withTopInset = decorationRequiresTopInset();
+			roundedBorderDecorator.withTopInset(withTopInset);
 			toggleResult = roundedBorderDecorator;
 		}
 		else {
@@ -277,16 +283,25 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return toggleResult;
 	}
 
+	private boolean decorationRequiresTopInset() {
+		return parent.decorationRequiresTopInset(this);
+	}
+
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
 		text.updateDecorationIndentions(indentions);
 	}
 
 	public void updateTextfieldDecorationIndentions() {
-		Indentions indentions = new Indentions(isDecorated());
+		Indentions indentions = new Indentions(getDecorated());
 		updateTextfieldDecorationIndentions(indentions);
 	}
 
-	public boolean isDecorated() { return roundedBorderDecorator != null; }
+	public RoundedBorderDecorationStyle getDecorated() {
+		if (roundedBorderDecorator == null) {
+			return None;
+		}
+		return roundedBorderDecorator.withTopInset() ? Full : Co;
+	}
 
 	public void initInheritedTextFieldIndentions() {
 		AbstractSchrittView decoratedParent = parent.findFirstDecoratedParent();
@@ -294,4 +309,5 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 			decoratedParent.updateTextfieldDecorationIndentions();
 		}
 	}
+
 }

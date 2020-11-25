@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static specman.Specman.initialtext;
+import static specman.view.RoundedBorderDecorationStyle.Co;
+import static specman.view.RoundedBorderDecorationStyle.None;
 
 public class SchrittSequenzView {
 	public static final String ZEILENLAYOUT_GAP = AbstractSchrittView.FORMLAYOUT_GAP;
@@ -157,8 +159,10 @@ public class SchrittSequenzView {
 			: RowSpec.decode(ZEILENLAYOUT_SCHRITT);
 	}
 
-	private CellConstraints constraints4step(int stepIndex) {
-		return CC.xy(1, stepIndex * 2 + 1);
+	private CellConstraints constraints4step(int stepIndex, AbstractSchrittView step) {
+		return step.getDecorated() == Co
+				? CC.xywh(1, stepIndex * 2, 1, 2)
+				: CC.xy(1, stepIndex * 2 + 1);
 	}
 
 	public AbstractSchrittView schrittAnhaengen(final AbstractSchrittView schritt, EditorI editor) {
@@ -167,7 +171,7 @@ public class SchrittSequenzView {
 			sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		}
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
-		sequenzBereich.add(schritt.getComponent(), constraints4step(schritte.size()));
+		sequenzBereich.add(schritt.getComponent(), constraints4step(schritte.size(), schritt));
 		schritte.add(schritt);
 		letzterSchrittWirdHoehenverbraucher();
 		return schritt;
@@ -263,11 +267,11 @@ public class SchrittSequenzView {
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
 
-		sequenzBereich.add(schritt.getComponent(), constraints4step(i));
+		sequenzBereich.add(schritt.getComponent(), constraints4step(i, schritt));
 
 		for (int n = i; n < schritte.size(); n++) {
 			AbstractSchrittView nachfolger = schritte.get(n);
-			sequenzbereichLayout.setConstraints(nachfolger.getComponent(), constraints4step(n+1));
+			sequenzbereichLayout.setConstraints(nachfolger.getComponent(), constraints4step(n+1, schritt));
 		}
 
 		schritte.add(i, schritt);
@@ -465,7 +469,7 @@ public class SchrittSequenzView {
 			if (sequenceChildren[componentIndex] == currentStepComponent) {
 				sequenzBereich.remove(componentIndex);
 				JComponent switchedStepComponent = schritt.toggleBorderType();
-				CellConstraints constraints = constraints4step(stepIndex);
+				CellConstraints constraints = constraints4step(stepIndex, schritt);
 				sequenzBereich.add(switchedStepComponent, constraints, componentIndex);
 				return;
 			}
@@ -485,20 +489,33 @@ public class SchrittSequenzView {
     }
 
     private void forwardTextfieldDecorationIndentions(int substepIndex, Indentions indentions) {
-		AbstractSchrittView substep = schritte.get(substepIndex);
-		if (!substep.isDecorated()) {
-			substep.updateTextfieldDecorationIndentions(indentions);
+			AbstractSchrittView substep = schritte.get(substepIndex);
+			if (substep.getDecorated() == None) {
+				substep.updateTextfieldDecorationIndentions(indentions);
+			}
 		}
-	}
 
 	public AbstractSchrittView findFirstDecoratedParent() {
 		SchrittSequenzView sequenz = this;
 		while(sequenz.parent != null) {
-			if (sequenz.parent.isDecorated()) {
+			if (sequenz.parent.getDecorated() != None) {
 				return sequenz.parent;
 			}
 			sequenz = sequenz.parent.parent;
 		}
 		return null;
+	}
+
+	/** Returns true if the passed step would require a top inset if it is decorated
+	 * by a rounded border. This is the case if the step is either the first one in its
+	 * sequence or if the preceeding step isn't decorated too. If two decorated steps
+	 * directly follow each other we don't want a double-sized space between them. */
+	public boolean decorationRequiresTopInset(AbstractSchrittView step) {
+		for (int i = 0; i < schritte.size(); i++) {
+			if (schritte.get(i) == step) {
+				return i == 0 || schritte.get(i-1).getDecorated() == None;
+			}
+		}
+		return false;
 	}
 }

@@ -2,6 +2,7 @@ package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,15 +15,25 @@ public class RoundedBorderDecorator extends JPanel {
   private static final int ARC_SIZE = 25;
 
   private final JComponent decoratedComponent;
+  private final FormLayout layout;
+  private boolean withTopInset;
 
   public RoundedBorderDecorator(JComponent componentToDecorate) {
     setBackground(Color.white);
-    String layoutInsetSpec = (INSET + INNER_BORDERLINE_WIDTH) + "px";
-    setLayout(new FormLayout(
-        layoutInsetSpec + ",10px:grow," + layoutInsetSpec,
-        layoutInsetSpec + ",fill:pref:grow," + layoutInsetSpec));
+    String commonInsetSpec = (INSET + INNER_BORDERLINE_WIDTH) + "px";
+    layout = new FormLayout(
+        commonInsetSpec + ",10px:grow," + commonInsetSpec,
+        commonInsetSpec + ",fill:pref:grow," + commonInsetSpec);
+    setLayout(layout);
     add(componentToDecorate, CC.xy(2, 2));
     decoratedComponent = componentToDecorate;
+    withTopInset(false);
+  }
+
+  public void withTopInset(boolean withTopInset) {
+    this.withTopInset = withTopInset;
+    int topInset = withTopInset ? INSET + INNER_BORDERLINE_WIDTH : INNER_BORDERLINE_WIDTH;
+    layout.setRowSpec(1, RowSpec.decode(topInset + "px"));
   }
 
   @Override
@@ -31,12 +42,15 @@ public class RoundedBorderDecorator extends JPanel {
     if (g instanceof Graphics2D) {
       Graphics2D g2d = (Graphics2D) g;
       Color originalColor = g2d.getColor();
-      int offsetTopAndLeft = INSET + (INNER_BORDERLINE_WIDTH / 2);
-      int offsetBottomAndRight = offsetTopAndLeft * 2;
+
+      int borderX = INSET + (INNER_BORDERLINE_WIDTH / 2);
+      int borderY = withTopInset ? borderX : INNER_BORDERLINE_WIDTH / 2;
+      int borderWidthMinus = borderX * 2;
+      int borderHeightMinus = borderX + borderY;
 
       antialiasingOn(g2d);
-      drawOuterBorderArea(g2d, offsetTopAndLeft, offsetBottomAndRight);
-      drawInnerBorderLine(g2d, offsetTopAndLeft, offsetBottomAndRight);
+      drawOuterBorderArea(g2d, borderX, borderY, borderWidthMinus, borderHeightMinus);
+      drawInnerBorderLine(g2d, borderX, borderY, borderWidthMinus, borderHeightMinus);
 
       g2d.setColor(originalColor);
     }
@@ -49,25 +63,27 @@ public class RoundedBorderDecorator extends JPanel {
     g2d.setRenderingHints(rh);
   }
 
-  private void drawInnerBorderLine(Graphics2D g2d, int offsetTopAndLeft, int offsetBottomAndRight) {
+  private void drawInnerBorderLine(Graphics2D g2d,
+      int borderX, int borderY, int borderWidthMinus, int borderHeightMinus) {
     g2d.setColor(Color.black);
     g2d.setStroke(new BasicStroke(2));
     g2d.draw(new RoundRectangle2D.Float(
-        offsetTopAndLeft,
-        offsetTopAndLeft,
-        (float)(getWidth() - offsetBottomAndRight),
-        (float)(getHeight() - offsetBottomAndRight),
+        borderX,
+        borderY,
+        (float)(getWidth() - borderWidthMinus),
+        (float)(getHeight() - borderHeightMinus),
         ARC_SIZE, ARC_SIZE));
   }
 
-  private void drawOuterBorderArea(Graphics2D g2d, int offsetTopAndLeft, int offsetBottomAndRight) {
+  private void drawOuterBorderArea(Graphics2D g2d,
+      int borderX, int borderY, int borderWidthMinus, int borderHeightMinus) {
     g2d.setColor(Color.white);
     Shape outer = new java.awt.geom.Rectangle2D.Float(0, 0, getWidth(), getHeight());
     Shape inner = new RoundRectangle2D.Float(
-        offsetTopAndLeft,
-        offsetTopAndLeft,
-        (float)(getWidth() - offsetBottomAndRight),
-        (float)(getHeight() - offsetBottomAndRight),
+        borderX,
+        borderY,
+        (float)(getWidth() - borderWidthMinus),
+        (float)(getHeight() - borderHeightMinus),
         ARC_SIZE, ARC_SIZE);
     Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
     path.append(outer, false);
@@ -76,4 +92,6 @@ public class RoundedBorderDecorator extends JPanel {
   }
 
   public JComponent getDecoratedComponent() { return decoratedComponent; }
+
+  public boolean withTopInset() { return withTopInset; }
 }
