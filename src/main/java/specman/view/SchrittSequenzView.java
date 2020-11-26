@@ -463,6 +463,10 @@ public class SchrittSequenzView {
 				JComponent switchedStepComponent = schritt.toggleBorderType();
 				CellConstraints constraints = constraints4step(stepIndex, schritt);
 				sequenzBereich.add(switchedStepComponent, constraints, componentIndex);
+				if (schritte.size() > stepIndex+1) {
+					AbstractSchrittView followingStep = schritte.get(stepIndex+1);
+					followingStep.decorateAsFollower(schritt.getDecorated());
+				}
 				updateLayoutRowspecsForAllsStepsAndGaps();
 				return;
 			}

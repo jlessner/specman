@@ -294,6 +294,12 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return roundedBorderDecorator.withTopInset() ? Full : Co;
 	}
 
+	public void decorateAsFollower(RoundedBorderDecorationStyle predecessorDeco) {
+		if (getDecorated() != None) {
+			roundedBorderDecorator.withTopInset(predecessorDeco == None);
+		}
+	}
+
 	public void initInheritedTextFieldIndentions() {
 		AbstractSchrittView decoratedParent = parent.findFirstDecoratedParent();
 		if (decoratedParent != null) {
@@ -302,4 +308,5 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public SchrittSequenzView getParent() { return parent; }
+
 }
