@@ -455,26 +455,30 @@ public class SchrittSequenzView {
 
 	public void toggleBorderType(AbstractSchrittView schritt) {
 		int stepIndex = stepIndex(schritt);
-		JComponent currentStepComponent = schritt.getComponent();
+		int componentIndex = stepComppnentIndex(schritt);
+		sequenzBereich.remove(componentIndex);
+		JComponent switchedStepComponent = schritt.toggleBorderType();
+		CellConstraints constraints = constraints4step(stepIndex, schritt);
+		sequenzBereich.add(switchedStepComponent, constraints, componentIndex);
+		if (schritt.getDecorated() == None) {
+			// If the step just lost its decoration by the toggling, its text fields
+			// now have to adjust to what indentions the parent step may require
+			schritt.initInheritedTextFieldIndentions();
+		}
+		updateFollowingStepDecoration(stepIndex+1);
+		updateLayoutRowspecsForAllsStepsAndGaps();
+	}
+
+	/** Find the index of a step's grafical root component within this sequence' panel */
+	int stepComppnentIndex(AbstractSchrittView step) {
+		JComponent stepComponent = step.getComponent();
 		Component[] sequenceChildren = sequenzBereich.getComponents();
-		int componentIndex;
-		for (componentIndex = 0; componentIndex < sequenceChildren.length; componentIndex++) {
-			if (sequenceChildren[componentIndex] == currentStepComponent) {
-				sequenzBereich.remove(componentIndex);
-				JComponent switchedStepComponent = schritt.toggleBorderType();
-				CellConstraints constraints = constraints4step(stepIndex, schritt);
-				sequenzBereich.add(switchedStepComponent, constraints, componentIndex);
-				if (schritt.getDecorated() == None) {
-					// If the step just lost its decoration, its text fields now have
-					// to adjust to what indentions the parent step may require
-					schritt.initInheritedTextFieldIndentions();
-				}
-				updateFollowingStepDecoration(stepIndex+1);
-				updateLayoutRowspecsForAllsStepsAndGaps();
-				return;
+		for (int componentIndex = 0; componentIndex < sequenceChildren.length; componentIndex++) {
+			if (sequenceChildren[componentIndex] == stepComponent) {
+				return componentIndex;
 			}
 		}
-		throw new IllegalArgumentException("Schritt " + schritt + " is not part of " + this);
+		throw new IllegalArgumentException("Step " + step + " is not part of " + this);
 	}
 
 	private void updateFollowingStepDecoration(int followerIndex) {
