@@ -323,6 +323,7 @@ public class SchrittSequenzView {
 			sequenzbereichLayout.removeRow(layoutZeilenLoeschIndex);
 			sequenzbereichLayout.removeRow(layoutZeilenLoeschIndex);
 			schritte.remove(schrittIndex);
+			updateFollowingStepDecoration(schrittIndex);
 			updateLayoutRowspecsForAllsStepsAndGaps();
 			renummerieren(sequenzBasisId);
 		}
@@ -463,10 +464,12 @@ public class SchrittSequenzView {
 				JComponent switchedStepComponent = schritt.toggleBorderType();
 				CellConstraints constraints = constraints4step(stepIndex, schritt);
 				sequenzBereich.add(switchedStepComponent, constraints, componentIndex);
-				if (schritte.size() > stepIndex+1) {
-					AbstractSchrittView followingStep = schritte.get(stepIndex+1);
-					followingStep.decorateAsFollower(schritt.getDecorated());
+				if (schritt.getDecorated() == None) {
+					// If the step just lost its decoration, its text fields now have
+					// to adjust to what indentions the parent step may require
+					schritt.initInheritedTextFieldIndentions();
 				}
+				updateFollowingStepDecoration(stepIndex+1);
 				updateLayoutRowspecsForAllsStepsAndGaps();
 				return;
 			}
@@ -474,7 +477,19 @@ public class SchrittSequenzView {
 		throw new IllegalArgumentException("Schritt " + schritt + " is not part of " + this);
 	}
 
-    public void updateTextfieldDecorationIndentions(Indentions lastStepIndention) {
+	private void updateFollowingStepDecoration(int followerIndex) {
+		if (schritte.size() > followerIndex) {
+			RoundedBorderDecorationStyle preceedingStyle = None;
+			if (followerIndex > 0) {
+				AbstractSchrittView step = schritte.get(followerIndex-1);
+				preceedingStyle = step.getDecorated();
+			}
+			AbstractSchrittView followingStep = schritte.get(followerIndex);
+			followingStep.decorateAsFollower(preceedingStyle);
+		}
+	}
+
+	public void updateTextfieldDecorationIndentions(Indentions lastStepIndention) {
 		Indentions stepIndentions = lastStepIndention.withBottom(false);
 		int s;
 		for (s = 0; s < schritte.size() - 1; s++) {
