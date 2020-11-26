@@ -55,10 +55,9 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		initCases(
 				editor,
 				new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), initialtext("Sonst")),
-				new ArrayList<ZweigSchrittSequenzView>(Arrays.asList(new ZweigSchrittSequenzView[] {
+				new ArrayList<ZweigSchrittSequenzView>(Arrays.asList(
 						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), initialtext("Fall 1")),
-						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), initialtext("Fall 2"))
-				})));
+						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), initialtext("Fall 2")))));
 	}
 	
 	private List<ZweigSchrittSequenzView> caseSequenzenAufbauen(EditorI editor, List<ZweigSchrittSequenzModel_V001> model) {
@@ -286,10 +285,10 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		spaltenResizerAnlegen(editor);
 		
 		setId(id);
-		SchrittSequenzView elternSequenz = editor.findeElternSequenz(this);
+		SchrittSequenzView elternSequenz = this.getParent();
 		elternSequenz.folgeschritteRenummerieren(this);
 		
-		Specman.instance().diagrammAktualisieren(null);
+		editor.diagrammAktualisieren(null);
 	}
 	
 	public ZweigSchrittSequenzView neuenZweigHinzufuegen(EditorI editor, ZweigSchrittSequenzView linkerNachbar) {

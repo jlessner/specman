@@ -180,17 +180,6 @@ class CatchBereich extends JPanel implements KlappbarerBereichI {
 		return null;
 	}
 
-	public SchrittSequenzView findeElternSequenz(SchrittSequenzView catchBereichsElternSequenz, AbstractSchrittView kindSchritt) {
-		for (CatchSchrittView catchSchritt: catchBloecke) {
-			if (catchSchritt == kindSchritt)
-				return catchBereichsElternSequenz;
-			SchrittSequenzView elternSequenz = catchSchritt.findeElternSequenz(kindSchritt);
-			if (elternSequenz != null)
-				return elternSequenz;
-		}
-		return null;
-	}
-
 	public BreakSchrittView findeBreakSchritt(String catchText) {
 		for (CatchSchrittView catchSchritt: catchBloecke) {
 			BreakSchrittView schritt = catchSchritt.findeBreakSchritt(catchText);

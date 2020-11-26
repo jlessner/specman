@@ -400,7 +400,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					return;
 				}
 				
-				SchrittSequenzView sequenz = hauptSequenz.findeElternSequenz(schritt);
+				SchrittSequenzView sequenz = schritt.getParent();
 				int schrittIndex = sequenz.schrittEntfernen(schritt);
 				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
 			}
@@ -411,7 +411,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView schritt = hauptSequenz.findeSchritt(zuletztFokussierterText);
 				if (schritt != null) {
-					SchrittSequenzView sequenz = hauptSequenz.findeElternSequenz(schritt);
+					SchrittSequenzView sequenz = schritt.getParent();
 					sequenz.toggleBorderType(schritt);
 					addEdit(new UndoableToggleStepBorder(Specman.this, schritt, sequenz));
 					diagrammAktualisieren(schritt);
@@ -837,11 +837,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 		String catchText = fuerCatchSchritt.ersteZeileExtraieren();
 		return sequenzDesCatchSchritts.findeBreakSchritt(catchText);
-	}
-
-	@Override
-	public SchrittSequenzView findeElternSequenz(AbstractSchrittView schrittView) {
-		return hauptSequenz.findeElternSequenz(schrittView);
 	}
 
 	public int zoomFaktor() { return zoomFaktor; }

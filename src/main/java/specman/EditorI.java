@@ -18,8 +18,6 @@ public interface EditorI extends FocusListener {
 
 	void vertikalLinieSetzen(int x, SpaltenResizer spaltenResizer);
 
-	SchrittSequenzView findeElternSequenz(AbstractSchrittView schrittView);
-
 	void diagrammLaden(File diagramFile);
 
 	int getZoomFactor();

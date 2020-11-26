@@ -189,15 +189,6 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return null;
 	}
 
-	public SchrittSequenzView findeElternSequenz(AbstractSchrittView kindSchritt) {
-		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
-			SchrittSequenzView elternSequenz = unterSequenz.findeElternSequenz(kindSchritt);
-			if (elternSequenz != null)
-				return elternSequenz;
-		}
-		return null;
-	}
-
 	public BreakSchrittView findeBreakSchritt(String catchText) {
 		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
 			BreakSchrittView schritt = unterSequenz.findeBreakSchritt(catchText);
@@ -310,4 +301,5 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		}
 	}
 
+	public SchrittSequenzView getParent() { return parent; }
 }

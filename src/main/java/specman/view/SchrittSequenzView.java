@@ -147,9 +147,16 @@ public class SchrittSequenzView {
 		return catchAnhaengen(schritt, editor);
 	}
 
-	private void letzterSchrittWirdHoehenverbraucher() {
+	private void updateLayoutRowspecsForAllsStepsAndGaps() {
 		for (int i = 0; i < schritte.size(); i++) {
 			sequenzbereichLayout.setRowSpec(i*2 + 1, rowspec4step(i));
+			if (i > 0) {
+				AbstractSchrittView schritt = schritte.get(i);
+				String rowSpec = schritt.getDecorated() == Co
+						? AbstractSchrittView.ZEILENLAYOUT_INHALT_VERBORGEN
+						: ZEILENLAYOUT_GAP;
+				sequenzbereichLayout.setRowSpec(i*2, RowSpec.decode(rowSpec));
+			}
 		}
 	}
 
@@ -160,9 +167,7 @@ public class SchrittSequenzView {
 	}
 
 	private CellConstraints constraints4step(int stepIndex, AbstractSchrittView step) {
-		return step.getDecorated() == Co
-				? CC.xywh(1, stepIndex * 2, 1, 2)
-				: CC.xy(1, stepIndex * 2 + 1);
+		return CC.xy(1, stepIndex * 2 + 1);
 	}
 
 	public AbstractSchrittView schrittAnhaengen(final AbstractSchrittView schritt, EditorI editor) {
@@ -173,7 +178,7 @@ public class SchrittSequenzView {
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
 		sequenzBereich.add(schritt.getComponent(), constraints4step(schritte.size(), schritt));
 		schritte.add(schritt);
-		letzterSchrittWirdHoehenverbraucher();
+		updateLayoutRowspecsForAllsStepsAndGaps();
 		return schritt;
 	}
 
@@ -275,7 +280,7 @@ public class SchrittSequenzView {
 		}
 
 		schritte.add(i, schritt);
-		letzterSchrittWirdHoehenverbraucher();
+		updateLayoutRowspecsForAllsStepsAndGaps();
 		folgeschritteRenummerieren(schritt);
 		return schritt;
 	}
@@ -318,7 +323,7 @@ public class SchrittSequenzView {
 			sequenzbereichLayout.removeRow(layoutZeilenLoeschIndex);
 			sequenzbereichLayout.removeRow(layoutZeilenLoeschIndex);
 			schritte.remove(schrittIndex);
-			letzterSchrittWirdHoehenverbraucher();
+			updateLayoutRowspecsForAllsStepsAndGaps();
 			renummerieren(sequenzBasisId);
 		}
 		// TODO: schritte.get(schrittIndex-1) funktioniert nicht richtig, wenn man einen Catch-Schritt entfernt
@@ -377,19 +382,6 @@ public class SchrittSequenzView {
 			}
 		}
 		return catchBereich.findeSchritt(zuletztFokussierterText);
-	}
-
-	public SchrittSequenzView findeElternSequenz(AbstractSchrittView kindSchritt) {
-		for (AbstractSchrittView schritt: schritte) {
-			if (schritt == kindSchritt)
-				return this;
-			if (schritt.isStrukturiert()) {
-				SchrittSequenzView untersequenz = schritt.findeElternSequenz(kindSchritt);
-				if (untersequenz != null)
-					return untersequenz;
-			}
-		}
-		return catchBereich.findeElternSequenz(this, kindSchritt);
 	}
 
 	public SchrittSequenzModel_V001 generiereSchittSequenzModel(boolean formatierterText) {
@@ -471,6 +463,7 @@ public class SchrittSequenzView {
 				JComponent switchedStepComponent = schritt.toggleBorderType();
 				CellConstraints constraints = constraints4step(stepIndex, schritt);
 				sequenzBereich.add(switchedStepComponent, constraints, componentIndex);
+				updateLayoutRowspecsForAllsStepsAndGaps();
 				return;
 			}
 		}
