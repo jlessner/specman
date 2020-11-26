@@ -1,8 +1,10 @@
 package specman.view;
 
 import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.Specman;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,29 +12,32 @@ import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 
 public class RoundedBorderDecorator extends JPanel {
-  private static final int INSET = 10;
+  private static final int INSET = 15;
   private static final int INNER_BORDERLINE_WIDTH = 2;
   private static final int ARC_SIZE = 25;
 
   private final JComponent decoratedComponent;
   private final FormLayout layout;
   private boolean withTopInset;
+  private int inset;
+  private int arc;
 
   public RoundedBorderDecorator(JComponent componentToDecorate) {
+    inset = INSET;
+    arc = ARC_SIZE;
     setBackground(Color.white);
-    String commonInsetSpec = (INSET + INNER_BORDERLINE_WIDTH) + "px";
-    layout = new FormLayout(
-        commonInsetSpec + ",10px:grow," + commonInsetSpec,
-        commonInsetSpec + ",fill:pref:grow," + commonInsetSpec);
+    String commonInsetSpec = (inset + INNER_BORDERLINE_WIDTH) + "px";
+    layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
     setLayout(layout);
     add(componentToDecorate, CC.xy(2, 2));
     decoratedComponent = componentToDecorate;
-    withTopInset(false);
+    withTopInset = false;
+    skalieren(Specman.instance().getZoomFactor());
   }
 
   public void withTopInset(boolean withTopInset) {
     this.withTopInset = withTopInset;
-    int topInset = withTopInset ? INSET + INNER_BORDERLINE_WIDTH : INNER_BORDERLINE_WIDTH;
+    int topInset = withTopInset ? inset + INNER_BORDERLINE_WIDTH : INNER_BORDERLINE_WIDTH;
     layout.setRowSpec(1, RowSpec.decode(topInset + "px"));
   }
 
@@ -43,7 +48,7 @@ public class RoundedBorderDecorator extends JPanel {
       Graphics2D g2d = (Graphics2D) g;
       Color originalColor = g2d.getColor();
 
-      int borderX = INSET + (INNER_BORDERLINE_WIDTH / 2);
+      int borderX = inset + (INNER_BORDERLINE_WIDTH / 2);
       int borderY = withTopInset ? borderX : INNER_BORDERLINE_WIDTH / 2;
       int borderWidthMinus = borderX * 2;
       int borderHeightMinus = borderX + borderY;
@@ -72,7 +77,7 @@ public class RoundedBorderDecorator extends JPanel {
         borderY,
         (float)(getWidth() - borderWidthMinus),
         (float)(getHeight() - borderHeightMinus),
-        ARC_SIZE, ARC_SIZE));
+        arc, arc));
   }
 
   private void drawOuterBorderArea(Graphics2D g2d,
@@ -84,7 +89,7 @@ public class RoundedBorderDecorator extends JPanel {
         borderY,
         (float)(getWidth() - borderWidthMinus),
         (float)(getHeight() - borderHeightMinus),
-        ARC_SIZE, ARC_SIZE);
+        arc, arc);
     Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
     path.append(outer, false);
     path.append(inner, false);
@@ -94,4 +99,16 @@ public class RoundedBorderDecorator extends JPanel {
   public JComponent getDecoratedComponent() { return decoratedComponent; }
 
   public boolean withTopInset() { return withTopInset; }
+
+  public void skalieren(int percent) {
+    inset = (INSET * percent) / 100;
+    arc = (ARC_SIZE * percent) / 100;
+    withTopInset(withTopInset);
+    String otherInsetSpec = (inset + INNER_BORDERLINE_WIDTH) + "px";
+    ColumnSpec columnSpec = ColumnSpec.decode(otherInsetSpec);
+    layout.setColumnSpec(1, columnSpec);
+    layout.setColumnSpec(3, columnSpec);
+    layout.setRowSpec(3, RowSpec.decode(otherInsetSpec));
+  }
+
 }

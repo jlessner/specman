@@ -334,6 +334,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
       ImageScaler imageScaler = new ImageScaler(prozentNeu, prozentAktuell);
       editorPane.setText(imageScaler.scaleImages(editorPane.getText()));
     }
+    insetPanel.skalieren(prozentNeu);
   }
 
   public java.util.List<Line2D.Double> getRechteZeilenraender() {

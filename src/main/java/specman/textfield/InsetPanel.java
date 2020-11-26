@@ -39,17 +39,14 @@ public class InsetPanel extends JPanel {
     private FormLayout layout;
     private EmptyBorder border;
     private JEditorPane editorPane;
+    private Indentions indentions;
 
     InsetPanel(JEditorPane editorPane) {
         this.editorPane = editorPane;
         this.layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
-        setEditorBorder(
-                JEDITORPANE_DEFAULT_BORDER_THICKNESS,
-                JEDITORPANE_DEFAULT_BORDER_THICKNESS,
-                JEDITORPANE_DEFAULT_BORDER_THICKNESS,
-                JEDITORPANE_DEFAULT_BORDER_THICKNESS);
         setLayout(layout);
         add(editorPane, CC.xy(2, 2));
+        updateDecorationIndentions(new Indentions());
     }
 
     private void setEditorBorder(int top, int left, int bottom, int right) {
@@ -72,6 +69,8 @@ public class InsetPanel extends JPanel {
     }
 
     public void updateDecorationIndentions(Indentions indentions) {
+        this.indentions = indentions;
+
         layout.setRowSpec(1, indentions.topInset());
         layout.setRowSpec(3, indentions.bottomInset());
         layout.setColumnSpec(1, indentions.leftInset());
@@ -82,5 +81,9 @@ public class InsetPanel extends JPanel {
                 indentions.leftBorder(),
                 indentions.bottomBorder(),
                 indentions.rightBorder());
+    }
+
+    public void skalieren(int prozent) {
+        updateDecorationIndentions(indentions);
     }
 }

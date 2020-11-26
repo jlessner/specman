@@ -232,6 +232,9 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public void nachinitialisieren() {}
 
 	public void skalieren(int prozentNeu, int prozentAktuell) {
+		if (roundedBorderDecorator != null) {
+			roundedBorderDecorator.skalieren(prozentNeu);
+		}
 		text.skalieren(prozentNeu, prozentAktuell);
 		unterSequenzen().forEach(sequenz -> sequenz.skalieren(prozentNeu, prozentAktuell));
 	}

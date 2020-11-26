@@ -2,6 +2,7 @@ package specman.textfield;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.Specman;
 import specman.view.RoundedBorderDecorationStyle;
 
 import static specman.view.RoundedBorderDecorationStyle.None;
@@ -12,6 +13,8 @@ public class Indentions {
     private static final int TOPBOTTOM_INSET_FOR_DECORATION = 1;
 
     final boolean top, left, bottom, right;
+
+    public Indentions() { this(None); }
 
     public Indentions(RoundedBorderDecorationStyle style) {
         top = left = bottom = right = (style != None);
@@ -24,13 +27,13 @@ public class Indentions {
         this.right = right;
     }
 
-    private static RowSpec toRowSpec(boolean indent) {
-        int px = indent ? TOPBOTTOM_INSET_FOR_DECORATION : 0;
+    private RowSpec toRowSpec(boolean indent) {
+        int px = indent ? (TOPBOTTOM_INSET_FOR_DECORATION * zoomPercent() / 100) : 0;
         return RowSpec.decode(px + "px");
     }
 
-    private static ColumnSpec toColumnSpec(boolean indent) {
-        int px = indent ? LEFTRIGHT_INSET_FOR_DECORATION : 0;
+    private ColumnSpec toColumnSpec(boolean indent) {
+        int px = indent ? (LEFTRIGHT_INSET_FOR_DECORATION * zoomPercent() / 100) : 0;
         return ColumnSpec.decode(px + "px");
     }
 
@@ -52,4 +55,6 @@ public class Indentions {
     public Indentions withLeft(boolean left) { return new Indentions(top, left, bottom, right); }
     public Indentions withBottom(boolean bottom) { return new Indentions(top, left, bottom, right); }
     public Indentions withRight(boolean right) { return new Indentions(top, left, bottom, right); }
+
+    private int zoomPercent() { return Specman.instance().getZoomFactor(); }
 }

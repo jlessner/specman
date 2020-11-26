@@ -505,11 +505,11 @@ public class SchrittSequenzView {
     }
 
     private void forwardTextfieldDecorationIndentions(int substepIndex, Indentions indentions) {
-			AbstractSchrittView substep = schritte.get(substepIndex);
-			if (substep.getDecorated() == None) {
-				substep.updateTextfieldDecorationIndentions(indentions);
-			}
+		AbstractSchrittView substep = schritte.get(substepIndex);
+		if (substep.getDecorated() == None) {
+			substep.updateTextfieldDecorationIndentions(indentions);
 		}
+	}
 
 	public AbstractSchrittView findFirstDecoratedParent() {
 		SchrittSequenzView sequenz = this;
