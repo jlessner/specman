@@ -156,11 +156,6 @@ public class CatchSchrittView extends AbstractSchrittView {
 	public JComponent getComponent() { return decorated(schrittPanel); }
 
 	@Override
-	public SchrittSequenzView findeSequenz(JTextComponent zuletztFokussierterText) {
-		return handlingSequenz.findeSequenz(zuletztFokussierterText);
-	}
-	
-	@Override
 	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
 		return handlingSequenz.findeSchritt(zuletztFokussierterText);
 	}
@@ -171,9 +166,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public boolean isStrukturiert() {
-		return true;
-	}
+	public boolean isStrukturiert() { return true; }
 
 	@Override
 	public void focusLost(FocusEvent e) {
@@ -269,8 +262,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 			return ergebnis;
 		}
 
-		@Override public AbstractSchrittView schrittZwischenschieben(AbstractSchrittView schritt, AbstractSchrittView vorgaengerSchritt, EditorI editor) {
-			AbstractSchrittView ergebnis = super.schrittZwischenschieben(schritt, vorgaengerSchritt, editor);
+		@Override public AbstractSchrittView schrittZwischenschieben(AbstractSchrittView schritt, StepInsertionPosition insertionPosition, AbstractSchrittView vorgaengerSchritt, EditorI editor) {
+			AbstractSchrittView ergebnis = super.schrittZwischenschieben(schritt, insertionPosition, vorgaengerSchritt, editor);
 			rahmenanzeigeAnpassen();
 			return ergebnis;
 		}

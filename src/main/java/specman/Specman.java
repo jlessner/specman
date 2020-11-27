@@ -22,6 +22,7 @@ import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
 import specman.view.CatchSchrittView;
 import specman.view.SchrittSequenzView;
+import specman.view.StepInsertionPosition;
 import specman.view.ZweigSchrittSequenzView;
 
 import javax.imageio.ImageIO;
@@ -44,6 +45,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static specman.view.StepInsertionPosition.After;
 
 /**
  * @author User #3
@@ -223,126 +226,107 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView schritt;
-				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
-				if (sequenz != null)
-					schritt = sequenz.einfachenSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
-				else
-					schritt = hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
-
-				newStepPostInit(schritt, sequenz);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+				AbstractSchrittView schritt = (referenceStep != null)
+						? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
+				newStepPostInit(schritt);
 			}
 		});
 		
 		whileSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt;
 				dropWelcomeMessage();
-				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
-				if (sequenz != null)
-					schritt = sequenz.whileSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
-				else
-					schritt = hauptSequenz.whileSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt, sequenz);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+				AbstractSchrittView schritt = (referenceStep != null)
+						? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.whileSchrittAnhaengen(Specman.this);
+				newStepPostInit(schritt);
 			}
 		});
 		
 		whileWhileSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt;
 				dropWelcomeMessage();
-				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
-				if (sequenz != null)
-					schritt = sequenz.whileWhileSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
-				else
-					schritt = hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt, sequenz);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+				AbstractSchrittView schritt = (referenceStep != null)
+						? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
+				newStepPostInit(schritt);
 			}
 		});
 		
 		ifElseSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt;
 				dropWelcomeMessage();
-				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
-				if (sequenz != null)
-					schritt = sequenz.ifElseSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
-				else
-					schritt = hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt, sequenz);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+				AbstractSchrittView schritt = (referenceStep != null)
+						? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
+				newStepPostInit(schritt);
 			}
 		});
 		
 		ifSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt;
 				dropWelcomeMessage();
-				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
-				if (sequenz != null)
-					schritt = sequenz.ifSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
-				else
-					schritt = hauptSequenz.ifSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt, sequenz);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+				AbstractSchrittView schritt = (referenceStep != null)
+						? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.ifSchrittAnhaengen(Specman.this);
+				newStepPostInit(schritt);
 			}
 		});
 		
 		caseSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt;
 				dropWelcomeMessage();
-				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
-				if (sequenz != null)
-					schritt = sequenz.caseSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
-				else
-					schritt = hauptSequenz.caseSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt, sequenz);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+				AbstractSchrittView schritt = (referenceStep != null)
+						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
+				newStepPostInit(schritt);
 			}
 		});
 		
 		subsequenzSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt;
 				dropWelcomeMessage();
-				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
-				if (sequenz != null)
-					schritt = sequenz.subsequenzSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
-				else
-					schritt = hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt, sequenz);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+				AbstractSchrittView schritt = (referenceStep != null)
+						? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
+				newStepPostInit(schritt);
 			}
 		});
 		
 		breakSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt;
 				dropWelcomeMessage();
-				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
-				if (sequenz != null)
-					schritt = sequenz.breakSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
-				else
-					schritt = hauptSequenz.breakSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt, sequenz);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+				AbstractSchrittView schritt = (referenceStep != null)
+						? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.breakSchrittAnhaengen(Specman.this);
+				newStepPostInit(schritt);
 			}
 		});
 		
 		catchSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt;
 				dropWelcomeMessage();
-				SchrittSequenzView sequenz = hauptSequenz.findeSequenz(zuletztFokussierterText);
-				if (sequenz != null)
-					schritt = sequenz.catchSchrittZwischenschieben(zuletztFokussierterText, Specman.this);
-				else
-					schritt = hauptSequenz.catchSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt, sequenz);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+				AbstractSchrittView schritt = (referenceStep != null)
+						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
+				newStepPostInit(schritt);
 			}
 		});
 		
@@ -644,8 +628,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		});
 	}
 
-	private void newStepPostInit(AbstractSchrittView newStep, SchrittSequenzView sequenz) {
-		addEdit(new UndoableSchrittHinzugefuegt(newStep, sequenz != null ? sequenz : hauptSequenz));
+	private void newStepPostInit(AbstractSchrittView newStep) {
+		addEdit(new UndoableSchrittHinzugefuegt(newStep, newStep.getParent()));
 		newStep.skalieren(zoomFaktor, 100);
 		newStep.initInheritedTextFieldIndentions();
 		diagrammAktualisieren(newStep);
@@ -830,7 +814,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public BreakSchrittView findeBreakSchritt(CatchSchrittView fuerCatchSchritt) {
-		SchrittSequenzView sequenzDesCatchSchritts = hauptSequenz.findeSequenz(fuerCatchSchritt.getText());
+		SchrittSequenzView sequenzDesCatchSchritts = fuerCatchSchritt.getParent();
 		if (sequenzDesCatchSchritts == null) {
 			System.err.println("Ups, das geht hier noch nicht richtig. Laden von Break-Ankoppungen");
 			return null;

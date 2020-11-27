@@ -170,15 +170,6 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		}
 		return false;
 	}
-	
-	public SchrittSequenzView findeSequenz(JTextComponent zuletztFokussierterText) {
-		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
-			SchrittSequenzView sequenz = unterSequenz.findeSequenz(zuletztFokussierterText);
-			if (sequenz != null)
-				return sequenz;
-		}
-		return null;
-	}
 
 	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
 		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
@@ -203,8 +194,8 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	/** Liefert alle in einem Schritt enthalten Untersequenzen, um damit die verschiedenen
-	 * Traversierungsfunktionen wie {@link #findeSequenz(JTextComponent)} und {@link #findeSchritt(JTextComponent)}
-	 * zu f�ttern. Damit spart man sich das rekursive Absteigen in allen Ableitungen f�r jede dieser
+	 * Traversierungsfunktionen wie {@link #findeSchritt(JTextComponent)} zu füttern. Damit
+	 * spart man sich das rekursive Absteigen in allen Ableitungen für jede dieser
 	 * Funktionen zu dublizieren
 	 */
 	protected List<SchrittSequenzView> unterSequenzen() {

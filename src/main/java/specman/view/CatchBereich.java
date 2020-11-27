@@ -152,15 +152,6 @@ class CatchBereich extends JPanel implements KlappbarerBereichI {
 		grundlinienAnschluesse.add(anschlussAnGrundlinie);
 	}
 
-	public SchrittSequenzView findeSequenz(JTextComponent zuletztFokussierterText) {
-		for (CatchSchrittView catchSchritt: catchBloecke) {
-			SchrittSequenzView sequenz = catchSchritt.findeSequenz(zuletztFokussierterText);
-			if (sequenz != null)
-				return sequenz;
-		}
-		return null;
-	}
-
 	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
 		for (CatchSchrittView catchSchritt: catchBloecke) {
 			if (catchSchritt.getText() == zuletztFokussierterText)

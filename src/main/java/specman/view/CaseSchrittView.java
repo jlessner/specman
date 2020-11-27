@@ -285,8 +285,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		spaltenResizerAnlegen(editor);
 		
 		setId(id);
-		SchrittSequenzView elternSequenz = this.getParent();
-		elternSequenz.folgeschritteRenummerieren(this);
+		parent.folgeschritteRenummerieren(this);
 		
 		editor.diagrammAktualisieren(null);
 	}
