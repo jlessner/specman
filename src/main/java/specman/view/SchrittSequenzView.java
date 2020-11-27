@@ -283,10 +283,10 @@ public class SchrittSequenzView {
 			sequenzbereichLayout.setConstraints(nachfolger.getComponent(), constraints4step(n+1, newStep));
 		}
 
-		schritte.add(i, schritt);
+		schritte.add(i, newStep);
 		updateLayoutRowspecsForAllsStepsAndGaps();
-		folgeschritteRenummerieren(schritt);
-		return schritt;
+		folgeschritteRenummerieren(newStep);
+		return newStep;
 	}
 
 	public void folgeschritteRenummerieren(AbstractSchrittView schritt) {
