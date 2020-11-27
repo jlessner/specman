@@ -66,8 +66,7 @@ public class IfSchrittView extends IfElseSchrittView {
 		elseSequenz.renummerieren(elseID);
 	}
 	
-	@Override
-	public SchrittID folgeIDInGleicherSequenz() {
+	@Override public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
 		return id.naechsteID();
 	}
 

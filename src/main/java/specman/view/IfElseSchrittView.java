@@ -161,9 +161,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		elseSequenz.renummerieren(elseID);
 	}
 
-	@Override
-	public SchrittID folgeIDInGleicherSequenz() {
-		return super.folgeIDInGleicherSequenz().naechsteID();
+	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
+		return super.newStepIDInSameSequence(direction).naechsteID();
 	}
 
 	protected Point berechneDreieckspitze() {

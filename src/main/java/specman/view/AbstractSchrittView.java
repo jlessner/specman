@@ -58,8 +58,8 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		text.setId(id.toString());
 	}
 	
-	public SchrittID folgeIDInGleicherSequenz() {
-		return id.naechsteID();
+	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
+		return direction == RelativeStepPosition.After ? id.naechsteID() : id.sameID();
 	}
 
 	public void setPlainText(String plainText) {

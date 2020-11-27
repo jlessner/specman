@@ -32,11 +32,20 @@ public class SchrittID {
 		naechsteNummern[naechsteNummern.length - 1]++;
 		return new SchrittID(naechsteNummern);
 	}
-	
+
+	public SchrittID vorhergehendeID() {
+		Integer[] vorhergehendeNummern = nummern.toArray(new Integer[0]);
+		vorhergehendeNummern[vorhergehendeNummern.length - 1]--;
+		return new SchrittID(vorhergehendeNummern);
+	}
+
+	public SchrittID sameID() {
+		return new SchrittID(nummern.toArray(new Integer[0]));
+	}
 	public SchrittID naechsteEbene() {
 		Integer[] naechsteNummern = nummern.toArray(new Integer[nummern.size()+1]);
 		naechsteNummern[naechsteNummern.length-1] = 0;
 		return new SchrittID(naechsteNummern);
 	}
-	
+
 }

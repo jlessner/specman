@@ -112,8 +112,8 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	@Override
-	public SchrittID folgeIDInGleicherSequenz() {
-		SchrittID id = super.folgeIDInGleicherSequenz();
+	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
+		SchrittID id = super.newStepIDInSameSequence(direction);
 		for (int i = 0; i < caseSequenzen.size(); i++)
 			id = id.naechsteID();
 		return id;

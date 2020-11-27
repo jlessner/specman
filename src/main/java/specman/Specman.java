@@ -22,7 +22,6 @@ import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
 import specman.view.CatchSchrittView;
 import specman.view.SchrittSequenzView;
-import specman.view.StepInsertionPosition;
 import specman.view.ZweigSchrittSequenzView;
 
 import javax.imageio.ImageIO;
@@ -46,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static specman.view.StepInsertionPosition.After;
+import static specman.view.RelativeStepPosition.After;
 
 /**
  * @author User #3

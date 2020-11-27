@@ -1,5 +1,5 @@
 package specman.view;
 
-public enum StepInsertionPosition {
+public enum RelativeStepPosition {
   Before, After;
 }
