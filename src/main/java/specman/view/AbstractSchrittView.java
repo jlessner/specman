@@ -302,5 +302,15 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public SchrittSequenzView getParent() { return parent; }
+	//TODO
+	public TextfieldShef getTextShef() {
+		return text;
+	}
 
+	public SchrittID getId() {
+		return id;
+	}
+	
 }
+
+

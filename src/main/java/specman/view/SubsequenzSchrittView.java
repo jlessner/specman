@@ -122,5 +122,8 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		Indentions substepIndentions = indentions.withTop(false).withRight(false);
 		subsequenz.updateTextfieldDecorationIndentions(substepIndentions);
 	}
-
+	//TODO
+	public JPanel getPanel() {
+		return panel;
+	}
 }

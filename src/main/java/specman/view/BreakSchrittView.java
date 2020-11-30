@@ -110,6 +110,10 @@ public class BreakSchrittView extends AbstractSchrittView {
 		super.skalieren(prozentNeu, prozentAktuell);
 		layout.setColumnSpec(1, ColumnSpec.decode(umgehungLayout()));
 	}
+	//TODO
+	public JPanel getPanel() {
+		return panel;
+	}
 
 	
 }

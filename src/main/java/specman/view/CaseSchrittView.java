@@ -340,4 +340,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			.stream()
 			.forEach(caseSequence -> caseSequence.updateTextfieldDecorationIndentions(caseIndentions));
 	}
+	//TODO
+	public ZweigSchrittSequenzView getSonstSequenz() {
+		return sonstSequenz;
+	}
+
+	public List<ZweigSchrittSequenzView> getCaseSequenzen() {
+		return caseSequenzen;
+	}
 }

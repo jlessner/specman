@@ -270,4 +270,12 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		Indentions elseIndentions = ifIndentions.withLeft(false);
 		elseSequenz.updateTextfieldDecorationIndentions(elseIndentions);
 	}
+	//TODO 
+	public ZweigSchrittSequenzView getIfSequenz() {
+		return ifSequenz;
+	}
+
+	public ZweigSchrittSequenzView getElseSequenz() {
+		return elseSequenz;
+	}
 }
