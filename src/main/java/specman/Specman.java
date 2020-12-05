@@ -23,6 +23,7 @@ import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
 import specman.view.CatchSchrittView;
 import specman.view.IfElseSchrittView;
+import specman.view.RelativeStepPosition;
 import specman.view.SchleifenSchrittView;
 import specman.view.SchrittSequenzView;
 import specman.view.SubsequenzSchrittView;
@@ -41,6 +42,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -980,10 +982,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		}
 		
-		public void dragGlassPanePos(Point pos,List<AbstractSchrittView> schrittListe,boolean insert) {
+		public void dragGlassPanePos(Point pos,List<AbstractSchrittView> schrittListe,boolean insert, MouseEvent e) {
 			int glassPaneHeight = 5;
 			GlassPane glassPane =  (GlassPane) this.getGlassPane();
 			Point p;
+			
+			//TODO mechanismus für leeres diagramm geht noch nicht 
+			if(schrittListe.size() == 0 && insert == true) {
+				SchrittSequenzView curSequenz = hauptSequenz;
+				addNeuerSchritt(instance, e,curSequenz);
+				System.out.println("moinssnfjkdsnkj");
+			}
+			
 			for(AbstractSchrittView schritt : schrittListe) {		
 			 //Abfrage einfacherSchritt
 			if(schritt.getClass().getName().equals("specman.view.EinfacherSchrittView")) {
@@ -997,15 +1007,17 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							p = SwingUtilities.convertPoint(container,0,0,Specman.this);
 							glassPane.setInputRecBounds(p.x-2,p.y+container.getHeight(), container.getWidth()+4, glassPaneHeight);
 							this.getGlassPane().setVisible(true);
+							if(insert) { //TODO MAX Mechanismus um einen neuen Schritt außerhalb eine Sequenz hinzufügen zu können
 								
+								
+							}
 							break;
 						}
 					}
-					//curschritt eig unnötig
 					glassPane.setInputRecBounds(p.x,p.y+r.height-glassPaneHeight, r.width, glassPaneHeight);
 					this.getGlassPane().setVisible(true);
 					if(insert) {
-						schritt.getParent().einfachenSchrittZwischenschieben(After, schritt, instance);
+						addNeuerSchritt(After, schritt, instance, e);
 					}
 					break;
 				}
@@ -1015,31 +1027,31 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				checkfalseGlassPaneforComponent(ifel.getTextShef().getInsetPanel(), pos, glassPaneHeight);
 				if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 					checkZweigHeading(ifel.getIfSequenz(),pos, glassPaneHeight);
-					dragGlassPanePos(pos,ifel.getIfSequenz().schritte,insert);
+					dragGlassPanePos(pos,ifel.getIfSequenz().schritte,insert,e);
 				}
 				checkZweigHeading(ifel.getElseSequenz(),pos, glassPaneHeight);
-				dragGlassPanePos(pos,ifel.getElseSequenz().schritte,insert);
+				dragGlassPanePos(pos,ifel.getElseSequenz().schritte,insert,e);
 				}
 			else if( schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView") ) {
 				SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
 				checkGlassPaneforComponent(schleife.getPanel(),pos,glassPaneHeight);
-				dragGlassPanePos(pos,schleife.getWiederholSequenz().schritte,insert); 
+				dragGlassPanePos(pos,schleife.getWiederholSequenz().schritte,insert,e); 
 				checkSchleifenHeading(schleife, pos, glassPaneHeight);
 				}
 			else if( schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 					CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 					checkfalseGlassPaneforComponent(caseSchritt.getTextShef().getInsetPanel(), pos, glassPaneHeight);
 					checkZweigHeading(caseSchritt.getSonstSequenz(),pos, glassPaneHeight);
-					dragGlassPanePos(pos,caseSchritt.getSonstSequenz().schritte,insert);
+					dragGlassPanePos(pos,caseSchritt.getSonstSequenz().schritte,insert,e);
 					for( ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 						checkZweigHeading(caseSequenz,pos, glassPaneHeight);
-						dragGlassPanePos(pos,caseSequenz.schritte,insert);
+						dragGlassPanePos(pos,caseSequenz.schritte,insert,e);
 					}
 				}
 			else if(schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
 				SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
 				checkGlassPaneforComponent(sub.getTextShef().getInsetPanel(), pos, glassPaneHeight);
-				dragGlassPanePos(pos,sub.getSequenz().schritte,insert);
+				dragGlassPanePos(pos,sub.getSequenz().schritte,insert,e);
 			}
 			else if(schritt.getClass().getName().equals("specman.view.BreakSchrittView")) {
 				BreakSchrittView  breakSchritt = (BreakSchrittView)schritt;
@@ -1047,8 +1059,53 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 			}
 		}
+		//Neuen Schritt zwischenschieben abhängig vom Button
+		private void addNeuerSchritt(RelativeStepPosition insertionPosition,
+				AbstractSchrittView schritt, EditorI editor,MouseEvent e) {
+				SchrittSequenzView sequenz = schritt.getParent();
+				if (e.getSource().equals(schrittAnhaengen)) {
+				schritt = sequenz.einfachenSchrittZwischenschieben(insertionPosition,schritt,instance);
+				}else if(e.getSource().equals(whileSchrittAnhaengen)){
+					schritt = sequenz.whileSchrittZwischenschieben(insertionPosition,schritt,instance);
+				}else if(e.getSource().equals(whileWhileSchrittAnhaengen)){
+					schritt = sequenz.whileWhileSchrittZwischenschieben(insertionPosition,schritt,instance);
+				}else if(e.getSource().equals(ifElseSchrittAnhaengen)){
+					schritt = sequenz.ifElseSchrittZwischenschieben(insertionPosition,schritt,instance); 
+				}else if(e.getSource().equals(ifSchrittAnhaengen)){
+						schritt = sequenz.ifSchrittZwischenschieben(insertionPosition,schritt,instance); 
+				}else if(e.getSource().equals(caseSchrittAnhaengen)){
+					schritt = sequenz.caseSchrittZwischenschieben(insertionPosition,schritt,instance);
+				}else if(e.getSource().equals(subsequenzSchrittAnhaengen)){
+					schritt = sequenz.subsequenzSchrittZwischenschieben(insertionPosition,schritt,instance);
+				}else if(e.getSource().equals(breakSchrittAnhaengen)){
+					schritt = sequenz.breakSchrittZwischenschieben(insertionPosition,schritt,instance);
+				}else if(e.getSource().equals(catchSchrittAnhaengen)){
+					schritt = sequenz.catchSchrittZwischenschieben(insertionPosition,schritt,instance);
+				}else if(e.getSource().equals(caseSchrittAnhaengen)){
+				}
+		}
+		//Neuen Schritt anhängen abhängig vom Button
+		private void addNeuerSchritt(EditorI editor,MouseEvent e,SchrittSequenzView sequenz) {
+			if (e.getSource().equals(schrittAnhaengen)) {
+				sequenz.einfachenSchrittAnhaengen(Specman.this);
+			}else if (e.getSource().equals(whileSchrittAnhaengen)) {
+				sequenz.whileSchrittAnhaengen(Specman.this);
+			}else if(e.getSource().equals(whileWhileSchrittAnhaengen)) {
+				sequenz.whileWhileSchrittAnhaengen(Specman.this);
+			}else if(e.getSource().equals(ifElseSchrittAnhaengen)){
+				sequenz.ifElseSchrittAnhaengen(Specman.this);
+			}else if(e.getSource().equals(ifSchrittAnhaengen)){
+				sequenz.ifSchrittAnhaengen(Specman.this);
+			}else if(e.getSource().equals(caseSchrittAnhaengen)){
+				sequenz.caseSchrittAnhaengen(Specman.this);
+			}else if(e.getSource().equals(subsequenzSchrittAnhaengen)){
+				sequenz.subsequenzSchrittAnhaengen(Specman.this);
+			}else if(e.getSource().equals(breakSchrittAnhaengen)){
+				sequenz.breakSchrittAnhaengen(Specman.this);
+			}else if(e.getSource().equals(catchSchrittAnhaengen)){
+				sequenz.catchSchrittAnhaengen(Specman.this);
+			}
+		}
+
 		
-		
-		
-	
 }
