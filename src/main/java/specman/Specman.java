@@ -230,6 +230,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -242,6 +245,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -254,6 +260,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -266,6 +275,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -278,6 +290,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -290,6 +305,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -302,6 +320,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -314,6 +335,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.breakSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -326,6 +350,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -348,6 +375,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
 				schritt.skalieren(zoomFaktor, 100);
 				diagrammAktualisieren(schritt);
+				if(instance != null && instance.aenderungenVerfolgen()) {
+					schritt.setAenderungsart(Aenderungsart.Hinzugefuegt);
+				}
 			}
 		});
 		
@@ -363,6 +393,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 		
+		
+		
+		//TODO Test
+		
 		loeschen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -373,21 +407,70 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					return;
 				}
 				
-				if (schritt instanceof CaseSchrittView) {
-					CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
-					ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
-					if (zweig != null) {
-						int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
-						undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
-					}
-					return;
+				
+				//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
+				
+				if(instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt){
+					
+					//Muss hinzugefügt werden um zu gucken ob die Markierung schon gestzt wurde
+					if(schritt.getAenderungsart()==Aenderungsart.Geloescht)
+                    	return;
+					
+					
+                    else {
+                    	
+                    	
+                    	schritt.setAenderungsart(Aenderungsart.Geloescht);
+						
+                    	
+                    	schritt.setPlainText("Gelöscht");
+                    	schritt.setPlainText(""+ schritt.getAenderungsart());
+                    	
+                    	if (schritt instanceof CaseSchrittView) {
+    						CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
+    						ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
+    						if (zweig != null) {
+    							//schritt.getParent()Specman.set...
+    							//schritt.findeSchritt(zuletztFokussierterText).setAenderungsart(Aenderungsart.Geloescht);;
+    							//schritt.setAenderungsart(Aenderungsart.Geloescht);
+    							//TODO Methode funkt irgendwie! aber anderen namen finden
+    							schritt.anderesEntfernen();
+    							
+    							
+
+    						}
+    						return;
+    					}
+                    }
+			
 				}
 				
-				SchrittSequenzView sequenz = schritt.getParent();
-				int schrittIndex = sequenz.schrittEntfernen(schritt);
-				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+				
+				//Hier erfolgt das richtige Löschen Aenderungsverfolgung nicht aktiviert
+				
+				else {
+					if (schritt instanceof CaseSchrittView) {
+						CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
+						ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
+						if (zweig != null) {
+							int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
+							undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+						}
+						return;
+					}
+					
+					SchrittSequenzView sequenz = schritt.getParent();
+					int schrittIndex = sequenz.schrittEntfernen(schritt);
+					undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+				}
+				
 			}
 		});
+		
+		//TODO Testende
+
+                
+		
 
 		toggleBorderType.addActionListener(new ActionListener() {
 			@Override
@@ -842,4 +925,5 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	@Override public int getZoomFactor() {
 		return zoomFaktor;
 	}
+	
 }

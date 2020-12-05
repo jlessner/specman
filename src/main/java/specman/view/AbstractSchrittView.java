@@ -1,5 +1,6 @@
 package specman.view;
 
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -42,15 +43,25 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	protected final TextfieldShef text;
 	protected SchrittID id;
+	protected Aenderungsart aenderungsart;
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	 
-	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
+	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
+		this.aenderungsart = aenderungsart;
 		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
 		this.parent = parent;
 		text.addFocusListener(editor);
 		text.addFocusListener(this);
+	}
+
+	public Aenderungsart getAenderungsart() {
+		return aenderungsart;
+	}
+
+	public void setAenderungsart(Aenderungsart aenderungsart) {
+		this.aenderungsart = aenderungsart;
 	}
 
 	public void setId(SchrittID id) {
@@ -219,6 +230,11 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public void entfernen(SchrittSequenzView container) {
 		unterSequenzen().forEach(sequenz -> sequenz.entfernen(this));
 	}
+	//TODO Entfernen mit Änderungsmarkerung
+	public void anderesEntfernen() {
+		unterSequenzen().forEach(sequenz -> sequenz.setAenderungsart(Aenderungsart.Geloescht));
+	}
+	
 
 	public void nachinitialisieren() {}
 

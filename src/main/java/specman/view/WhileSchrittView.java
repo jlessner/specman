@@ -1,5 +1,6 @@
 package specman.view;
 
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.AbstractSchrittModel_V001;
@@ -7,15 +8,15 @@ import specman.model.v001.WhileSchrittModel_V001;
 
 public class WhileSchrittView extends SchleifenSchrittView {
 	
-	protected WhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
-		super(editor, parent, initialerText, id, false);
+	protected WhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
+		super(editor, parent, initialerText, id, aenderungsart, false);
 		if (withDefaultContent) {
-			initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
+			initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene(), aenderungsart));
 		}
 	}
 
-	public WhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
-		this(editor, parent, initialerText, id, true);
+	public WhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
+		this(editor, parent, initialerText, id, aenderungsart, true);
 	}
 
 	public WhileSchrittView(EditorI editor, SchrittSequenzView parent, WhileSchrittModel_V001 model) {
@@ -24,7 +25,7 @@ public class WhileSchrittView extends SchleifenSchrittView {
 	}
 
 	public WhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText) {
-		this(editor, parent, initialerText, (SchrittID) null);
+		this(editor, parent, initialerText, (SchrittID) null, null);
 	}
 	
 	@Override
@@ -33,6 +34,7 @@ public class WhileSchrittView extends SchleifenSchrittView {
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			aenderungsart,
 			klappen.isSelected(),
 			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
 			linkerBalken.getWidth());

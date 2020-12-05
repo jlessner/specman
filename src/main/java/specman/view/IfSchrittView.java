@@ -2,6 +2,8 @@ package specman.view;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -26,16 +28,16 @@ import static specman.Specman.schrittHintergrund;
 public class IfSchrittView extends IfElseSchrittView {
 	int ifBreite;
 	
-	public IfSchrittView(EditorI editor, SchrittSequenzView parent, String initialerString, SchrittID id) {
-		super(editor, parent, initialerString, id, false);
-		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), ""));
-		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), TextfieldShef.right("Ja")));
+	public IfSchrittView(EditorI editor, SchrittSequenzView parent, String initialerString, SchrittID id, Aenderungsart aenderungsart) {
+		super(editor, parent, initialerString, id, aenderungsart, false);
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, ""));
+		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, TextfieldShef.right("Ja")));
 		ifBreite = SPALTENLAYOUT_UMGEHUNG_GROESSE * Specman.instance().zoomFaktor() / 100;
 	}
 
 	public IfSchrittView(EditorI editor, SchrittSequenzView parent, IfSchrittModel_V001 model) {
-		super(editor, parent, model.inhalt.text, model.id, false);
-		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), ""));
+		super(editor, parent, model.inhalt.text, model.id, model.aenderungsart, false);
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), aenderungsart, ""));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		setBackground(new Color(model.farbe));
 		ifBreiteSetzen(model.leerBreite);
@@ -102,6 +104,7 @@ public class IfSchrittView extends IfElseSchrittView {
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
 			klappen.isSelected(),
+			aenderungsart,
 			elseSequenz.generiereZweigSchrittSequenzModel(formatierterText),
 			ifSequenz.ueberschrift.getWidth());
 		return model;
