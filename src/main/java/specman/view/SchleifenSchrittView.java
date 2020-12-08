@@ -198,5 +198,11 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	public JPanel getPanel() {
 		return panel;
 	}
+	public JPanel getLinkerBalken(){
+		return linkerBalken;
+	}
+	public JPanel getUntererBalken(){
+		return untererBalken;
+	}
 
 }
