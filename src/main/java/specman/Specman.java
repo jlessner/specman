@@ -1192,6 +1192,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			sequenz.schrittZwischenschieben(step,insertionPosition,schritt,instance);
 			hauptSequenz.renummerieren(hauptSequenz.schritte.get(0).getId());
+			System.out.println("test");
 		}
 
 		if (e.getSource().equals(schrittAnhaengen)) {
