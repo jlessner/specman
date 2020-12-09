@@ -10,6 +10,7 @@ import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import specman.model.ModelEnvelope;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
+import specman.textfield.InsetPanel;
 import specman.textfield.TextfieldShef;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
@@ -65,7 +66,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 1.0f, new float[] {10.0f, 10.0f }, 0f);
 
 	JTextComponent zuletztFokussierterText;
-	SchrittSequenzView hauptSequenz;
+	public SchrittSequenzView hauptSequenz;
 	JPanel arbeitsbereich;
 	JPanel hauptSequenzContainer;
 	SpaltenResizer breitenAnpasser;
@@ -1178,6 +1179,21 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private void addNeuerSchritt(RelativeStepPosition insertionPosition,
 								 AbstractSchrittView schritt, EditorI editor,MouseEvent e) {
 		SchrittSequenzView sequenz = schritt.getParent();
+//ToDo Löschen und hinzufügen beim verschieben
+		if(e.getSource().getClass().getName().equals("javax.swing.JLabel")){
+			JLabel label = (JLabel) e.getSource();
+
+			InsetPanel ip = (InsetPanel) label.getParent().getParent();
+			AbstractSchrittView step = hauptSequenz.findeSchritt(ip.getTextfeld().getTextComponent());
+
+			int schrittindex = hauptSequenz.schrittEntfernen(step);
+
+			undoManager.addEdit(new UndoableSchrittEntfernt(step,step.getParent(),schrittindex));
+
+			sequenz.schrittZwischenschieben(step,insertionPosition,schritt,instance);
+			hauptSequenz.renummerieren(hauptSequenz.schritte.get(0).getId());
+		}
+
 		if (e.getSource().equals(schrittAnhaengen)) {
 			schritt = sequenz.einfachenSchrittZwischenschieben(insertionPosition,schritt,instance);
 		}else if(e.getSource().equals(whileSchrittAnhaengen)){

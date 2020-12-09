@@ -1,6 +1,7 @@
 package specman.textfield;
 
 import specman.EditorI;
+import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
@@ -21,11 +22,7 @@ import javax.swing.text.html.CSS;
 import javax.swing.text.html.HTML;
 
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Line2D.Double;
 import java.util.ArrayList;
@@ -82,7 +79,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
   public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
     editorPane = new JEditorPane();
-    insetPanel = new InsetPanel(editorPane);
+    insetPanel = new InsetPanel(editorPane, this); //TODO
     editor.instrumentWysEditor(editorPane, initialerText, 0);
     editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
     editorPane.setFont(font);
@@ -96,6 +93,11 @@ public class TextfieldShef implements ComponentListener, KeyListener {
       schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
       schrittNummer.setForeground(Color.WHITE);
       schrittNummer.setOpaque(true);
+      //Todo
+      DragStepAdapter ada = new DragStepAdapter(editor);
+      schrittNummer.addMouseListener(ada);
+      schrittNummer.addMouseMotionListener(ada);
+
       editorPane.add(schrittNummer);
       editorPane.addComponentListener(this);
     }

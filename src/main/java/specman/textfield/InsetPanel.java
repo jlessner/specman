@@ -40,13 +40,19 @@ public class InsetPanel extends JPanel {
     private EmptyBorder border;
     private JEditorPane editorPane;
     private Indentions indentions;
+    private TextfieldShef textfeld; //ToDO
 
-    InsetPanel(JEditorPane editorPane) {
+    InsetPanel(JEditorPane editorPane, TextfieldShef t) {
         this.editorPane = editorPane;
         this.layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
         setLayout(layout);
         add(editorPane, CC.xy(2, 2));
         updateDecorationIndentions(new Indentions());
+        this.textfeld = t; //ToDO
+    }
+
+    public TextfieldShef getTextfeld() {
+        return textfeld;
     }
 
     private void setEditorBorder(int top, int left, int bottom, int right) {
