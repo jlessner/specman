@@ -1053,7 +1053,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		//mechanismus für leeres diagramm -> dropWelcome ergänzt
 		insertFirstStep(schrittListe, insert, e);
-		this.getGlassPane().setVisible(false);
+	
 
 		for(AbstractSchrittView schritt : schrittListe) {
 			//Abfrage einfacherSchritt
