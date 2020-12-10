@@ -1058,6 +1058,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		for(AbstractSchrittView schritt : schrittListe) {
 			//Abfrage einfacherSchritt
+			int groesse = schrittListe.size();
 			if(schritt.getClass().getName().equals("specman.view.EinfacherSchrittView")) {
 				p = SwingUtilities.convertPoint(schritt.getTextShef().getInsetPanel(),0,0,Specman.this);
 				Rectangle r = schritt.getTextShef().getInsetPanel().getVisibleRect();
@@ -1161,6 +1162,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					break;
 				}
 			}
+			if(groesse != schrittListe.size()){
+				break;
+			}
 		}
 	}
 
@@ -1189,12 +1193,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			InsetPanel ip = (InsetPanel) label.getParent().getParent();
 			AbstractSchrittView step = hauptSequenz.findeSchritt(ip.getTextfeld().getTextComponent());
 
-			int schrittindex = hauptSequenz.schrittEntfernen(step);
 
+			int schrittindex = step.getParent().schrittEntfernen(step);
+
+			step.setId(schritt.newStepIDInSameSequence(insertionPosition));
 			undoManager.addEdit(new UndoableSchrittEntfernt(step,step.getParent(),schrittindex));
 
+			step.setParent(schritt.getParent());
 			sequenz.schrittZwischenschieben(step,insertionPosition,schritt,instance);
-			hauptSequenz.renummerieren(hauptSequenz.schritte.get(0).getId());
+			//hauptSequenz.renummerieren(hauptSequenz.schritte.get(0).getId());
 			System.out.println("test");
 		}
 
