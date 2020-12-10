@@ -33,6 +33,7 @@ public class DragButtonAdapter extends MouseAdapter {
 		public void mouseDragged(MouseEvent e) {
 			//-2 da performanter
 			Point pt = e.getPoint();
+			System.out.println(pt);
 			JComponent parent = (JComponent) e.getComponent();
 			Point dp = pt;
 			Point dragOffset = new Point(pt.x - dp.x, pt.y - dp.y);

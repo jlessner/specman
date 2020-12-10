@@ -138,7 +138,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		// Falls jemand nicht aufgepasst hat und beim Initialisieren irgendwelche Funktionen verwendet hat,
 		// die schon etwas im Undo-Manager hinterlassen.
 		undoManager.discardAllEdits();
-		this.setGlassPane(new GlassPane());
+		this.setGlassPane(new GlassPane(getJMenuBar().getHeight()));
 	}
 
 	private void setInitialWindowSizeAndScreenCenteredLocation() {
@@ -776,7 +776,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		setJMenuBar(menuBar);
 		// ToDo Sidebar Changed from getContentPane().add(shefEditorPane.getFormatToolBar(), CC.xywh(1, 2, 1, 1));
 		getContentPane().add(shefEditorPane.getFormatToolBar(), CC.xywh(1, 2, 2, 1));
-	}
+		
+		}
 
 	@Override
 	public void addEdit(UndoableEdit edit) {
@@ -1052,6 +1053,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		//mechanismus für leeres diagramm -> dropWelcome ergänzt
 		insertFirstStep(schrittListe, insert, e);
+		this.getGlassPane().setVisible(false);
 
 		for(AbstractSchrittView schritt : schrittListe) {
 			//Abfrage einfacherSchritt
