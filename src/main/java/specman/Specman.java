@@ -138,7 +138,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		// Falls jemand nicht aufgepasst hat und beim Initialisieren irgendwelche Funktionen verwendet hat,
 		// die schon etwas im Undo-Manager hinterlassen.
 		undoManager.discardAllEdits();
-		this.setGlassPane(new GlassPane(getJMenuBar().getHeight()));
+		System.out.println(SwingUtilities.convertPoint(this.getContentPane(), 0, 0,this));
+		this.setGlassPane(new GlassPane((SwingUtilities.convertPoint(this.getContentPane(), 0, 0,this).y)-getJMenuBar().getHeight()));
 	}
 
 	private void setInitialWindowSizeAndScreenCenteredLocation() {
