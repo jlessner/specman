@@ -112,4 +112,8 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 
 	abstract protected int texteinrueckungNeuberechnen();
 	
+	//TODO get Panel
+	public JPanel getPanel() {
+		return panel;
+	}
 }

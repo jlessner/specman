@@ -315,6 +315,8 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return id;
 	}
 	
+	public abstract JComponent getPanel();
+	
 }
 
 

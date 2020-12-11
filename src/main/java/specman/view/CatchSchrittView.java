@@ -314,5 +314,10 @@ public class CatchSchrittView extends AbstractSchrittView {
 		}
 
 	}
+	//TODO Catchbereich noch nicht definiert
+	@Override
+	public JComponent getPanel() {
+		return null;
+	}
 
 }

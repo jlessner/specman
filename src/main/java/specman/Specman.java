@@ -28,6 +28,7 @@ import specman.view.RelativeStepPosition;
 import specman.view.SchleifenSchrittView;
 import specman.view.SchrittSequenzView;
 import specman.view.SubsequenzSchrittView;
+import specman.view.VerzweigungSchrittView;
 import specman.view.ZweigSchrittSequenzView;
 
 import javax.imageio.ImageIO;
@@ -1022,8 +1023,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			ru = cu.getBounds();
 			ru.setLocation(pu);
 		}
-
-		if(r.contains(pos)) {
+		//Abfrage ob der Mousezeiger über dem linken oder unteren Balken ist
+		if(rl.contains(pos)|| ru.contains(pos)) {
 			GlassPane gP = (GlassPane) this.getGlassPane();
 			gP.setInputRecBounds(p.x,p.y+r.height-glassPaneHeight, r.width, glassPaneHeight);
 			this.getGlassPane().setVisible(true);
@@ -1057,6 +1058,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	
 
 		for(AbstractSchrittView schritt : schrittListe) {
+
+			
 			//Abfrage einfacherSchritt
 			int groesse = schrittListe.size();
 			if(schritt.getClass().getName().equals("specman.view.EinfacherSchrittView")) {
@@ -1064,6 +1067,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				Rectangle r = schritt.getTextShef().getInsetPanel().getVisibleRect();
 				r.setLocation(p);
 				if(r.contains(pos)) {
+					//Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört
 					if(schrittListe.get(schrittListe.size()-1)==schritt && schritt.getId().nummern.size()>1) {
 						if(pos.y > (p.y+r.height-glassPaneHeight) ) {
 							Container container = schritt.getParent().getContainer().getParent();
@@ -1073,21 +1077,36 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							if(insert) {
 								//hier wird nur festgestellt, dass es sich um den letzten Schritt in der Sequenz handelt und das Iterieren beendet -> Sprung zurück in vorherige Ebene
 								lastStep = true;
-								break;
 							}
 							break;
 						}
 					}
 					glassPane.setInputRecBounds(p.x,p.y+r.height-glassPaneHeight, r.width, glassPaneHeight);
-					this.getGlassPane().setVisible(true);
-					if(insert) {
-						addNeuerSchritt(After, schritt, instance, e);
+					//Abfrage erster Schritt
+//					if(schritt.getId().toString().equals("1")&& (pos.y < (r.y+glassPaneHeight))) {
+//						glassPane.setInputRecBounds(p.x,p.y, r.width, glassPaneHeight);
+//						if(insert) {
+//							addNeuerSchritt(Before, schritt, instance, e);
+//						}
+//					}else {
+					if(checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+						break;
+					}else {	
+						glassPane.setInputRecBounds(p.x,p.y+r.height-glassPaneHeight, r.width, glassPaneHeight);
+						if(insert) {
+							addNeuerSchritt(After, schritt, instance, e);
+						}
 					}
+					this.getGlassPane().setVisible(true);
+					
 					break;
 				}
 				//Abfrage IfElseSchritt
 			}else if( schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
-				IfElseSchrittView ifel= (IfElseSchrittView) schritt;
+				IfElseSchrittView ifel= (IfElseSchrittView) schritt;				
+				if(checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+					break;
+				}
 				checkfalseGlassPaneforComponent(ifel.getTextShef().getInsetPanel(), pos, glassPaneHeight);
 				if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 					checkZweigHeading(ifel.getIfSequenz(),pos, glassPaneHeight, insert, e);
@@ -1105,6 +1124,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 			else if( schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView") ) {
 				SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+				if(checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+					break;
+				}
 				//TODO change from checkGlassPaneforComponent(schleife.getPanel(),pos,glassPaneHeight, insert, e);
 				if(checkGlassPaneforComponent(schleife,pos,glassPaneHeight, insert, e)){
 					break;
@@ -1122,6 +1144,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 			else if( schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+				if(checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+					break;
+				}
 				checkfalseGlassPaneforComponent(caseSchritt.getTextShef().getInsetPanel(), pos, glassPaneHeight);
 				checkZweigHeading(caseSchritt.getSonstSequenz(),pos, glassPaneHeight, insert, e);
 				dragGlassPanePos(pos,caseSchritt.getSonstSequenz().schritte,insert,e);
@@ -1139,6 +1164,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 			else if(schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
 				SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+				if(checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+					break;
+				}
 				//ToDo checkGlassPaneforComponent(sub.getTextShef().getInsetPanel(), pos, glassPaneHeight, insert, e);
 				checkGlassPaneforComponent(sub, pos, glassPaneHeight, insert, e);
 				dragGlassPanePos(pos,sub.getSequenz().schritte,insert,e);
@@ -1152,6 +1180,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 			else if(schritt.getClass().getName().equals("specman.view.BreakSchrittView")) {
 				BreakSchrittView breakSchritt = (BreakSchrittView)schritt;
+				if(checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+					break;
+				}
 				//ToDo checkGlassPaneforComponent(breakSchritt.getPanel(), pos, glassPaneHeight, insert, e);
 				checkGlassPaneforComponent(breakSchritt, pos, glassPaneHeight, insert, e);
 
@@ -1167,7 +1198,25 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		}
 	}
+	
+	private boolean checkFirstStep(AbstractSchrittView schritt,Point pos,int glassPaneHeight,boolean insert,MouseEvent e) {	
+		Rectangle r = schritt.getPanel().getBounds();
+		Point p = SwingUtilities.convertPoint(schritt.getPanel(),0,0,Specman.this);
+		r.setLocation(p);
+		if(r.contains(pos)) {
+			if(schritt.getId().toString().equals("1")&&(pos.y < (r.y+glassPaneHeight))) {
+				GlassPane glassPane = (GlassPane) this.getGlassPane();
+				glassPane.setInputRecBounds(p.x,p.y, r.width, glassPaneHeight);
+				glassPane.setVisible(true);
+				if(insert) {
+					addNeuerSchritt(Before, schritt, instance, e);
 
+				}
+				return true;
+			}
+	}
+		return false;
+	}
 	/**
 	 * Entfernt die WelcomeMessage und fügt den neuen Schritt hinzu
 	 * @param schrittListe - Schrittliste
