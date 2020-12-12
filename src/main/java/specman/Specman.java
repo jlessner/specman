@@ -1240,25 +1240,33 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 
 		if (e.getSource().equals(schrittAnhaengen)) {
-			sequenz.einfachenSchrittZwischenschieben(insertionPosition,schritt,instance);
+			schritt = sequenz.einfachenSchrittZwischenschieben(insertionPosition,schritt,instance);
+			newStepPostInit(schritt);
 		}else if(e.getSource().equals(whileSchrittAnhaengen)){
-			sequenz.whileSchrittZwischenschieben(insertionPosition,schritt,instance);
+			schritt = sequenz.whileSchrittZwischenschieben(insertionPosition,schritt,instance);
+			newStepPostInit(schritt);
 		}else if(e.getSource().equals(whileWhileSchrittAnhaengen)){
-			sequenz.whileWhileSchrittZwischenschieben(insertionPosition,schritt,instance);
+			schritt = sequenz.whileWhileSchrittZwischenschieben(insertionPosition,schritt,instance);
+			newStepPostInit(schritt);
 		}else if(e.getSource().equals(ifElseSchrittAnhaengen)){
-			sequenz.ifElseSchrittZwischenschieben(insertionPosition,schritt,instance);
+			schritt = sequenz.ifElseSchrittZwischenschieben(insertionPosition,schritt,instance);
+			newStepPostInit(schritt);
 		}else if(e.getSource().equals(ifSchrittAnhaengen)){
-			sequenz.ifSchrittZwischenschieben(insertionPosition,schritt,instance);
+			schritt = sequenz.ifSchrittZwischenschieben(insertionPosition,schritt,instance);
+			newStepPostInit(schritt);
 		}else if(e.getSource().equals(caseSchrittAnhaengen)){
-			sequenz.caseSchrittZwischenschieben(insertionPosition,schritt,instance);
+			schritt = sequenz.caseSchrittZwischenschieben(insertionPosition,schritt,instance);
+			newStepPostInit(schritt);
 		}else if(e.getSource().equals(subsequenzSchrittAnhaengen)){
-			sequenz.subsequenzSchrittZwischenschieben(insertionPosition,schritt,instance);
+			schritt = sequenz.subsequenzSchrittZwischenschieben(insertionPosition,schritt,instance);
+			newStepPostInit(schritt);
 		}else if(e.getSource().equals(breakSchrittAnhaengen)){
-			sequenz.breakSchrittZwischenschieben(insertionPosition,schritt,instance);
+			schritt = sequenz.breakSchrittZwischenschieben(insertionPosition,schritt,instance);
+			newStepPostInit(schritt);
 		}else if(e.getSource().equals(catchSchrittAnhaengen)){
-			sequenz.catchSchrittZwischenschieben(insertionPosition,schritt,instance);
+			schritt = sequenz.catchSchrittZwischenschieben(insertionPosition,schritt,instance);
+			newStepPostInit(schritt);
 		}else if(e.getSource().equals(caseAnhaengen)){
-
 
 		}
 	}
