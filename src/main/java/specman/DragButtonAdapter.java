@@ -33,7 +33,7 @@ public class DragButtonAdapter extends MouseAdapter {
 		public void mouseDragged(MouseEvent e) {
 			//-2 da performanter
 			Point pt = e.getPoint();
-			System.out.println(pt);
+			//System.out.println(pt);
 			JComponent parent = (JComponent) e.getComponent();
 			Point dp = pt;
 			Point dragOffset = new Point(pt.x - dp.x, pt.y - dp.y);
@@ -57,7 +57,7 @@ public class DragButtonAdapter extends MouseAdapter {
 			spec.window.setVisible(false);
 			Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, spec);
 			spec.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,true,e);
-			System.out.println(e.getSource());
+			//System.out.println(e.getSource());
 			spec.getGlassPane().setVisible(false);
 		}
 }
