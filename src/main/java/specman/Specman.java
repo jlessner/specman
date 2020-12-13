@@ -21,6 +21,8 @@ import specman.view.AbstractSchrittView;
 import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
 import specman.view.CatchSchrittView;
+import specman.view.IfElseSchrittView;
+import specman.view.SchleifenSchrittView;
 import specman.view.SchrittSequenzView;
 import specman.view.ZweigSchrittSequenzView;
 
@@ -58,7 +60,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 1.0f, new float[] {10.0f, 10.0f }, 0f);
 
 	JTextComponent zuletztFokussierterText;
-	SchrittSequenzView hauptSequenz;
+	public SchrittSequenzView hauptSequenz;
 	JPanel arbeitsbereich;
 	JPanel hauptSequenzContainer;
 	SpaltenResizer breitenAnpasser;
@@ -394,9 +396,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		});
 		
 		
-		
 		//TODO Test
-		
 		loeschen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -407,47 +407,33 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					return;
 				}
 				
-				
 				//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
-				
 				if(instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt){
 					
-					//Muss hinzugefügt werden um zu gucken ob die Markierung schon gestzt wurde
+					//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
 					if(schritt.getAenderungsart()==Aenderungsart.Geloescht)
                     	return;
-					
-					
                     else {
                     	
-                    	
+                    	//Setzen der Änderungsmarkierung und in allen unterschritten
                     	schritt.setAenderungsart(Aenderungsart.Geloescht);
-						
                     	
-                    	schritt.setPlainText("Gelöscht");
-                    	schritt.setPlainText(""+ schritt.getAenderungsart());
+                    	//TODO entfernen, Testweise um die Enumvergabe zu testen
+                    	schritt.setPlainText("Test: entfernt");
                     	
+                    	//TODO mit Casesschritten muss das nochmal bearbeitet werden
                     	if (schritt instanceof CaseSchrittView) {
     						CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
     						ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
     						if (zweig != null) {
-    							//schritt.getParent()Specman.set...
-    							//schritt.findeSchritt(zuletztFokussierterText).setAenderungsart(Aenderungsart.Geloescht);;
-    							//schritt.setAenderungsart(Aenderungsart.Geloescht);
-    							//TODO Methode funkt irgendwie! aber anderen namen finden
-    							schritt.anderesEntfernen();
-    							
-    							
-
+    							schritt.unterschritteAenderungsartGeloescht(schritt.getParent());
     						}
     						return;
     					}
                     }
-			
 				}
 				
-				
-				//Hier erfolgt das richtige Löschen Aenderungsverfolgung nicht aktiviert
-				
+				//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
 				else {
 					if (schritt instanceof CaseSchrittView) {
 						CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
@@ -458,19 +444,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						}
 						return;
 					}
-					
 					SchrittSequenzView sequenz = schritt.getParent();
 					int schrittIndex = sequenz.schrittEntfernen(schritt);
 					undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
 				}
-				
 			}
 		});
-		
-		//TODO Testende
-
-                
-		
 
 		toggleBorderType.addActionListener(new ActionListener() {
 			@Override
@@ -560,6 +539,28 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				d.getContentPane().add(p);
 				d.pack();
 				d.setVisible(true);
+			}
+		});
+		
+		//TODO
+		aenderungenUebernehmen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				List <AbstractSchrittView> schritte = hauptSequenz.schritte;
+				//TODO der Übergabeparameter wird hier eig. nicht gebraucht, vielleicht eine neue Methode schreiben
+				recrusiv(schritte, Aenderungsart.Bearbeitet);
+				//recrusiv(schritte, Aenderungsart.Hinzugefuegt);
+
+			}
+		});
+		
+		//TODO
+		aenderungenVerwerfen.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				List <AbstractSchrittView> schritte = hauptSequenz.schritte;
+				recrusiv(schritte, null);
 			}
 		});
 		
@@ -736,6 +737,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		review = new JButton();
 		birdsview = new JButton();
 		aenderungenVerfolgen = new JToggleButton();
+		aenderungenUebernehmen = new JButton();
+		aenderungenVerwerfen = new JButton();
 		zoom = new JComboBox<ZoomFaktor>();
 		for (ZoomFaktor faktor: ZoomFaktor.values())
 			zoom.addItem(faktor);
@@ -767,6 +770,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolbarButtonHinzufuegen(toggleBorderType, "switch-border", "Rahmen umschalten");
 		toolBar.addSeparator();
 		toolbarButtonHinzufuegen(aenderungenVerfolgen, "aenderungen", "Änderungen verfolgen");
+		toolbarButtonHinzufuegen(aenderungenUebernehmen, "uebernehmen", "Änderungen übernehmen");
+		toolbarButtonHinzufuegen(aenderungenVerwerfen, "verwerfen", "Änderungen verwerfen");
 		toolbarButtonHinzufuegen(review, "review", "Für Review zusammenklappen");
 		toolBar.addSeparator();
 		toolbarButtonHinzufuegen(birdsview, "birdsview", "Bird's View");
@@ -852,6 +857,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JButton toggleBorderType;
 	private JButton review;
 	private JButton birdsview;
+	private JButton aenderungenUebernehmen;
+	private JButton aenderungenVerwerfen;
 	private JComboBox<ZoomFaktor> zoom;
 	private JToggleButton aenderungenVerfolgen;
 	private JMenuItem speichern;
@@ -924,6 +931,130 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	@Override public int getZoomFactor() {
 		return zoomFaktor;
+	}
+	
+	
+	//TODO Ich nehme mir nur einen Schritt und gehe dann durch alle unterschritte
+	public void ohneSchleife(AbstractSchrittView schritt, Aenderungsart art) {
+		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
+			
+			recrusiv(ifel.getElseSequenz().schritte, art);
+			
+			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+				recrusiv(ifel.getIfSequenz().schritte, art);
+            }
+		}
+		
+		else if( schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView") ) {
+            SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+            recrusiv(schleife.getWiederholSequenz().schritte, art);
+		}
+	}
+	
+	//TODO Ich durchlaufe alle Schritte, bis ich zum untersten Schritt des Pfades angekommen bin
+	//Ist noch nicht komplett fertig, derzeit werden nur Schleifen If und Else Anweisungen komplett durchlaufen
+	//Kann alle Schritte nur einer Aenderungsart zuweisen
+	public void recrusiv(List<AbstractSchrittView> schritte, Aenderungsart art) {
+		for (AbstractSchrittView schritt: schritte) {
+			
+			//wird beim Verwerfen durchlaufen
+			if (art == null) {
+				schritt.setAenderungsart(art);
+			}
+			
+			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
+				System.out.println("Hinzugefuegt");
+				schritt.setAenderungsart(null);
+			}
+			
+			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
+				System.out.println("Es wurde eine Änderung vorgenommen"); 
+			}
+			
+			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+				System.out.println("Geloescht"); 
+				
+				SchrittSequenzView sequenz = schritt.getParent();
+				int schrittIndex = sequenz.schrittEntfernen(schritt);
+				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+			}
+			
+			schritte = hauptSequenz.schritte;
+			
+
+			
+			//Überprüfung auf unterschritte
+			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+				IfElseSchrittView ifel= (IfElseSchrittView) schritt;
+				
+				recrusiv(ifel.getElseSequenz().schritte, art);
+				
+				if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+					recrusiv(ifel.getIfSequenz().schritte, art);
+                }
+			}
+			
+			else if(schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView") ) {
+                SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+                recrusiv(schleife.getWiederholSequenz().schritte, art);
+			}
+			
+			
+		}
+	}
+	
+	//TODO if auswahl, derzeit nicht in benutzung
+	public void ifFilter(List<AbstractSchrittView> schritte) {
+		for (AbstractSchrittView schritt: schritte) {
+			
+			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
+				System.out.println("Hinzugefuegt");
+				schritt.setAenderungsart(null);
+			}
+			
+			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
+				System.out.println("Es wurde eine Änderung vorgenommen"); 
+			}
+			
+			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+				System.out.println("Geloescht"); 
+				
+				SchrittSequenzView sequenz = schritt.getParent();
+				sequenz.schrittEntfernen(schritt);
+			}
+		}
+	}
+	
+	//TODO Switch auswahl, derzeit nicht in benutzung
+	public void switchFilter(AbstractSchrittView schritt) {
+		switch(schritt.getAenderungsart()){ 
+		case Hinzugefuegt://TODO Schritt hinzugefügt noch nicht implementiert
+			System.out.println("Hinzugefuegt");
+			schritt.setAenderungsart(null);
+			break; 
+		case Bearbeitet://TODO Schritt geändert noch nicht implementiert
+			System.out.println("Es wurde eine Änderung vorgenommen"); 
+			break; 
+		case Geloescht://TODO Änderung wurde gelöscht, ist die Löschenfunktion aus dem Button
+			System.out.println("Geloescht"); 
+			if (schritt instanceof CaseSchrittView) {
+				CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
+				ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
+				if (zweig != null) {
+					int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
+					undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+				}
+				return;
+			}
+			SchrittSequenzView sequenz = schritt.getParent();
+			int schrittIndex = sequenz.schrittEntfernen(schritt);
+			undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+			break; 
+		default: 
+			System.out.println("Hier liegt keine Änderung vor"); 
+			break; 
+		}
 	}
 	
 }

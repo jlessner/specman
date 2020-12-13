@@ -209,6 +209,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	 * spart man sich das rekursive Absteigen in allen Ableitungen für jede dieser
 	 * Funktionen zu dublizieren
 	 */
+	
 	protected List<SchrittSequenzView> unterSequenzen() {
 		return KEINE_SEQUENZEN;
 	}
@@ -230,8 +231,9 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public void entfernen(SchrittSequenzView container) {
 		unterSequenzen().forEach(sequenz -> sequenz.entfernen(this));
 	}
-	//TODO Entfernen mit Änderungsmarkerung
-	public void anderesEntfernen() {
+	
+	//TODO funkt noch nicht richtig setzen der Aenderungsart bei unterschritten
+	public void unterschritteAenderungsartGeloescht(SchrittSequenzView container) {
 		unterSequenzen().forEach(sequenz -> sequenz.setAenderungsart(Aenderungsart.Geloescht));
 	}
 	

@@ -70,6 +70,10 @@ public class SchrittSequenzView {
 	public void setAenderungsart(Aenderungsart aenderungsart) {
 		this.aenderungsart = aenderungsart;
 	}
+	
+	public List<AbstractSchrittView> getSchritte(){
+		return schritte;
+	}
 
 	public SchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittSequenzModel_V001 model) {
 		this(parent, model.id, model.aenderungsart);
@@ -374,6 +378,7 @@ public class SchrittSequenzView {
 		}
 		return catchBereich.findeSchritt(zuletztFokussierterText);
 	}
+	
 
 	public SchrittSequenzModel_V001 generiereSchittSequenzModel(boolean formatierterText) {
 		SchrittSequenzModel_V001 model = new SchrittSequenzModel_V001(
