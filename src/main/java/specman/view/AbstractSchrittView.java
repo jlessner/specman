@@ -84,6 +84,11 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public String getPlainText() {
 		return text.getText();
 	}
+	
+	//TODO
+	public TextfieldShef getshef() {
+		return text;
+	}
 
 	protected void setAenderungsmarkierungen(List<Aenderungsmarkierung_V001> aenderungen) {
 		text.setAenderungsmarkierungen(aenderungen);

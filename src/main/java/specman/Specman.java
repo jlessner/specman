@@ -24,6 +24,7 @@ import specman.view.CatchSchrittView;
 import specman.view.IfElseSchrittView;
 import specman.view.SchleifenSchrittView;
 import specman.view.SchrittSequenzView;
+import specman.view.SubsequenzSchrittView;
 import specman.view.ZweigSchrittSequenzView;
 
 import javax.imageio.ImageIO;
@@ -420,6 +421,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
                     	
                     	//TODO entfernen, Testweise um die Enumvergabe zu testen
                     	schritt.setPlainText("Test: entfernt");
+                    	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.geloeschtStil);
                     	
                     	//TODO mit Casesschritten muss das nochmal bearbeitet werden
                     	if (schritt instanceof CaseSchrittView) {
@@ -999,7 +1001,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
                 SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
                 recrusiv(schleife.getWiederholSequenz().schritte, art);
 			}
-			
+			//TODO selbst hinzugefügt
+			else if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+				recrusiv(caseSchritt.getSonstSequenz().schritte, art);
+			}
+			else if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
+				SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+				recrusiv(sub.getSequenz().schritte, art);
+			}
 			
 		}
 	}
@@ -1056,5 +1066,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			break; 
 		}
 	}
+	
 	
 }

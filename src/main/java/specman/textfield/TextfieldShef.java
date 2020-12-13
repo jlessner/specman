@@ -34,7 +34,8 @@ import java.util.List;
 import static specman.Specman.schrittHintergrund;
 
 public class TextfieldShef implements ComponentListener, KeyListener {
-  public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE = Color.LIGHT_GRAY;
+  public static final Color Schriftfarbe_Geloescht = Color.LIGHT_GRAY;
+  public static final Color Hintergrundfarbe_Geloescht = Color.BLACK;
   public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
   public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
   public static final String INDIKATOR_GELB = getHTMLColor(AENDERUNGSMARKIERUNG_FARBE);
@@ -46,34 +47,92 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
   public static MutableAttributeSet geaendertStil = new SimpleAttributeSet();
   public static MutableAttributeSet geloeschtStil = new SimpleAttributeSet();
+  public static MutableAttributeSet ganzerSchrittGeloeschtStil = new SimpleAttributeSet();
   public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
   public static Font labelFont = new Font(Font.SANS_SERIF, Font.BOLD, SCHRITTNR_FONTSIZE);
 
+  public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE = Color.LIGHT_GRAY;
+  public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
+  public static final Color NEUMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 153);
+  public static final String INDIKATOR_GRAU = getHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE);
+  public static final String INDIKATOR_SCHWARZ = getHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE2);    
+  
   static {
     // Das hier ist ein bisschen tricky:
-    // Die Zeile mit StyleConstants.setBackground sorgt dafür, dass man die Hintergrundfarbe unmittelbar
+    // Die Zeile mit StyleConstants.setBackground sorgt dafÃ¼r, dass man die Hintergrundfarbe unmittelbar
     // beim Editieren in der Oberflche sieht. Allerdings taucht sie dann nicht im abgespeicherten HTML
-    // auf und geht auch verloren, sobald man einen Zeilenumbruch im Text einfügt. Also braucht man noch
-    // ein weiteres, persistentes Styling über ein Span-Tag, wie ich es hier gefunden habe:
+    // auf und geht auch verloren, sobald man einen Zeilenumbruch im Text einfÃ¼gt. Also braucht man noch
+    // ein weiteres, persistentes Styling Ã¼ber ein Span-Tag, wie ich es hier gefunden habe:
     // https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
     String htmlStyle = "background-color:" + getHTMLColor(Color.yellow);
+    String htmlStyleSchwarz = "background-color:" + getHTMLColor(Color.black);
+    
     SimpleAttributeSet htmlHintergrundStyle = new SimpleAttributeSet();
+    SimpleAttributeSet htmlHintergrundStyleSchwarz = new SimpleAttributeSet();
+    
     htmlHintergrundStyle.addAttribute(HTML.Attribute.STYLE, htmlStyle);
     geaendertStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
     StyleConstants.setBackground(geaendertStil, AENDERUNGSMARKIERUNG_FARBE);
 
+    //neue Stile (null, hinzugefuegt, geloescht)
     geloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
     StyleConstants.setBackground(geloeschtStil, AENDERUNGSMARKIERUNG_FARBE);
     StyleConstants.setStrikeThrough(geloeschtStil, true);
+    
+    //neuer Static Stil
+    /** Geloescht Stil - Foreground (RGB (0,0,0)) - Background (RGB(255,255,153)) -  Fontcolor (RGB(166,166,166)) - StrikeThrough true */
+	htmlHintergrundStyleSchwarz.addAttribute(HTML.Attribute.STYLE, htmlStyleSchwarz);
+	ganzerSchrittGeloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleSchwarz);
+	StyleConstants.setBackground(ganzerSchrittGeloeschtStil, Schriftfarbe_Geloescht);
+	StyleConstants.setStrikeThrough(ganzerSchrittGeloeschtStil, true);
+	StyleConstants.setForeground(ganzerSchrittGeloeschtStil, Hintergrundfarbe_Geloescht);
   }
 
+  public void setStyle(String text, MutableAttributeSet attr) {
+	    StyledDocument doc = (StyledDocument)editorPane.getDocument();
+	    doc.setCharacterAttributes(0,text.length(), attr, true);
+		ganzerSchrittGeloeschtStilSetzenWennNochNichtVorhanden();
+  }
+  
+  public void setStyleSchrittnummer(JLabel label , MutableAttributeSet attr) {
+  	StyledDocument doc = (StyledDocument)editorPane.getDocument();
+  	String labelText = label.getText();
+	    doc.setCharacterAttributes(0,labelText.length(), attr, true);
+	    ganzerSchrittGeloeschtStilSetzenWennNochNichtVorhanden();
+  }
+  
+  
+//06.12.2020    
+  public void ganzerSchrittGeloeschtStilSetzenWennNochNichtVorhanden() {
+		if (!ganzerSchrittgeloeschtStilGesetzt()) {
+	        StyledEditorKit k = (StyledEditorKit)editorPane.getEditorKit();
+	        MutableAttributeSet inputAttributes = k.getInputAttributes();
+			inputAttributes.addAttributes(geloeschtStil);
+		}
+		
+	}
+  
+	//06.12.2020
+	public boolean ganzerSchrittgeloeschtStilGesetzt() {
+      StyledEditorKit k = (StyledEditorKit)editorPane.getEditorKit();
+      MutableAttributeSet inputAttributes = k.getInputAttributes();
+      Object currentTextDecoration = inputAttributes.getAttribute(CSS.Attribute.TEXT_DECORATION);
+      Object currentFontColor = inputAttributes.getAttribute(CSS.Attribute.COLOR);
+      if (currentTextDecoration != null && currentTextDecoration.toString().equals(INDIKATOR_GELOESCHT_MARKIERT) && currentFontColor.toString().equals(INDIKATOR_GRAU))
+      	return false;
+		Object currentBackgroundColorValue = inputAttributes.getAttribute(CSS.Attribute.BACKGROUND_COLOR);
+		return currentBackgroundColorValue != null && currentBackgroundColorValue.toString().equalsIgnoreCase(INDIKATOR_SCHWARZ) 
+				&& currentTextDecoration != null && currentTextDecoration.toString().equalsIgnoreCase(INDIKATOR_GELOESCHT_MARKIERT)
+				&& currentFontColor != null && currentFontColor.toString().equalsIgnoreCase(INDIKATOR_GRAU);
+	}
+	
   public static String getHTMLColor(Color color) {
     if (color == null) {
       return "#000000";
     }
     return "#" + Integer.toHexString(color.getRGB()).substring(2).toLowerCase();
   }
-
+  
 
   private final InsetPanel insetPanel;
   private final JEditorPane editorPane;
@@ -92,8 +151,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     if (schrittId != null) {
       schrittNummer = new JLabel(schrittId);
       schrittNummer.setFont(labelFont);
-      schrittNummer.setBackground(SCHRITTNUMMER_HINTERGRUNDFARBE);
-      schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
+      schrittNummer.setBackground(Schriftfarbe_Geloescht);
+      schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Schriftfarbe_Geloescht));
       schrittNummer.setForeground(Color.WHITE);
       schrittNummer.setOpaque(true);
       editorPane.add(schrittNummer);
@@ -151,8 +210,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     String text;
     java.util.List<Aenderungsmarkierung_V001> aenderungen = null;
     if (formatierterText) {
-      // Wenn wir die Zeilenumbrüche nicht rausnehmen, dann entstehen später beim Laden u.U.
-      // Leerzeichen an Zeilenenden, die im ursprünglichen Text nicht drin waren. Das ist doof,
+      // Wenn wir die ZeilenumbrÃ¼che nicht rausnehmen, dann entstehen spÃ¤ter beim Laden u.U.
+      // Leerzeichen an Zeilenenden, die im ursprÃ¼nglichen Text nicht drin waren. Das ist doof,
       // weil dann die separat abgespeicherten Textintervalle der Aenderungsmarkierungen
       // nicht mehr passen.
       text = editorPane.getText().replace("\n", "");
@@ -194,7 +253,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
   public void schrittnummerAnzeigen(boolean sichtbar) {
     if (schrittNummer != null) {
       schrittNummerSichtbar = sichtbar;
-      componentResized(null); // Sorgt daf�r, dass der Label auch optisch sofort verschwindet
+      componentResized(null); // Sorgt dafï¿½r, dass der Label auch optisch sofort verschwindet
     }
   }
 
@@ -236,11 +295,11 @@ public class TextfieldShef implements ComponentListener, KeyListener {
   }
 
   public void setAenderungsmarkierungen(java.util.List<Aenderungsmarkierung_V001> aenderungen) {
-    //TODO JL: Brauchen wir aktuell nicht mehr. Das war nötig, weil die Hintergrundfarbe nicht
+    //TODO JL: Brauchen wir aktuell nicht mehr. Das war nÃ¶tig, weil die Hintergrundfarbe nicht
     // im abgespeicherten HTML erhalten blieb. Das ist jetzt dank des Tricks aus
     // https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
     // der Fall. Die Funktion kann also evt. weg, sofern wir aus den HTML-Formatierungen allein
-    // alle die Änderungsinformationen vollständig wieder auslesen können.
+    // alle die Ã„nderungsinformationen vollstÃ¤ndig wieder auslesen kÃ¶nnen.
     //		StyledDocument doc = (StyledDocument)getDocument();
     //        MutableAttributeSet attr = new SimpleAttributeSet();
     //        StyleConstants.setBackground(attr, AENDERUNGSMARKIERUNG_FARBE);
@@ -257,9 +316,9 @@ public class TextfieldShef implements ComponentListener, KeyListener {
       int p1 = editorPane.getSelectionEnd();
       if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
         if (p0 != p1) {
-          // Eigentlich muss man das hier komplizierter machen. Sind nämlich in der
-          // Selektion Zeichen enthalten, die als geändert markiert sind, dann muss
-          // man diese entfernen statt sie als gelöscht zu markieren.
+          // Eigentlich muss man das hier komplizierter machen. Sind nÃ¤mlich in der
+          // Selektion Zeichen enthalten, die als geÃ¤ndert markiert sind, dann muss
+          // man diese entfernen statt sie als gelÃ¶scht zu markieren.
           editorPane.setCaretPosition(p0);
           doc.setCharacterAttributes(p0, p1 - p0, geloeschtStil, false);
         }
@@ -289,7 +348,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
         doc.setCharacterAttributes(p0, p1 - p0, geloeschtStil, false);
         editorPane.setSelectionStart(p1);
         // Jetzt ist am Ende der vorherigen Selektion noch der Geloescht-Stil gesetzt
-        // D.h. die Durchstreichung muss noch weg f�r das neue Zeichen, das grade eingef�gt werden soll
+        // D.h. die Durchstreichung muss noch weg fï¿½r das neue Zeichen, das grade eingefï¿½gt werden soll
         StyledEditorKit k = (StyledEditorKit)editorPane.getEditorKit();
         MutableAttributeSet inputAttributes = k.getInputAttributes();
         StyleConstants.setStrikeThrough(inputAttributes, false);
@@ -298,9 +357,9 @@ public class TextfieldShef implements ComponentListener, KeyListener {
   }
 
   private void aenderungsStilSetzenWennNochNichtVorhanden() {
-    // Durch die folgende If-Abfrage verhindert man, dass die als geändert markierten Buchstaben
+    // Durch die folgende If-Abfrage verhindert man, dass die als geÃ¤ndert markierten Buchstaben
     // alle einzelne Elements werden. Wenn an der aktuellen Position schon gelbe Hintegrundfarbe
-    // eingestellt ist, dann ändern wir den aktuellen Style gar nicht mehr.
+    // eingestellt ist, dann Ã¤ndern wir den aktuellen Style gar nicht mehr.
     if (!aenderungsStilGesetzt()) {
       StyledEditorKit k = (StyledEditorKit)editorPane.getEditorKit();
       MutableAttributeSet inputAttributes = k.getInputAttributes();
@@ -327,7 +386,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     if (schrittNummer != null) {
       schrittNummer.setFont(labelFont.deriveFont((float)SCHRITTNR_FONTSIZE * prozentNeu / 100));
     }
-    // prozentAktuell = 0 ist ein Indikator für initiales Laden. Da brauchen wir nur den Font
+    // prozentAktuell = 0 ist ein Indikator fÃ¼r initiales Laden. Da brauchen wir nur den Font
     // anpassen. Die Bilder stehen bereits entsprechend des im Modell abgespeicherten Zoomfaktors
     // skaliert im HTML.
     if (prozentAktuell != 0 && prozentNeu != prozentAktuell) {
