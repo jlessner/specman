@@ -769,8 +769,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		setJMenuBar(menuBar);
 		// ToDo Sidebar Changed from getContentPane().add(shefEditorPane.getFormatToolBar(), CC.xywh(1, 2, 1, 1));
 		getContentPane().add(shefEditorPane.getFormatToolBar(), CC.xywh(1, 2, 2, 1));
-		
-		}
+
+	}
 
 	@Override
 	public void addEdit(UndoableEdit edit) {
@@ -879,15 +879,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return zoomFaktor;
 	}
 
+	// GlassPane and add Step to sequence
 	public void checkZweigHeading(ZweigSchrittSequenzView zweig,Point pos,int glassPaneHeight, Boolean ins, MouseEvent mE) {
 		Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(),0,0,Specman.this);
 		Rectangle r = createRectangle(p, zweig.getUeberschrift());
 		if(r.contains(pos)) {
-			GlassPane gP = (GlassPane) this.getGlassPane();
-			gP.setInputRecBounds(p.x,p.y+r.height-glassPaneHeight, r.width, glassPaneHeight);
-			this.getGlassPane().setVisible(true);
-
-			//bei Release hinzufügen es Schrittes an erster Position im Zweig
+			createGlassPane(r.width, p.x, p.y+r.height-glassPaneHeight, glassPaneHeight, true);
+			//mouserelease add Step at first Position in sequenz
 			if(ins) {
 				AbstractSchrittView step = zweig.schritte.get(0);
 				addNeuerSchritt(Before, step, instance, mE);
@@ -895,14 +893,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	/**
-	 * GlassPane over Cases
-	 * @param zweig
-	 * @param pos
-	 * @param glassPaneHeight
-	 * @param ins
-	 * @param mE
-	 */
+	// GlassPane over Cases
 	public void checkCaseHeading(ZweigSchrittSequenzView zweig,Point pos,int glassPaneHeight, Boolean ins, MouseEvent mE) {
 		Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(),0,0,Specman.this);
 		Rectangle r = createRectangle(p, zweig.getUeberschrift());
@@ -917,31 +908,33 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				gP.setInputRecBounds(p.x+r.width-glassPaneHeight,p.y, glassPaneHeight, r.height);
 				this.getGlassPane().setVisible(true);
 			}*/
-			GlassPane gP = (GlassPane) this.getGlassPane();
-			gP.setInputRecBounds(p.x+r.width-glassPaneHeight,p.y, glassPaneHeight, r.height);
-			this.getGlassPane().setVisible(true);
-			//bei Release hinzufügen es Schrittes an erster Position im Zweig
+			createGlassPane(glassPaneHeight, p.x + r.width - glassPaneHeight, p.y, r.height, true);
+			//mouserelease add Case right from choosen Case
 			if(ins) {
-				AbstractSchrittView step = hauptSequenz.findeSchritt(zweig.getUeberschrift().getTextComponent());
-				CaseSchrittView caseSchritt = (CaseSchrittView) step;
-				ZweigSchrittSequenzView ausgewählterZweig = caseSchritt.istZweigUeberschrift(zweig.getUeberschrift().getTextComponent());
-				ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(this, ausgewählterZweig);
-				addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
-				step.skalieren(zoomFaktor, 100);
-				diagrammAktualisieren(step);
+				addCase(zweig);
 			}
 		}
 	}
 
+	//add Case withing Drag and Drop
+	private void addCase(ZweigSchrittSequenzView zweig) {
+		AbstractSchrittView step = hauptSequenz.findeSchritt(zweig.getUeberschrift().getTextComponent());
+		CaseSchrittView caseSchritt = (CaseSchrittView) step;
+		ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.istZweigUeberschrift(zweig.getUeberschrift().getTextComponent());
+		ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(this, ausgewaehlterZweig);
+		addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
+		step.skalieren(zoomFaktor, 100);
+		diagrammAktualisieren(step);
+	}
+
+	// GlassPane and add Step to sequence
 	public void checkSchleifenHeading(SchleifenSchrittView schleife,Point pos,int glassPaneHeight, Boolean ins, MouseEvent mE) {
 		Point p = SwingUtilities.convertPoint(schleife.getTextShef().getInsetPanel(),0,0,Specman.this);
 		Rectangle r = createRectangle(p, schleife.getTextShef());
 		if(r.contains(pos)) {
-			GlassPane gP = (GlassPane) this.getGlassPane();
-			gP.setInputRecBounds(p.x,p.y+r.height-glassPaneHeight, r.width, glassPaneHeight);
-			this.getGlassPane().setVisible(true);
+			createGlassPane(r.width, p.x, p.y+r.height-glassPaneHeight, glassPaneHeight, true);
 
-			//bei Release hinzufügen es Schrittes an erster Position im Zweig
+			//mouserelease add Step at first Position in sequenz
 			if(ins) {
 				AbstractSchrittView step = schleife.getWiederholSequenz().schritte.get(0);
 				addNeuerSchritt(Before, step, instance, mE);
@@ -949,6 +942,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
+	// GlassPane and add Step to sequence
 	public boolean checkGlassPaneforComponent(AbstractSchrittView step, Point pos, int glassPaneHeight,boolean ins,MouseEvent mE) {
 		//Todo schauen ob berechnung mehr sinn macht
 		Component c = null;
@@ -986,10 +980,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 		//Abfrage ob der Mousezeiger über dem linken oder unteren Balken ist
 		if(rl.contains(pos)|| ru.contains(pos)) {
-			GlassPane gP = (GlassPane) this.getGlassPane();
-			gP.setInputRecBounds(p.x,p.y+r.height-glassPaneHeight, r.width, glassPaneHeight);
-			this.getGlassPane().setVisible(true);
-
+			createGlassPane(r.width, p.x, p.y+r.height-glassPaneHeight, glassPaneHeight, true);
 			//bei Release hinzufügen eines Schrittes an erster Position im Zweig
 			if((ins && cl != null && rl.contains(pos))||(ins && cu != null && ru.contains(pos))) {
 				addNeuerSchritt(After, step, instance, mE);
@@ -998,26 +989,27 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 		return false;
 	}
+
+	//GlassPane
 	public void checkfalseGlassPaneforComponent(TextfieldShef c, Point pos, int glassPaneHeight) {
 		Point p = SwingUtilities.convertPoint(c.getInsetPanel(),0,0,Specman.this);
 		Rectangle r = createRectangle(p,c);
 		if(r.contains(pos)) {
-			GlassPane gP = (GlassPane) this.getGlassPane();
-			gP.setInputRecBounds(p.x,p.y+r.height-glassPaneHeight, r.width, glassPaneHeight);
-			this.getGlassPane().setVisible(false);
+			createGlassPane(r.width, p.x, p.y+r.height-glassPaneHeight, glassPaneHeight, false);
 		}
 	}
 
+	//Recursive method to check and add Steps
 	public void dragGlassPanePos(Point pos,List<AbstractSchrittView> schrittListe,boolean insert, MouseEvent e) {
 		int glassPaneHeight = 5;
 		GlassPane glassPane =  (GlassPane) this.getGlassPane();
 		Point p;
 
-		//mechanismus für leeres diagramm -> dropWelcome ergänzt
+		//inserts firststep to empty diagram
 		insertFirstStep(schrittListe, insert, e);
 
 		for(AbstractSchrittView schritt : schrittListe) {
-			//TODO Case hinzufügen
+			//Add Case
 			if(e.getSource().equals(caseAnhaengen)) {
 				if (schritt instanceof CaseSchrittView) {
 					CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
@@ -1050,148 +1042,149 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					}else if(schritt instanceof SubsequenzSchrittView){
 						SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
 						dragGlassPanePos(pos, sub.getSequenz().schritte, insert, e);
-
 					}else{
-						System.out.println("Hier passiert nix");
+						//no Action
 					}
 				}
+			//Add Step
 			}else {
-			//Abfrage einfacherSchritt
-			int groesse = schrittListe.size();
-			if (schritt instanceof EinfacherSchrittView) {
-				p = SwingUtilities.convertPoint(schritt.getTextShef().getInsetPanel(), 0, 0, Specman.this);
-				Rectangle r = createRectangle(p, schritt.getTextShef());
-				if (r.contains(pos)) {
-					//Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört
-					if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
-						if (pos.y > (p.y + r.height - glassPaneHeight)) {
-							Container container = schritt.getParent().getContainer().getParent();
-							p = SwingUtilities.convertPoint(container, 0, 0, Specman.this);
-							glassPane.setInputRecBounds(p.x - 2, p.y + container.getHeight(), container.getWidth() + 4, glassPaneHeight);
-							this.getGlassPane().setVisible(true);
-							if (insert) {
-								//hier wird nur festgestellt, dass es sich um den letzten Schritt in der Sequenz handelt und das Iterieren beendet -> Sprung zurück in vorherige Ebene
-								lastStep = true;
+				//Abfrage einfacherSchritt
+				int groesse = schrittListe.size();
+				if (schritt instanceof EinfacherSchrittView) {
+					p = SwingUtilities.convertPoint(schritt.getTextShef().getInsetPanel(), 0, 0, Specman.this);
+					Rectangle r = createRectangle(p, schritt.getTextShef());
+					if (r.contains(pos)) {
+						//Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört
+						if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
+							if (pos.y > (p.y + r.height - glassPaneHeight)) {
+								Container container = schritt.getParent().getContainer().getParent();
+								p = SwingUtilities.convertPoint(container, 0, 0, Specman.this);
+								glassPane.setInputRecBounds(p.x - 2, p.y + container.getHeight(), container.getWidth() + 4, glassPaneHeight);
+								this.getGlassPane().setVisible(true);
+								if (insert) {
+									//hier wird nur festgestellt, dass es sich um den letzten Schritt in der Sequenz handelt und das Iterieren beendet -> Sprung zurück in vorherige Ebene
+									lastStep = true;
+								}
+								break;
 							}
-							break;
 						}
-					}
-					glassPane.setInputRecBounds(p.x, p.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
+						glassPane.setInputRecBounds(p.x, p.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
 
+						if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+							break;
+						} else {
+							glassPane.setInputRecBounds(p.x, p.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
+							if (insert) {
+								addNeuerSchritt(After, schritt, instance, e);
+							}
+						}
+						this.getGlassPane().setVisible(true);
+						break;
+					}//Abfrage IfElseSchritt
+				} else if (schritt instanceof IfElseSchrittView || schritt instanceof IfSchrittView) {
+					IfElseSchrittView ifel = (IfElseSchrittView) schritt;
 					if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
 						break;
-					} else {
-						glassPane.setInputRecBounds(p.x, p.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
-						if (insert) {
-							addNeuerSchritt(After, schritt, instance, e);
-						}
 					}
-					this.getGlassPane().setVisible(true);
 
-					break;
-
-				}//Abfrage IfElseSchritt
-			} else if (schritt instanceof IfElseSchrittView || schritt instanceof IfSchrittView) {
-				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
-				if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
-					break;
-				}
-				checkfalseGlassPaneforComponent(ifel.getTextShef(), pos, glassPaneHeight);
-				if (schritt instanceof IfElseSchrittView) {
-					checkZweigHeading(ifel.getIfSequenz(), pos, glassPaneHeight, insert, e);
-					dragGlassPanePos(pos, ifel.getIfSequenz().schritte, insert, e);
-				}
-				checkZweigHeading(ifel.getElseSequenz(), pos, glassPaneHeight, insert, e);
-				dragGlassPanePos(pos, ifel.getElseSequenz().schritte, insert, e);
-
-				//wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
-				if (lastStep) {
-					addNeuerSchritt(After, ifel, instance, e);
-					lastStep = false;
-					break;
-				}
-				//While SChritt
-			} else if (schritt instanceof WhileSchrittView || schritt instanceof WhileWhileSchrittView) {
-				SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
-				if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
-					break;
-				}
-				if (checkGlassPaneforComponent(schleife, pos, glassPaneHeight, insert, e)) {
-					break;
-				}
-
-				dragGlassPanePos(pos, schleife.getWiederholSequenz().schritte, insert, e);
-				checkSchleifenHeading(schleife, pos, glassPaneHeight, insert, e);
-
-				//wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
-				if (lastStep) {
-					addNeuerSchritt(After, schleife, instance, e);
-					lastStep = false;
-					break;
-				}
-			} else if (schritt instanceof CaseSchrittView) {
-				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-				if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
-					break;
-				}
-				checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
-				checkZweigHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, insert, e);
-				dragGlassPanePos(pos, caseSchritt.getSonstSequenz().schritte, insert, e);
-				for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
-					checkZweigHeading(caseSequenz, pos, glassPaneHeight, insert, e);
-					dragGlassPanePos(pos, caseSequenz.schritte, insert, e);
+					checkfalseGlassPaneforComponent(ifel.getTextShef(), pos, glassPaneHeight);
+					if (schritt instanceof IfElseSchrittView) {
+						checkZweigHeading(ifel.getIfSequenz(), pos, glassPaneHeight, insert, e);
+						dragGlassPanePos(pos, ifel.getIfSequenz().schritte, insert, e);
+					}
+					checkZweigHeading(ifel.getElseSequenz(), pos, glassPaneHeight, insert, e);
+					dragGlassPanePos(pos, ifel.getElseSequenz().schritte, insert, e);
 
 					//wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
 					if (lastStep) {
-						addNeuerSchritt(After, caseSchritt, instance, e);
+						addNeuerSchritt(After, ifel, instance, e);
+						lastStep = false;
+						break;
+					}
+					//While SChritt
+				} else if (schritt instanceof WhileSchrittView || schritt instanceof WhileWhileSchrittView) {
+					SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+					if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+						break;
+					}
+					if (checkGlassPaneforComponent(schleife, pos, glassPaneHeight, insert, e)) {
+						break;
+					}
+
+					dragGlassPanePos(pos, schleife.getWiederholSequenz().schritte, insert, e);
+					checkSchleifenHeading(schleife, pos, glassPaneHeight, insert, e);
+
+					//wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
+					if (lastStep) {
+						addNeuerSchritt(After, schleife, instance, e);
+						lastStep = false;
+						break;
+					}
+				} else if (schritt instanceof CaseSchrittView) {
+					CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+					if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+						break;
+					}
+					checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
+					checkZweigHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, insert, e);
+					dragGlassPanePos(pos, caseSchritt.getSonstSequenz().schritte, insert, e);
+					for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+						checkZweigHeading(caseSequenz, pos, glassPaneHeight, insert, e);
+						dragGlassPanePos(pos, caseSequenz.schritte, insert, e);
+
+						//wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
+						if (lastStep) {
+							addNeuerSchritt(After, caseSchritt, instance, e);
+							lastStep = false;
+							break;
+						}
+					}
+				} else if (schritt instanceof SubsequenzSchrittView) {
+					SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+					if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+						break;
+					}
+					checkGlassPaneforComponent(sub, pos, glassPaneHeight, insert, e);
+					dragGlassPanePos(pos, sub.getSequenz().schritte, insert, e);
+
+					//wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
+					if (lastStep) {
+						addNeuerSchritt(After, sub, instance, e);
+						lastStep = false;
+						break;
+					}
+				} else if (schritt instanceof BreakSchrittView) {
+					BreakSchrittView breakSchritt = (BreakSchrittView) schritt;
+					if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+						break;
+					}
+					checkGlassPaneforComponent(breakSchritt, pos, glassPaneHeight, insert, e);
+
+					//wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
+					if (lastStep) {
+						addNeuerSchritt(After, breakSchritt, instance, e);
 						lastStep = false;
 						break;
 					}
 				}
-			} else if (schritt instanceof SubsequenzSchrittView) {
-				SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
-				if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
+				if (groesse != schrittListe.size()) {
 					break;
 				}
-				checkGlassPaneforComponent(sub, pos, glassPaneHeight, insert, e);
-				dragGlassPanePos(pos, sub.getSequenz().schritte, insert, e);
-
-				//wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
-				if (lastStep) {
-					addNeuerSchritt(After, sub, instance, e);
-					lastStep = false;
-					break;
-				}
-			} else if (schritt instanceof BreakSchrittView) {
-				BreakSchrittView breakSchritt = (BreakSchrittView) schritt;
-				if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
-					break;
-				}
-				checkGlassPaneforComponent(breakSchritt, pos, glassPaneHeight, insert, e);
-
-				//wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
-				if (lastStep) {
-					addNeuerSchritt(After, breakSchritt, instance, e);
-					lastStep = false;
-					break;
-				}
-			}
-			if (groesse != schrittListe.size()) {
-				break;
 			}
 		}
 	}
-	}
-	/**
-	 * Creates Rectangle that refelcts a Step with Location and size
- 	 * @param p - absolute Point
-	 * @param textShef - Textfeld of Step
-	 * @return
-	 */
+
+	//Creates Rectangle that refelcts a Step with Location and size
 	private Rectangle createRectangle(Point p, TextfieldShef textShef) {
 		Rectangle r = textShef.getInsetPanel().getVisibleRect();
 		r.setLocation(p);
 		return r;
+	}
+	//Creates GlassPane
+	private void createGlassPane(int glassPaneHeight, int i, int y, int height, boolean b) {
+		GlassPane gP = (GlassPane) this.getGlassPane();
+		gP.setInputRecBounds(i, y, glassPaneHeight, height);
+		this.getGlassPane().setVisible(b);
 	}
 
 	private boolean checkFirstStep(AbstractSchrittView schritt,Point pos,int glassPaneHeight,boolean insert,MouseEvent e) {
@@ -1208,15 +1201,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 				return true;
 			}
-	}
+		}
 		return false;
 	}
-	/**
-	 * Entfernt die WelcomeMessage und fügt den neuen Schritt hinzu
-	 * @param schrittListe - Schrittliste
-	 * @param insert - boolean hinzufügen
-	 * @param e - MouseEvent
-	 */
+
+	// Entfernt die WelcomeMessage und fügt den neuen Schritt hinzu
 	private void insertFirstStep(List<AbstractSchrittView> schrittListe, boolean insert, MouseEvent e) {
 		if(schrittListe.size() == 0 && insert) {
 			SchrittSequenzView curSequenz = hauptSequenz;
