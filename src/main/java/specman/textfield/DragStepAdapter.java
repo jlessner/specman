@@ -21,7 +21,7 @@ public class DragStepAdapter extends MouseAdapter {
     }
 
     public void mousePressed(MouseEvent e) {
-        dummy = new JTextField("Neuer Schritt");
+        dummy = new JTextField("zu verschiebender Schritt");
         dummy.setBounds(new Rectangle(100, 15));
     }
 
