@@ -96,7 +96,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			spaltenSpec += ", 10px:grow, " + FORMLAYOUT_GAP;
 		spaltenSpec += ", 10px:grow";
 		return new FormLayout(spaltenSpec,
-				layoutRowSpec1() + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
+				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 	}
 
 	@Override
@@ -162,8 +162,23 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			Point2D.Double schnittpunktMitDreieckslinie = LineIntersect.lineLineIntersect(
 					dreieckSpitze.x,  dreieckSpitze.y, panel.getWidth(), 0,
 					x, dreieckSpitze.y, x, 0);
-			g.drawLine(x, dreieckSpitze.y, x, (int)schnittpunktMitDreieckslinie.getY() + LINIENBREITE);
+			g.drawLine(x, dreieckSpitze.y, x, 0);
 		}
+		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		g.setRenderingHint(
+			RenderingHints.KEY_ANTIALIASING, 
+			RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setColor(Color.WHITE);
+		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
+		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		g.setStroke(new BasicStroke(LINIENBREITE));
+		g.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setColor(Color.BLACK);
+		g.drawPolygon(polygonXaussen, polygonYausssen, 4);
 
 		return dreieckSpitze;
 	}
@@ -322,11 +337,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	private void layoutConstraintsSetzen() {
 		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1));
-		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 2));
-		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 4));
+		
+		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3));
+		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5));
 		for (int i = 0; i < caseSequenzen.size(); i++) {
-			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 2));
-			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 4));
+			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 3));
+			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 5));
 		}
 	}
 
