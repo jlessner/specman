@@ -14,7 +14,11 @@ import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
+import specman.textfield.TextfieldShef; //neu
 
+import javax.swing.JComponent;
+import javax.swing.JPanel; //neu
+import javax.swing.JTextField; //neu
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentListener;
@@ -59,6 +63,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), initialtext("Fall 1")),
 						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), initialtext("Fall 2")))));
 	}
+	//hatte hier die Methode neu geschrieben 
 	
 	private List<ZweigSchrittSequenzView> caseSequenzenAufbauen(EditorI editor, List<ZweigSchrittSequenzModel_V001> model) {
 		return model.stream()
@@ -96,7 +101,9 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			spaltenSpec += ", 10px:grow, " + FORMLAYOUT_GAP;
 		spaltenSpec += ", 10px:grow";
 		return new FormLayout(spaltenSpec,
-				layoutRowSpec1() + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
+//				layoutRowSpec1() + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
+				/** @author PVN */
+				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR); 
 	}
 
 	@Override
@@ -150,7 +157,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		return sonstSequenz.ueberschrift.getWidth() / 2;
 	}
 
+	//=> Methode wird nicht mehr benoetigt, weil die Dreieckslinien nicht mehr vorhanden sind
 	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
+		/** die Methode zeichnet die senkrechten Linien zwischen Fall1 & Fall2 & Sonst 
+		 * bisher bis zur Dreieckslinie, die aber jetzt nicht mehr existiert, also muessen die senkrechten Trennlinien
+		 * nicht mehr gezeichnet werden, sondern koennen eig vom Layout dargestellt werden
+		 */
 		Point dreieckSpitze = super.dreieckUndTrennerZeichnen(g);
 		
 		// Wir zeichnen gleich nur noch senkrechte Linie. Die werden mit Antialiasing unscharf und
@@ -162,8 +174,24 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			Point2D.Double schnittpunktMitDreieckslinie = LineIntersect.lineLineIntersect(
 					dreieckSpitze.x,  dreieckSpitze.y, panel.getWidth(), 0,
 					x, dreieckSpitze.y, x, 0);
-			g.drawLine(x, dreieckSpitze.y, x, (int)schnittpunktMitDreieckslinie.getY() + LINIENBREITE);
+//			g.drawLine(x, dreieckSpitze.y, x, (int)schnittpunktMitDreieckslinie.getY() + LINIENBREITE);
+			g.drawLine(x, dreieckSpitze.y, x, 0);
 		}
+		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		g.setRenderingHint(
+			RenderingHints.KEY_ANTIALIASING, 
+			RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setColor(Color.WHITE);
+		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
+		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		g.setStroke(new BasicStroke(LINIENBREITE));
+		g.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setColor(Color.BLACK);
+		g.drawPolygon(polygonXaussen, polygonYausssen, 4);
 
 		return dreieckSpitze;
 	}
@@ -321,12 +349,22 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	private void layoutConstraintsSetzen() {
-		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1));
-		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 2));
-		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 4));
+		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1)); 
+//		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1, 1)); //Case
+		
+//		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 2)); 
+		/** @author PVN */
+		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3)); //Sonst
+//		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 4));
+		/** @author PVN */
+		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5)); //Neuer Schritt 1 unter Sonst
 		for (int i = 0; i < caseSequenzen.size(); i++) {
-			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 2));
-			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 4));
+//			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 2));
+			/** @author PVN */
+			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 3)); //Fall 1 und Fall 2 
+//			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 4));
+			/** @author PVN */
+			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 5)); //Neuer Schritt unter Fall 1 und Fall 2 
 		}
 	}
 

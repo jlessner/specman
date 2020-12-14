@@ -53,7 +53,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 
 	protected static String layoutRowSpec1() {
 		int aktuellerZoomfaktor = Specman.instance().zoomFaktor();
-		return "fill:[" + (30 * aktuellerZoomfaktor / 100) + "dlu,pref]";
+		return "fill:[" + (1 * aktuellerZoomfaktor / 100) + "dlu,pref]";
 	}
 	
 	@Override
@@ -74,6 +74,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 //		berechneHoeheFuerVollstaendigUnberuehrtenText();
 		text.setLeftInset((int)textEinrueckung);
 		text.setRightInset((int)textEinrueckung);
+//		System.out.println("Texteinrueckung: "+textEinrueckung);
 		panel.repaint(); // Sorgt daf�r, dass das umplazierte Textfeld und alles andere auf dem Panel sofort neu gezeichnet wird
 	}
 
@@ -94,8 +95,26 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, 
                 RenderingHints.VALUE_ANTIALIAS_ON);
-		g.drawLine(0,  0,  dreieckSpitze.x,  dreieckSpitze.y);
-		g.drawLine(dreieckSpitze.x,  dreieckSpitze.y, breite, 0);
+//		g.drawLine(0,  0,  dreieckSpitze.x,  dreieckSpitze.y);
+//		g.drawLine(dreieckSpitze.x,  dreieckSpitze.y, breite, 0);
+		
+		
+		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		g.setRenderingHint(
+			RenderingHints.KEY_ANTIALIASING, 
+			RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setColor(Color.WHITE);
+		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
+		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		g.setStroke(new BasicStroke(LINIENBREITE));
+		g.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setColor(Color.BLACK);
+		g.drawPolygon(polygonXaussen, polygonYausssen, 4);
+		
 		
 		// Dis folgenden beiden Zeilen stellen sicher, dass *nach* dem Zeichnen des Dreiecks
 		// die evt. �ber den Linien liegenden Grafikkomponenten noch einmal gezeichnet werden.

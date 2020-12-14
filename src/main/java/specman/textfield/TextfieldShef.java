@@ -6,6 +6,7 @@ import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -60,8 +61,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     SimpleAttributeSet htmlHintergrundStyle = new SimpleAttributeSet();
     htmlHintergrundStyle.addAttribute(HTML.Attribute.STYLE, htmlStyle);
     geaendertStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
+    
     StyleConstants.setBackground(geaendertStil, AENDERUNGSMARKIERUNG_FARBE);
-
     geloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
     StyleConstants.setBackground(geloeschtStil, AENDERUNGSMARKIERUNG_FARBE);
     StyleConstants.setStrikeThrough(geloeschtStil, true);
@@ -74,21 +75,45 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     return "#" + Integer.toHexString(color.getRGB()).substring(2).toLowerCase();
   }
 
-
+//  private final JPanel paneltest;
   private final InsetPanel insetPanel;
   private final JEditorPane editorPane;
   private final JLabel schrittNummer;
   boolean schrittNummerSichtbar = true;
 
+  //einfügen
+//  private final JTextField textf;
+  //einfügen Ende
+  
+  
   public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
     editorPane = new JEditorPane();
     insetPanel = new InsetPanel(editorPane);
-    editor.instrumentWysEditor(editorPane, initialerText, 0);
+//    paneltest = new JPanel();
+//    paneltest.add(editorPane);
+    System.out.println("Initialer Text: "+initialerText);
+    System.out.println("Ausgeführt in TextfieldShef-Konstruktor Editor: "+editor);
+    //einfügen
+//    textf = new JTextField();
+//    insetPanel = new InsetPanel(textf);
+//    editor.instrumentWysEditor(editorPane, initialerText ,100);
+    
+    insetPanel.setAlignmentX(editorPane.LEFT_ALIGNMENT);
+    insetPanel.setBorder(new LineBorder(Color.red));
+    //eunfügen Ende
+    editor.instrumentWysEditor(editorPane, initialerText, 1);
     editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+  
     editorPane.setFont(font);
     setBackground(schrittHintergrund());
+    
+    insetPanel.setBackground(Color.yellow);
     editorPane.addKeyListener(this);
-
+   //einfügen
+//    insetPanel.setBorder(new LineBorder(Color.red));
+//    System.out.println("EditorPane: "+editorPane.toString());
+//    insetPanel.setAlignmentY(10000);
+//einfügen Ende
     if (schrittId != null) {
       schrittNummer = new JLabel(schrittId);
       schrittNummer.setFont(labelFont);
@@ -383,6 +408,9 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     return "<div align='center'>" + Specman.initialtext(text) + "</div>";
   }
 
+  public static String left(String text) {
+	    return "<div align='left'>" + Specman.initialtext(text) + "</div>";
+	  }
   public String getText() { return editorPane.getText(); }
 
   public JTextComponent getTextComponent() { return editorPane; }

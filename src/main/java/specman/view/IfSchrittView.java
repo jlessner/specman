@@ -79,6 +79,7 @@ public class IfSchrittView extends IfElseSchrittView {
 	}
 
 	private void ifBreiteSetzen(int angepassteIfBreite) {
+//		ifBreite = 10;
 		ifBreite = angepassteIfBreite;
 		panelLayout.setColumnSpec(1, ColumnSpec.decode(angepassteIfBreite + "px"));
 	}
