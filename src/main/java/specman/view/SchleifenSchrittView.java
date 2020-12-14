@@ -29,7 +29,6 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	final KlappButton klappen;
 	final FormLayout layout;
 	SchrittSequenzView wiederholSequenz;
-
 	int balkenbreite;
 
 	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, boolean mitUnteremBalken) {
@@ -194,8 +193,9 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		// an additional border shielding the inner steps from any rounded border
 		// decorarions outside.
 	}
-	
+
 	public SchrittSequenzView getWiederholSequenz() {
 		return wiederholSequenz;
 	}
+	
 }

@@ -64,4 +64,9 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		super.updateTextfieldDecorationIndentions(indentions);
 		ueberschrift.updateDecorationIndentions(indentions);
 	}
+
+	public TextfieldShef getUeberschrift() {
+		return ueberschrift;
+	}
+	
 }
