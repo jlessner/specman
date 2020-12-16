@@ -94,10 +94,10 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		 * Fontcolor (RGB(166,166,166)) - StrikeThrough true
 		 */
 		htmlHintergrundStyleSchwarz.addAttribute(HTML.Attribute.STYLE, htmlStyleSchwarz);
-		ganzerSchrittGeloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleSchwarz);
-		StyleConstants.setBackground(ganzerSchrittGeloeschtStil, Hintergrundfarbe_Geloescht);
-		StyleConstants.setStrikeThrough(ganzerSchrittGeloeschtStil, true);
-		StyleConstants.setForeground(ganzerSchrittGeloeschtStil, Schriftfarbe_Geloescht);
+        ganzerSchrittGeloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleSchwarz);
+        StyleConstants.setBackground(ganzerSchrittGeloeschtStil, Hintergrundfarbe_Geloescht);
+        StyleConstants.setStrikeThrough(ganzerSchrittGeloeschtStil, true);
+        StyleConstants.setForeground(ganzerSchrittGeloeschtStil, Schriftfarbe_Geloescht);
 
 		// Standard Style
 		htmlHintergrundStyleStandard.addAttribute(HTML.Attribute.STYLE, htmlStyleStandard);
@@ -109,7 +109,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 	public void setStyle(String text, MutableAttributeSet attr) {
 		StyledDocument doc = (StyledDocument) editorPane.getDocument();
-		doc.setCharacterAttributes(0, text.length(), attr, true);
+		doc.setCharacterAttributes(0, text.length(), attr, false);
 		//ganzerSchrittGeloeschtStilSetzenWennNochNichtVorhanden();
 	}
 

@@ -110,4 +110,11 @@ public class IfSchrittView extends IfElseSchrittView {
 		return model;
 	}
 	
+	//TODO Die Backgroundcolor in IfSchrittViews anpassen
+	public void setBackground(Color bg) {
+		super.setBackground(bg);
+		ifSequenz.sequenzBereich.setBackground(bg);
+		panel.repaint(); // Damit die Linien nachgezeichnet werden
+	}
+	
 }

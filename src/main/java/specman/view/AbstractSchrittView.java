@@ -49,7 +49,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	 
 	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
-		this.aenderungsart = aenderungsart;
+		this.aenderungsart = Specman.initialArt();
 		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
 		this.parent = parent;
 		text.addFocusListener(editor);

@@ -7,6 +7,8 @@ import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 
+import java.awt.Color;
+
 import javax.swing.text.JTextComponent;
 
 /**
@@ -67,6 +69,12 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	public TextfieldShef getUeberschrift() {
 		return ueberschrift;
+	}
+	
+	//TODO Die Backgroundcolor in IfSchrittViews anpassen
+	public void setBackground(Color bg) {
+		sequenzBereich.setBackground(bg);
+		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}
 	
 }
