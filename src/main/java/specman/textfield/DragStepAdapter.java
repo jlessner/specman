@@ -26,17 +26,17 @@ public class DragStepAdapter extends MouseAdapter {
     }
 
     public void mouseDragged(MouseEvent e) {
+    	
         //-2 da performanter
         Point pt = e.getPoint();
         JComponent parent = (JComponent) e.getComponent();
         Point dp = pt;
         Point dragOffset = new Point(pt.x - dp.x, pt.y - dp.y);
         Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, spec);
-        spec.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,false,e);
-
-        spec.window.add( dummy);
+        spec.window.add(dummy);
         spec.window.pack();
         updateWindowLocation(pt,dragOffset, parent);
+        spec.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,false,e);
         spec.window.setVisible(true);
     }
 

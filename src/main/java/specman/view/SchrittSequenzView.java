@@ -513,4 +513,8 @@ public class SchrittSequenzView {
 		}
 		return false;
 	}
+//TODO
+	public AbstractSchrittView getParent() {
+		return parent;
+	}
 }

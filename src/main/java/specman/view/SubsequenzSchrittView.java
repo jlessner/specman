@@ -126,4 +126,10 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	public JPanel getPanel() {
 		return panel;
 	}
+
+	public SchrittSequenzView getSubsequenz() {
+		return subsequenz;
+	}
+
+	
 }

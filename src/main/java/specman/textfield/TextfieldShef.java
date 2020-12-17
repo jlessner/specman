@@ -1,5 +1,6 @@
 package specman.textfield;
 
+import specman.DragButtonAdapter;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -93,8 +94,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
       schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
       schrittNummer.setForeground(Color.WHITE);
       schrittNummer.setOpaque(true);
-      //Todo
-      DragStepAdapter ada = new DragStepAdapter(editor);
+      //TODO
+      DragButtonAdapter ada = new DragButtonAdapter(Specman.instance());
       schrittNummer.addMouseListener(ada);
       schrittNummer.addMouseMotionListener(ada);
 
