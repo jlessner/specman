@@ -1041,11 +1041,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					return;
 			}
 		}
+		
 		//inserts firststep to empty diagram
 		insertFirstStep(schrittListe, insert, e);
 		for(AbstractSchrittView schritt : schrittListe) {
 			p = SwingUtilities.convertPoint(schritt.getPanel(), 0, 0, Specman.this);
-			Rectangle r = createRectangle(p, schritt.getPanel());			
+			Rectangle r = createRectangle(p, schritt.getPanel());		
+			//Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört
+			if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
+				if(lastPixels(pos, p, glassPaneHeight, r, glassPane, schritt, insert)) {
+					break;
+				}
+			}
 			//Add Case
 			if(e.getSource().equals(caseAnhaengen)) {
 				if (schritt instanceof CaseSchrittView) {
@@ -1089,25 +1096,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				int groesse = schrittListe.size();
 				if (schritt instanceof EinfacherSchrittView) {
 					if (r.contains(pos)) {
-						//Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört
-						if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
-							if(lastPixels(pos, p, glassPaneHeight, r, glassPane, schritt, insert)) {
-								//TODO dass es sich um keinen WHILEWHILE Schritt handelt
-								break;
-							}
-						}
-//							if (pos.y > (p.y + r.height - glassPaneHeight)) {
-//								Container container = schritt.getParent().getContainer().getParent();
-//								p = SwingUtilities.convertPoint(container, 0, 0, Specman.this);
-//								glassPane.setInputRecBounds(p.x - 2, p.y + container.getHeight(), container.getWidth() + 4, glassPaneHeight);
-//								this.getGlassPane().setVisible(true);
-//								if (insert) {
-//									//hier wird nur festgestellt, dass es sich um den letzten Schritt in der Sequenz handelt und das Iterieren beendet -> Sprung zurück in vorherige Ebene
-//									lastStep = true;
-//								}
-//								break;
-//							}
-						
 						glassPane.setInputRecBounds(p.x, p.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
 
 						if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
@@ -1122,6 +1110,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						break;
 					}//Abfrage IfElseSchritt
 				} else if (schritt instanceof IfElseSchrittView || schritt instanceof IfSchrittView) {
+					
 					IfElseSchrittView ifel = (IfElseSchrittView) schritt;
 					if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
 						break;
@@ -1143,13 +1132,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					}
 					//While SChritt
 				} else if (schritt instanceof WhileSchrittView || schritt instanceof WhileWhileSchrittView) {
-		
-						//Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört
-						if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
-							if(lastPixels(pos, p, glassPaneHeight, r, glassPane, schritt, insert)) {
-								break;
-							}
-						}
 
 					SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
 					if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
