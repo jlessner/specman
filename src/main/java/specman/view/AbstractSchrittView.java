@@ -44,14 +44,13 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	protected SchrittID id;
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
-	
-	
+	 
 	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
 		this.id = id;
 		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
 		this.parent = parent;
-//		text.addFocusListener(editor);
-//		text.addFocusListener(this);
+		text.addFocusListener(editor);
+		text.addFocusListener(this);
 	}
 
 	public void setId(SchrittID id) {

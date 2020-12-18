@@ -45,6 +45,10 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, int numCases) {
 		super(editor, parent, initialerText, id, createPanelLayout(numCases));
 		panel.add(text.asJComponent(), INITIAL_DUMMY);
+		/** @author PVN */
+		JPanel lueckenFueller = new JPanel(); 
+		lueckenFueller.setBackground(Color.WHITE);
+		panel.add(lueckenFueller, CC.xy(1, 1));
 	}
 
 	protected void initCases(EditorI editor, ZweigSchrittSequenzView sonstSequenz, List<ZweigSchrittSequenzView> caseSequenzen) {
@@ -159,31 +163,31 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	//=> Methode wird nicht mehr benoetigt, weil die Dreieckslinien nicht mehr vorhanden sind
 	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
-		/** die Methode zeichnet die senkrechten Linien zwischen Fall1 & Fall2 & Sonst 
-		 * bisher bis zur Dreieckslinie, die aber jetzt nicht mehr existiert, also muessen die senkrechten Trennlinien
-		 * nicht mehr gezeichnet werden, sondern koennen eig vom Layout dargestellt werden
-		 */
 		Point dreieckSpitze = super.dreieckUndTrennerZeichnen(g);
 		
 		// Wir zeichnen gleich nur noch senkrechte Linie. Die werden mit Antialiasing unscharf und
 		// bilden dann keine nahtlose, sauber Verl�ngerung der Gaps aus dem Layoutgitter mehr.
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		
-		for (ZweigSchrittSequenzView caseSequenz: caseSequenzen) {
-			int x = caseSequenz.ueberschrift.getX() - LINIENBREITE/2;
-			Point2D.Double schnittpunktMitDreieckslinie = LineIntersect.lineLineIntersect(
-					dreieckSpitze.x,  dreieckSpitze.y, panel.getWidth(), 0,
-					x, dreieckSpitze.y, x, 0);
-//			g.drawLine(x, dreieckSpitze.y, x, (int)schnittpunktMitDreieckslinie.getY() + LINIENBREITE);
-			g.drawLine(x, dreieckSpitze.y, x, 0);
-		}
+//		for (ZweigSchrittSequenzView caseSequenz: caseSequenzen) {
+//			int x = caseSequenz.ueberschrift.getX() - LINIENBREITE/2;
+//			Point2D.Double schnittpunktMitDreieckslinie = LineIntersect.lineLineIntersect(
+//					dreieckSpitze.x,  dreieckSpitze.y, panel.getWidth(), 0,
+//					x, dreieckSpitze.y, x, 0);
+////			g.drawLine(x, dreieckSpitze.y, x, (int)schnittpunktMitDreieckslinie.getY() + LINIENBREITE);
+////			g.drawLine(x, dreieckSpitze.y, x, 0);
+//		}
+		/** @author PVN */ 
+		g.drawLine(dreieckSpitze.x, dreieckSpitze.y, dreieckSpitze.x, 0);
+		
 		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
 		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
 		g.setRenderingHint(
 			RenderingHints.KEY_ANTIALIASING, 
 			RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.WHITE);
-		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
+		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
+		
 		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
 		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
 		g.setStroke(new BasicStroke(LINIENBREITE));
@@ -191,7 +195,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
                 RenderingHints.KEY_ANTIALIASING, 
                 RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.BLACK);
-		g.drawPolygon(polygonXaussen, polygonYausssen, 4);
+		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
 
 		return dreieckSpitze;
 	}
@@ -349,22 +353,22 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	private void layoutConstraintsSetzen() {
-		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1)); 
-//		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1, 1)); //Case
-		
-//		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 2)); 
-		/** @author PVN */
-		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3)); //Sonst
+		int size = caseSequenzen.size(); 
+		System.out.println(size);
+//		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1)); 
+//		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 2));
 //		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 4));
-		/** @author PVN */
-		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5)); //Neuer Schritt 1 unter Sonst
-		for (int i = 0; i < caseSequenzen.size(); i++) {
+//		for (int i = 0; i < caseSequenzen.size(); i++) {
 //			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 2));
-			/** @author PVN */
-			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 3)); //Fall 1 und Fall 2 
 //			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 4));
-			/** @author PVN */
-			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 5)); //Neuer Schritt unter Fall 1 und Fall 2 
+//		}
+		
+		panelLayout.setConstraints(text.asJComponent(), CC.xywh(3, 1, (1 + caseSequenzen.size()*2)-2, 1)); 
+		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3)); 
+		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5)); 
+		for (int i = 0; i < caseSequenzen.size(); i++) {
+			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 3));  
+			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 5));  
 		}
 	}
 

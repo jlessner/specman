@@ -12,13 +12,6 @@ public class Indentions {
     private static final int LEFTRIGHT_INSET_FOR_DECORATION = 10;
     private static final int TOPBOTTOM_INSET_FOR_DECORATION = 1;
 
-    
-//    public static final int JEDITORPANE_DEFAULT_BORDER_THICKNESS = 1;
-//    private static final int LEFTRIGHT_INSET_FOR_DECORATION = 20;
-//    private static final int TOPBOTTOM_INSET_FOR_DECORATION = 30;
-    
-    
-    
     final boolean top, left, bottom, right;
 
     public Indentions() { this(None); }

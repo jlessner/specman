@@ -49,7 +49,7 @@ public class SchrittSequenzView {
 		huellLayout = new FormLayout("10px:grow", ZEILENLAYOUT_LETZTER_SCHRITT + ", " + ZEILENLAYOUT_CATCHBEREICH);
 		panel.setLayout(huellLayout);
 //		panel.setBackground(Specman.schrittHintergrund());
-//		panel.setBackground(Color.YELLOW);
+		panel.setBackground(Color.YELLOW);
 		this.sequenzBasisId = sequenzBasisId;
 		sequenzBereich = new JPanel();
 		sequenzBereich.setBackground(Color.black);
@@ -111,14 +111,14 @@ public class SchrittSequenzView {
 	}
 
 	public AbstractSchrittView ifElseSchrittAnhaengen(EditorI editor) {
-		String initialerText = TextfieldShef.center("If-Else-Schritt" + (schritte.size()+1));
+		String initialerText = TextfieldShef.center("If-Else-" + (schritte.size()+1));
 		IfElseSchrittView schritt = new IfElseSchrittView(editor, this, initialerText, naechsteSchrittID());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittAnhaengen(schritt, editor);
 	}
 
 	public AbstractSchrittView ifSchrittAnhaengen(EditorI editor) {
-		String initialerText = TextfieldShef.center("If-Schritt" + (schritte.size()+1));
+		String initialerText = TextfieldShef.center("If-Else-" + (schritte.size()+1));
 		IfSchrittView schritt = new IfSchrittView(editor, this, initialerText, naechsteSchrittID());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittAnhaengen(schritt, editor);
@@ -213,8 +213,7 @@ public class SchrittSequenzView {
 
 	public AbstractSchrittView ifElseSchrittZwischenschieben(RelativeStepPosition insertionPosition,
 			AbstractSchrittView referenceStep, EditorI editor) {
-//		String initialerText = TextfieldShef.center("Neue Bedingung " + (schritte.size()+1));
-		String initialerText = TextfieldShef.center("Bedingung" + (schritte.size()+1));
+		String initialerText = TextfieldShef.center("Neue Bedingung " + (schritte.size()+1));
 		IfElseSchrittView schritt = new IfElseSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition));
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittZwischenschieben(schritt, insertionPosition, referenceStep, editor);
@@ -222,8 +221,7 @@ public class SchrittSequenzView {
 
 	public AbstractSchrittView ifSchrittZwischenschieben(RelativeStepPosition insertionPosition,
 			AbstractSchrittView referenceStep, EditorI editor) {
-//		String initialerText = TextfieldShef.center("Neue Bedingung " + (schritte.size()+1));
-		String initialerText = TextfieldShef.center("Bedingung " + (schritte.size()+1));
+		String initialerText = TextfieldShef.center("Neue Bedingung " + (schritte.size()+1));
 		IfSchrittView schritt = new IfSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition));
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittZwischenschieben(schritt, insertionPosition, referenceStep, editor);
@@ -231,8 +229,6 @@ public class SchrittSequenzView {
 
 	public AbstractSchrittView caseSchrittZwischenschieben(RelativeStepPosition insertionPosition,
 			AbstractSchrittView referenceStep, EditorI editor) {
-//		String initialerText = initialtext("Case-" + (schritte.size()+1));
-		/** @author PVN */
 		String initialerText = initialtext("Case-" + (schritte.size()+1));
 		CaseSchrittView schritt = new CaseSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition));
 		schritt.initialeSchritteAnhaengen(editor);

@@ -6,7 +6,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
@@ -44,29 +43,15 @@ public class InsetPanel extends JPanel {
 
     InsetPanel(JEditorPane editorPane) {
         this.editorPane = editorPane;
-        this.layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,10px");
+        this.layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
         setLayout(layout);
-        //einfügen
         add(editorPane, CC.xy(2, 2));
-        setBackground(Color.cyan);
-        //einfügen Ende
-        
-//        add(editorPane, CC.xy(2, 2));
         updateDecorationIndentions(new Indentions());
     }
 
     private void setEditorBorder(int top, int left, int bottom, int right) {
         this.border = new EmptyBorder(top, left, bottom, right);
         editorPane.setBorder(border);
-        //einfügen
-//        editorPane.setBackground(Color.yellow);
-        
-//        editorPane.setAlignmentX(LEFT_ALIGNMENT);
-//        editorPane.setAlignmentY(LEFT_ALIGNMENT);
-//        editorPane.setAlignmentX(left);
-//        editorPane.setAlignmentY(JEDITORPANE_DEFAULT_BORDER_THICKNESS);
-//        editorPane.setAlignmentX(JEDITORPANE_DEFAULT_BORDER_THICKNESS);
-        //einfügen Ende
     }
 
     public void setLeftInset(int px) {
@@ -81,7 +66,6 @@ public class InsetPanel extends JPanel {
         insets.right = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
         border = new EmptyBorder(insets);
         editorPane.setBorder(border);
-//        editorPane.setBackground(Color.yellow);
     }
 
     public void updateDecorationIndentions(Indentions indentions) {

@@ -665,6 +665,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		export = new JMenuItem("Exportieren");
 		//======== this ========
 		Container contentPane = getContentPane();
+		/**
+		 * FormLayout sorgt fuer Einteilung in Spalten & Zeilen, wobei hier:
+		 * ("Spalten-Vorgabe", "Zeilen-Vorgabe")
+		 * fill:10px:grow -> fill fuellt die ganze Hoehe der Zeile, min. 10px & waechst wenn mehr Platz ist
+		 */
 		contentPane.setLayout(new FormLayout("default:grow", "default, default, fill:10px:grow"));
 
 		//======== toolBar ========

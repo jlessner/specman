@@ -28,24 +28,20 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	ZweigSchrittSequenzView ifSequenz;
 	ZweigSchrittSequenzView elseSequenz;
 	boolean dreieckBisUnten = true;
-	//TODO: RAUTE: Bedingung-Textfeld muss angepasst werden -> Textfeld fuellt nicht den ganzen Bereich aus & verschiebt 
-	//sich mit, wenn die Spaltengroessen veraendert werden -> muss aber fest in dem Bereich bleiben
 	
 	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, createPanelLayout());
 		/** @author PVN */
 		JPanel leeresFeld = new JPanel(); 
 		leeresFeld.setBackground(Color.WHITE);
-//		panel.add(text.asJComponent(), CC.xywh(1, 1, 3, 1)); //neue Bedingung bei If-Else-Schritt-Erstellung
-		/** @author PVN */
+		panel.add(leeresFeld, CC.xywh(1, 1, 1, 1));
+		/** @author PVN */		
 		JPanel panelBedingung = new JPanel(); 
 		panelBedingung.setBackground(Color.WHITE);
-		panelBedingung.setLayout(new FormLayout("20px, 10px:grow", "fill:pref"));
+		panelBedingung.setLayout(new FormLayout(20 * Specman.instance().getZoomFactor()/100 + ", 10px:grow", "fill:pref"));
 		panelBedingung.add(text.asJComponent(), "2,1");
 		panel.add(panelBedingung, CC.xywh(3, 1, 1, 1));
 		panel.add(leeresFeld, CC.xywh(1, 1, 1, 1));
-//		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 4));
-		/** @author PVN */
 		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 5));
 		text.addFocusListener(new FocusAdapter() {
 			@Override public void focusLost(FocusEvent e) {
@@ -54,9 +50,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		});
 		if(withDefaultContent) {
 			initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), initialtext("Ja")));
-			initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), TextfieldShef.center("Nein")));
+			initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), TextfieldShef.right("Nein")));
 		}
 	}
+	
 
 	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, IfElseSchrittModel_V001 model) {
 		this(editor, parent, model.inhalt.text, model.id, false);
@@ -89,8 +86,6 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 
 	protected static FormLayout createPanelLayout() {
 		return new FormLayout(
-			 //	fill:[" + (30 * aktuellerZoomfaktor / 100) + "dlu,pref]"
-									//fill:pref				2px						fill:pref:grow
 				"10px:grow, " + FORMLAYOUT_GAP + ", 10px:grow",
 //				layoutRowSpec1() + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 				/** @author PVN */
@@ -99,11 +94,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 
 	protected void elseBedingungAnlegen(ZweigSchrittSequenzView elseSequenz) {
 		elseSequenz.ueberschrift.addFocusListener(this);
-//		panel.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 2, 2, 1));
 		/** @author PVN */
 		JPanel panelElse = new JPanel(); 
 		panelElse.setBackground(Color.WHITE);
-		panelElse.setLayout(new FormLayout("20px, 10px:grow", "fill:pref:grow"));
+		panelElse.setLayout(new FormLayout(20 * Specman.instance().getZoomFactor()/100 + ", 10px:grow", "fill:pref:grow"));
 		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 1, 1, 1));
 		panel.add(panelElse, CC.xywh(3, 3, 1, 1));  
 		elseSequenz.ueberschrift.addFocusListener(new FocusAdapter() {
@@ -153,11 +147,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	
 	protected void ifBedingungAnlegen(ZweigSchrittSequenzView ifSequenz) {
 		ifSequenz.ueberschrift.addFocusListener(this);
-//		panel.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1, 2)); //setzt (ja) auf 1,2
 		/** @author PVN */
 		JPanel panelIf = new JPanel(); 
 		panelIf.setBackground(Color.WHITE);
-		panelIf.setLayout(new FormLayout("10px:grow, 20px", "fill:pref:grow"));
+		panelIf.setLayout(new FormLayout("10px:grow, " + 20 * Specman.instance().getZoomFactor()/100, "fill:pref:grow"));
 		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));
 		panel.add(panelIf, CC.xy(1, 3));
 		ifSequenz.ueberschrift.addFocusListener(new FocusAdapter() {
@@ -182,7 +175,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		return ifBreite / (ifBreite + elseBreite);
 	}
 
-	private void ifBreitenanteilSetzen(float ifBreitenanteil) { //in () % Anteil fï¿½r die Breite 
+	private void ifBreitenanteilSetzen(float ifBreitenanteil) { //in () % Anteil für die Breite 
 		float elseBreitenanteil = 1.0f - ifBreitenanteil;
 		panelLayout.setColumnSpec(1, ColumnSpec.decode("10px:grow(" + ifBreitenanteil + ")"));
 		panelLayout.setColumnSpec(3, ColumnSpec.decode("10px:grow(" + elseBreitenanteil + ")"));
@@ -254,7 +247,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 
 	protected int texteinrueckungNeuberechnen() {
-		return ifSequenz.ueberschrift.getWidth() / 2;
+//		return ifSequenz.ueberschrift.getWidth() / 2;
+		return 0; 
 	}
 
 	@Override
