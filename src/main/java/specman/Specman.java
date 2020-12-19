@@ -91,6 +91,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		hauptSequenz = new SchrittSequenzView();
 
 		scrollPane = new JScrollPane();
+		//TODO
+		scrollPane.addMouseWheelListener(new DragButtonAdapter(this));
 		getContentPane().add(scrollPane, CC.xy(2, 3));
 		// ToDo Sidebar change from getContentPane().add(scrollPane, CC.xy(1, 3));
 

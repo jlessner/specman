@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -106,5 +107,9 @@ public class DragButtonAdapter extends MouseAdapter {
 		private AbstractSchrittView labelToStep(JLabel label) {
 			InsetPanel ip = (InsetPanel) label.getParent().getParent();
 			return spec.hauptSequenz.findeSchritt(ip.getTextfeld().getTextComponent());
+		}
+		
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			spec.getGlassPane().setVisible(false);
 		}
 }
