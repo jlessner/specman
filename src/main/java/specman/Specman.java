@@ -1109,7 +1109,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						this.getGlassPane().setVisible(true);
 						break;
 					}//Abfrage IfElseSchritt
-				} else if (schritt instanceof IfElseSchrittView || schritt instanceof IfSchrittView) {
+				} else if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 					
 					IfElseSchrittView ifel = (IfElseSchrittView) schritt;
 					if (checkFirstStep(schritt, pos, glassPaneHeight, insert, e)) {
@@ -1117,7 +1117,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					}
 
 					checkfalseGlassPaneforComponent(ifel.getTextShef(), pos, glassPaneHeight);
-					if (schritt instanceof IfElseSchrittView) {
+					if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 						checkZweigHeading(ifel.getIfSequenz(), pos, glassPaneHeight, insert, e);
 						dragGlassPanePos(pos, ifel.getIfSequenz().schritte, insert, e);
 					}
@@ -1338,16 +1338,19 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	
 	private boolean lastPixels(Point pos, Point p, int glassPaneHeight, Rectangle r, GlassPane glassPane,AbstractSchrittView schritt,Boolean insert ) {
 		if(!(schritt.getParent().getParent() instanceof WhileWhileSchrittView)) {
-			if (pos.y > (p.y + r.height - glassPaneHeight)) {
-				Container container = schritt.getParent().getContainer().getParent();
-				p = SwingUtilities.convertPoint(container, 0, 0, Specman.this);
-				glassPane.setInputRecBounds(p.x - 2, p.y + container.getHeight(), container.getWidth() + 4, glassPaneHeight);
-				this.getGlassPane().setVisible(true);
-				if (insert) {
-					//hier wird nur festgestellt, dass es sich um den letzten Schritt in der Sequenz handelt und das Iterieren beendet -> Sprung zurück in vorherige Ebene
-					lastStep = true;
+			r.setLocation(p);
+			if(r.contains(pos)) {
+				if (pos.y > (p.y + r.height - glassPaneHeight)) {
+					Container container = schritt.getParent().getContainer().getParent();
+					p = SwingUtilities.convertPoint(container, 0, 0, Specman.this);
+					glassPane.setInputRecBounds(p.x - 2, p.y + container.getHeight(), container.getWidth() + 4, glassPaneHeight);
+					this.getGlassPane().setVisible(true);
+					if (insert) {
+						//hier wird nur festgestellt, dass es sich um den letzten Schritt in der Sequenz handelt und das Iterieren beendet -> Sprung zurück in vorherige Ebene
+						lastStep = true;
+					}
+					return true;
 				}
-				return true;
 			}
 		}
 		return false;
