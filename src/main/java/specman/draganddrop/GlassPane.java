@@ -8,8 +8,8 @@ import java.awt.Cursor;
 import javax.swing.JPanel;
 
 public class GlassPane extends JPanel {
-	public JPanel panel;
-	int menueHeight;
+	private JPanel panel;
+	private final int menueHeight;
 
 
 	public GlassPane(int menueHeight) {
