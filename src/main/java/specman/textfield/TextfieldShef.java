@@ -1,8 +1,7 @@
 package specman.textfield;
 
-import specman.DragButtonAdapter;
+import specman.draganddrop.DragButtonAdapter;
 import specman.EditorI;
-import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;

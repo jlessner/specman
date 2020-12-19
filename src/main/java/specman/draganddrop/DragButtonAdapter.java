@@ -1,9 +1,7 @@
-package specman;
+package specman.draganddrop;
 
-import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -15,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import specman.Specman;
 import specman.textfield.InsetPanel;
 import specman.view.AbstractSchrittView;
 

@@ -7,6 +7,8 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 
+import specman.draganddrop.DragButtonAdapter;
+import specman.draganddrop.GlassPane;
 import specman.model.ModelEnvelope;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
@@ -39,7 +41,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1074,9 +1075,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						}
 					}
 				}else{
-					if(schritt instanceof IfElseSchrittView || schritt instanceof IfSchrittView){
+					if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")){
 						IfElseSchrittView ifel = (IfElseSchrittView) schritt;
-						if (schritt instanceof IfElseSchrittView) {
+						if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 							dragGlassPanePos(pos, ifel.getIfSequenz().schritte, insert, e);
 						}
 						dragGlassPanePos(pos, ifel.getElseSequenz().schritte, insert, e);
@@ -1357,6 +1358,4 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 		return false;
 	}
-	
-
 }
