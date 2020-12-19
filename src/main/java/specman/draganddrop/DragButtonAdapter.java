@@ -17,7 +17,8 @@ import specman.Specman;
 import specman.textfield.InsetPanel;
 import specman.view.AbstractSchrittView;
 
-
+import static specman.draganddrop.InsertDecision.Insert;
+import static specman.draganddrop.InsertDecision.NoInsert;
 
 
 public class DragButtonAdapter extends MouseAdapter {
@@ -50,7 +51,7 @@ public class DragButtonAdapter extends MouseAdapter {
 		spec.window.pack();
 		updateWindowLocation(pt,dragOffset, parent);
 		spec.window.setVisible(true);
-		draggingLogic.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,false,e);
+		draggingLogic.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,NoInsert,e);
 
 	}
 
@@ -67,7 +68,7 @@ public class DragButtonAdapter extends MouseAdapter {
 		}
 		spec.window.setVisible(false);
 		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, spec);
-		draggingLogic.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,true,e);
+		draggingLogic.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,Insert,e);
 		//System.out.println(e.getSource());
 		spec.getGlassPane().setVisible(false);
 		spec.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
