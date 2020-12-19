@@ -42,7 +42,7 @@ public class DragButtonAdapter extends MouseAdapter {
 	
 		public void mouseDragged(MouseEvent e) {	
 			if(checkEinzigerSchritt(e)){
-				spec.showInvalidCursor();
+				draggingLogic.showInvalidCursor();
 				return;
 			}
 			Point pt = e.getPoint();
@@ -87,7 +87,7 @@ public class DragButtonAdapter extends MouseAdapter {
 				AbstractSchrittView step =   spec.hauptSequenz.findeSchritt(ip.getTextfeld().getTextComponent());
 				//Abfrage ob man sich auf sich selbst befindet
 				if(step.getParent().schritte.size() <= 1) {
-						spec.showInvalidCursor();
+						draggingLogic.showInvalidCursor();
 				}
 		}
 		}
