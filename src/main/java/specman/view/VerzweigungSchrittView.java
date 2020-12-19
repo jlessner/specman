@@ -26,8 +26,14 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 			@Override
 			public void paint(Graphics g) {
 				super.paint(g);
-				dreieckUndTrennerZeichnen((Graphics2D)g);
+				RauteZeichnen((Graphics2D)g);
 			}
+			
+//			@Override
+//			public void paint(Graphics g) {
+//				super.paint(g);
+//				dreieckUndTrennerZeichnen((Graphics2D)g);
+//			}
 		};
 		
 		panel.setBackground(Color.black);
@@ -89,47 +95,80 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		panel.repaint(); // Zeichnet Dreieck und Case-Trenner nach, wenn man mit Editieren der Texte fertig ist
 	}
 
-	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
-		int breite = panel.getWidth();
-		Point dreieckSpitze = berechneDreieckspitze();
-		/** urspruenglicher Code im Prototypen */
+//	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
+//		int breite = panel.getWidth();
+//		Point dreieckSpitze = berechneDreieckspitze();
+//		/** urspruenglicher Code im Prototypen */
+////		g.setStroke(new BasicStroke(LINIENBREITE));
+////		g.setRenderingHint(
+////                RenderingHints.KEY_ANTIALIASING, //sorgt bei Schraeglinien dafuer, dass die gerade/ sauber dargestellt werden
+////                RenderingHints.VALUE_ANTIALIAS_ON);
+////		g.drawLine(0,  0,  dreieckSpitze.x,  dreieckSpitze.y);
+////		g.drawLine(dreieckSpitze.x,  dreieckSpitze.y, breite, 0);
+//		
+//		/** @author PVN */ 
+//		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+//		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+//		g.setRenderingHint(
+//			RenderingHints.KEY_ANTIALIASING, 
+//			RenderingHints.VALUE_ANTIALIAS_ON);
+//		g.setColor(Color.WHITE);
+//		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
+//		
+//		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+//		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
 //		g.setStroke(new BasicStroke(LINIENBREITE));
 //		g.setRenderingHint(
-//                RenderingHints.KEY_ANTIALIASING, //sorgt bei Schraeglinien dafuer, dass die gerade/ sauber dargestellt werden
+//                RenderingHints.KEY_ANTIALIASING, 
 //                RenderingHints.VALUE_ANTIALIAS_ON);
-//		g.drawLine(0,  0,  dreieckSpitze.x,  dreieckSpitze.y);
-//		g.drawLine(dreieckSpitze.x,  dreieckSpitze.y, breite, 0);
-		
-		/** @author PVN */ 
-		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
-		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
-		g.setRenderingHint(
-			RenderingHints.KEY_ANTIALIASING, 
-			RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setColor(Color.WHITE);
-		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
-		
-		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
-		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
-		g.setStroke(new BasicStroke(LINIENBREITE));
-		g.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING, 
-                RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setColor(Color.BLACK);
-		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
-		
-		// Dis folgenden beiden Zeilen stellen sicher, dass *nach* dem Zeichnen des Dreiecks
-		// die evt. �ber den Linien liegenden Grafikkomponenten noch einmal gezeichnet werden.
-		// Dann werden sie auf jeden Fall nicht von den Linien �berdeckt. Das passiert n�mlich
-		// sonst manchmal, wobei ich noch nicht verstanden habe, unter welchen Bedingungen
-		// das passiert. Es geht also vmtl. auch eleganter
-		klappen.repaint();
-		text.repaintSchrittId();
-		
-		return dreieckSpitze;
-	}
+//		g.setColor(Color.BLACK);
+//		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
+//		
+//		// Dis folgenden beiden Zeilen stellen sicher, dass *nach* dem Zeichnen des Dreiecks
+//		// die evt. �ber den Linien liegenden Grafikkomponenten noch einmal gezeichnet werden.
+//		// Dann werden sie auf jeden Fall nicht von den Linien �berdeckt. Das passiert n�mlich
+//		// sonst manchmal, wobei ich noch nicht verstanden habe, unter welchen Bedingungen
+//		// das passiert. Es geht also vmtl. auch eleganter
+//		klappen.repaint();
+//		text.repaintSchrittId();
+//		
+//		return dreieckSpitze;
+//	}
 
-	abstract protected Point berechneDreieckspitze();
+	
+		
+		protected Point RauteZeichnen(Graphics2D g) {
+			
+			Point mittelPunktRaut = berechneMittelPunktfuerRaute();
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+			g.drawLine(mittelPunktRaut.x, mittelPunktRaut.y, mittelPunktRaut.x, 0);
+
+
+			int[] polygonXinnen = {(mittelPunktRaut.x-20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x, (mittelPunktRaut.x+20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x};
+			int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+			g.setRenderingHint(
+				RenderingHints.KEY_ANTIALIASING, 
+				RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setColor(Color.WHITE);
+			g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
+			
+			int[] polygonXaussen = {(mittelPunktRaut.x-20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x, (mittelPunktRaut.x+20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x};
+			int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+			g.setStroke(new BasicStroke(LINIENBREITE));
+			g.setRenderingHint(
+	                RenderingHints.KEY_ANTIALIASING, 
+	                RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setColor(Color.BLACK);
+			g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
+			return mittelPunktRaut;
+		}
+	
+	
+	
+	
+//	abstract protected Point berechneDreieckspitze();
+	
+	abstract protected Point berechneMittelPunktfuerRaute();
 
 	abstract protected int texteinrueckungNeuberechnen();
 	

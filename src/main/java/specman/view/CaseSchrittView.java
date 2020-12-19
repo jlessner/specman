@@ -162,12 +162,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	//=> Methode wird nicht mehr benoetigt, weil die Dreieckslinien nicht mehr vorhanden sind
-	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
-		Point dreieckSpitze = super.dreieckUndTrennerZeichnen(g);
-		
+//	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
+//		Point dreieckSpitze = super.dreieckUndTrennerZeichnen(g);
+//		
 		// Wir zeichnen gleich nur noch senkrechte Linie. Die werden mit Antialiasing unscharf und
 		// bilden dann keine nahtlose, sauber Verl�ngerung der Gaps aus dem Layoutgitter mehr.
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+//		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		
 //		for (ZweigSchrittSequenzView caseSequenz: caseSequenzen) {
 //			int x = caseSequenz.ueberschrift.getX() - LINIENBREITE/2;
@@ -178,9 +178,36 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 ////			g.drawLine(x, dreieckSpitze.y, x, 0);
 //		}
 		/** @author PVN */ 
-		g.drawLine(dreieckSpitze.x, dreieckSpitze.y, dreieckSpitze.x, 0);
+//		g.drawLine(dreieckSpitze.x, dreieckSpitze.y, dreieckSpitze.x, 0);
+//		
+//		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+//		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+//		g.setRenderingHint(
+//			RenderingHints.KEY_ANTIALIASING, 
+//			RenderingHints.VALUE_ANTIALIAS_ON);
+//		g.setColor(Color.WHITE);
+//		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
+//		
+//		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+//		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+//		g.setStroke(new BasicStroke(LINIENBREITE));
+//		g.setRenderingHint(
+//                RenderingHints.KEY_ANTIALIASING, 
+//                RenderingHints.VALUE_ANTIALIAS_ON);
+//		g.setColor(Color.BLACK);
+//		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
+//
+//		return dreieckSpitze;
+//	}
+	
+		protected Point RauteZeichnen(Graphics2D g) {
 		
-		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+		Point mittelPunktRaut = berechneMittelPunktfuerRaute();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		g.drawLine(mittelPunktRaut.x, mittelPunktRaut.y, mittelPunktRaut.x, 0);
+
+
+		int[] polygonXinnen = {(mittelPunktRaut.x-20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x, (mittelPunktRaut.x+20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x};
 		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
 		g.setRenderingHint(
 			RenderingHints.KEY_ANTIALIASING, 
@@ -188,7 +215,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		g.setColor(Color.WHITE);
 		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
 		
-		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
+		int[] polygonXaussen = {(mittelPunktRaut.x-20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x, (mittelPunktRaut.x+20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x};
 		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setRenderingHint(
@@ -196,15 +223,20 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
                 RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.BLACK);
 		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
-
-		return dreieckSpitze;
+		return mittelPunktRaut;
 	}
-	
-	protected Point berechneDreieckspitze() {
+
+		protected Point berechneMittelPunktfuerRaute() {
 		return new Point(
 				sonstSequenz.getContainer().getWidth(),
 				sonstSequenz.ueberschrift.getY());
-	}
+		}
+
+//protected Point berechneDreieckspitze() {
+//	return new Point(
+//			sonstSequenz.getContainer().getWidth(),
+//			sonstSequenz.ueberschrift.getY());
+//}
 
 	@Override
 	public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {

@@ -27,7 +27,9 @@ import static specman.Specman.initialtext;
 public class IfElseSchrittView extends VerzweigungSchrittView implements ComponentListener, SpaltenContainerI {
 	ZweigSchrittSequenzView ifSequenz;
 	ZweigSchrittSequenzView elseSequenz;
-	boolean dreieckBisUnten = true;
+	
+	boolean MittelPunktRaute = true;
+//	boolean dreieckBisUnten = true;
 	
 	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, createPanelLayout());
@@ -101,43 +103,47 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 1, 1, 1));
 		panel.add(panelElse, CC.xywh(3, 3, 1, 1));  
 		elseSequenz.ueberschrift.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textueberschneidungenMitDreiecksliniePruefen();
-			}
+//			@Override
+//			public void focusLost(FocusEvent e) {
+//				textueberschneidungenMitDreiecksliniePruefen();
+//			}
 		});
 	}
 
-	private void textueberschneidungenMitDreiecksliniePruefen() {
-		Point dreieckSpitze = berechneDreieckspitze(true);
-		Line2D.Double abfallendeLinie = new Line2D.Double
-				(0, 0, dreieckSpitze.getX(), dreieckSpitze.getY());
-		Line2D.Double aufsteigendeLinie = new Line2D.Double
-				(dreieckSpitze.getX(), dreieckSpitze.getY(), panel.getWidth(), 0);
-		boolean volleBreiteBenoetigt =
-			textUeberschneidetDreieckslinie(elseSequenz.ueberschrift.getLinkeZeilenraender(), elseSequenz.ueberschrift.getBounds(), aufsteigendeLinie) ||
-			textUeberschneidetDreieckslinie(ifSequenz.ueberschrift.getRechteZeilenraender(), ifSequenz.ueberschrift.getBounds(), abfallendeLinie);
-;
-		layoutAnTexteFuerIfElseBedingungenAnpassen(volleBreiteBenoetigt);
-	}
+//	private void textueberschneidungenMitDreiecksliniePruefen() {
+//		Point dreieckSpitze = berechneDreieckspitze(true);
+//
+//		
+//		Line2D.Double abfallendeLinie = new Line2D.Double
+//				(0, 0, dreieckSpitze.getX(), dreieckSpitze.getY());
+//		Line2D.Double aufsteigendeLinie = new Line2D.Double
+//				(dreieckSpitze.getX(), dreieckSpitze.getY(), panel.getWidth(), 0);
+//		boolean volleBreiteBenoetigt =
+//			textUeberschneidetDreieckslinie(elseSequenz.ueberschrift.getLinkeZeilenraender(), elseSequenz.ueberschrift.getBounds(), aufsteigendeLinie) ||
+//			textUeberschneidetDreieckslinie(ifSequenz.ueberschrift.getRechteZeilenraender(), ifSequenz.ueberschrift.getBounds(), abfallendeLinie);
+//;
+//		layoutAnTexteFuerIfElseBedingungenAnpassen(volleBreiteBenoetigt);
+//	}
 
-	private boolean textUeberschneidetDreieckslinie(List<Line2D.Double> textRaender, Rectangle offset, Line2D.Double dreieckslinie) {
-		for (Line2D.Double rand: textRaender) {
-			// Randlinie des Textfelds auf die Koordinates des Panels umrechnen und bis zum unteren Rand des Kopfbereichs verl�ngern
-			Line2D.Double senkrechte = new Line2D.Double(
-					rand.x1 + offset.getX(),
-					rand.y1 + offset.getY(),
-					rand.x2 + offset.getX(),
-					panel.getHeight());
-			if (senkrechte.intersectsLine(dreieckslinie)) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	private boolean textUeberschneidetDreieckslinie(List<Line2D.Double> textRaender, Rectangle offset, Line2D.Double dreieckslinie) {
+//		for (Line2D.Double rand: textRaender) {
+//			// Randlinie des Textfelds auf die Koordinates des Panels umrechnen und bis zum unteren Rand des Kopfbereichs verl�ngern
+//			Line2D.Double senkrechte = new Line2D.Double(
+//					rand.x1 + offset.getX(),
+//					rand.y1 + offset.getY(),
+//					rand.x2 + offset.getX(),
+//					panel.getHeight());
+//			if (senkrechte.intersectsLine(dreieckslinie)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 	private void layoutAnTexteFuerIfElseBedingungenAnpassen(boolean volleBreiteBenoetigt) {
-		dreieckBisUnten = !volleBreiteBenoetigt;
+		MittelPunktRaute = !volleBreiteBenoetigt;
+
+//		dreieckBisUnten = !volleBreiteBenoetigt;
 		panelLayout.setConstraints(elseSequenz.ueberschrift.asJComponent(),
 //				volleBreiteBenoetigt ? CC.xywh(3, 2, 1, 1) : CC.xywh(2, 2, 2, 1));
 				/** @author PVN */
@@ -154,10 +160,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));
 		panel.add(panelIf, CC.xy(1, 3));
 		ifSequenz.ueberschrift.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textueberschneidungenMitDreiecksliniePruefen();
-			}
+//			@Override
+//			public void focusLost(FocusEvent e) {
+//				textueberschneidungenMitDreiecksliniePruefen();
+//			}
 		});
 	}
 
@@ -195,16 +201,30 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		return super.newStepIDInSameSequence(direction).naechsteID();
 	}
 
-	protected Point berechneDreieckspitze() {
-		return berechneDreieckspitze(dreieckBisUnten);
+	protected Point berechneMittelPunktfuerRaute() {
+		return berechneMittelPunktfuerRaute(MittelPunktRaute);
 	}
 
-	protected Point berechneDreieckspitze(boolean bisUnten) {
+//	protected Point berechneDreieckspitze() {
+//		return berechneDreieckspitze(dreieckBisUnten);
+//	}
+
+	
+	protected Point berechneMittelPunktfuerRaute(boolean bisUnten) {
 		return new Point(
 				ifSequenz.getContainer().getWidth(),
 				ifSequenz.ueberschrift.getY() + (bisUnten ? ifSequenz.ueberschrift.getHeight() : 0));
 	}
 
+//	protected Point berechneDreieckspitze(boolean bisUnten) {
+//		return new Point(
+//				ifSequenz.getContainer().getWidth(),
+//				ifSequenz.ueberschrift.getY() + (bisUnten ? ifSequenz.ueberschrift.getHeight() : 0));
+//	}
+//	
+	
+	
+	
 	@Override
 	public void setBackground(Color bg) {
 		super.setBackground(bg);
