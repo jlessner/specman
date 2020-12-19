@@ -1,6 +1,5 @@
 package specman.draganddrop;
 
-import specman.EditorI;
 import specman.Specman;
 import specman.textfield.InsetPanel;
 import specman.textfield.TextfieldShef;
@@ -30,25 +29,23 @@ public class DraggingLogic implements Serializable {
         Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
-            createGlassPane(r.width, p.x, p.y + r.height - glassPaneHeight, glassPaneHeight, true);
+            createGlassPane(r.width, p.x,p.y + r.height - glassPaneHeight, glassPaneHeight,true);
             //mouserelease add Step at first Position in sequenz
             if (insertDecision == InsertDecision.Insert) {
                 AbstractSchrittView step = zweig.schritte.get(0);
-                addNeuerSchritt(Before, step, specman, mE);
+                addNeuerSchritt(Before, step, mE);
             }
         }
     }
 
     // GlassPane over Cases
-    private void checkCaseHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) {
+    private void checkCaseHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, InsertDecision insertDecision) {
         Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
             createGlassPane(glassPaneHeight, p.x + r.width - glassPaneHeight, p.y, r.height, true);
             //mouserelease add Case right from choosen Case
-            if (insertDecision == InsertDecision.Insert) {
-                addCase(zweig);
-            }
+            if (insertDecision == InsertDecision.Insert) addCase(zweig);
         }
     }
 
@@ -73,7 +70,7 @@ public class DraggingLogic implements Serializable {
             //mouserelease add Step at first Position in sequenz
             if (insertDecision == InsertDecision.Insert) {
                 AbstractSchrittView step = schleife.getWiederholSequenz().schritte.get(0);
-                addNeuerSchritt(Before, step, specman, mE);
+                addNeuerSchritt(Before, step, mE);
             }
         }
     }
@@ -88,14 +85,13 @@ public class DraggingLogic implements Serializable {
             //mouserelease add Step at first Position in sequenz
             if (insertDecision == InsertDecision.Insert) {
                 AbstractSchrittView step = schritt.getSubsequenz().schritte.get(0);
-                addNeuerSchritt(Before, step, specman, mE);
+                addNeuerSchritt(Before, step, mE);
             }
         }
     }
 
     // GlassPane and add Step to sequence
     private boolean checkGlassPaneforComponent(AbstractSchrittView step, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) {
-        //Todo schauen ob berechnung mehr sinn macht
         Component c = null;
         Component cl = null;
         Component cu = null;
@@ -103,8 +99,8 @@ public class DraggingLogic implements Serializable {
         Rectangle rl = new Rectangle();
         Rectangle ru = new Rectangle();
         Point p = null;
-        Point pl = null;
-        Point pu = null;
+        Point pl;
+        Point pu;
 
         if (step instanceof SchleifenSchrittView) {
             c = ((SchleifenSchrittView) step).getPanel();
@@ -117,10 +113,11 @@ public class DraggingLogic implements Serializable {
             //Abfrage für MousePosition auf dem Panel des Breakschritts
             cl = c;
         }
-
-        p = SwingUtilities.convertPoint(c, 0, 0, specman);
-        r = c.getBounds();
-        r.setLocation(p);
+        if (cl != null) {
+            p = SwingUtilities.convertPoint(c, 0, 0, specman);
+            r = c.getBounds();
+            r.setLocation(p);
+        }
         if (cl != null) {
             pl = SwingUtilities.convertPoint(cl, 0, 0, specman);
             rl = cl.getBounds();
@@ -136,7 +133,7 @@ public class DraggingLogic implements Serializable {
             createGlassPane(r.width, p.x, p.y + r.height - glassPaneHeight, glassPaneHeight, true);
             //bei Release hinzufügen eines Schrittes an erster Position im Zweig
             if (((insertDecision==InsertDecision.Insert) && cl != null && rl.contains(pos)) || ((insertDecision == InsertDecision.Insert) && cu != null && ru.contains(pos))) {
-                addNeuerSchritt(After, step, specman, mE);
+                addNeuerSchritt(After, step, mE);
                 return true;
             }
         }
@@ -181,24 +178,28 @@ public class DraggingLogic implements Serializable {
         for (AbstractSchrittView schritt : schrittListe) {
             p = SwingUtilities.convertPoint(schritt.getPanel(), 0, 0, specman);
             Rectangle r = createRectangle(p, schritt.getPanel());
-            //Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört
-            if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
-                if (lastPixels(pos, p, glassPaneHeight, r, glassPane, schritt, insertDecision)) {
-                    break;
+
+            //Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört // Zusaätzliche Abfrage da Marker beim CaseAnängen angezeigt wurde
+            if (!(e.getSource().equals(specman.getCaseAnhaengen()))) {
+                if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
+                    if (lastPixels(pos, p, glassPaneHeight, r, glassPane, schritt, insertDecision)) {
+                        break;
+                    }
                 }
             }
+
             //Add Case
             if (e.getSource().equals(specman.getCaseAnhaengen())) {
                 if (schritt instanceof CaseSchrittView) {
                     CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 
                     checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
-                    checkCaseHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, insertDecision, e);
+                    checkCaseHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, insertDecision);
                     dragGlassPanePos(pos, caseSchritt.getSonstSequenz().schritte, insertDecision, e);
 
                     for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
                         int groesse = caseSchritt.getCaseSequenzen().size();
-                        checkCaseHeading(caseSequenz, pos, glassPaneHeight, insertDecision, e);
+                        checkCaseHeading(caseSequenz, pos, glassPaneHeight, insertDecision);
                         dragGlassPanePos(pos, caseSequenz.schritte, insertDecision, e);
 
                         if (groesse != caseSchritt.getCaseSequenzen().size()) {
@@ -220,8 +221,6 @@ public class DraggingLogic implements Serializable {
                     } else if (schritt instanceof SubsequenzSchrittView) {
                         SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
                         dragGlassPanePos(pos, sub.getSequenz().schritte, insertDecision, e);
-                    } else {
-                        //no Action
                     }
                 }
                 //Add Step
@@ -237,7 +236,7 @@ public class DraggingLogic implements Serializable {
                         } else {
                             glassPane.setInputRecBounds(p.x, p.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
                             if (insertDecision == InsertDecision.Insert) {
-                                addNeuerSchritt(After, schritt, specman, e);
+                                addNeuerSchritt(After, schritt, e);
                             }
                         }
                         specman.getGlassPane().setVisible(true);
@@ -261,7 +260,7 @@ public class DraggingLogic implements Serializable {
 
                     //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
                     if (lastStep) {
-                        addNeuerSchritt(After, ifel, specman, e);
+                        addNeuerSchritt(After, ifel, e);
                         lastStep = false;
                         break;
                     }
@@ -281,7 +280,7 @@ public class DraggingLogic implements Serializable {
 
                     //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
                     if (lastStep) {
-                        addNeuerSchritt(After, schleife, specman, e);
+                        addNeuerSchritt(After, schleife, e);
                         lastStep = false;
                         break;
                     }
@@ -299,7 +298,7 @@ public class DraggingLogic implements Serializable {
 
                         //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
                         if (lastStep) {
-                            addNeuerSchritt(After, caseSchritt, specman, e);
+                            addNeuerSchritt(After, caseSchritt, e);
                             lastStep = false;
                             break;
                         }
@@ -314,7 +313,7 @@ public class DraggingLogic implements Serializable {
                     checkSubsequenzHeading(sub, pos, glassPaneHeight, insertDecision, e);
                     //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
                     if (lastStep) {
-                        addNeuerSchritt(After, sub, specman, e);
+                        addNeuerSchritt(After, sub, e);
                         lastStep = false;
                         break;
                     }
@@ -327,7 +326,7 @@ public class DraggingLogic implements Serializable {
 
                     //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
                     if (lastStep) {
-                        addNeuerSchritt(After, breakSchritt, specman, e);
+                        addNeuerSchritt(After, breakSchritt, e);
                         lastStep = false;
                         break;
                     }
@@ -370,7 +369,7 @@ public class DraggingLogic implements Serializable {
                 glassPane.setInputRecBounds(p.x, p.y, r.width, glassPaneHeight);
                 glassPane.setVisible(true);
                 if (insertDecision == InsertDecision.Insert) {
-                    addNeuerSchritt(Before, schritt, specman, e);
+                    addNeuerSchritt(Before, schritt, e);
                 }
                 return true;
             }
@@ -383,13 +382,13 @@ public class DraggingLogic implements Serializable {
         if (schrittListe.size() == 0 && (insertDecision == InsertDecision.Insert)) {
             SchrittSequenzView curSequenz = specman.getHauptSequenz();
             specman.dropWelcomeMessage();
-            addNeuerSchritt(specman, e, curSequenz);
+            addNeuerSchritt(e, curSequenz);
         }
     }
 
     //Neuen Schritt zwischenschieben abhängig vom Button
     private void addNeuerSchritt(RelativeStepPosition insertionPosition,
-                                AbstractSchrittView schritt, EditorI editor, MouseEvent e) {
+                                 AbstractSchrittView schritt, MouseEvent e) {
         SchrittSequenzView sequenz = schritt.getParent();
         //ToDo Löschen und hinzufügen beim verschieben
         if (e.getSource() instanceof JLabel) {
@@ -437,12 +436,11 @@ public class DraggingLogic implements Serializable {
         } else if (e.getSource().equals(specman.getCatchSchrittAnhaengen())) {
             schritt = sequenz.catchSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-        } else if (e.getSource().equals(specman.getCaseAnhaengen())) {
-
         }
-    }//Neuen Schritt anhängen abhängig vom Button
+    }
 
-    private void addNeuerSchritt(EditorI editor, MouseEvent e, SchrittSequenzView sequenz) {
+    //Neuen Schritt anhängen abhängig vom Button
+    private void addNeuerSchritt(MouseEvent e, SchrittSequenzView sequenz) {
         if (e.getSource().equals(specman.getSchrittAnhaengen())) {
             sequenz.einfachenSchrittAnhaengen(specman);
         } else if (e.getSource().equals(specman.getWhileSchrittAnhaengen())) {

@@ -92,7 +92,7 @@ public class DragButtonAdapter extends MouseAdapter {
 		spec.setCursor(Cursor.getDefaultCursor());
 	}
 
-	//Letzer Schritt darf nicht verschoben werden
+	//Letzter Schritt darf nicht verschoben werden
 	private boolean checkEinzigerSchritt(MouseEvent e) {
 		if(e.getSource() instanceof JLabel){
 			AbstractSchrittView step = labelToStep( (JLabel) e.getSource());
