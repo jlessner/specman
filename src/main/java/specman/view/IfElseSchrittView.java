@@ -27,9 +27,7 @@ import static specman.Specman.initialtext;
 public class IfElseSchrittView extends VerzweigungSchrittView implements ComponentListener, SpaltenContainerI {
 	ZweigSchrittSequenzView ifSequenz;
 	ZweigSchrittSequenzView elseSequenz;
-	
-	boolean MittelPunktRaute = true;
-//	boolean dreieckBisUnten = true;
+	boolean mittelpunktRaute = true;
 	
 	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, createPanelLayout());
@@ -73,7 +71,6 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	protected void initIfSequenz(ZweigSchrittSequenzView pIfSequenz) {
 		this.ifSequenz = pIfSequenz;
 		ifBedingungAnlegen(ifSequenz);
-//		panel.add(ifSequenz.getContainer(), CC.xy(1, 4));
 		/** @author PVN */
 		panel.add(ifSequenz.getContainer(), CC.xy(1, 5)); 
 	}
@@ -81,7 +78,6 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	protected void initElseSequenz(ZweigSchrittSequenzView pElseSequenz) {
 		this.elseSequenz = pElseSequenz;
 		elseBedingungAnlegen(elseSequenz);
-//		panel.add(elseSequenz.getContainer(), CC.xy(3, 4));
 		/** @author PVN */
 		panel.add(elseSequenz.getContainer(), CC.xy(3, 5)); 
 	}
@@ -141,11 +137,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 //	}
 	
 	private void layoutAnTexteFuerIfElseBedingungenAnpassen(boolean volleBreiteBenoetigt) {
-		MittelPunktRaute = !volleBreiteBenoetigt;
-
-//		dreieckBisUnten = !volleBreiteBenoetigt;
+		mittelpunktRaute = !volleBreiteBenoetigt;
 		panelLayout.setConstraints(elseSequenz.ueberschrift.asJComponent(),
-//				volleBreiteBenoetigt ? CC.xywh(3, 2, 1, 1) : CC.xywh(2, 2, 2, 1));
 				/** @author PVN */
 				volleBreiteBenoetigt ? CC.xywh(3, 1, 1, 1) : CC.xywh(2, 2, 1, 1));
 		Specman.instance().diagrammAktualisieren(null);
@@ -201,29 +194,15 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		return super.newStepIDInSameSequence(direction).naechsteID();
 	}
 
-	protected Point berechneMittelPunktfuerRaute() {
-		return berechneMittelPunktfuerRaute(MittelPunktRaute);
+	protected Point berechneRautenmittelpunkt() { //umbenannt
+		return berechneRautenmittelpunkt(mittelpunktRaute);
 	}
 
-//	protected Point berechneDreieckspitze() {
-//		return berechneDreieckspitze(dreieckBisUnten);
-//	}
-
-	
-	protected Point berechneMittelPunktfuerRaute(boolean bisUnten) {
+	protected Point berechneRautenmittelpunkt(boolean bisUnten) { //umbenannt
 		return new Point(
 				ifSequenz.getContainer().getWidth(),
 				ifSequenz.ueberschrift.getY() + (bisUnten ? ifSequenz.ueberschrift.getHeight() : 0));
 	}
-
-//	protected Point berechneDreieckspitze(boolean bisUnten) {
-//		return new Point(
-//				ifSequenz.getContainer().getWidth(),
-//				ifSequenz.ueberschrift.getY() + (bisUnten ? ifSequenz.ueberschrift.getHeight() : 0));
-//	}
-//	
-	
-	
 	
 	@Override
 	public void setBackground(Color bg) {
@@ -268,7 +247,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 
 	protected int texteinrueckungNeuberechnen() {
 //		return ifSequenz.ueberschrift.getWidth() / 2;
-		return 0; 
+		return 0; /** @author PVN */ 
 	}
 
 	@Override

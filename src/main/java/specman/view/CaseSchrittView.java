@@ -41,7 +41,8 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	
 	ZweigSchrittSequenzView sonstSequenz;
 	List<ZweigSchrittSequenzView> caseSequenzen;
-
+	//TODO RAUTE: der lueckenFueller nimmt die veraenderte Groesse beim Zoomen nicht an -> muss sich ebenfalls anpassen
+	
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, int numCases) {
 		super(editor, parent, initialerText, id, createPanelLayout(numCases));
 		panel.add(text.asJComponent(), INITIAL_DUMMY);
@@ -158,56 +159,17 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	protected int texteinrueckungNeuberechnen() {
-		return sonstSequenz.ueberschrift.getWidth() / 2;
+//		return sonstSequenz.ueberschrift.getWidth() / 2;
+		return 10; /**@author PVN */ 
 	}
 
-	//=> Methode wird nicht mehr benoetigt, weil die Dreieckslinien nicht mehr vorhanden sind
-//	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
-//		Point dreieckSpitze = super.dreieckUndTrennerZeichnen(g);
-//		
-		// Wir zeichnen gleich nur noch senkrechte Linie. Die werden mit Antialiasing unscharf und
-		// bilden dann keine nahtlose, sauber Verl�ngerung der Gaps aus dem Layoutgitter mehr.
-//		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		
-//		for (ZweigSchrittSequenzView caseSequenz: caseSequenzen) {
-//			int x = caseSequenz.ueberschrift.getX() - LINIENBREITE/2;
-//			Point2D.Double schnittpunktMitDreieckslinie = LineIntersect.lineLineIntersect(
-//					dreieckSpitze.x,  dreieckSpitze.y, panel.getWidth(), 0,
-//					x, dreieckSpitze.y, x, 0);
-////			g.drawLine(x, dreieckSpitze.y, x, (int)schnittpunktMitDreieckslinie.getY() + LINIENBREITE);
-////			g.drawLine(x, dreieckSpitze.y, x, 0);
-//		}
-		/** @author PVN */ 
-//		g.drawLine(dreieckSpitze.x, dreieckSpitze.y, dreieckSpitze.x, 0);
-//		
-//		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
-//		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
-//		g.setRenderingHint(
-//			RenderingHints.KEY_ANTIALIASING, 
-//			RenderingHints.VALUE_ANTIALIAS_ON);
-//		g.setColor(Color.WHITE);
-//		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
-//		
-//		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
-//		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
-//		g.setStroke(new BasicStroke(LINIENBREITE));
-//		g.setRenderingHint(
-//                RenderingHints.KEY_ANTIALIASING, 
-//                RenderingHints.VALUE_ANTIALIAS_ON);
-//		g.setColor(Color.BLACK);
-//		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
-//
-//		return dreieckSpitze;
-//	}
-	
-		protected Point RauteZeichnen(Graphics2D g) {
-		
-		Point mittelPunktRaut = berechneMittelPunktfuerRaute();
+	protected Point rauteZeichnen(Graphics2D g) { //umbenannt
+		Point mittelpunktRaute = super.rauteZeichnen(g); //umbenannt
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g.drawLine(mittelPunktRaut.x, mittelPunktRaut.y, mittelPunktRaut.x, 0);
-
-
-		int[] polygonXinnen = {(mittelPunktRaut.x-20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x, (mittelPunktRaut.x+20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x};
+		/** @author PVN, SD */ 
+		g.drawLine(mittelpunktRaute.x, mittelpunktRaute.y, mittelpunktRaute.x, 0);
+		
+		int[] polygonXinnen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
 		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
 		g.setRenderingHint(
 			RenderingHints.KEY_ANTIALIASING, 
@@ -215,7 +177,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		g.setColor(Color.WHITE);
 		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
 		
-		int[] polygonXaussen = {(mittelPunktRaut.x-20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x, (mittelPunktRaut.x+20 * Specman.instance().getZoomFactor()/100), mittelPunktRaut.x};
+		int[] polygonXaussen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
 		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setRenderingHint(
@@ -223,20 +185,15 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
                 RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.BLACK);
 		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
-		return mittelPunktRaut;
+
+		return mittelpunktRaute;
 	}
 
-		protected Point berechneMittelPunktfuerRaute() {
+	protected Point berechneRautenmittelpunkt() { //umbenannt
 		return new Point(
 				sonstSequenz.getContainer().getWidth(),
 				sonstSequenz.ueberschrift.getY());
-		}
-
-//protected Point berechneDreieckspitze() {
-//	return new Point(
-//			sonstSequenz.getContainer().getWidth(),
-//			sonstSequenz.ueberschrift.getY());
-//}
+	}
 
 	@Override
 	public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
@@ -385,16 +342,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	private void layoutConstraintsSetzen() {
-		int size = caseSequenzen.size(); 
-		System.out.println(size);
-//		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1)); 
-//		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 2));
-//		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 4));
-//		for (int i = 0; i < caseSequenzen.size(); i++) {
-//			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 2));
-//			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 4));
-//		}
-		
+		/** @author PVN */ 
 		panelLayout.setConstraints(text.asJComponent(), CC.xywh(3, 1, (1 + caseSequenzen.size()*2)-2, 1)); 
 		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3)); 
 		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5)); 
