@@ -19,6 +19,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static specman.Specman.initialtext;
 import static specman.view.RelativeStepPosition.After;
@@ -36,7 +37,9 @@ public class SchrittSequenzView {
 	final JPanel sequenzBereich;
 	final CatchBereich catchBereich;
 	final JPanel panel;
-	public final List<AbstractSchrittView> schritte = new ArrayList<AbstractSchrittView>();
+	//TODO CopyOnWriteArrayList Arraylisten ermöglichen das removen von Schritten während man eine Liste durchläuft
+	//wird benötigt um mehre als gelöscht markierte Schritte auf einmal zu löschen
+	public final List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
 	final FormLayout sequenzbereichLayout;
 	boolean schrittnummernSichtbar = true;
 	final FormLayout huellLayout;
