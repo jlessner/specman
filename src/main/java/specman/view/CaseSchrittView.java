@@ -41,13 +41,14 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	
 	ZweigSchrittSequenzView sonstSequenz;
 	List<ZweigSchrittSequenzView> caseSequenzen;
+	JPanel lueckenFueller;
 	//TODO RAUTE: der lueckenFueller nimmt die veraenderte Groesse beim Zoomen nicht an -> muss sich ebenfalls anpassen
 	
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, int numCases) {
 		super(editor, parent, initialerText, id, createPanelLayout(numCases));
 		panel.add(text.asJComponent(), INITIAL_DUMMY);
 		/** @author PVN */
-		JPanel lueckenFueller = new JPanel(); 
+		lueckenFueller = new JPanel();
 		lueckenFueller.setBackground(Color.WHITE);
 		panel.add(lueckenFueller, CC.xy(1, 1));
 	}
@@ -342,7 +343,8 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	private void layoutConstraintsSetzen() {
-		/** @author PVN */ 
+		/** @author PVN */
+		panelLayout.setConstraints(lueckenFueller, CC.xy(1, 1));
 		panelLayout.setConstraints(text.asJComponent(), CC.xywh(3, 1, (1 + caseSequenzen.size()*2)-2, 1)); 
 		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3)); 
 		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5)); 
