@@ -26,7 +26,6 @@ public class CatchSchrittView extends AbstractSchrittView {
 	final JPanel schrittPanel;
 	final JPanel fussPanel;
 	
-//	final JPanel dreiecksPanel;
 	final FormLayout layout;
 	final HandlingSchrittSequenz handlingSequenz;
 	boolean hatNachfolger;
@@ -44,16 +43,6 @@ public class CatchSchrittView extends AbstractSchrittView {
 		
 		schrittPanel.add(text.asJComponent(), CC.xy(2, 2));
 		
-//		dreiecksPanel = new JPanel() {
-//			@Override
-//			public void paint(Graphics g) {
-//				super.paint(g);
-//				dreieckZeichnen((Graphics2D)g);
-//			}
-//		};
-//		dreiecksPanel.setBackground(Specman.schrittHintergrund());
-//		dreiecksPanel.setLayout(null);
-//		schrittPanel.add(dreiecksPanel, CC.xy(1, 2));
 		
 		JPanel doppellinie = new JPanel();
 		doppellinie.setBackground(Specman.schrittHintergrund());
@@ -64,13 +53,6 @@ public class CatchSchrittView extends AbstractSchrittView {
 		fussPanel.setBackground(Specman.schrittHintergrund());
 		schrittPanel.add(fussPanel, CC.xyw(1, 6, 2));
 		
-//		klappen = new KlappButton(this, dreiecksPanel, layout, 4);
-//		klappen.addComponentListener(new ComponentAdapter() {
-//			// Kleine Sch�nheitsgeschichte, vergleiche {@link IfElseSchrittView#addComponentListener}
-//			@Override public void componentHidden(ComponentEvent e) {
-//				dreiecksPanel.repaint();
-//			}
-//		});
 
 		if (handlingModel != null) {
 			handlingSequenz = new HandlingSchrittSequenz(editor, this, handlingModel);
@@ -83,20 +65,6 @@ public class CatchSchrittView extends AbstractSchrittView {
 		schrittPanel.add(handlingSequenz.getContainer(), CC.xywh(1, 4, 2, 1));
 
 	}
-
-//	private void dreieckZeichnen(Graphics2D g) {
-//		int hoehe = text.getHeight();
-//		int dreieckSpitzeY = hoehe / 2;
-//		int dreieckSpitzeX = text.getX() - LINIENBREITE;
-//		g.setStroke(new BasicStroke(1));
-//		g.setRenderingHint(
-//                RenderingHints.KEY_ANTIALIASING, 
-//                RenderingHints.VALUE_ANTIALIAS_ON);
-//		g.drawLine(0,  0,  dreieckSpitzeX,  dreieckSpitzeY);
-//		g.drawLine(dreieckSpitzeX,  dreieckSpitzeY, - LINIENBREITE, hoehe); // Wieso -LINIENBREITE statt 0 ist mir selber nicht ganz klar ;-)
-//		// Folgende Zeile vergleiche {@link IfElseSchrittView#dreieckZeichnen}
-//		klappen.repaint();
-//	}
 
 	@Override
 	public void setId(SchrittID id) {

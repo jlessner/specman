@@ -42,7 +42,6 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	ZweigSchrittSequenzView sonstSequenz;
 	List<ZweigSchrittSequenzView> caseSequenzen;
 	JPanel lueckenFueller;
-	//TODO RAUTE: der lueckenFueller nimmt die veraenderte Groesse beim Zoomen nicht an -> muss sich ebenfalls anpassen
 	
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, int numCases) {
 		super(editor, parent, initialerText, id, createPanelLayout(numCases));
@@ -161,17 +160,17 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	protected int texteinrueckungNeuberechnen() {
 //		return sonstSequenz.ueberschrift.getWidth() / 2;
-		return 10; /**@author PVN */ 
+		return 20; /**@author PVN */ 
 	}
 
 	protected Point rauteZeichnen(Graphics2D g) { //umbenannt
 		Point mittelpunktRaute = super.rauteZeichnen(g); //umbenannt
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		/** @author PVN, SD */ 
+		/** @author PVN */ 
 		g.drawLine(mittelpunktRaute.x, mittelpunktRaute.y, mittelpunktRaute.x, 0);
 		
 		int[] polygonXinnen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
-		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */ 
 		g.setRenderingHint(
 			RenderingHints.KEY_ANTIALIASING, 
 			RenderingHints.VALUE_ANTIALIAS_ON);
@@ -179,7 +178,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
 		
 		int[] polygonXaussen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
-		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, 

@@ -88,8 +88,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
     editorPane.setFont(font);
     setBackground(schrittHintergrund());
-    editorPane.setBackground(Color.YELLOW); //neu 
-    insetPanel.setBorder(new LineBorder(Color.RED)); //neu 
     editorPane.addKeyListener(this);
 
     if (schrittId != null) {
