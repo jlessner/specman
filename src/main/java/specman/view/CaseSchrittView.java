@@ -15,6 +15,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 
+import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentListener;
@@ -37,10 +38,15 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	
 	ZweigSchrittSequenzView sonstSequenz;
 	List<ZweigSchrittSequenzView> caseSequenzen;
-
+	JPanel lueckenFueller;
+	
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, int numCases) {
 		super(editor, parent, initialerText, id, createPanelLayout(numCases));
 		panel.add(text.asJComponent(), INITIAL_DUMMY);
+		/** @author PVN */
+		lueckenFueller = new JPanel();
+		lueckenFueller.setBackground(Color.WHITE);
+		panel.add(lueckenFueller, CC.xy(1, 1));
 	}
 
 	protected void initCases(EditorI editor, ZweigSchrittSequenzView sonstSequenz, List<ZweigSchrittSequenzView> caseSequenzen) {
@@ -79,7 +85,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	private void spaltenResizerAnlegen(EditorI editor) {
 		for (int i = 0; i < caseSequenzen.size(); i++) {
-			panel.add(new SpaltenResizer(this, i, editor), CC.xywh(2 + 2*i, 2, 1, 3));
+			panel.add(new SpaltenResizer(this, i, editor), CC.xywh(2 + 2*i, 4, 1, 2)); /**@author PVN */
 		}
 	}
 	
@@ -96,7 +102,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			spaltenSpec += ", 10px:grow, " + FORMLAYOUT_GAP;
 		spaltenSpec += ", 10px:grow";
 		return new FormLayout(spaltenSpec,
-				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
+				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR); /**@author PVN */
 	}
 
 	@Override
@@ -147,43 +153,36 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	protected int texteinrueckungNeuberechnen() {
-		return sonstSequenz.ueberschrift.getWidth() / 2;
+		return 20;
 	}
 
-	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
-		Point dreieckSpitze = super.dreieckUndTrennerZeichnen(g);
-		
-		// Wir zeichnen gleich nur noch senkrechte Linie. Die werden mit Antialiasing unscharf und
-		// bilden dann keine nahtlose, sauber Verl�ngerung der Gaps aus dem Layoutgitter mehr.
+	protected Point rauteZeichnen(Graphics2D g) { //umbenannt
+		Point mittelpunktRaute = super.rauteZeichnen(g); //umbenannt
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		/** @author PVN */ 
+		g.drawLine(mittelpunktRaute.x, mittelpunktRaute.y, mittelpunktRaute.x, 0);
 		
-		for (ZweigSchrittSequenzView caseSequenz: caseSequenzen) {
-			int x = caseSequenz.ueberschrift.getX() - LINIENBREITE/2;
-			Point2D.Double schnittpunktMitDreieckslinie = LineIntersect.lineLineIntersect(
-					dreieckSpitze.x,  dreieckSpitze.y, panel.getWidth(), 0,
-					x, dreieckSpitze.y, x, 0);
-			g.drawLine(x, dreieckSpitze.y, x, 0);
-		}
-		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
-		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		int[] polygonXinnen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
+		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */
 		g.setRenderingHint(
 			RenderingHints.KEY_ANTIALIASING, 
 			RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.WHITE);
-		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
-		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
-		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
+		
+		int[] polygonXaussen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
+		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, 
                 RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.BLACK);
-		g.drawPolygon(polygonXaussen, polygonYausssen, 4);
+		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
 
-		return dreieckSpitze;
+		return mittelpunktRaute;
 	}
-	
-	protected Point berechneDreieckspitze() {
+
+	protected Point berechneRautenmittelpunkt() { //umbenannt
 		return new Point(
 				sonstSequenz.getContainer().getWidth(),
 				sonstSequenz.ueberschrift.getY());
@@ -336,10 +335,11 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	private void layoutConstraintsSetzen() {
-		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1));
-		
-		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3));
-		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5));
+		/** @author PVN */
+		panelLayout.setConstraints(lueckenFueller, CC.xy(1, 1));
+		panelLayout.setConstraints(text.asJComponent(), CC.xywh(3, 1, (1 + caseSequenzen.size()*2)-2, 1)); 
+		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3)); 
+		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5)); 
 		for (int i = 0; i < caseSequenzen.size(); i++) {
 			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 3));
 			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 5));

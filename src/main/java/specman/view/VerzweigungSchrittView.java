@@ -26,9 +26,10 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 			@Override
 			public void paint(Graphics g) {
 				super.paint(g);
-				dreieckUndTrennerZeichnen((Graphics2D)g);
+				rauteZeichnen((Graphics2D)g);
 			}
 		};
+		
 		panel.setBackground(Color.black);
 		//createPanelLayout(caseInitialtexte.length);
 		panel.setLayout(panelLayout);
@@ -53,7 +54,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 
 	protected static String layoutRowSpec1() {
 		int aktuellerZoomfaktor = Specman.instance().zoomFaktor();
-		return "fill:[" + (1 * aktuellerZoomfaktor / 100) + "dlu,pref]";
+		return "fill:[" + (10 * aktuellerZoomfaktor / 100) + "dlu,pref]"; /**@author PVN */
 	}
 	
 	@Override
@@ -87,28 +88,25 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		panel.repaint(); // Zeichnet Dreieck und Case-Trenner nach, wenn man mit Editieren der Texte fertig ist
 	}
 
-	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
-		int breite = panel.getWidth();
-		Point dreieckSpitze = berechneDreieckspitze();
-		
-		//"innere" Raute zeichnen -> weiss ausgefuellt
-		int[] polygonXinnen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
-		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+	protected Point rauteZeichnen(Graphics2D g) { //umbenannt
+		Point mittelpunktRaute = berechneRautenmittelpunkt(); //umbenannt
+		/** @author PVN */ 
+		int[] polygonXinnen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
+		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */
 		g.setRenderingHint(
 			RenderingHints.KEY_ANTIALIASING, 
 			RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.WHITE);
-		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
+		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
 		
-		//"aeussere" Raute zeichnen -> schwarze Linien
-		int[] polygonXaussen = {(dreieckSpitze.x-20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x, (dreieckSpitze.x+20 * Specman.instance().getZoomFactor()/100), dreieckSpitze.x};
-		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; 
+		int[] polygonXaussen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
+		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */ 
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, 
                 RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.BLACK);
-		g.drawPolygon(polygonXaussen, polygonYausssen, 4);
+		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
 		
 		
 		// Dis folgenden beiden Zeilen stellen sicher, dass *nach* dem Zeichnen des Dreiecks
@@ -119,10 +117,10 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		klappen.repaint();
 		text.repaintSchrittId();
 		
-		return dreieckSpitze;
+		return mittelpunktRaute;
 	}
-
-	abstract protected Point berechneDreieckspitze();
+	
+	abstract protected Point berechneRautenmittelpunkt(); //umbenannt
 
 	abstract protected int texteinrueckungNeuberechnen();
 	
