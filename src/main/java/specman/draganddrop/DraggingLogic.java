@@ -43,7 +43,8 @@ public class DraggingLogic implements Serializable {
         Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
-            createGlassPane(glassPaneHeight, p.x + r.width - glassPaneHeight, p.y, r.height, true);
+            int casehight = zweig.getContainer().getHeight() + zweig.getUeberschrift().getHeight() + 2;
+            createGlassPane(glassPaneHeight, p.x + r.width - glassPaneHeight, p.y, casehight, true);
             //mouserelease add Case right from choosen Case
             if (insertDecision == InsertDecision.Insert) addCase(zweig);
         }
@@ -113,7 +114,8 @@ public class DraggingLogic implements Serializable {
             //Abfrage für MousePosition auf dem Panel des Breakschritts
             cl = c;
         }
-        if (cl != null) {
+
+        if (c != null) {
             p = SwingUtilities.convertPoint(c, 0, 0, specman);
             r = c.getBounds();
             r.setLocation(p);
@@ -355,6 +357,7 @@ public class DraggingLogic implements Serializable {
     //Creates GlassPane
     private void createGlassPane(int glassPaneHeight, int i, int y, int height, boolean b) {
         GlassPane gP = (GlassPane) specman.getGlassPane();
+
         gP.setInputRecBounds(i, y, glassPaneHeight, height);
         specman.getGlassPane().setVisible(b);
     }
