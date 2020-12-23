@@ -43,21 +43,20 @@ public class DragButtonAdapter extends MouseAdapter {
 		}
 		Point pt = e.getPoint();
 		JComponent parent = (JComponent) e.getComponent();
-		Point dragOffset = new Point(0, 0);
 		//-2 da performanter
 		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, spec);
 		spec.getGlassPane().setVisible(false);
 		spec.window.add(dummy);
 		spec.window.pack();
-		updateWindowLocation(pt,dragOffset, parent);
+		updateWindowLocation(pt, parent);
 		spec.window.setVisible(true);
 		draggingLogic.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,NoInsert,e);
 
 	}
 
 	//Updates the Window Location
-	private void updateWindowLocation(Point pt,Point dragOffset, JComponent parent){
-		Point p = new Point(pt.x - dragOffset.x +3, pt.y - dragOffset.y +3);
+	private void updateWindowLocation(Point pt, JComponent parent){
+		Point p = new Point(pt.x  +3, pt.y +3);
 		SwingUtilities.convertPointToScreen(p,parent);
 		spec.window.setLocation(p);
 	}
