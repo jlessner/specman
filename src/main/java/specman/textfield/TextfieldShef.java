@@ -70,8 +70,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     }
     return "#" + Integer.toHexString(color.getRGB()).substring(2).toLowerCase();
   }
-
-
   private final InsetPanel insetPanel;
   private final JEditorPane editorPane;
   private final JLabel schrittNummer;
@@ -84,8 +82,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
     editorPane.setFont(font);
     setBackground(schrittHintergrund());
-    editorPane.addKeyListener(this);
-
+    editorPane.addKeyListener(this);   
+      
     if (schrittId != null) {
       schrittNummer = new JLabel(schrittId);
       schrittNummer.setFont(labelFont);
@@ -100,6 +98,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
       editorPane.add(schrittNummer);
       editorPane.addComponentListener(this);
+      insetPanel.setEnabled(false);
+      
     }
     else {
       schrittNummer = null;
@@ -422,10 +422,12 @@ public class TextfieldShef implements ComponentListener, KeyListener {
     insetPanel.updateDecorationIndentions(indentForDecoration);
   }
   
-  //TODO
+
+  //TODO  
   public InsetPanel getInsetPanel() {
-
 	  return insetPanel;
-
 	 }
+  public JEditorPane getEditorPane() {
+	  return editorPane;
+  }
 }

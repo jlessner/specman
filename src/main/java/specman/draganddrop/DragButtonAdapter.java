@@ -63,6 +63,7 @@ public class DragButtonAdapter extends MouseAdapter {
 
 	public void mouseReleased(MouseEvent e) {
 		if(checkEinzigerSchritt(e)){
+			spec.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			return;
 		}
 		spec.window.setVisible(false);
