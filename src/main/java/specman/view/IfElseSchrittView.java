@@ -31,7 +31,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	ZweigSchrittSequenzView elseSequenz;
 	boolean mittelpunktRaute = true;
 	
-	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
+	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id,Aenderungsart anderungsart,  boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, anderungsart, createPanelLayout());
 		/** @author PVN */
 		JPanel leeresFeld = new JPanel();
