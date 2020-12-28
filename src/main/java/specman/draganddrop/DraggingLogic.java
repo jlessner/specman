@@ -395,20 +395,26 @@ public class DraggingLogic implements Serializable {
         SchrittSequenzView sequenz = schritt.getParent();
         //ToDo Löschen und hinzufügen beim verschieben
         if (e.getSource() instanceof JLabel) {
-            JLabel label = (JLabel) e.getSource();
+            if(specman.aenderungenVerfolgen()){
+                //TODO Aenderungsmarkierung für verschobene Schritte
+                System.out.println("test");
 
-            InsetPanel ip = (InsetPanel) label.getParent().getParent();
-            AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
-            //Abfrage da der Schritt nicht vor oder nach sich selbst eingefügt werden kann
-            if (step != schritt) {
+            }else{
+                JLabel label = (JLabel) e.getSource();
 
-                int schrittindex = step.getParent().schrittEntfernen(step);
+                InsetPanel ip = (InsetPanel) label.getParent().getParent();
+                AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
+                //Abfrage da der Schritt nicht vor oder nach sich selbst eingefügt werden kann
+                if (step != schritt) {
 
-                step.setId(schritt.newStepIDInSameSequence(insertionPosition));
-                specman.getUndoManager().addEdit(new UndoableSchrittEntfernt(step, step.getParent(), schrittindex));
+                    int schrittindex = step.getParent().schrittEntfernen(step);
 
-                step.setParent(schritt.getParent());
-                sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
+                    step.setId(schritt.newStepIDInSameSequence(insertionPosition));
+                    specman.getUndoManager().addEdit(new UndoableSchrittEntfernt(step, step.getParent(), schrittindex));
+
+                    step.setParent(schritt.getParent());
+                    sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
+                }
             }
         }
 

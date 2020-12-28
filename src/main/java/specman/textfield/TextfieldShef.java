@@ -2,6 +2,7 @@ package specman.textfield;
 
 import specman.EditorI;
 import specman.Specman;
+import specman.draganddrop.DragButtonAdapter;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
