@@ -398,7 +398,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
                     	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
                     	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
                     	schritt.getText().setEditable(false);
-                    	aenderungsMarkierungenAufGelöscht(schritt);
+                    	aenderungsMarkierungenAufGeloescht(schritt);
                     	ohneSchleife(schritt, Aenderungsart.Geloescht);
                     }
 				}
@@ -1046,7 +1046,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
             	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
             	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
             	schritt.getText().setEditable(false);
-            	aenderungsMarkierungenAufGelöscht(schritt);
+            	aenderungsMarkierungenAufGeloescht(schritt);
 			}
 
 			//gibt den Schritt zur überprüfung auf Unterschritte
@@ -1142,7 +1142,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	//TODO
-	public void aenderungsMarkierungenAufGelöscht(AbstractSchrittView schritt) {
+	public void aenderungsMarkierungenAufGeloescht(AbstractSchrittView schritt) {
 		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
 			ifel.getElseSequenz().getUeberschrift().setStyle(ifel.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
