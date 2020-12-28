@@ -1,10 +1,13 @@
 package specman.view;
 
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
+
+import java.awt.Color;
 
 import javax.swing.text.JTextComponent;
 
@@ -17,13 +20,14 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	TextfieldShef ueberschrift;
 	
+
 	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, ZweigSchrittSequenzModel_V001 model) {
 		super(editor, parent, model);
 		ueberschriftInitialisieren(editor, model.ueberschrift != null ? model.ueberschrift.text : null);
 	}
 
-	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, String initialerText) {
-		super(parent, sequenzBasisId);
+	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart, String initialerText) {
+		super(parent, sequenzBasisId, aenderungsart);
 		ueberschriftInitialisieren(editor, initialerText);
 	}
 
@@ -41,6 +45,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	public ZweigSchrittSequenzModel_V001 generiereZweigSchrittSequenzModel(boolean formatierterText) {
 		ZweigSchrittSequenzModel_V001 model = new ZweigSchrittSequenzModel_V001(
 				sequenzBasisId,
+				aenderungsart,
 				catchBereich.klappen.isSelected(),
 				catchBereich.umgehungBreite,
 				ueberschrift.getTextMitAenderungsmarkierungen(formatierterText));
@@ -61,4 +66,15 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		super.updateTextfieldDecorationIndentions(indentions);
 		ueberschrift.updateDecorationIndentions(indentions);
 	}
+
+	public TextfieldShef getUeberschrift() {
+		return ueberschrift;
+	}
+	
+	//TODO Die Backgroundcolor in IfSchrittViews anpassen
+	public void setBackground(Color bg) {
+		sequenzBereich.setBackground(bg);
+		panel.repaint(); // Damit die Linien nachgezeichnet werden
+	}
+	
 }

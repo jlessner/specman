@@ -1,5 +1,6 @@
 package specman.view;
 
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -42,15 +43,25 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	protected final TextfieldShef text;
 	protected SchrittID id;
+	protected Aenderungsart aenderungsart;
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	 
-	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
+	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
+		this.aenderungsart = Specman.initialArt();
 		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
 		this.parent = parent;
 		text.addFocusListener(editor);
 		text.addFocusListener(this);
+	}
+
+	public Aenderungsart getAenderungsart() {
+		return aenderungsart;
+	}
+
+	public void setAenderungsart(Aenderungsart aenderungsart) {
+		this.aenderungsart = aenderungsart;
 	}
 
 	public void setId(SchrittID id) {
@@ -72,6 +83,11 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	public String getPlainText() {
 		return text.getText();
+	}
+	
+	//TODO
+	public TextfieldShef getshef() {
+		return text;
 	}
 
 	protected void setAenderungsmarkierungen(List<Aenderungsmarkierung_V001> aenderungen) {
@@ -198,6 +214,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	 * spart man sich das rekursive Absteigen in allen Ableitungen für jede dieser
 	 * Funktionen zu dublizieren
 	 */
+	
 	protected List<SchrittSequenzView> unterSequenzen() {
 		return KEINE_SEQUENZEN;
 	}
@@ -219,6 +236,12 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public void entfernen(SchrittSequenzView container) {
 		unterSequenzen().forEach(sequenz -> sequenz.entfernen(this));
 	}
+	
+	//TODO funkt noch nicht richtig setzen der Aenderungsart bei unterschritten
+	public void unterschritteAenderungsartGeloescht(SchrittSequenzView container) {
+		unterSequenzen().forEach(sequenz -> sequenz.setAenderungsart(Aenderungsart.Geloescht));
+	}
+	
 
 	public void nachinitialisieren() {}
 

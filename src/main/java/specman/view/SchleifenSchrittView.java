@@ -4,6 +4,8 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenContainerI;
@@ -29,8 +31,8 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	SchrittSequenzView wiederholSequenz;
 	int balkenbreite;
 
-	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean mitUnteremBalken) {
-		super(editor, parent, initialerText, id);
+	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, boolean mitUnteremBalken) {
+		super(editor, parent, initialerText, id, aenderungsart);
 		panel = new JPanel();
 		panel.setBackground(Color.black);
 		balkenbreite = SPALTENLAYOUT_UMGEHUNG_GROESSE;
@@ -64,13 +66,13 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		klappen = new KlappButton(this, linkerBalken, layout, 3);
 	}
 
-	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id) {
-		this(editor, parent, null, id, false);
-		initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
+	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id, Aenderungsart aenderungsart) {
+		this(editor, parent, null, id, aenderungsart, false);
+		initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene(), aenderungsart));
 	}
 
 	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, WhileSchrittModel_V001 model, boolean mitUnteremBalken) {
-		this(editor, parent, model.inhalt.text, model.id, mitUnteremBalken);
+		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, mitUnteremBalken);
 		initWiederholsequenzFromModel(editor, model);
 	}
 
@@ -99,8 +101,8 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		layout.setColumnSpec(1, ColumnSpec.decode(balkenbreite + "px"));
 	}
 
-	protected SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
-		SchrittSequenzView sequenz = new SchrittSequenzView(this, id);
+	protected SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id, Aenderungsart aenderungsart) {
+		SchrittSequenzView sequenz = new SchrittSequenzView(this, id, aenderungsart);
 		sequenz.einfachenSchrittAnhaengen(editor);
 		return sequenz;
 	}
@@ -177,6 +179,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			aenderungsart,
 			klappen.isSelected(),
 			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
 			0);
@@ -190,4 +193,9 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		// an additional border shielding the inner steps from any rounded border
 		// decorarions outside.
 	}
+
+	public SchrittSequenzView getWiederholSequenz() {
+		return wiederholSequenz;
+	}
+	
 }

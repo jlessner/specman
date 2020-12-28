@@ -1,5 +1,6 @@
 package specman.model.v001;
 
+import specman.Aenderungsart;
 import specman.SchrittID;
 
 public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
@@ -18,10 +19,11 @@ public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		TextMitAenderungsmarkierungen_V001 inhalt,
 		int farbe,
 		boolean zugeklappt,
+		Aenderungsart aenderungsart,
 		ZweigSchrittSequenzModel_V001 ifSequenz,
 		ZweigSchrittSequenzModel_V001 elseSequenz,
 		float ifBreitenanteil) {
-		super(id, inhalt, farbe, zugeklappt);
+		super(id, inhalt, farbe, aenderungsart, zugeklappt);
 		this.ifSequenz = ifSequenz;
 		this.elseSequenz = elseSequenz;
 		this.ifBreitenanteil = ifBreitenanteil;

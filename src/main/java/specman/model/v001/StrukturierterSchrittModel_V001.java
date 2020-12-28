@@ -1,5 +1,6 @@
 package specman.model.v001;
 
+import specman.Aenderungsart;
 import specman.SchrittID;
 
 public class StrukturierterSchrittModel_V001 extends AbstractSchrittModel_V001 {
@@ -9,8 +10,8 @@ public class StrukturierterSchrittModel_V001 extends AbstractSchrittModel_V001 {
 		zugeklappt = false;
 	}
 
-	public StrukturierterSchrittModel_V001(SchrittID id, TextMitAenderungsmarkierungen_V001 inhalt, int farbe, boolean zugeklappt) {
-		super(id, inhalt, farbe);
+	public StrukturierterSchrittModel_V001(SchrittID id, TextMitAenderungsmarkierungen_V001 inhalt, int farbe, Aenderungsart aenderungsart, boolean zugeklappt) {
+		super(id, inhalt, farbe, aenderungsart);
 		this.zugeklappt = zugeklappt;
 	}
 }

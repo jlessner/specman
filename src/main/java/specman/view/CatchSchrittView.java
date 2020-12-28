@@ -4,6 +4,8 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -31,8 +33,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 	KlappButton klappen;
 	boolean breakAngekoppelt;
 
-	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, SchrittSequenzModel_V001 handlingModel) {
-		super(editor, parent, initialerText, id);
+	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, SchrittSequenzModel_V001 handlingModel) {
+		super(editor, parent, initialerText, id, aenderungsart);
 		schrittPanel = new JPanel();
 		schrittPanel.setBackground(Color.black);
 		layout = new FormLayout(
@@ -57,7 +59,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 			handlingSequenz = new HandlingSchrittSequenz(editor, this, handlingModel);
 		}
 		else {
-			handlingSequenz = new HandlingSchrittSequenz(this, id.naechsteEbene());
+			handlingSequenz = new HandlingSchrittSequenz(this, id.naechsteEbene(), aenderungsart);
 			handlingSequenz.einfachenSchrittAnhaengen(editor);
 			schrittnummerSichtbarkeitSetzen(false);
 		}
@@ -81,7 +83,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, CatchSchrittModel_V001 model) {
-		this(editor, parent, model.inhalt.text, model.id, model.handlingSequenz);
+		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, model.handlingSequenz);
 		setBackground(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
 		breakAngekoppelt = model.breakAngekoppelt;
@@ -90,7 +92,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText) {
-		this(editor, parent, initialerText, null, null);
+		this(editor, parent, initialerText, null, null, null);
 	}
 	
 	@Override
@@ -204,6 +206,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
 			klappen.isSelected(),
+			aenderungsart,
 			handlingSequenz.generiereSchittSequenzModel(formatierterText),
 			breakAngekoppelt);
 		return model;
@@ -220,8 +223,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 			super(editor, parent, model);
 		}
 
-		public HandlingSchrittSequenz(AbstractSchrittView parent, SchrittID sequenzBasisId) {
-			super(parent, sequenzBasisId);
+		public HandlingSchrittSequenz(AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart) {
+			super(parent, sequenzBasisId, aenderungsart);
 		}
 
 		@Override public AbstractSchrittView schrittAnhaengen(AbstractSchrittView schritt, EditorI editor) {

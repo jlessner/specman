@@ -5,6 +5,8 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenResizer;
@@ -39,9 +41,9 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	ZweigSchrittSequenzView sonstSequenz;
 	List<ZweigSchrittSequenzView> caseSequenzen;
 	JPanel lueckenFueller;
-	
-	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, int numCases) {
-		super(editor, parent, initialerText, id, createPanelLayout(numCases));
+
+	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, int numCases) {
+		super(editor, parent, initialerText, id, aenderungsart, createPanelLayout(numCases));
 		panel.add(text.asJComponent(), INITIAL_DUMMY);
 		/** @author PVN */
 		lueckenFueller = new JPanel();
@@ -56,14 +58,14 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		spaltenResizerAnlegen(editor);
 	}
 
-	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
-		this(editor, parent, initialerText, id, 2);
+	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
+		this(editor, parent, initialerText, id, aenderungsart, 2);
 		initCases(
 				editor,
-				new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), initialtext("Sonst")),
+				new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, initialtext("Sonst")),
 				new ArrayList<ZweigSchrittSequenzView>(Arrays.asList(
-						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), initialtext("Fall 1")),
-						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), initialtext("Fall 2")))));
+						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 1")),
+						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 2")))));
 	}
 	
 	private List<ZweigSchrittSequenzView> caseSequenzenAufbauen(EditorI editor, List<ZweigSchrittSequenzModel_V001> model) {
@@ -73,7 +75,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 	
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, CaseSchrittModel_V001 model) {
-		this(editor, parent, model.inhalt.text, model.id, model.caseSequenzen.size());
+		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, model.caseSequenzen.size());
 		initCases(
 				editor,
 				new ZweigSchrittSequenzView(editor, this, model.sonstSequenz),
@@ -159,22 +161,22 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	protected Point rauteZeichnen(Graphics2D g) { //umbenannt
 		Point mittelpunktRaute = super.rauteZeichnen(g); //umbenannt
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		/** @author PVN */ 
+		/** @author PVN */
 		g.drawLine(mittelpunktRaute.x, mittelpunktRaute.y, mittelpunktRaute.x, 0);
-		
+
 		int[] polygonXinnen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
 		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */
 		g.setRenderingHint(
-			RenderingHints.KEY_ANTIALIASING, 
+			RenderingHints.KEY_ANTIALIASING,
 			RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.WHITE);
 		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
-		
+
 		int[] polygonXaussen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
 		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.BLACK);
 		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
@@ -238,6 +240,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			aenderungsart,
 			klappen.isSelected(),
 			sonstSequenz.generiereZweigSchrittSequenzModel(formatierterText),
 			new ArrayList<Float>(spaltenbreitenAnteileBerechnen(spaltenbreitenErmitteln())));
@@ -306,7 +309,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	
 	public ZweigSchrittSequenzView neuenZweigHinzufuegen(EditorI editor, ZweigSchrittSequenzView linkerNachbar) {
 		int linkerNachbarIndex = caseSequenzen.indexOf(linkerNachbar);
-		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), "Fall " + (linkerNachbarIndex+2));
+		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, "Fall " + (linkerNachbarIndex+2));
 		neuerZweig.einfachenSchrittAnhaengen(editor);
 		zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
 		return neuerZweig;
@@ -337,9 +340,9 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	private void layoutConstraintsSetzen() {
 		/** @author PVN */
 		panelLayout.setConstraints(lueckenFueller, CC.xy(1, 1));
-		panelLayout.setConstraints(text.asJComponent(), CC.xywh(3, 1, (1 + caseSequenzen.size()*2)-2, 1)); 
-		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3)); 
-		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5)); 
+		panelLayout.setConstraints(text.asJComponent(), CC.xywh(3, 1, (1 + caseSequenzen.size()*2)-2, 1));
+		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 3));
+		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5));
 		for (int i = 0; i < caseSequenzen.size(); i++) {
 			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 3));
 			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 5));
@@ -355,5 +358,15 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		caseSequenzen
 			.stream()
 			.forEach(caseSequence -> caseSequence.updateTextfieldDecorationIndentions(caseIndentions));
+	}
+
+	//TODO
+	public ZweigSchrittSequenzView getSonstSequenz() {
+		return sonstSequenz;
+	}
+
+	//TODO
+	public List<ZweigSchrittSequenzView> getCaseSequenzen() {
+		return caseSequenzen;
 	}
 }

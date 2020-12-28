@@ -1,6 +1,8 @@
 package specman.view;
 
 import com.jgoodies.forms.layout.FormLayout;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenContainerI;
@@ -19,8 +21,8 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	KlappButton klappen;
 	FormLayout panelLayout;
 
-	public VerzweigungSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, FormLayout panelLayout) {
-		super(editor, parent, initialerText, id);
+	public VerzweigungSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, FormLayout panelLayout) {
+		super(editor, parent, initialerText, id, aenderungsart);
 		this.panelLayout = panelLayout;
 		panel = new JPanel() {
 			@Override

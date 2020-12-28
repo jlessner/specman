@@ -1,5 +1,6 @@
 package specman.model.v001;
 
+import specman.Aenderungsart;
 import specman.SchrittID;
 
 public class CatchSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
@@ -16,9 +17,10 @@ public class CatchSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		TextMitAenderungsmarkierungen_V001 inhalt,
 		int farbe,
 		boolean zugeklappt,
+		Aenderungsart aenderungsart,
 		SchrittSequenzModel_V001 handlingSequenz,
 		boolean breakAngekoppelt) {
-		super(id, inhalt, farbe, zugeklappt);
+		super(id, inhalt, farbe, aenderungsart, zugeklappt);
 		this.handlingSequenz = handlingSequenz;
 		this.breakAngekoppelt = breakAngekoppelt;
 	}

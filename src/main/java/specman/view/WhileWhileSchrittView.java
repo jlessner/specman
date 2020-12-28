@@ -1,5 +1,6 @@
 package specman.view;
 
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.AbstractSchrittModel_V001;
@@ -14,15 +15,15 @@ import specman.model.v001.WhileWhileSchrittModel_V001;
  */
 public class WhileWhileSchrittView extends SchleifenSchrittView {
 	
-	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
-		super(editor, parent, initialerText, id, true);
+	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
+		super(editor, parent, initialerText, id, aenderungsart, true);
 		if (withDefaultContent) {
-			initWiederholsequenz(einschrittigeInitialsequenz(editor, id));
+			initWiederholsequenz(einschrittigeInitialsequenz(editor, id, aenderungsart));
 		}
 	}
 
-	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialwrText, SchrittID id) {
-		this(editor, parent, initialwrText, id, true);
+	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialwrText, SchrittID id, Aenderungsart aenderungsart) {
+		this(editor, parent, initialwrText, id, aenderungsart, true);
 	}
 
 	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, WhileWhileSchrittModel_V001 model) {
@@ -36,6 +37,7 @@ public class WhileWhileSchrittView extends SchleifenSchrittView {
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			aenderungsart,
 			klappen.isSelected(),
 			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
 			linkerBalken.getWidth());

@@ -2,6 +2,8 @@ package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.AbstractSchrittModel_V001;
@@ -20,8 +22,8 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	final FormLayout layout;
 	SchrittSequenzView subsequenz;
 
-	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
-		super(editor, parent, initialerText, id);
+	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
+		super(editor, parent, initialerText, id, aenderungsart);
 
 		text.setLeftInset(TEXTEINRUECKUNG);
 
@@ -38,23 +40,23 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		//roundedBorderDecorator = new RoundedBorderDecorator(panel);
 
 		if (withDefaultContent) {
-			initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
+			initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene(), aenderungsart));
 		}
 	}
 
-	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
-		this(editor, parent, initialerText, id, true);
+	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
+		this(editor, parent, initialerText, id, aenderungsart, true);
 	}
 
 	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, SubsequenzSchrittModel_V001 model) {
-		this(editor, parent, model.inhalt.text, model.id, false);
+		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, false);
 		initSubsequenz(new SchrittSequenzView(editor, this, model.subsequenz));
 		setBackground(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
 	}
 
-	private SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
-		SchrittSequenzView sequenz = new SchrittSequenzView(this, id);
+	private SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id, Aenderungsart aenderungsart) {
+		SchrittSequenzView sequenz = new SchrittSequenzView(this, id, aenderungsart);
 		sequenz.einfachenSchrittAnhaengen(editor);
 		return sequenz;
 	}
@@ -112,6 +114,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			aenderungsart,
 			klappen.isSelected(),
 			subsequenz.generiereSchittSequenzModel(formatierterText));
 		return model;

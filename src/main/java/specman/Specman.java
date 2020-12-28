@@ -21,7 +21,11 @@ import specman.view.AbstractSchrittView;
 import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
 import specman.view.CatchSchrittView;
+import specman.view.IfElseSchrittView;
+import specman.view.IfSchrittView;
+import specman.view.SchleifenSchrittView;
 import specman.view.SchrittSequenzView;
+import specman.view.SubsequenzSchrittView;
 import specman.view.ZweigSchrittSequenzView;
 
 import javax.imageio.ImageIO;
@@ -29,6 +33,7 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.StyleConstants;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
@@ -44,7 +49,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import static specman.Specman.schrittHintergrund;
 import static specman.view.RelativeStepPosition.After;
 
 /**
@@ -58,7 +65,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 1.0f, new float[] {10.0f, 10.0f }, 0f);
 
 	JTextComponent zuletztFokussierterText;
-	SchrittSequenzView hauptSequenz;
+	public SchrittSequenzView hauptSequenz;
 	JPanel arbeitsbereich;
 	JPanel hauptSequenzContainer;
 	SpaltenResizer breitenAnpasser;
@@ -363,6 +370,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 		
+		
+		//TODO Test
 		loeschen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -373,19 +382,37 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					return;
 				}
 				
-				if (schritt instanceof CaseSchrittView) {
-					CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
-					ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
-					if (zweig != null) {
-						int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
-						undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
-					}
-					return;
+				//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
+				if(instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt){
+					
+					//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
+					if(schritt.getAenderungsart()==Aenderungsart.Geloescht)
+                    	return;
+                    else {
+                    	schritt.setAenderungsart(Aenderungsart.Geloescht);
+                    	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+                    	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+                    	schritt.getText().setEditable(false);
+                    	aenderungsMarkierungenAufGelöscht(schritt);
+                    	ohneSchleife(schritt, Aenderungsart.Geloescht);
+                    }
 				}
 				
-				SchrittSequenzView sequenz = schritt.getParent();
-				int schrittIndex = sequenz.schrittEntfernen(schritt);
-				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+				//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
+				else {
+					if (schritt instanceof CaseSchrittView) {
+						CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
+						ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
+						if (zweig != null) {
+							int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
+							undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+						}
+						return;
+					}
+					SchrittSequenzView sequenz = schritt.getParent();
+					int schrittIndex = sequenz.schrittEntfernen(schritt);
+					undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+				}
 			}
 		});
 
@@ -477,6 +504,29 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				d.getContentPane().add(p);
 				d.pack();
 				d.setVisible(true);
+			}
+		});
+		
+		//TODO
+		aenderungenUebernehmen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
+				schritte = hauptSequenz.schritte;
+				uebernehmenAbfrage(schritte);
+
+			}
+		});
+		
+		//TODO
+		aenderungenVerwerfen.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				
+				List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
+				schritte = hauptSequenz.schritte;
+				recrusiv(schritte, null);
+				
 			}
 		});
 		
@@ -653,6 +703,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		review = new JButton();
 		birdsview = new JButton();
 		aenderungenVerfolgen = new JToggleButton();
+		aenderungenUebernehmen = new JButton();
+		aenderungenVerwerfen = new JButton();
 		zoom = new JComboBox<ZoomFaktor>();
 		for (ZoomFaktor faktor: ZoomFaktor.values())
 			zoom.addItem(faktor);
@@ -684,6 +736,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolbarButtonHinzufuegen(toggleBorderType, "switch-border", "Rahmen umschalten");
 		toolBar.addSeparator();
 		toolbarButtonHinzufuegen(aenderungenVerfolgen, "aenderungen", "Änderungen verfolgen");
+		toolbarButtonHinzufuegen(aenderungenUebernehmen, "uebernehmen", "Änderungen übernehmen");
+		toolbarButtonHinzufuegen(aenderungenVerwerfen, "verwerfen", "Änderungen verwerfen");
 		toolbarButtonHinzufuegen(review, "review", "Für Review zusammenklappen");
 		toolBar.addSeparator();
 		toolbarButtonHinzufuegen(birdsview, "birdsview", "Bird's View");
@@ -769,6 +823,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JButton toggleBorderType;
 	private JButton review;
 	private JButton birdsview;
+	private JButton aenderungenUebernehmen;
+	private JButton aenderungenVerwerfen;
 	private JComboBox<ZoomFaktor> zoom;
 	private JToggleButton aenderungenVerfolgen;
 	private JMenuItem speichern;
@@ -838,8 +894,190 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return (instance() != null && instance().aenderungenVerfolgen()) ?
 			TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Color.white;
 	}
+	
+	//TODO Methode um die Aenderugnsart von neuen Schritten auf hinzugefügt zu ändern, wenn die Änderungsverfolgung aktiviert ist
+	public static Aenderungsart initialArt() {
+		return (instance() != null && instance().aenderungenVerfolgen()) ?
+				Aenderungsart.Hinzugefuegt : null;
+	}
+	
 
 	@Override public int getZoomFactor() {
 		return zoomFaktor;
+	}
+	
+	
+	//TODO Ich nehme mir nur einen Schritt und gehe dann durch alle unterschritte.
+	//wird benötigt, wenn z.B. ein Schritt als gelöscht markiert werden soll,
+	//um zu prüfen ob der Schritt unterschritt hat und diese dann auch zu markieren
+	public void ohneSchleife(AbstractSchrittView schritt, Aenderungsart art) {
+		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
+			recrusiv(ifel.getElseSequenz().schritte, art);
+			
+			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+				recrusiv(ifel.getIfSequenz().schritte, art);
+            }
+		}
+		
+		else if(schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView") ) {
+            SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+            recrusiv(schleife.getWiederholSequenz().schritte, art);
+		}
+		
+		else if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+			recrusiv(caseSchritt.getSonstSequenz().schritte, art);
+			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+				recrusiv(caseSequenz.schritte, art);
+			}
+		}
+		else if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
+			SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+			recrusiv(sub.getSequenz().schritte, art);
+		}
+	}
+	
+
+	//TODO Ich durchlaufe alle Schritte, bis ich zum untersten Schritt des Pfades angekommen bin
+	//Kann alle Schritte/Unterschritte der uebergebenen Art zuweisen
+	//Wird benutzt um alle unterschritte einer Schrittliste zu durchlaufen und die gewünschte Aenderungsart hinzuzufügen
+	public void recrusiv(List<AbstractSchrittView> schritte, Aenderungsart art) {
+		for (AbstractSchrittView schritt: schritte) {
+			
+			//wird beim Verwerfen durchlaufen
+			if (art == null) {
+				if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
+					SchrittSequenzView sequenz = schritt.getParent();
+					int schrittIndex = sequenz.schrittEntfernen(schritt);
+					undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+				}
+				schritt.setAenderungsart(art);
+				schritt.getshef().setPlainText(schritt.getshef().getPlainText());
+				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+				schritt.getText().setEditable(true);
+				aenderungsMarkierungenUndEnumsEntfernen(schritt);
+			}
+			
+			//setzt die Unterschritte eines Schrittes auf die Aenderungsart geloescht
+			if(art == Aenderungsart.Geloescht) {
+            	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+            	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+            	schritt.getText().setEditable(false);
+            	aenderungsMarkierungenAufGelöscht(schritt);
+			}
+			
+			//gibt den Schritt zur überprüfung auf Unterschritte
+			ohneSchleife(schritt, art);
+		}
+	}
+
+	//TODO Uebernehmen methode mit abfrage welche art zugewiesen ist
+	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte) {
+		
+		for (AbstractSchrittView schritt: schritte) {
+			
+			//wird bei keiner gesetzten Änderungsart durchlaufen
+			if (schritt.getAenderungsart() == null) {
+				System.out.println("Es liegen keine Aenderungen vor");
+			}
+			
+			//wird bei der Aenderungsart hinzugefügt durchlaufen
+			//entfernt alle Text/Schrittmarkierungen
+			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
+				System.out.println("Hinzugefuegt");
+				schritt.setAenderungsart(null);
+				schritt.getshef().setPlainText(schritt.getshef().getPlainText());
+				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+				aenderungsMarkierungenUndEnumsEntfernen(schritt);
+			}
+			
+			//TODO noch nicht implementiert
+			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
+				System.out.println("Es wurde eine Änderung vorgenommen"); 
+				schritt.setAenderungsart(null);
+				schritt.getshef().setPlainText(schritt.getshef().getPlainText());
+				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+			}
+			
+			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+				System.out.println("Geloescht");
+				SchrittSequenzView sequenz = schritt.getParent();
+				int schrittIndex = sequenz.schrittEntfernen(schritt);
+				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+			}
+			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+				uebernehmenAbfrage(ifel.getElseSequenz().schritte);				
+				if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+					uebernehmenAbfrage(ifel.getIfSequenz().schritte);
+				}
+			}
+			else if (schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView")) {
+				SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+				uebernehmenAbfrage(schleife.getWiederholSequenz().schritte);
+			}
+			else if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+				uebernehmenAbfrage(caseSchritt.getSonstSequenz().schritte);
+				for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+					uebernehmenAbfrage(caseSequenz.schritte);
+				}
+			}
+			else if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
+				SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+				uebernehmenAbfrage(sub.getSequenz().schritte);
+			}
+		}
+	}
+	
+	//TODO
+	//Überschriften von If/Else und Cases zurücksetzen
+	//Der Teil setzt alle Änderungsmarkierungen auf den Standardwert zurück
+	public void aenderungsMarkierungenUndEnumsEntfernen(AbstractSchrittView schritt) {
+		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
+			schritt.setPlainText(schritt.getshef().getPlainText(), StyleConstants.ALIGN_CENTER);
+			ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText());
+			ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText(), StyleConstants.ALIGN_RIGHT);
+			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEditable(true);
+			ifel.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+				ifel.getIfSequenz().getUeberschrift().setPlainText(ifel.getIfSequenz().getUeberschrift().getPlainText());
+				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEditable(true);
+            }
+		}
+		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+			caseSchritt.getSonstSequenz().getUeberschrift().setPlainText(caseSchritt.getSonstSequenz().getUeberschrift().getPlainText());
+			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEditable(true);
+			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+				caseSequenz.getUeberschrift().setPlainText(caseSequenz.getUeberschrift().getPlainText());
+				caseSequenz.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+				caseSequenz.getUeberschrift().getTextComponent().setEditable(true);
+			}
+		}
+	}
+
+	//TODO
+	public void aenderungsMarkierungenAufGelöscht(AbstractSchrittView schritt) {
+		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
+			ifel.getElseSequenz().getUeberschrift().setStyle(ifel.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEditable(false);
+			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+				ifel.getIfSequenz().getUeberschrift().setStyle(ifel.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEditable(false);
+            }
+		}
+		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+			caseSchritt.getSonstSequenz().getUeberschrift().setStyle(caseSchritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEditable(false);
+			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+				caseSequenz.getUeberschrift().setStyle(caseSequenz.getUeberschrift().getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+				caseSequenz.getUeberschrift().getTextComponent().setEditable(false);				
+			}
+		}
 	}
 }
