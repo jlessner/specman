@@ -552,6 +552,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
   public InsetPanel getInsetPanel() {
 	  return insetPanel;
 	 }
+  
   public JEditorPane getEditorPane() {
 	  return editorPane;
   }
