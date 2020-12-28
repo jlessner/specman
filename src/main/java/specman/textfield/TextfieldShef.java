@@ -21,11 +21,7 @@ import javax.swing.text.html.CSS;
 import javax.swing.text.html.HTML;
 
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Line2D.Double;
 import java.util.ArrayList;
@@ -125,7 +121,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		ganzerSchrittGeloeschtStilSetzenWennNochNichtVorhanden();
 	}
 
-//06.12.2020    
+//06.12.2020
 	public void ganzerSchrittGeloeschtStilSetzenWennNochNichtVorhanden() {
 		if (!ganzerSchrittGeloeschtStilGesetzt()) {
 			StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
@@ -166,7 +162,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 	public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
 		editorPane = new JEditorPane();
-		insetPanel = new InsetPanel(editorPane);
+		insetPanel = new InsetPanel(editorPane, this);
 		editor.instrumentWysEditor(editorPane, initialerText, 0);
 		editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 		editorPane.setFont(font);
@@ -180,8 +176,14 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Schriftfarbe_Geloescht));
 			schrittNummer.setForeground(Color.WHITE);
 			schrittNummer.setOpaque(true);
+
+            DragButtonAdapter ada = new DragButtonAdapter(Specman.instance());
+            schrittNummer.addMouseListener(ada);
+            schrittNummer.addMouseMotionListener(ada);
+
 			editorPane.add(schrittNummer);
 			editorPane.addComponentListener(this);
+            insetPanel.setEnabled(false);
 		} else {
 			schrittNummer = null;
 		}
@@ -540,7 +542,16 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		return insetPanel.getBounds();
 	}
 
-	public void updateDecorationIndentions(Indentions indentForDecoration) {
-		insetPanel.updateDecorationIndentions(indentForDecoration);
-	}
+  public void updateDecorationIndentions(Indentions indentForDecoration) {
+    insetPanel.updateDecorationIndentions(indentForDecoration);
+  }
+
+
+  //TODO
+  public InsetPanel getInsetPanel() {
+	  return insetPanel;
+	 }
+  public JEditorPane getEditorPane() {
+	  return editorPane;
+  }
 }

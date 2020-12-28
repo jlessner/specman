@@ -33,4 +33,10 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 		return model;
 	}
 
+	@Override
+	public JComponent getPanel() {
+		// TODO Auto-generated method stub
+		return text.asJComponent();
+	}
+
 }

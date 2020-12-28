@@ -73,7 +73,7 @@ public class SchrittSequenzView {
 	public void setAenderungsart(Aenderungsart aenderungsart) {
 		this.aenderungsart = aenderungsart;
 	}
-	
+
 	public List<AbstractSchrittView> getSchritte(){
 		return schritte;
 	}
@@ -353,7 +353,7 @@ public class SchrittSequenzView {
 		Specman.instance().diagrammAktualisieren(naechsterFokus);
 		return schrittIndex;
 	}
-		
+
 	public void schrittHinzufuegen(AbstractSchrittView schritt, int schrittIndex) {
 		if (schritt instanceof CatchSchrittView) {
 			System.err.println("Noch nicht implementiert!");
@@ -381,7 +381,7 @@ public class SchrittSequenzView {
 		}
 		return catchBereich.findeSchritt(zuletztFokussierterText);
 	}
-	
+
 
 	public SchrittSequenzModel_V001 generiereSchittSequenzModel(boolean formatierterText) {
 		SchrittSequenzModel_V001 model = new SchrittSequenzModel_V001(
@@ -533,5 +533,8 @@ public class SchrittSequenzView {
 		}
 		return false;
 	}
-
+//TODO
+	public AbstractSchrittView getParent() {
+		return parent;
+	}
 }

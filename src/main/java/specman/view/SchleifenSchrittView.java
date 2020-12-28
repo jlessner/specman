@@ -193,9 +193,19 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		// an additional border shielding the inner steps from any rounded border
 		// decorarions outside.
 	}
-
+	//TODO
 	public SchrittSequenzView getWiederholSequenz() {
 		return wiederholSequenz;
 	}
-	
+
+	public JPanel getPanel() {
+		return panel;
+	}
+	public JPanel getLinkerBalken(){
+		return linkerBalken;
+	}
+	public JPanel getUntererBalken(){
+		return untererBalken;
+	}
+
 }
