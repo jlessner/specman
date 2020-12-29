@@ -390,15 +390,13 @@ public class DraggingLogic implements Serializable {
     }
 
     //Neuen Schritt zwischenschieben abhängig vom Button
-    private void addNeuerSchritt(RelativeStepPosition insertionPosition,
-                                 AbstractSchrittView schritt, MouseEvent e) {
+    private void addNeuerSchritt(RelativeStepPosition insertionPosition,AbstractSchrittView schritt, MouseEvent e) {
         SchrittSequenzView sequenz = schritt.getParent();
         //ToDo Löschen und hinzufügen beim verschieben
         if (e.getSource() instanceof JLabel) {
             if(specman.aenderungenVerfolgen()){
                 //TODO Aenderungsmarkierung für verschobene Schritte
-                System.out.println("test");
-
+                schritt.getshef().setVerschobenStil(schritt.getshef().getPlainText());
             }else{
                 JLabel label = (JLabel) e.getSource();
 

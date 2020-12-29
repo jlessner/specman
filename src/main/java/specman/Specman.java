@@ -13,13 +13,7 @@ import specman.model.ModelEnvelope;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.textfield.TextfieldShef;
-import specman.undo.UndoableDiagrammSkaliert;
-import specman.undo.UndoableSchrittEingefaerbt;
-import specman.undo.UndoableSchrittEntfernt;
-import specman.undo.UndoableSchrittHinzugefuegt;
-import specman.undo.UndoableToggleStepBorder;
-import specman.undo.UndoableZweigEntfernt;
-import specman.undo.UndoableZweigHinzugefuegt;
+import specman.undo.*;
 import specman.view.AbstractSchrittView;
 import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
@@ -394,12 +388,30 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					if(schritt.getAenderungsart()==Aenderungsart.Geloescht)
                     	return;
                     else {
-                    	schritt.setAenderungsart(Aenderungsart.Geloescht);
-                    	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-                    	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-                    	schritt.getText().setEditable(false);
-                    	aenderungsMarkierungenAufGeloescht(schritt);
-                    	ohneSchleife(schritt, Aenderungsart.Geloescht);
+                    	//schritt.setAenderungsart(Aenderungsart.Geloescht);
+                    	//schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+                    	//schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+                    	//schritt.getText().setEditable(false);
+                    	//aenderungsMarkierungenAufGeloescht(schritt);
+                    	//ohneSchleife(schritt, Aenderungsart.Geloescht);
+
+						//Setzen der Änderungsmarkierung und in allen unterschritten
+						//schritt.setAenderungsart(Aenderungsart.Geloescht);
+						//schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+						//schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+						//schritt.getText().setEditable(false);
+						//System.out.println("Kopfschritt wurde als geloescht markiert");
+						//aenderungsMarkierungenAufGelöscht(schritt);
+						//ohneSchleife(schritt, Aenderungsart.Geloescht);
+                    	/*schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
+                        schritt.getshef().schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
+                        schritt.getshef().schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
+                        schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));*/
+
+						schritt.setAenderungsart(Aenderungsart.Geloescht);
+						schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText());
+						addEdit(new UndoableSchrittnummerEntfernt(schritt, schritt.getshef().schrittNummer));
+						ohneSchleife(schritt, Aenderungsart.Geloescht);
                     }
 				}
 
