@@ -1029,13 +1029,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			//wird beim Verwerfen durchlaufen
 			if (art == null) {
+				//hinzugefügter Schritt muss entfernt werden, da verworfen
 				if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 					SchrittSequenzView sequenz = schritt.getParent();
 					int schrittIndex = sequenz.schrittEntfernen(schritt);
 					undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
 				}
 				schritt.setAenderungsart(art);
-				schritt.getshef().setPlainText(schritt.getshef().getPlainText());
+				//schritt.getshef().setPlainText(schritt.getshef().getPlainText());
+            	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 				schritt.getText().setEnabled(true);
 				aenderungsMarkierungenUndEnumsEntfernen(schritt);
@@ -1069,7 +1071,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 				System.out.println("Hinzugefuegt");
 				schritt.setAenderungsart(null);
-				schritt.getshef().setPlainText(schritt.getshef().getPlainText());
+				schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 				aenderungsMarkierungenUndEnumsEntfernen(schritt);
 			}
@@ -1078,7 +1080,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
 				System.out.println("Es wurde eine Änderung vorgenommen");
 				schritt.setAenderungsart(null);
-				schritt.getshef().setPlainText(schritt.getshef().getPlainText());
+				schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 			}
 
@@ -1119,22 +1121,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void aenderungsMarkierungenUndEnumsEntfernen(AbstractSchrittView schritt) {
 		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
-			schritt.setPlainText(schritt.getshef().getPlainText(), StyleConstants.ALIGN_CENTER);
-			ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText());
-			ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText(), StyleConstants.ALIGN_RIGHT);
+			schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
+			//schritt.setPlainText(schritt.getshef().getPlainText(), StyleConstants.ALIGN_CENTER);
+			ifel.getElseSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
+			//ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText(), StyleConstants.ALIGN_RIGHT);
 			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEnabled(true);
 			ifel.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
-				ifel.getIfSequenz().getUeberschrift().setPlainText(ifel.getIfSequenz().getUeberschrift().getPlainText());
+				ifel.getIfSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEnabled(true);;
             }
 		}
 		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-			caseSchritt.getSonstSequenz().getUeberschrift().setPlainText(caseSchritt.getSonstSequenz().getUeberschrift().getPlainText());
+			caseSchritt.getSonstSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEnabled(true);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
-				caseSequenz.getUeberschrift().setPlainText(caseSequenz.getUeberschrift().getPlainText());
+				caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				caseSequenz.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 				caseSequenz.getUeberschrift().getTextComponent().setEnabled(true);
 			}
