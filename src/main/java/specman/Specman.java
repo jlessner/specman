@@ -1045,7 +1045,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if(art == Aenderungsart.Geloescht) {
             	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
             	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-            	schritt.getText().setEditable(false);
+            	//schritt.getText().setEditable(false);
+            	schritt.getText().setEnabled(false);
             	aenderungsMarkierungenAufGeloescht(schritt);
 			}
 
@@ -1143,22 +1144,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	//TODO
 	public void aenderungsMarkierungenAufGeloescht(AbstractSchrittView schritt) {
+		schritt.getText().setEnabled(false);
 		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
 			ifel.getElseSequenz().getUeberschrift().setStyle(ifel.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEditable(false);
+			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEnabled(false);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 				ifel.getIfSequenz().getUeberschrift().setStyle(ifel.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEditable(false);
+				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEnabled(false);;
             }
 		}
 		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 			caseSchritt.getSonstSequenz().getUeberschrift().setStyle(caseSchritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEditable(false);
+			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEnabled(false);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 				caseSequenz.getUeberschrift().setStyle(caseSequenz.getUeberschrift().getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-				caseSequenz.getUeberschrift().getTextComponent().setEditable(false);
+				caseSequenz.getUeberschrift().getTextComponent().setEnabled(false);;
 			}
 		}
 	}

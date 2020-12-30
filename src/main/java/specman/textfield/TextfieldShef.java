@@ -432,6 +432,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 				StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
 				MutableAttributeSet inputAttributes = k.getInputAttributes();
 				StyleConstants.setStrikeThrough(inputAttributes, false);
+				
 			}
 		} else {
 			DefaultStyledDocument doc = (DefaultStyledDocument) editorPane.getDocument();
@@ -610,4 +611,5 @@ public class TextfieldShef implements ComponentListener, KeyListener {
   public JEditorPane getEditorPane() {
 	  return editorPane;
   }
+
 }
