@@ -397,7 +397,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
                     	schritt.setAenderungsart(Aenderungsart.Geloescht);
                     	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
                     	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-                    	schritt.getText().setEditable(false);
+                    	//schritt.getText().setEditable(false);
                     	aenderungsMarkierungenAufGeloescht(schritt);
                     	ohneSchleife(schritt, Aenderungsart.Geloescht);
                     }
@@ -1037,7 +1037,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				schritt.setAenderungsart(art);
 				schritt.getshef().setPlainText(schritt.getshef().getPlainText());
 				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-				schritt.getText().setEditable(true);
+				schritt.getText().setEnabled(true);
 				aenderungsMarkierungenUndEnumsEntfernen(schritt);
 			}
 
@@ -1045,7 +1045,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if(art == Aenderungsart.Geloescht) {
             	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
             	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-            	//schritt.getText().setEditable(false);
             	schritt.getText().setEnabled(false);
             	aenderungsMarkierungenAufGeloescht(schritt);
 			}
@@ -1123,21 +1122,21 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			schritt.setPlainText(schritt.getshef().getPlainText(), StyleConstants.ALIGN_CENTER);
 			ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText());
 			ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText(), StyleConstants.ALIGN_RIGHT);
-			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEditable(true);
+			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEnabled(true);
 			ifel.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 				ifel.getIfSequenz().getUeberschrift().setPlainText(ifel.getIfSequenz().getUeberschrift().getPlainText());
-				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEditable(true);
+				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEnabled(true);;
             }
 		}
 		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 			caseSchritt.getSonstSequenz().getUeberschrift().setPlainText(caseSchritt.getSonstSequenz().getUeberschrift().getPlainText());
-			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEditable(true);
+			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEnabled(true);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 				caseSequenz.getUeberschrift().setPlainText(caseSequenz.getUeberschrift().getPlainText());
 				caseSequenz.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-				caseSequenz.getUeberschrift().getTextComponent().setEditable(true);
+				caseSequenz.getUeberschrift().getTextComponent().setEnabled(true);
 			}
 		}
 	}
@@ -1160,7 +1159,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEnabled(false);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 				caseSequenz.getUeberschrift().setStyle(caseSequenz.getUeberschrift().getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-				caseSequenz.getUeberschrift().getTextComponent().setEnabled(false);;
+				caseSequenz.getUeberschrift().getTextComponent().setEnabled(false);
 			}
 		}
 	}
