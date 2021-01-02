@@ -39,12 +39,12 @@ public class DraggingLogic implements Serializable {
     }
 
     // GlassPane over Cases
-    private void checkCaseHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, InsertDecision insertDecision) {
+    private void checkCaseHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight,int offsetRaute, InsertDecision insertDecision) {
         Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
             int casehight = zweig.getContainer().getHeight() + zweig.getUeberschrift().getHeight() + 2;
-            createGlassPane(glassPaneHeight, p.x + r.width - glassPaneHeight, p.y, casehight, true);
+            createGlassPane(glassPaneHeight, p.x + r.width - glassPaneHeight, p.y+offsetRaute, casehight-offsetRaute, true);
             //mouserelease add Case right from choosen Case
             if (insertDecision == InsertDecision.Insert) addCase(zweig);
         }
@@ -196,12 +196,12 @@ public class DraggingLogic implements Serializable {
                     CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 
                     checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
-                    checkCaseHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, insertDecision);
+                    checkCaseHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, caseSchritt.getRautenHeight(), insertDecision);
                     dragGlassPanePos(pos, caseSchritt.getSonstSequenz().schritte, insertDecision, e);
 
                     for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
                         int groesse = caseSchritt.getCaseSequenzen().size();
-                        checkCaseHeading(caseSequenz, pos, glassPaneHeight, insertDecision);
+                        checkCaseHeading(caseSequenz, pos, glassPaneHeight,0, insertDecision);
                         dragGlassPanePos(pos, caseSequenz.schritte, insertDecision, e);
 
                         if (groesse != caseSchritt.getCaseSequenzen().size()) {

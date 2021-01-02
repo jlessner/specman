@@ -369,4 +369,8 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	public List<ZweigSchrittSequenzView> getCaseSequenzen() {
 		return caseSequenzen;
 	}
+	//TODO
+	public int getRautenHeight() {
+		return berechneRautenmittelpunkt().y;
+	}
 }
