@@ -32,7 +32,7 @@ public class IfSchrittView extends IfElseSchrittView {
 		super(editor, parent, initialerString, id, aenderungsart, false);
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, ""));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, TextfieldShef.right("Ja")));
-		ifBreite = SPALTENLAYOUT_UMGEHUNG_GROESSE * Specman.instance().zoomFaktor() / 100;
+		ifBreite = SPALTENLAYOUT_UMGEHUNG_GROESSE + 2; /**@author PVN, Dueck */ 
 	}
 
 	public IfSchrittView(EditorI editor, SchrittSequenzView parent, IfSchrittModel_V001 model) {

@@ -30,14 +30,18 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	ZweigSchrittSequenzView ifSequenz;
 	ZweigSchrittSequenzView elseSequenz;
 	boolean mittelpunktRaute = true;
+	JPanel leeresFeld; 
+	JPanel panelBedingung;
+	JPanel panelElse;
+	JPanel panelIf;
 	
 	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id,Aenderungsart anderungsart,  boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, anderungsart, createPanelLayout());
 		/** @author PVN */
-		JPanel leeresFeld = new JPanel();
-		leeresFeld.setBackground(Color.WHITE);
-		JPanel panelBedingung = new JPanel();
-		panelBedingung.setBackground(Color.WHITE);
+		leeresFeld = new JPanel();
+		leeresFeld.setBackground(Specman.schrittHintergrund());
+		panelBedingung = new JPanel();
+		panelBedingung.setBackground(Specman.schrittHintergrund());
 		panelBedingung.setLayout(new FormLayout(20 * Specman.instance().getZoomFactor()/100 + ", 10px:grow", "fill:pref"));
 		panelBedingung.add(text.asJComponent(), "2,1");
 		panel.add(panelBedingung, CC.xywh(3, 1, 1, 1));
@@ -88,8 +92,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	protected void elseBedingungAnlegen(ZweigSchrittSequenzView elseSequenz) {
 		elseSequenz.ueberschrift.addFocusListener(this);
 		/** @author PVN */
-		JPanel panelElse = new JPanel();
-		panelElse.setBackground(Color.WHITE);
+		panelElse = new JPanel();
+		panelElse.setBackground(Specman.schrittHintergrund());
 		panelElse.setLayout(new FormLayout(20 * Specman.instance().getZoomFactor()/100 + ", 10px:grow", "fill:pref:grow"));
 		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 1, 1, 1));
 		panel.add(panelElse, CC.xywh(3, 3, 1, 1));
@@ -98,8 +102,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	protected void ifBedingungAnlegen(ZweigSchrittSequenzView ifSequenz) {
 		ifSequenz.ueberschrift.addFocusListener(this);
 		/**@author PVN */
-		JPanel panelIf = new JPanel();
-		panelIf.setBackground(Color.WHITE);
+		panelIf = new JPanel();
+		panelIf.setBackground(Specman.schrittHintergrund());
 		panelIf.setLayout(new FormLayout("10px:grow, " + 20 * Specman.instance().getZoomFactor()/100, "fill:pref:grow"));
 		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));
 		panel.add(panelIf, CC.xy(1, 3));

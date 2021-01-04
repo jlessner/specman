@@ -47,7 +47,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		panel.add(text.asJComponent(), INITIAL_DUMMY);
 		/** @author PVN */
 		lueckenFueller = new JPanel();
-		lueckenFueller.setBackground(Color.WHITE);
+		lueckenFueller.setBackground(Specman.schrittHintergrund());
 		panel.add(lueckenFueller, CC.xy(1, 1));
 	}
 
@@ -64,7 +64,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 				editor,
 				new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, initialtext("Sonst")),
 				new ArrayList<ZweigSchrittSequenzView>(Arrays.asList(
-						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 1")),
+						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, initialtext("&emsp Fall 1")), /**@author PVN */ 
 						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 2")))));
 	}
 	
@@ -155,33 +155,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	protected int texteinrueckungNeuberechnen() {
-		return 20;
-	}
-
-	protected Point rauteZeichnen(Graphics2D g) { //umbenannt
-		Point mittelpunktRaute = super.rauteZeichnen(g); //umbenannt
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		/** @author PVN */
-		g.drawLine(mittelpunktRaute.x, mittelpunktRaute.y, mittelpunktRaute.x, 0);
-
-		int[] polygonXinnen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
-		int[] polygonYinnen = {text.getHeight(), (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight(), (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */
-		g.setRenderingHint(
-			RenderingHints.KEY_ANTIALIASING,
-			RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setColor(Color.WHITE);
-		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
-
-		int[] polygonXaussen = {(mittelpunktRaute.x-20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x, (mittelpunktRaute.x+20 * Specman.instance().getZoomFactor()/100), mittelpunktRaute.x};
-		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-20 * Specman.instance().getZoomFactor()/100), text.getHeight()+1, (text.getHeight()+20 * Specman.instance().getZoomFactor()/100)}; /** @author PVN, SD */
-		g.setStroke(new BasicStroke(LINIENBREITE));
-		g.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setColor(Color.BLACK);
-		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
-
-		return mittelpunktRaute;
+		return 20 * Specman.instance().getZoomFactor() / 100; /**@author PVN */ 
 	}
 
 	protected Point berechneRautenmittelpunkt() { //umbenannt

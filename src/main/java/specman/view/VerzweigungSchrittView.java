@@ -56,7 +56,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 
 	protected static String layoutRowSpec1() {
 		int aktuellerZoomfaktor = Specman.instance().zoomFaktor();
-		return "fill:[" + (10 * aktuellerZoomfaktor / 100) + "dlu,pref]"; /**@author PVN */
+		return "fill:[" + (1 * aktuellerZoomfaktor / 100) + "dlu,pref]"; /**@author PVN */
 	}
 	
 	@Override
