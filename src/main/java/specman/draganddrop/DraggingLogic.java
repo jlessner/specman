@@ -1,5 +1,6 @@
 package specman.draganddrop;
 
+import specman.Aenderungsart;
 import specman.Specman;
 import specman.textfield.InsetPanel;
 import specman.textfield.TextfieldShef;
@@ -396,7 +397,47 @@ public class DraggingLogic implements Serializable {
         if (e.getSource() instanceof JLabel) {
             if(specman.aenderungenVerfolgen()){
                 //TODO Aenderungsmarkierung für verschobene Schritte
-                schritt.getshef().setVerschobenStil(schritt.getshef().getPlainText());
+
+
+                //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
+                if(schritt.getAenderungsart()== Aenderungsart.Geloescht)
+                    return;
+                else {
+
+                    JLabel label = (JLabel) e.getSource();
+
+                    InsetPanel ip = (InsetPanel) label.getParent().getParent();
+                    AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
+
+
+                    EinfacherSchrittView quellschritt = new EinfacherSchrittView(specman, sequenz, step.getPlainText(), null, null);
+                    sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
+
+                    quellschritt.setAenderungsart(Aenderungsart.Geloescht);
+                    quellschritt.getshef().setStyle(step.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+                    quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+                    Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
+                    Specman.instance().ohneSchleife(quellschritt, Aenderungsart.Geloescht);
+
+                    if (step != schritt) {
+
+                        int schrittindex = step.getParent().schrittEntfernen(step);
+
+                        step.setId(schritt.newStepIDInSameSequence(insertionPosition));
+                        specman.getUndoManager().addEdit(new UndoableSchrittEntfernt(step, step.getParent(), schrittindex));
+
+                        step.setParent(schritt.getParent());
+                        sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
+
+                        step.setAenderungsart(Aenderungsart.Hinzugefuegt);
+                        step.getshef().setStyle(step.getPlainText(), TextfieldShef.zielschrittStil);
+                        step.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+                        Specman.instance().ohneSchleife(step, Aenderungsart.Hinzugefuegt);
+                    }
+
+                }
+
+                //schritt.getshef().setVerschobenStil(schritt.getshef().getPlainText());
             }else{
                 JLabel label = (JLabel) e.getSource();
 

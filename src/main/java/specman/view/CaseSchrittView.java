@@ -47,7 +47,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		panel.add(text.asJComponent(), INITIAL_DUMMY);
 		/** @author PVN */
 		lueckenFueller = new JPanel();
-		lueckenFueller.setBackground(Color.WHITE);
+		lueckenFueller.setBackground(Specman.schrittHintergrund());
 		panel.add(lueckenFueller, CC.xy(1, 1));
 	}
 
@@ -231,6 +231,8 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		super.setBackground(bg);
 		sonstSequenz.ueberschrift.setBackground(bg);
 		caseSequenzen.forEach(sequenz -> sequenz.ueberschrift.setBackground(bg));
+		lueckenFueller.setBackground(bg);
+
 		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}
 

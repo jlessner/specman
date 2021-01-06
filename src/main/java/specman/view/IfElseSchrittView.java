@@ -29,15 +29,21 @@ import static specman.Specman.initialtext;
 public class IfElseSchrittView extends VerzweigungSchrittView implements ComponentListener, SpaltenContainerI {
 	ZweigSchrittSequenzView ifSequenz;
 	ZweigSchrittSequenzView elseSequenz;
+	JPanel leeresFeld = new JPanel();
+	JPanel panelIf = new JPanel();
+	JPanel panelElse = new JPanel();
+	JPanel panelBedingung = new JPanel();
 	boolean mittelpunktRaute = true;
 	
 	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id,Aenderungsart anderungsart,  boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, anderungsart, createPanelLayout());
 		/** @author PVN */
-		JPanel leeresFeld = new JPanel();
-		leeresFeld.setBackground(Color.WHITE);
-		JPanel panelBedingung = new JPanel();
-		panelBedingung.setBackground(Color.WHITE);
+		//JPanel leeresFeld = new JPanel();
+		//leeresFeld.setBackground(Color.WHITE);
+		leeresFeld.setBackground(Specman.instance().schrittHintergrund());
+		//JPanel panelBedingung = new JPanel();
+		//panelBedingung.setBackground(Color.WHITE);
+		panelBedingung.setBackground(Specman.instance().schrittHintergrund());
 		panelBedingung.setLayout(new FormLayout(20 * Specman.instance().getZoomFactor()/100 + ", 10px:grow", "fill:pref"));
 		panelBedingung.add(text.asJComponent(), "2,1");
 		panel.add(panelBedingung, CC.xywh(3, 1, 1, 1));
@@ -88,8 +94,9 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	protected void elseBedingungAnlegen(ZweigSchrittSequenzView elseSequenz) {
 		elseSequenz.ueberschrift.addFocusListener(this);
 		/** @author PVN */
-		JPanel panelElse = new JPanel();
-		panelElse.setBackground(Color.WHITE);
+		//JPanel panelElse = new JPanel();
+		//panelElse.setBackground(Color.WHITE);
+		panelElse.setBackground(Specman.instance().schrittHintergrund());
 		panelElse.setLayout(new FormLayout(20 * Specman.instance().getZoomFactor()/100 + ", 10px:grow", "fill:pref:grow"));
 		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 1, 1, 1));
 		panel.add(panelElse, CC.xywh(3, 3, 1, 1));
@@ -98,8 +105,9 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	protected void ifBedingungAnlegen(ZweigSchrittSequenzView ifSequenz) {
 		ifSequenz.ueberschrift.addFocusListener(this);
 		/**@author PVN */
-		JPanel panelIf = new JPanel();
-		panelIf.setBackground(Color.WHITE);
+		//JPanel panelIf = new JPanel();
+		//panelIf.setBackground(Color.WHITE);
+		panelIf.setBackground(Specman.instance().schrittHintergrund());
 		panelIf.setLayout(new FormLayout("10px:grow, " + 20 * Specman.instance().getZoomFactor()/100, "fill:pref:grow"));
 		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));
 		panel.add(panelIf, CC.xy(1, 3));
@@ -154,6 +162,15 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		super.setBackground(bg);
 		ifSequenz.ueberschrift.setBackground(bg);
 		elseSequenz.ueberschrift.setBackground(bg);
+		panelIf.setBackground(bg);
+		panelElse.setBackground(bg);
+		leeresFeld.setBackground(bg);
+		panelBedingung.setBackground(bg);
+
+		//Raute
+
+
+
 		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}
 

@@ -1126,10 +1126,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			ifel.getElseSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 			//ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText(), StyleConstants.ALIGN_RIGHT);
 			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEnabled(true);
-			ifel.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 				ifel.getIfSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEnabled(true);;
+				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEnabled(true);
             }
 		}
 		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
@@ -1153,7 +1152,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEnabled(false);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 				ifel.getIfSequenz().getUeberschrift().setStyle(ifel.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEnabled(false);;
+				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEnabled(false);
             }
 		}
 		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
