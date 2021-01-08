@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 public class GlassPane extends JPanel {
 	private JPanel panel;
 	private final int menueHeight;
-
+	private int windowsoffset;
 
 	public GlassPane(int menueHeight) {
 		setOpaque(false);
@@ -19,6 +19,11 @@ public class GlassPane extends JPanel {
 		this.menueHeight = menueHeight;
 		add(panel);
 		this.setVisible(true);
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.contains("win")){
+		    windowsoffset = 6;
+		}
+	  
 	}
 
 	private void createPanel() {
@@ -29,7 +34,7 @@ public class GlassPane extends JPanel {
 
 	public void setInputRecBounds(int x, int y, int width, int height) {
 		y= y-menueHeight;
-		panel.setBounds(x, y, width, height);
+		panel.setBounds(x-windowsoffset, y, width, height);
 
 		Specman.instance().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 	}
