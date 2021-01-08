@@ -257,7 +257,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
     public ZweigSchrittSequenzView getElseSequenz() {
         return elseSequenz;
     }
-
+	public int getRautenHeight() {
+		// TODO Auto-generated method stub
+		return berechneRautenmittelpunkt().y;
+	}
 
 
 }

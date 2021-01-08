@@ -38,6 +38,24 @@ public class DraggingLogic implements Serializable {
         }
     }
 
+    // GlassPane and add Step to sequence
+    private void checkZweigHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, int offsetRaute, InsertDecision insertDecision, MouseEvent mE) {
+        Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
+        if(offsetRaute<0) {
+        	p.x= p.x+offsetRaute;
+        }
+        Rectangle r = createRectangle(p, zweig.getUeberschrift());
+        r.width= r.width+Math.abs(offsetRaute);
+        if (r.contains(pos)) {
+            createGlassPane(r.width, p.x,p.y + r.height - glassPaneHeight, glassPaneHeight,true);
+            //mouserelease add Step at first Position in sequenz
+            if (insertDecision == InsertDecision.Insert) {
+                AbstractSchrittView step = zweig.schritte.get(0);
+                addNeuerSchritt(Before, step, mE);
+            }
+        }
+    }
+    
     // GlassPane over Cases
     private void checkCaseHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight,int offsetRaute, InsertDecision insertDecision) {
         Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
@@ -254,10 +272,10 @@ public class DraggingLogic implements Serializable {
 
                     checkfalseGlassPaneforComponent(ifel.getTextShef(), pos, glassPaneHeight);
                     if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
-                        checkZweigHeading(ifel.getIfSequenz(), pos, glassPaneHeight, insertDecision, e);
+                        checkZweigHeading(ifel.getIfSequenz(), pos, glassPaneHeight, ifel.getRautenHeight(),insertDecision, e);
                         dragGlassPanePos(pos, ifel.getIfSequenz().schritte, insertDecision, e);
                     }
-                    checkZweigHeading(ifel.getElseSequenz(), pos, glassPaneHeight, insertDecision, e);
+                    checkZweigHeading(ifel.getElseSequenz(), pos, glassPaneHeight,-ifel.getRautenHeight(), insertDecision, e);
                     dragGlassPanePos(pos, ifel.getElseSequenz().schritte, insertDecision, e);
 
                     //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
