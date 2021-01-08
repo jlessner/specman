@@ -29,7 +29,7 @@ public class DraggingLogic implements Serializable {
         Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
-            createGlassPane(r.width, p.x,p.y + r.height - glassPaneHeight, glassPaneHeight,true);
+            createGlassPane(r.width, r.x,r.y + r.height - glassPaneHeight, glassPaneHeight,true);
             //mouserelease add Step at first Position in sequenz
             if (insertDecision == InsertDecision.Insert) {
                 AbstractSchrittView step = zweig.schritte.get(0);
@@ -47,7 +47,7 @@ public class DraggingLogic implements Serializable {
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         r.width= r.width+Math.abs(offsetRaute);
         if (r.contains(pos)) {
-            createGlassPane(r.width, p.x,p.y + r.height - glassPaneHeight, glassPaneHeight,true);
+        	createGlassPane(r.width, r.x,r.y + r.height - glassPaneHeight, glassPaneHeight,true);
             //mouserelease add Step at first Position in sequenz
             if (insertDecision == InsertDecision.Insert) {
                 AbstractSchrittView step = zweig.schritte.get(0);
@@ -62,7 +62,7 @@ public class DraggingLogic implements Serializable {
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
             int casehight = zweig.getContainer().getHeight() + zweig.getUeberschrift().getHeight() + 2;
-            createGlassPane(glassPaneHeight, p.x + r.width - glassPaneHeight, p.y+offsetRaute, casehight-offsetRaute, true);
+            createGlassPane(glassPaneHeight, r.x + r.width - glassPaneHeight, r.y+offsetRaute, casehight-offsetRaute, true);
             //mouserelease add Case right from choosen Case
             if (insertDecision == InsertDecision.Insert) addCase(zweig);
         }
@@ -84,7 +84,7 @@ public class DraggingLogic implements Serializable {
         Point p = SwingUtilities.convertPoint(schleife.getTextShef().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, schleife.getTextShef());
         if (r.contains(pos)) {
-            createGlassPane(r.width, p.x, p.y + r.height - glassPaneHeight, glassPaneHeight, true);
+            createGlassPane(r.width, r.x, r.y + r.height - glassPaneHeight, glassPaneHeight, true);
 
             //mouserelease add Step at first Position in sequenz
             if (insertDecision == InsertDecision.Insert) {
@@ -99,7 +99,7 @@ public class DraggingLogic implements Serializable {
         Point p = SwingUtilities.convertPoint(schritt.getTextShef().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, schritt.getTextShef());
         if (r.contains(pos)) {
-            createGlassPane(r.width, p.x, p.y + r.height - glassPaneHeight, glassPaneHeight, true);
+            createGlassPane(r.width, r.x, r.y + r.height - glassPaneHeight, glassPaneHeight, true);
 
             //mouserelease add Step at first Position in sequenz
             if (insertDecision == InsertDecision.Insert) {
@@ -150,7 +150,7 @@ public class DraggingLogic implements Serializable {
         }
         //Abfrage ob der Mousezeiger über dem linken oder unteren Balken ist
         if (rl.contains(pos) || ru.contains(pos)) {
-            createGlassPane(r.width, p.x, p.y + r.height - glassPaneHeight, glassPaneHeight, true);
+            createGlassPane(r.width, r.x, r.y + r.height - glassPaneHeight, glassPaneHeight, true);
             //bei Release hinzufügen eines Schrittes an erster Position im Zweig
             if (((insertDecision==InsertDecision.Insert) && cl != null && rl.contains(pos)) || ((insertDecision == InsertDecision.Insert) && cu != null && ru.contains(pos))) {
                 addNeuerSchritt(After, step, mE);
@@ -165,7 +165,7 @@ public class DraggingLogic implements Serializable {
         Point p = SwingUtilities.convertPoint(c.getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, c);
         if (r.contains(pos)) {
-            createGlassPane(r.width, p.x, p.y + r.height - glassPaneHeight, glassPaneHeight, false);
+            createGlassPane(r.width, r.x, r.y + r.height - glassPaneHeight, glassPaneHeight, false);
         }
     }//Recursive method to check and add Steps
 
@@ -249,12 +249,12 @@ public class DraggingLogic implements Serializable {
                 int groesse = schrittListe.size();
                 if (schritt instanceof EinfacherSchrittView) {
                     if (r.contains(pos)) {
-                        glassPane.setInputRecBounds(p.x, p.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
+                        glassPane.setInputRecBounds(r.x, r.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
 
                         if (checkFirstStep(schritt, pos, glassPaneHeight, insertDecision, e)) {
                             break;
                         } else {
-                            glassPane.setInputRecBounds(p.x, p.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
+                            glassPane.setInputRecBounds(r.x,r.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
                             if (insertDecision == InsertDecision.Insert) {
                                 addNeuerSchritt(After, schritt, e);
                             }
@@ -375,7 +375,6 @@ public class DraggingLogic implements Serializable {
     //Creates GlassPane
     private void createGlassPane(int glassPaneHeight, int i, int y, int height, boolean b) {
         GlassPane gP = (GlassPane) specman.getGlassPane();
-
         gP.setInputRecBounds(i, y, glassPaneHeight, height);
         specman.getGlassPane().setVisible(b);
     }
@@ -387,7 +386,7 @@ public class DraggingLogic implements Serializable {
         if (r.contains(pos)) {
             if (schritt.getId().toString().equals("1") && (pos.y < (r.y + glassPaneHeight))) {
                 GlassPane glassPane = (GlassPane) specman.getGlassPane();
-                glassPane.setInputRecBounds(p.x, p.y, r.width, glassPaneHeight);
+                glassPane.setInputRecBounds(r.x,r.y, r.width, glassPaneHeight);
                 glassPane.setVisible(true);
                 if (insertDecision == InsertDecision.Insert) {
                     addNeuerSchritt(Before, schritt, e);
@@ -493,10 +492,10 @@ public class DraggingLogic implements Serializable {
         if (!(schritt.getParent().getParent() instanceof WhileWhileSchrittView)) {
             r.setLocation(p);
             if (r.contains(pos)) {
-                if (pos.y > (p.y + r.height - glassPaneHeight)) {
+                if (pos.y > (r.y + r.height - glassPaneHeight)) {
                     Container container = schritt.getParent().getContainer().getParent();
                     p = SwingUtilities.convertPoint(container, 0, 0, specman);
-                    glassPane.setInputRecBounds(p.x - 2, p.y + container.getHeight(), container.getWidth() + 4, glassPaneHeight);
+                    glassPane.setInputRecBounds(r.x - 2, r.y + container.getHeight()+1, container.getWidth() + 4, glassPaneHeight);
                     specman.getGlassPane().setVisible(true);
                     if (insertDecision == InsertDecision.Insert) {
                         //hier wird nur festgestellt, dass es sich um den letzten Schritt in der Sequenz handelt und das Iterieren beendet -> Sprung zurück in vorherige Ebene
