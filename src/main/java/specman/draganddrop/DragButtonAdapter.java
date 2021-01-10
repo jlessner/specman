@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import specman.Aenderungsart;
 import specman.Specman;
 import specman.textfield.InsetPanel;
 import specman.view.AbstractSchrittView;
@@ -41,6 +42,11 @@ public class DragButtonAdapter extends MouseAdapter {
 			draggingLogic.showInvalidCursor();
 			return;
 		}
+		if(checkGeloeschterSchritt(e)){
+			draggingLogic.showInvalidCursor();
+			return;
+		}
+
 		Point pt = e.getPoint();
 		JComponent parent = (JComponent) e.getComponent();
 		//-2 da performanter
@@ -97,6 +103,15 @@ public class DragButtonAdapter extends MouseAdapter {
 		if(e.getSource() instanceof JLabel){
 			AbstractSchrittView step = labelToStep( (JLabel) e.getSource());
 			return step.getParent().schritte.size() <= 1;
+		}
+		return false;
+	}
+
+	//gelöschter Schritt darf nicht verschoben werden
+	private boolean checkGeloeschterSchritt(MouseEvent e){
+		if(e.getSource() instanceof JLabel){
+			AbstractSchrittView step = labelToStep( (JLabel) e.getSource());
+			return step.getAenderungsart()== Aenderungsart.Geloescht;
 		}
 		return false;
 	}
