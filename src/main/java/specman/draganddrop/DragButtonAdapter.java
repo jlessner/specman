@@ -72,6 +72,10 @@ public class DragButtonAdapter extends MouseAdapter {
 			spec.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			return;
 		}
+		if(checkGeloeschterSchritt(e)){
+			spec.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			return;
+		}
 		spec.window.setVisible(false);
 		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, spec);
 		draggingLogic.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,Insert,e);
@@ -91,7 +95,11 @@ public class DragButtonAdapter extends MouseAdapter {
 			if(step.getParent().schritte.size() <= 1) {
 				draggingLogic.showInvalidCursor();
 			}
+			if(checkGeloeschterSchritt(e)){
+				draggingLogic.showInvalidCursor();
+			}
 		}
+
 	}
 
 	public void mouseExited(MouseEvent e) {
