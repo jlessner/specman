@@ -495,7 +495,7 @@ public class DraggingLogic implements Serializable {
                 if (pos.y > (r.y + r.height - glassPaneHeight)) {
                     Container container = schritt.getParent().getContainer().getParent();
                     p = SwingUtilities.convertPoint(container, 0, 0, specman);
-                    glassPane.setInputRecBounds(r.x - 2, r.y + container.getHeight()+1, container.getWidth() + 4, glassPaneHeight);
+                    glassPane.setInputRecBounds(p.x - 2, p.y + container.getHeight()+1, container.getWidth() + 4, glassPaneHeight);
                     specman.getGlassPane().setVisible(true);
                     if (insertDecision == InsertDecision.Insert) {
                         //hier wird nur festgestellt, dass es sich um den letzten Schritt in der Sequenz handelt und das Iterieren beendet -> Sprung zurück in vorherige Ebene
