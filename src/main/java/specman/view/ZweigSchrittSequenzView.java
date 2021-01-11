@@ -3,6 +3,7 @@ package specman.view;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
+import specman.Specman;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
@@ -29,6 +30,8 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart, String initialerText) {
 		super(parent, sequenzBasisId, aenderungsart);
 		ueberschriftInitialisieren(editor, initialerText);
+		//TODO etwas sehr unschön, wird später geändert, muss in die einzelkonstruktoren
+		this.aenderungsart = Specman.instance().initialArt();
 	}
 
 	private void ueberschriftInitialisieren(EditorI editor, String initialerText) {

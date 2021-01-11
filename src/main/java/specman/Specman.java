@@ -6,6 +6,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
+import org.w3c.dom.Text;
 import specman.draganddrop.DragButtonAdapter;
 import specman.draganddrop.DraggingLogic;
 import specman.draganddrop.GlassPane;
@@ -394,12 +395,36 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					if(schritt.getAenderungsart()==Aenderungsart.Geloescht)
                     	return;
                     else {
-                    	schritt.setAenderungsart(Aenderungsart.Geloescht);
-                    	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-                    	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-                    	//schritt.getText().setEditable(false);
-                    	aenderungsMarkierungenAufGeloescht(schritt);
-                    	ohneSchleife(schritt, Aenderungsart.Geloescht);
+
+                    	//TODO einzelne Casees entfernen
+						if (schritt instanceof CaseSchrittView) {
+							CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+							ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
+							if (zweig != null) {
+								zweig.setAenderungsart(Aenderungsart.Geloescht);
+								zweig.getUeberschrift().setStyle(zweig.getUeberschrift().getText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+								zweig.getUeberschrift().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+								recrusiv(zweig.getSchritte(), Aenderungsart.Geloescht);
+							}
+							else {
+								schritt.setAenderungsart(Aenderungsart.Geloescht);
+								schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+								schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+								aenderungsMarkierungenAufGeloescht(schritt);
+								ohneSchleife(schritt, Aenderungsart.Geloescht);
+							}
+						}
+
+
+
+						else{
+							schritt.setAenderungsart(Aenderungsart.Geloescht);
+							schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+							schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+							//schritt.getText().setEditable(false);
+							aenderungsMarkierungenAufGeloescht(schritt);
+							ohneSchleife(schritt, Aenderungsart.Geloescht);
+						}
                     }
 				}
 
@@ -1014,6 +1039,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				recrusiv(caseSequenz.schritte, art);
 			}
 		}
+
 		else if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
 			SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
 			recrusiv(sub.getSequenz().schritte, art);
@@ -1029,6 +1055,24 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			//wird beim Verwerfen durchlaufen
 			if (art == null) {
+
+				//Verwerfen von Änderungen, bei Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
+				if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+					CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+					//nur für caseSequenzen möglich, da man die Sonstsequenz eh nicht löschen kann
+					for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+						if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
+							int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
+							undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
+						}
+						if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
+							caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
+							caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+							recrusiv(caseSequenz.schritte, null);
+						}
+					}
+				}
+
 				//hinzugefügter Schritt muss entfernt werden, da verworfen
 				if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 					SchrittSequenzView sequenz = schritt.getParent();
@@ -1060,6 +1104,25 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte) {
 
 		for (AbstractSchrittView schritt: schritte) {
+
+			//Übernehmen von Änderungen, bei Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
+			if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+				//nur für caseSequenzen möglich, da man die Sonstsequenz eh nicht löschen kann
+				for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+					if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
+						int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
+						undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
+					}
+					if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
+						caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
+						caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+						recrusiv(caseSequenz.schritte, null);
+					}
+				}
+			}
+
+			System.out.println(schritt.getClass());
 
 			//wird bei keiner gesetzten Änderungsart durchlaufen
 			if (schritt.getAenderungsart() == null) {

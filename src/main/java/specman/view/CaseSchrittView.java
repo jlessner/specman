@@ -311,7 +311,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	
 	public ZweigSchrittSequenzView neuenZweigHinzufuegen(EditorI editor, ZweigSchrittSequenzView linkerNachbar) {
 		int linkerNachbarIndex = caseSequenzen.indexOf(linkerNachbar);
-		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, initialtext("Fall " + (linkerNachbarIndex+2)));
+		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), Specman.instance().initialArt(), initialtext("Fall " + (linkerNachbarIndex+2)));
 		neuerZweig.einfachenSchrittAnhaengen(editor);
 		zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
 		return neuerZweig;
