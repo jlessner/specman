@@ -22,12 +22,12 @@ import static specman.draganddrop.InsertDecision.Insert;
 import static specman.draganddrop.InsertDecision.NoInsert;
 
 
-public class DragButtonAdapter extends MouseAdapter {
+public class DragAdapter extends MouseAdapter {
 	private final Specman spec;
 	private	JTextField dummy;
 	private final DraggingLogic draggingLogic;
 
-	public DragButtonAdapter(Specman spec) {
+	public DragAdapter(Specman spec) {
 		this.spec = spec;
 		this.draggingLogic = new DraggingLogic(spec);
 	}

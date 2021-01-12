@@ -6,7 +6,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
-import specman.draganddrop.DragButtonAdapter;
+import specman.draganddrop.DragAdapter;
 import specman.draganddrop.DraggingLogic;
 import specman.draganddrop.GlassPane;
 import specman.model.ModelEnvelope;
@@ -98,7 +98,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		scrollPane = new JScrollPane();
 		//TODO
-		scrollPane.addMouseWheelListener(new DragButtonAdapter(this));
+		scrollPane.addMouseWheelListener(new DragAdapter(this));
 		getContentPane().add(scrollPane, CC.xy(2, 3));
 		// ToDo Sidebar change from getContentPane().add(scrollPane, CC.xy(1, 3));
 
@@ -758,7 +758,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 		//TODO
-		DragButtonAdapter dragButtonAdapter = new DragButtonAdapter(this);
+		DragAdapter dragButtonAdapter = new DragAdapter(this);
 		addDragAdapter(schrittAnhaengen,dragButtonAdapter);
 		addDragAdapter(whileSchrittAnhaengen,dragButtonAdapter);
 		addDragAdapter(whileWhileSchrittAnhaengen,dragButtonAdapter);
@@ -774,7 +774,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	}
 
-	private void addDragAdapter(JButton button, DragButtonAdapter adapter) {
+	private void addDragAdapter(JButton button, DragAdapter adapter) {
 		button.addMouseListener(adapter);
 		button.addMouseMotionListener(adapter);
 	}

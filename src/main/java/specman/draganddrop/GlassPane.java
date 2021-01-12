@@ -29,13 +29,11 @@ public class GlassPane extends JPanel {
 	private void createPanel() {
 		panel = new JPanel();
 		panel.setBackground(new Color(85,85,85, 95));
-		panel.setBounds(100,22, 120, 12);
 	}
 
 	public void setInputRecBounds(int x, int y, int width, int height) {
 		y= y-menueHeight;
 		panel.setBounds(x-windowsoffset, y, width, height);
-
 		Specman.instance().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 	}
 }

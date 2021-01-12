@@ -2,7 +2,7 @@ package specman.textfield;
 
 import specman.EditorI;
 import specman.Specman;
-import specman.draganddrop.DragButtonAdapter;
+import specman.draganddrop.DragAdapter;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
@@ -178,7 +178,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			schrittNummer.setForeground(Color.WHITE);
 			schrittNummer.setOpaque(true);
 
-            DragButtonAdapter ada = new DragButtonAdapter(Specman.instance());
+            DragAdapter ada = new DragAdapter(Specman.instance());
             schrittNummer.addMouseListener(ada);
             schrittNummer.addMouseMotionListener(ada);
 
