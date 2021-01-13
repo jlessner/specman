@@ -36,7 +36,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		//createPanelLayout(caseInitialtexte.length);
 		panel.setLayout(panelLayout);
 		panel.addComponentListener(this);
-
+		panel.setEnabled(false);
 		// TODO JL: Die Platzierung des Klappbuttons muss neu gebaut werden. Weder das Textfeld noch
 		// das Hauptpanel sind geeignet, weil diese ein Formlayout haben. Allerdings dürfte sich das
 		// Problem erledigen, wenn die Aktogramm-Darstellung kommt. Dann ist links oben gar kein Text
