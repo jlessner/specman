@@ -46,18 +46,18 @@ public class DragAdapter extends MouseAdapter {
 			draggingLogic.showInvalidCursor();
 			return;
 		}
-
 		Point pt = e.getPoint();
 		JComponent parent = (JComponent) e.getComponent();
-		//-2 da performanter
 		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, spec);
+		if(!spec.getGlassPane().isVisible() ) {
+			spec.setCursor(Cursor.DEFAULT_CURSOR);
+		}
 		spec.getGlassPane().setVisible(false);
 		spec.window.add(dummy);
 		spec.window.pack();
 		updateWindowLocation(pt, parent);
 		spec.window.setVisible(true);
 		draggingLogic.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,NoInsert,e);
-
 	}
 
 	//Updates the Window Location
@@ -85,14 +85,10 @@ public class DragAdapter extends MouseAdapter {
 		spec.window.remove(dummy);
 	}
 
-	//Detection funktioniert aber der Cursor wird nicht gesetzt
+
 	public void mouseEntered(MouseEvent e) {
 		if(e.getSource() instanceof JLabel){
-			JLabel label = (JLabel) e.getSource();
-			InsetPanel ip = (InsetPanel) label.getParent().getParent();
-			AbstractSchrittView step =   spec.hauptSequenz.findeSchritt(ip.getTextfeld().getTextComponent());
-			//Abfrage ob man sich auf sich selbst befindet
-			if(step.getParent().schritte.size() <= 1) {
+			if(checkEinzigerSchritt(e)) {
 				draggingLogic.showInvalidCursor();
 			}
 			if(checkGeloeschterSchritt(e)){
