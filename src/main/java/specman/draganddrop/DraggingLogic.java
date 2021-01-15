@@ -62,7 +62,7 @@ public class DraggingLogic implements Serializable {
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
             int casehight = zweig.getContainer().getHeight() + zweig.getUeberschrift().getHeight() + 2;
-            createGlassPane(glassPaneHeight, r.x + r.width - glassPaneHeight, r.y+offsetRaute, casehight-offsetRaute, true);
+            createGlassPane(glassPaneHeight, r.x + r.width - glassPaneHeight+offsetRaute, r.y+offsetRaute, casehight-offsetRaute, true);
             //mouserelease add Case right from choosen Case
             if (insertDecision == InsertDecision.Insert) addCase(zweig);
         }
@@ -214,7 +214,7 @@ public class DraggingLogic implements Serializable {
                     CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 
                     checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
-                    checkCaseHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, caseSchritt.getRautenHeight(), insertDecision);
+                    checkCaseHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, (int)caseSchritt.breiteLayoutspalteBerechnen(), insertDecision);
                     dragGlassPanePos(pos, caseSchritt.getSonstSequenz().schritte, insertDecision, e);
 
                     for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
@@ -272,10 +272,10 @@ public class DraggingLogic implements Serializable {
 
                     checkfalseGlassPaneforComponent(ifel.getTextShef(), pos, glassPaneHeight);
                     if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
-                        checkZweigHeading(ifel.getIfSequenz(), pos, glassPaneHeight, ifel.getRautenHeight(),insertDecision, e);
+                        checkZweigHeading(ifel.getIfSequenz(), pos, glassPaneHeight, (int)ifel.breiteLayoutspalteBerechnen(),insertDecision, e);
                         dragGlassPanePos(pos, ifel.getIfSequenz().schritte, insertDecision, e);
                     }
-                    checkZweigHeading(ifel.getElseSequenz(), pos, glassPaneHeight,-ifel.getRautenHeight(), insertDecision, e);
+                    checkZweigHeading(ifel.getElseSequenz(), pos, glassPaneHeight,- (int)ifel.breiteLayoutspalteBerechnen(), insertDecision, e);
                     dragGlassPanePos(pos, ifel.getElseSequenz().schritte, insertDecision, e);
 
                     //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
@@ -310,12 +310,15 @@ public class DraggingLogic implements Serializable {
                         break;
                     }
                     checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
-                    checkZweigHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, insertDecision, e);
+                    checkZweigHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight,(int)caseSchritt.breiteLayoutspalteBerechnen(), insertDecision, e);
                     dragGlassPanePos(pos, caseSchritt.getSonstSequenz().schritte, insertDecision, e);
                     for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
-                        checkZweigHeading(caseSequenz, pos, glassPaneHeight, insertDecision, e);
-                        dragGlassPanePos(pos, caseSequenz.schritte, insertDecision, e);
-
+                    	if(caseSchritt.getCaseSequenzen().get(0) == caseSequenz) {
+                    		 checkZweigHeading(caseSequenz, pos, glassPaneHeight,-(int)caseSchritt.breiteLayoutspalteBerechnen(), insertDecision, e);
+                    	}else {
+	                        checkZweigHeading(caseSequenz, pos, glassPaneHeight, insertDecision, e);
+                    	}
+                    	dragGlassPanePos(pos, caseSequenz.schritte, insertDecision, e);
                         //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
                         if (lastStep) {
                             addNeuerSchritt(After, caseSchritt, e);
