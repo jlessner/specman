@@ -284,6 +284,16 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			System.err.println("Noch nicht fertig: Sonst-Sequenz entfernen");
 			return -1;
 		}
+		/** @author PVN */ 
+		if (zweig == caseSequenzen.get(0) && caseSequenzen.size() <=2 ) {
+			System.err.println("1. Fall kann nicht entfernt werden");
+			return -1; 
+		}
+		/**@author PVN */ 
+		if (zweig == caseSequenzen.get(1) && caseSequenzen.size() <=2) {
+			System.err.println("2. Fall kann nicht entfernt werden");
+			return -1; 
+		}
 		int caseIndex = caseSequenzen.indexOf(zweig);
 		zweigAusListeUndPanelEntfernen(zweig);
 		zweigAnzahlAenderungAbschliessen(editor, spaltenbreitenErmitteln());
