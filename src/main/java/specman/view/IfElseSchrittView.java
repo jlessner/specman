@@ -42,7 +42,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		leeresFeld.setBackground(Specman.schrittHintergrund());
 		panelBedingung = new JPanel();
 		panelBedingung.setBackground(Specman.schrittHintergrund());
-		panelBedingung.setLayout(new FormLayout(20 * Specman.instance().getZoomFactor()/100 + ", 10px:grow", "fill:pref"));
+		panelBedingung.setLayout(createSpalteLinks());
 		panelBedingung.add(text.asJComponent(), "2,1");
 		panel.add(panelBedingung, CC.xywh(3, 1, 1, 1));
 		panel.add(leeresFeld, CC.xywh(1, 1, 1, 1));
@@ -94,7 +94,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		/** @author PVN */
 		panelElse = new JPanel();
 		panelElse.setBackground(Specman.schrittHintergrund());
-		panelElse.setLayout(new FormLayout(20 * Specman.instance().getZoomFactor()/100 + ", 10px:grow", "fill:pref:grow"));
+		panelElse.setLayout(createSpalteLinks());
 		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 1, 1, 1));
 		panel.add(panelElse, CC.xywh(3, 3, 1, 1));
 	}
@@ -104,7 +104,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		/**@author PVN */
 		panelIf = new JPanel();
 		panelIf.setBackground(Specman.schrittHintergrund());
-		panelIf.setLayout(new FormLayout("10px:grow, " + 20 * Specman.instance().getZoomFactor()/100, "fill:pref:grow"));
+		panelIf.setLayout(createSpalteRechts());
 		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));
 		panel.add(panelIf, CC.xy(1, 3));
 	}
@@ -189,9 +189,23 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		elseSequenz.zusammenklappenFuerReview();
 	}
 	
+	/** @author PVN */
+	public static int spalteUmrechnen(int prozentNeu) {
+		int breiteSpaltenLayout = 20*prozentNeu/100; 
+		return breiteSpaltenLayout;
+	}
+	
 	@Override
 	public void skalieren(int prozentNeu, int prozentAktuell) {
 		super.skalieren(prozentNeu, prozentAktuell);
+		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
+		/**@author SD */
+		panelBedingung.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); 
+		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); 
+		panelIf.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); 
+		panelBedingung.add(text.asJComponent(), CC.xy(2, 1));
+		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xy(2, 1));
+		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));
 	}
 
 	protected int texteinrueckungNeuberechnen() {

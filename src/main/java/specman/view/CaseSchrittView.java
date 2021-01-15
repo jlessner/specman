@@ -52,17 +52,20 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		lueckenFueller = new JPanel();
 		lueckenFueller.setBackground(Specman.schrittHintergrund());
 		panel.add(lueckenFueller, CC.xy(1, 1));
+		
 		panelCase = new JPanel(); 
 		panelCase.setBackground(Specman.schrittHintergrund());
-		panelCase.setLayout(new FormLayout(breiteLayoutBerechnen() + ", 10px:grow", "fill:pref"));
+		panelCase.setLayout(createSpalteLinks());
 		panel.add(panelCase, CC.xy(3, 1));
+		
 		panelSonst = new JPanel(); 
 		panelSonst.setBackground(Specman.schrittHintergrund());
-		panelSonst.setLayout(new FormLayout("10px:grow, " + breiteLayoutBerechnen(), "fill:pref:grow"));
+		panelSonst.setLayout(createSpalteRechts());
 		panel.add(panelSonst, CC.xy(1, 3));
+		
 		panelFall1 = new JPanel(); 
 		panelFall1.setBackground(Specman.schrittHintergrund());
-		panelFall1.setLayout(new FormLayout(breiteLayoutBerechnen() + ", 10px:grow", "fill:pref:grow"));
+		panelFall1.setLayout(createSpalteLinks());
 		panel.add(panelFall1, CC.xy(3, 3));
 	}
 
@@ -121,9 +124,10 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		return new FormLayout(spaltenSpec,
 				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR); 
 	}
+	
 	/** @author PVN */
-	private int breiteLayoutBerechnen() {
-		int breiteSpaltenLayout = 20*Specman.instance().getZoomFactor()/100; 
+	public static int spalteUmrechnen(int prozentNeu) {
+		int breiteSpaltenLayout = 20*prozentNeu/100; 
 		return breiteSpaltenLayout;
 	}
 
@@ -137,6 +141,14 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		// Cool, was das FormLayout so alles kann ;-)
 		// Syntaxtricks von hier: http://manual.openestate.org/extern/forms-1.2.1/reference/variables.html
 		panelLayout.setRowSpec(1, RowSpec.decode(layoutRowSpec1()));
+		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
+		/** @author SD */
+		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); 
+		panelSonst.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); 
+		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); 
+		panelCase.add(text.asJComponent(), CC.xy(2, 1));
+		panelSonst.add(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 1));
+		panelFall1.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(2, 1));
 	}
 
 	@Override
