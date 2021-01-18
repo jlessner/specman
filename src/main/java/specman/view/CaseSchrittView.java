@@ -329,12 +329,23 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	
 	public ZweigSchrittSequenzView neuenZweigHinzufuegen(EditorI editor, ZweigSchrittSequenzView linkerNachbar) {
 		int linkerNachbarIndex = caseSequenzen.indexOf(linkerNachbar);
-		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, "Fall " + (linkerNachbarIndex+2));
-		neuerZweig.einfachenSchrittAnhaengen(editor);
-		zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
-		return neuerZweig;
+		/** @author Stephan D*/
+		if(linkerNachbarIndex ==-1) {
+			for (int i = 0; i < caseSequenzen.size(); i++) {
+				caseSequenzen.get(i).ueberschrift.addFocusListener(this);
+				panel.add(caseSequenzen.get(i).ueberschrift.asJComponent(), INITIAL_DUMMY);
+			}
+			ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, "Fall neben sonst " + (linkerNachbarIndex+2));
+			neuerZweig.einfachenSchrittAnhaengen(editor);
+			zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
+			return neuerZweig;
+		}else {
+			ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, "Case  " + (linkerNachbarIndex+2));
+			neuerZweig.einfachenSchrittAnhaengen(editor);
+			zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
+			return neuerZweig;
+		}
 	}
-	
 	private ArrayList<Integer> zweigbreiteInSpaltenbreitenEinpassen(ZweigSchrittSequenzView zweig, int zweigIndex) {
 		ArrayList<Integer> spaltenBreiten = spaltenbreitenErmitteln();
 		int summeSpaltenbreiten = spaltenBreiten.stream().mapToInt(i -> i).sum();
