@@ -188,7 +188,6 @@ public class DraggingLogic implements Serializable {
             }
             //Abfrage ob man sich auf sich selbst befindet
             if (rec.contains(pos)) {
-                showInvalidCursor();
                 return;
             }
         }
