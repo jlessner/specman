@@ -30,11 +30,11 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	ZweigSchrittSequenzView ifSequenz;
 	ZweigSchrittSequenzView elseSequenz;
 	boolean mittelpunktRaute = true;
-	JPanel leeresFeld; 
+	JPanel leeresFeld;
 	JPanel panelBedingung;
 	JPanel panelElse;
 	JPanel panelIf;
-	
+
 	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id,Aenderungsart anderungsart,  boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, anderungsart, createPanelLayout());
 		/** @author PVN */
@@ -158,6 +158,15 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		super.setBackground(bg);
 		ifSequenz.ueberschrift.setBackground(bg);
 		elseSequenz.ueberschrift.setBackground(bg);
+		panelIf.setBackground(bg);
+		panelElse.setBackground(bg);
+		leeresFeld.setBackground(bg);
+		panelBedingung.setBackground(bg);
+
+		//Raute
+
+
+
 		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}
 
@@ -191,18 +200,18 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	
 	/** @author PVN */
 	public static int spalteUmrechnen(int prozentNeu) {
-		int breiteSpaltenLayout = 20*prozentNeu/100; 
+		int breiteSpaltenLayout = 20*prozentNeu/100;
 		return breiteSpaltenLayout;
 	}
-	
+
 	@Override
 	public void skalieren(int prozentNeu, int prozentAktuell) {
 		super.skalieren(prozentNeu, prozentAktuell);
 		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
 		/**@author SD */
-		panelBedingung.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); 
-		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); 
-		panelIf.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); 
+		panelBedingung.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow"));
+		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow"));
+		panelIf.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow"));
 		panelBedingung.add(text.asJComponent(), CC.xy(2, 1));
 		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xy(2, 1));
 		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));

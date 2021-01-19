@@ -52,18 +52,18 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		lueckenFueller = new JPanel();
 		lueckenFueller.setBackground(Specman.schrittHintergrund());
 		panel.add(lueckenFueller, CC.xy(1, 1));
-		
-		panelCase = new JPanel(); 
+
+		panelCase = new JPanel();
 		panelCase.setBackground(Specman.schrittHintergrund());
 		panelCase.setLayout(createSpalteLinks());
 		panel.add(panelCase, CC.xy(3, 1));
-		
-		panelSonst = new JPanel(); 
+
+		panelSonst = new JPanel();
 		panelSonst.setBackground(Specman.schrittHintergrund());
 		panelSonst.setLayout(createSpalteRechts());
 		panel.add(panelSonst, CC.xy(1, 3));
-		
-		panelFall1 = new JPanel(); 
+
+		panelFall1 = new JPanel();
 		panelFall1.setBackground(Specman.schrittHintergrund());
 		panelFall1.setLayout(createSpalteLinks());
 		panel.add(panelFall1, CC.xy(3, 3));
@@ -82,7 +82,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 				editor,
 				new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, initialtext("Sonst")),
 				new ArrayList<ZweigSchrittSequenzView>(Arrays.asList(
-						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 1")),  
+						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 1")),
 						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 2")))));
 	}
 	
@@ -122,12 +122,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			spaltenSpec += ", 10px:grow, " + FORMLAYOUT_GAP;
 		spaltenSpec += ", 10px:grow";
 		return new FormLayout(spaltenSpec,
-				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR); 
+				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 	}
-	
+
 	/** @author PVN */
 	public static int spalteUmrechnen(int prozentNeu) {
-		int breiteSpaltenLayout = 20*prozentNeu/100; 
+		int breiteSpaltenLayout = 20*prozentNeu/100;
 		return breiteSpaltenLayout;
 	}
 
@@ -143,9 +143,9 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		panelLayout.setRowSpec(1, RowSpec.decode(layoutRowSpec1()));
 		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
 		/** @author SD */
-		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); 
-		panelSonst.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); 
-		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); 
+		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow"));
+		panelSonst.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow"));
+		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow"));
 		panelCase.add(text.asJComponent(), CC.xy(2, 1));
 		panelSonst.add(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 1));
 		panelFall1.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(2, 1));
@@ -187,7 +187,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	protected int texteinrueckungNeuberechnen() {
-		return 0; /**@author PVN */ 
+		return 0; /**@author PVN */
 	}
 
 	protected Point berechneRautenmittelpunkt() { //umbenannt
@@ -284,15 +284,15 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			System.err.println("Noch nicht fertig: Sonst-Sequenz entfernen");
 			return -1;
 		}
-		/** @author PVN */ 
+		/** @author PVN */
 		if (zweig == caseSequenzen.get(0) && caseSequenzen.size() <=2 ) {
 			System.err.println("1. Fall kann nicht entfernt werden");
-			return -1; 
+			return -1;
 		}
-		/**@author PVN */ 
+		/**@author PVN */
 		if (zweig == caseSequenzen.get(1) && caseSequenzen.size() <=2) {
 			System.err.println("2. Fall kann nicht entfernt werden");
-			return -1; 
+			return -1;
 		}
 		int caseIndex = caseSequenzen.indexOf(zweig);
 		zweigAusListeUndPanelEntfernen(zweig);
@@ -335,12 +335,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 				caseSequenzen.get(i).ueberschrift.addFocusListener(this);
 				panel.add(caseSequenzen.get(i).ueberschrift.asJComponent(), INITIAL_DUMMY);
 			}
-			ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, "Fall neben sonst " + (linkerNachbarIndex+2));
+			ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), Specman.initialArt(), initialtext("Fall " + (linkerNachbarIndex+2)));
 			neuerZweig.einfachenSchrittAnhaengen(editor);
 			zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
 			return neuerZweig;
 		}else {
-			ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, "Case  " + (linkerNachbarIndex+2));
+			ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), Specman.initialArt(), initialtext("Case " + (linkerNachbarIndex+2)));
 			neuerZweig.einfachenSchrittAnhaengen(editor);
 			zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
 			return neuerZweig;
