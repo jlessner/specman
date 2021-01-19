@@ -14,13 +14,7 @@ import specman.model.ModelEnvelope;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.textfield.TextfieldShef;
-import specman.undo.UndoableDiagrammSkaliert;
-import specman.undo.UndoableSchrittEingefaerbt;
-import specman.undo.UndoableSchrittEntfernt;
-import specman.undo.UndoableSchrittHinzugefuegt;
-import specman.undo.UndoableToggleStepBorder;
-import specman.undo.UndoableZweigEntfernt;
-import specman.undo.UndoableZweigHinzugefuegt;
+import specman.undo.*;
 import specman.view.AbstractSchrittView;
 import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
@@ -245,6 +239,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -257,6 +252,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -269,6 +265,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -281,6 +278,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -293,6 +291,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -305,6 +304,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -317,6 +317,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -329,6 +330,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.breakSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -341,6 +343,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -363,6 +366,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
 				schritt.skalieren(zoomFaktor, 100);
 				diagrammAktualisieren(schritt);
+				pruefeFuerSchrittnummer();
 			}
 		});
 		
@@ -412,10 +416,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							}
 							else {
 								schritt.setAenderungsart(Aenderungsart.Geloescht);
-								schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-								schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+								//schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+								//schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+								//schritt.getText().setEditable(false);
 								aenderungsMarkierungenAufGeloescht(schritt);
 								ohneSchleife(schritt, Aenderungsart.Geloescht);
+								schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText());
+								//System.out.println(undoManager.getUndoPresentationName());
+								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 							}
 						}
 
@@ -1162,10 +1170,30 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			//TODO noch nicht implementiert
 			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
-				System.out.println("Es wurde eine Änderung vorgenommen");
+				/*System.out.println("Es wurde eine Änderung vorgenommen");
 				schritt.setAenderungsart(null);
 				schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+				*/
+				String neuerString="";
+				for (int textstelle = 0; textstelle<schritt.getshef().getPlainText().length();textstelle++) {
+					char char1 = schritt.getshef().getPlainText().charAt(textstelle);
+					if (schritt.getshef().aenderungsStilCheck() == true) {
+						System.out.println(schritt.getshef().getPlainText().charAt(textstelle) + " und n");
+						neuerString = neuerString + String.valueOf(char1);
+					} else if (schritt.getshef().geloeschtStilCheck() == true) {
+						System.out.println(schritt.getshef().getPlainText().charAt(textstelle) + " und g");
+						neuerString = neuerString;
+					} else {
+						neuerString += String.valueOf(char1);
+						System.out.println(schritt.getshef().getPlainText().charAt(textstelle) + " und u");
+					}
+				}
+				System.out.println("Neuer String lautet"+neuerString);
+				schritt.getshef().setPlainText(neuerString);
+				schritt.getshef().setStyle(schritt.getPlainText(),TextfieldShef.standardStil);
+				schritt.setAenderungsart(null);
+
 			}
 
 			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
@@ -1250,5 +1278,27 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				caseSequenz.getUeberschrift().getTextComponent().setEnabled(false);
 			}
 		}
+	}
+	public void pruefeFuerSchrittnummer() {
+		List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
+		schritte = hauptSequenz.schritte;
+		if(instance != null && instance.aenderungenVerfolgen()) {
+			for (AbstractSchrittView schritt : schritte) {
+
+				//wird bei keiner gesetzten Änderungsart durchlaufen
+				if (schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+					schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
+				}
+				if (schritt.getAenderungsart() == Aenderungsart.Quellschritt) {
+					schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" + "B" + "</span></body></html>");
+				}
+				if (schritt.getAenderungsart() == Aenderungsart.Zielschritt) {
+					schritt.getshef().schrittNummer.setText("<html><body><span>" + "A" + "</span><span>&lArr</span><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
+				}
+
+			}
+		}
+		else
+			return;
 	}
 }

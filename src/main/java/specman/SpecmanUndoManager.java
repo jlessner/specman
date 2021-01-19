@@ -25,6 +25,12 @@ public class SpecmanUndoManager extends UndoManager {
         return success;
     }
 
+
+    @Override
+    public boolean replaceEdit(UndoableEdit anEdit) {
+        return super.replaceEdit(anEdit);
+    }
+
     @Override
     public synchronized void discardAllEdits() {
         super.discardAllEdits();
