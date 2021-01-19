@@ -199,76 +199,81 @@ public class DraggingLogic implements Serializable {
             p = SwingUtilities.convertPoint(schritt.getPanel(), 0, 0, specman);
             Rectangle r = createRectangle(p, schritt.getPanel());
 
-            //Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört // Zusaätzliche Abfrage da Marker beim CaseAnängen angezeigt wurde
-            if (!(e.getSource().equals(specman.getCaseAnhaengen()))) {
-                if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
-                    if (lastPixels(pos, p, glassPaneHeight, r, glassPane, schritt, insertDecision)) {
-                        break;
+            if(schritt.getAenderungsart()==Aenderungsart.Geloescht){
+                //Auf einem Gelöschten Schritt nur verbot zeigen
+                showInvalidCursor();
+            }else {
+
+                //Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört // Zusätzliche Abfrage da Marker beim CaseAnängen angezeigt wurde
+                if (!(e.getSource().equals(specman.getCaseAnhaengen()))) {
+                    if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
+                        if (lastPixels(pos, p, glassPaneHeight, r, glassPane, schritt, insertDecision)) {
+                            break;
+                        }
                     }
                 }
-            }
 
-            //Add Case
-            if (e.getSource().equals(specman.getCaseAnhaengen())) {
-                if (schritt instanceof CaseSchrittView) {
-                    CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+                //Add Case
+                if (e.getSource().equals(specman.getCaseAnhaengen())) {
+                    if (schritt instanceof CaseSchrittView) {
+                        CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 
                     checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
                     checkCaseHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, (int)caseSchritt.breiteLayoutspalteBerechnen(), insertDecision);
                     dragGlassPanePos(pos, caseSchritt.getSonstSequenz().schritte, insertDecision, e);
 
-                    for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
-                        int groesse = caseSchritt.getCaseSequenzen().size();
-                        checkCaseHeading(caseSequenz, pos, glassPaneHeight,0, insertDecision);
-                        dragGlassPanePos(pos, caseSequenz.schritte, insertDecision, e);
+                        for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+                            int groesse = caseSchritt.getCaseSequenzen().size();
+                            checkCaseHeading(caseSequenz, pos, glassPaneHeight, 0, insertDecision);
+                            dragGlassPanePos(pos, caseSequenz.schritte, insertDecision, e);
 
-                        if (groesse != caseSchritt.getCaseSequenzen().size()) {
-                            break;
-                        }
-                    }
-                } else {
-                    if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
-                        IfElseSchrittView ifel = (IfElseSchrittView) schritt;
-                        if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
-                            dragGlassPanePos(pos, ifel.getIfSequenz().schritte, insertDecision, e);
-                        }
-                        dragGlassPanePos(pos, ifel.getElseSequenz().schritte, insertDecision, e);
-
-                    } else if (schritt instanceof WhileSchrittView || schritt instanceof WhileWhileSchrittView) {
-                        SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
-                        dragGlassPanePos(pos, schleife.getWiederholSequenz().schritte, insertDecision, e);
-
-                    } else if (schritt instanceof SubsequenzSchrittView) {
-                        SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
-                        dragGlassPanePos(pos, sub.getSequenz().schritte, insertDecision, e);
-                    }
-                }
-                //Add Step
-            } else {
-                //Abfrage einfacherSchritt
-                int groesse = schrittListe.size();
-                if (schritt instanceof EinfacherSchrittView) {
-                    if (r.contains(pos)) {
-                        glassPane.setInputRecBounds(r.x, r.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
-
-                        if (checkFirstStep(schritt, pos, glassPaneHeight, insertDecision, e)) {
-                            break;
-                        } else {
-                            glassPane.setInputRecBounds(r.x,r.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
-                            if (insertDecision == InsertDecision.Insert) {
-                                addNeuerSchritt(After, schritt, e);
+                            if (groesse != caseSchritt.getCaseSequenzen().size()) {
+                                break;
                             }
                         }
-                        specman.getGlassPane().setVisible(true);
-                        break;
-                    }
-                    //Abfrage IfElseSchritt
-                } else if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+                    } else {
+                        if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+                            IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+                            if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+                                dragGlassPanePos(pos, ifel.getIfSequenz().schritte, insertDecision, e);
+                            }
+                            dragGlassPanePos(pos, ifel.getElseSequenz().schritte, insertDecision, e);
 
-                    IfElseSchrittView ifel = (IfElseSchrittView) schritt;
-                    if (checkFirstStep(schritt, pos, glassPaneHeight, insertDecision, e)) {
-                        break;
+                        } else if (schritt instanceof WhileSchrittView || schritt instanceof WhileWhileSchrittView) {
+                            SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+                            dragGlassPanePos(pos, schleife.getWiederholSequenz().schritte, insertDecision, e);
+
+                        } else if (schritt instanceof SubsequenzSchrittView) {
+                            SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+                            dragGlassPanePos(pos, sub.getSequenz().schritte, insertDecision, e);
+                        }
                     }
+                    //Add Step
+                } else {
+                    //Abfrage einfacherSchritt
+                    int groesse = schrittListe.size();
+                    if (schritt instanceof EinfacherSchrittView) {
+                        if (r.contains(pos)) {
+                            glassPane.setInputRecBounds(r.x, r.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
+
+                            if (checkFirstStep(schritt, pos, glassPaneHeight, insertDecision, e)) {
+                                break;
+                            } else {
+                                glassPane.setInputRecBounds(r.x, r.y + r.height - glassPaneHeight, r.width, glassPaneHeight);
+                                if (insertDecision == InsertDecision.Insert) {
+                                    addNeuerSchritt(After, schritt, e);
+                                }
+                            }
+                            specman.getGlassPane().setVisible(true);
+                            break;
+                        }
+                        //Abfrage IfElseSchritt
+                    } else if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+
+                        IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+                        if (checkFirstStep(schritt, pos, glassPaneHeight, insertDecision, e)) {
+                            break;
+                        }
 
                     checkfalseGlassPaneforComponent(ifel.getTextShef(), pos, glassPaneHeight);
                     if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
@@ -278,25 +283,25 @@ public class DraggingLogic implements Serializable {
                     checkZweigHeading(ifel.getElseSequenz(), pos, glassPaneHeight,- (int)ifel.breiteLayoutspalteBerechnen(), insertDecision, e);
                     dragGlassPanePos(pos, ifel.getElseSequenz().schritte, insertDecision, e);
 
-                    //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
-                    if (lastStep) {
-                        addNeuerSchritt(After, ifel, e);
-                        lastStep = false;
-                        break;
-                    }
-                    //While Schritt
-                } else if (schritt instanceof WhileSchrittView || schritt instanceof WhileWhileSchrittView) {
+                        //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
+                        if (lastStep) {
+                            addNeuerSchritt(After, ifel, e);
+                            lastStep = false;
+                            break;
+                        }
+                        //While Schritt
+                    } else if (schritt instanceof WhileSchrittView || schritt instanceof WhileWhileSchrittView) {
 
-                    SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
-                    if (checkFirstStep(schritt, pos, glassPaneHeight, insertDecision, e)) {
-                        break;
-                    }
-                    if (checkGlassPaneforComponent(schleife, pos, glassPaneHeight, insertDecision, e)) {
-                        break;
-                    }
+                        SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+                        if (checkFirstStep(schritt, pos, glassPaneHeight, insertDecision, e)) {
+                            break;
+                        }
+                        if (checkGlassPaneforComponent(schleife, pos, glassPaneHeight, insertDecision, e)) {
+                            break;
+                        }
 
-                    dragGlassPanePos(pos, schleife.getWiederholSequenz().schritte, insertDecision, e);
-                    checkSchleifenHeading(schleife, pos, glassPaneHeight, insertDecision, e);
+                        dragGlassPanePos(pos, schleife.getWiederholSequenz().schritte, insertDecision, e);
+                        checkSchleifenHeading(schleife, pos, glassPaneHeight, insertDecision, e);
 
                     //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
                     if (lastStep) {
@@ -347,15 +352,16 @@ public class DraggingLogic implements Serializable {
                     }
                     checkGlassPaneforComponent(breakSchritt, pos, glassPaneHeight, insertDecision, e);
 
-                    //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
-                    if (lastStep) {
-                        addNeuerSchritt(After, breakSchritt, e);
-                        lastStep = false;
+                        //wenn letzter Step in Sequenz beenden der Rekusiven Methode und verwenden des Übergeordneten Schrittes
+                        if (lastStep) {
+                            addNeuerSchritt(After, breakSchritt, e);
+                            lastStep = false;
+                            break;
+                        }
+                    }
+                    if (groesse != schrittListe.size()) {
                         break;
                     }
-                }
-                if (groesse != schrittListe.size()) {
-                    break;
                 }
             }
         }
@@ -415,8 +421,6 @@ public class DraggingLogic implements Serializable {
         //ToDo Löschen und hinzufügen beim verschieben
         if (e.getSource() instanceof JLabel) {
             if(specman.aenderungenVerfolgen()){
-                //TODO Aenderungsmarkierung für verschobene Schritte
-
 
                 //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
                 if(schritt.getAenderungsart()== Aenderungsart.Geloescht)
