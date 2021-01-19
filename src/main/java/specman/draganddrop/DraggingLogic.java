@@ -409,17 +409,15 @@ public class DraggingLogic implements Serializable {
                     InsetPanel ip = (InsetPanel) label.getParent().getParent();
                     AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
                     sequenz=step.getParent();
-
-                    EinfacherSchrittView quellschritt = new EinfacherSchrittView(specman, sequenz, "", step.getId(), null);
+                    QuellSchrittView quellschritt = new QuellSchrittView(specman, sequenz, "", step.getId(), null, null);
                     sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
 
                     quellschritt.setAenderungsart(Aenderungsart.Quellschritt);
                     quellschritt.getshef().setQuellStil(step.getPlainText());
                     quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
                     //TODO Schrittnummer des Quellschritts
-                    quellschritt.getshef().schrittNummer.setText("abc");
-                    //quellschritt.getshef().schrittNummer.setText("<html><body><span>"+quellschritt.getshef().schrittNummer.getText()+
-                    //        " </span><span>&larr </span><span style='text-decoration: line-through;'>"+step.getshef().schrittNummer.getText()+"</span></body></html>");
+                    quellschritt.getshef().schrittNummer.setText("<html><body><span>"+quellschritt.getshef().schrittNummer.getText()+
+                            " </span><span>&larr </span><span style='text-decoration: line-through;'>"+step.getshef().schrittNummer.getText()+"</span></body></html>");
 
                     Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
                     Specman.instance().ohneSchleife(quellschritt, Aenderungsart.Quellschritt);
@@ -427,7 +425,6 @@ public class DraggingLogic implements Serializable {
                     if (step != schritt) {
 
                         int schrittindex = step.getParent().schrittEntfernen(step);
-
                         step.setId(schritt.newStepIDInSameSequence(insertionPosition));
                         specman.getUndoManager().addEdit(new UndoableSchrittEntfernt(step, step.getParent(), schrittindex));
 
@@ -440,7 +437,10 @@ public class DraggingLogic implements Serializable {
                         step.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
                                 +schritt.getshef().schrittNummer.getText()+"</span><span>&rarr</span><span>"+step.getshef().schrittNummer.getText()+ "</span></body></html>");
                         Specman.instance().ohneSchleife(step, Aenderungsart.Zielschritt);
+                        //specman.pruefeFuerSchrittnummer();
                     }
+                    specman.pruefeFuerSchrittnummer();
+                    quellschritt.setReferenzId(step.getId());
 
                 }
 

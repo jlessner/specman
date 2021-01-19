@@ -3,7 +3,7 @@ package specman.model.v001;
 import specman.Aenderungsart;
 import specman.SchrittID;
 
-public class QuellSchrittModel_V001 extends AbstractSchrittModel_V001{
+public class QuellSchrittModel_V001 extends EinfacherSchrittModel_V001{
 
     public final SchrittID referenzId;
 

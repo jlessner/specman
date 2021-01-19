@@ -8,7 +8,7 @@ import specman.model.v001.QuellSchrittModel_V001;
 import javax.swing.*;
 import java.awt.*;
 
-public class QuellSchrittView extends AbstractSchrittView{
+public class QuellSchrittView extends EinfacherSchrittView{
 
     protected SchrittID referenzId;
 
@@ -24,9 +24,6 @@ public class QuellSchrittView extends AbstractSchrittView{
     }
 
     @Override
-    public JComponent getComponent() { return decorated(text.asJComponent()); }
-
-    @Override
     public QuellSchrittModel_V001 generiereModel(boolean formatierterText) {
         QuellSchrittModel_V001 model = new QuellSchrittModel_V001(
                 id,
@@ -36,12 +33,6 @@ public class QuellSchrittView extends AbstractSchrittView{
                 referenzId
         );
         return model;
-    }
-
-    @Override
-    public JComponent getPanel() {
-        // TODO Auto-generated method stub
-        return text.asJComponent();
     }
 
     public SchrittID getReferenzId() {

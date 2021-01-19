@@ -30,10 +30,15 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledEditorKit;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CompoundEdit;
+import javax.swing.undo.CannotUndoException;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -135,6 +140,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		undoManager.discardAllEdits();
 		this.setGlassPane(new GlassPane((SwingUtilities.convertPoint(this.getContentPane(), 0, 0,this).y)-getJMenuBar().getHeight()));
 	}
+	/*public UndoMerge(){
+		super();
+		setEditorKit(new StyledEditorKit());
+		getDocument().addUndoableEditListener(undoManager);
+	}*/
 
 	private void setInitialWindowSizeAndScreenCenteredLocation() {
 		setSize(1100, 700);
@@ -416,26 +426,33 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							}
 							else {
 								schritt.setAenderungsart(Aenderungsart.Geloescht);
-								//schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-								//schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-								//schritt.getText().setEditable(false);
+								schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+								schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+								schritt.getText().setEditable(false);
 								aenderungsMarkierungenAufGeloescht(schritt);
 								ohneSchleife(schritt, Aenderungsart.Geloescht);
-								schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText());
-								//System.out.println(undoManager.getUndoPresentationName());
+								/*zweig.getUeberschrift().setStyle(zweig.getUeberschrift().getText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+								zweig.getUeberschrift().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);*/
+								//TODO Schrittnummern!
+								schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
+								schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
+								schritt.getshef().schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
+								schritt.getshef().schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
+								//schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
+
 								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 							}
 						}
-
-
 
 						else{
 							schritt.setAenderungsart(Aenderungsart.Geloescht);
 							schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
 							schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-							//schritt.getText().setEditable(false);
+							schritt.getText().setEditable(false);
+							schritt.getshef().setStyle(schritt.getshef().getPlainText(),TextfieldShef.ganzerSchrittGeloeschtStil);
 							aenderungsMarkierungenAufGeloescht(schritt);
 							ohneSchleife(schritt, Aenderungsart.Geloescht);
+							undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 						}
                     }
 				}
@@ -556,7 +573,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 				List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
 				schritte = hauptSequenz.schritte;
-				uebernehmenAbfrage(schritte);
+				try {
+					uebernehmenAbfrage(schritte);
+				} catch (BadLocationException badLocationException) {
+					badLocationException.printStackTrace();
+				}
 
 			}
 		});
@@ -568,7 +589,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
 				schritte = hauptSequenz.schritte;
 				recrusiv(schritte, null);
-
+				/*try{
+					verwerfenAbfrage(schritte);
+				} catch (BadLocationException badLocationException) {
+					badLocationException.printStackTrace();
+				}*/
 			}
 		});
 
@@ -1093,7 +1118,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						}
 					}
 				}
-
 				//hinzugefügter Schritt muss entfernt werden, da verworfen
 				if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 					SchrittSequenzView sequenz = schritt.getParent();
@@ -1124,8 +1148,69 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
+	//TODO Verwerfen Abfrage
+
+	public void verwerfenAbfrage(List<AbstractSchrittView> schritte) throws BadLocationException{
+
+		for (AbstractSchrittView schritt:schritte){
+			if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+				//nur für caseSequenzen möglich, da man die Sonstsequenz eh nicht löschen kann
+				for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+					if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
+						int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
+						undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
+					}
+					if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
+						caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
+						caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+						recrusiv(caseSequenz.schritte, null);
+					}
+				}
+			}
+			if (schritt.getAenderungsart() == null) {
+				System.out.println("Es liegen keine Aenderungen vor");
+			}
+			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
+				System.out.println("Neuen Schritt entfernt");
+				SchrittSequenzView sequenz = schritt.getParent();
+				int schrittIndex = sequenz.schrittEntfernen(schritt);
+				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+			}
+			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
+				//TODO verwerfen Methode
+				schritt.getshef().aenderungenVerwerfen();
+				schritt.setAenderungsart(null);
+			}
+			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+				System.out.println("Alter Schritt wiederhergestellt");
+				schritt.setAenderungsart(null);
+				schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
+				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+				aenderungsMarkierungenUndEnumsEntfernen(schritt);
+			}
+			//TODO Quellschritt & Zielschritt
+			/*if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
+				System.out.println("Quellschritt Geloescht");
+				SchrittSequenzView sequenz = schritt.getParent();
+				int schrittIndex = sequenz.schrittEntfernen(schritt);
+			}
+			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
+				System.out.println("Zielschritt hinzugefügt");
+				schritt.getshef().aenderungenUebernehmen();
+				schritt.setAenderungsart(null);
+				//TODO Auslagern der SchrittnummerMethoden
+				//schritt.getshef().setSchrittnummerStandardStil(schritt);
+				schritt.getshef().schrittNummer.setText(schritt.getshef().schrittNummer.getText());
+				schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Schriftfarbe_Geloescht));
+				schritt.getshef().schrittNummer.setBackground(TextfieldShef.Schriftfarbe_Geloescht);
+				schritt.getshef().schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Standard);
+			}*/
+		}
+	}
+
 	//TODO Uebernehmen methode mit abfrage welche art zugewiesen ist
-	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte) {
+	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte) throws BadLocationException {
 
 		for (AbstractSchrittView schritt: schritte) {
 
@@ -1148,6 +1233,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						caseSequenz.setAenderungsart(null);
 						recrusiv(caseSequenz.schritte, null);
 					}
+
 				}
 			}
 
@@ -1170,30 +1256,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			//TODO noch nicht implementiert
 			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
-				/*System.out.println("Es wurde eine Änderung vorgenommen");
+				schritt.getshef().aenderungenUebernehmen();
 				schritt.setAenderungsart(null);
-				schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-				*/
-				String neuerString="";
-				for (int textstelle = 0; textstelle<schritt.getshef().getPlainText().length();textstelle++) {
-					char char1 = schritt.getshef().getPlainText().charAt(textstelle);
-					if (schritt.getshef().aenderungsStilCheck() == true) {
-						System.out.println(schritt.getshef().getPlainText().charAt(textstelle) + " und n");
-						neuerString = neuerString + String.valueOf(char1);
-					} else if (schritt.getshef().geloeschtStilCheck() == true) {
-						System.out.println(schritt.getshef().getPlainText().charAt(textstelle) + " und g");
-						neuerString = neuerString;
-					} else {
-						neuerString += String.valueOf(char1);
-						System.out.println(schritt.getshef().getPlainText().charAt(textstelle) + " und u");
-					}
-				}
-				System.out.println("Neuer String lautet"+neuerString);
-				schritt.getshef().setPlainText(neuerString);
-				schritt.getshef().setStyle(schritt.getPlainText(),TextfieldShef.standardStil);
-				schritt.setAenderungsart(null);
-
 			}
 
 			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
@@ -1204,6 +1268,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				//continue damit er nicht versucht, die unterschritte eines gelöschten Schrittes zu finden
 				continue;
 			}
+			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
+				System.out.println("Quellschritt Geloescht");
+				SchrittSequenzView sequenz = schritt.getParent();
+				int schrittIndex = sequenz.schrittEntfernen(schritt);
+			}
+			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
+				System.out.println("Zielschritt hinzugefügt");
+				schritt.getshef().aenderungenUebernehmen();
+				schritt.setAenderungsart(null);
+				//TODO Auslagern der SchrittnummerMethoden
+				//schritt.getshef().setSchrittnummerStandardStil(schritt);
+				schritt.getshef().schrittNummer.setText(schritt.getshef().schrittNummer.getText());
+				schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Schriftfarbe_Geloescht));
+				schritt.getshef().schrittNummer.setBackground(TextfieldShef.Schriftfarbe_Geloescht);
+				schritt.getshef().schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Standard);
+			}
+
 			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
 				uebernehmenAbfrage(ifel.getElseSequenz().schritte);

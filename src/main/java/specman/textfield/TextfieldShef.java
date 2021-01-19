@@ -7,6 +7,8 @@ import specman.Aenderungsart;
 import specman.draganddrop.DragButtonAdapter;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
+import specman.model.v001.ZielschrittMarkierungen_V001;
+import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -31,11 +33,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
 	public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
 	public static final String INDIKATOR_GELB = getHTMLColor(AENDERUNGSMARKIERUNG_FARBE);
-	public static final String INDIKATOR_AENDERUNGSMARKIERUNG = CSS.Attribute.BACKGROUND_COLOR + ": " + INDIKATOR_GELB;
 	public static final String INDIKATOR_GELOESCHT_MARKIERT = "line-through";
-	public static final String INDIKATOR_WEISS = getHTMLColor(Hintergrundfarbe_Standard);
-	public static final String INDIKATOR_KEINEMARKIERUNG = CSS.Attribute.BACKGROUND_COLOR + ": " + INDIKATOR_WEISS;
-	public static final String INDIKATOR_STANDARD = "none";
 	public static final int FONTSIZE = 15;
 	public static final int SCHRITTNR_FONTSIZE = 10;
 
@@ -44,14 +42,12 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public static MutableAttributeSet ganzerSchrittGeloeschtStil = new SimpleAttributeSet();
 	public static MutableAttributeSet standardStil = new SimpleAttributeSet();
 	public static MutableAttributeSet quellschrittStil = new SimpleAttributeSet();
-	public static MutableAttributeSet zielschrittStil  =new SimpleAttributeSet();
 
 	public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
 	public static Font labelFont = new Font(Font.SANS_SERIF, Font.BOLD, SCHRITTNR_FONTSIZE);
 
 	public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE = Color.LIGHT_GRAY;
 	public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
-	public static final Color NEUMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 153);
 	public static final String INDIKATOR_GRAU = getHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE);
 	public static final String INDIKATOR_SCHWARZ = getHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE2);
 
@@ -78,30 +74,22 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		geaendertStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
 		StyleConstants.setBackground(geaendertStil, AENDERUNGSMARKIERUNG_FARBE);
 
-		// neue Stile (null, hinzugefuegt, geloescht)
 		geloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
 		StyleConstants.setBackground(geloeschtStil, AENDERUNGSMARKIERUNG_FARBE);
 		StyleConstants.setStrikeThrough(geloeschtStil, true);
 
-		// neuer Static Stil
-		/**
-		 * Geloescht Stil - Foreground (RGB (0,0,0)) - Background (RGB(255,255,153)) -
-		 * Fontcolor (RGB(166,166,166)) - StrikeThrough true
-		 */
 		htmlHintergrundStyleSchwarz.addAttribute(HTML.Attribute.STYLE, htmlStyleSchwarz);
 		ganzerSchrittGeloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleSchwarz);
 		StyleConstants.setBackground(ganzerSchrittGeloeschtStil, Hintergrundfarbe_Geloescht);
 		StyleConstants.setStrikeThrough(ganzerSchrittGeloeschtStil, true);
 		StyleConstants.setForeground(ganzerSchrittGeloeschtStil, Schriftfarbe_Geloescht);
 
-		// Standard Style
 		htmlHintergrundStyleStandard.addAttribute(HTML.Attribute.STYLE, htmlStyleStandard);
 		standardStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleStandard);
 		StyleConstants.setBackground(standardStil, Hintergrundfarbe_Standard);
 		StyleConstants.setStrikeThrough(standardStil, false);
 		StyleConstants.setForeground(standardStil, Schriftfarbe_Standard);
 
-		//Quellschritt  || der verschobene Schritt ist im StandardStil!!!
 		quellschrittStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
 		StyleConstants.setBackground(quellschrittStil, AENDERUNGSMARKIERUNG_FARBE);
 		StyleConstants.setStrikeThrough(quellschrittStil, true);
@@ -112,23 +100,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setStyle(String text, MutableAttributeSet attr) {
 		StyledDocument doc = (StyledDocument) editorPane.getDocument();
 		doc.setCharacterAttributes(0, text.length(), attr, false);
-		if (standardStil.equals(attr)) {
-			ganzerSchrittStandardStilGesetzt();
-		} else if (geloeschtStil.equals(attr)) {
-			geloeschtStilGesetzt();
-		} else if (geaendertStil.equals(attr)) {
-			aenderungsStilGesetzt();
-		}
 	}
 
-	public void setGeloeschtStil(String text) {
-		setStyle(text, ganzerSchrittGeloeschtStil);
-		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schrittNummer.getText()+"</span></body></html>");
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
-		schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
-		schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
-	}
 	public void setZielschrittStil(String text) {
 		setStyle(text, standardStil);
 		setBackground(Hintergrundfarbe_Standard);
@@ -141,34 +114,21 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setQuellStil(String text) {
 		setStyle(text, quellschrittStil);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		//schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schrittNummer.getText()+"</span></body></html>");
+		schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schrittNummer.getText()+"</span></body></html>");
 		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
 		schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
 		schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
 	}
 
-	// public void removeStyle(String text) throws BadLocationException {
-	// StyledDocument doc = (StyledDocument)editorPane.getDocument();
-	// doc.remove, arg1);;
-	// }
-
-	public void setStyleSchrittnummer(String text, MutableAttributeSet attr) {
-		StyledDocument doc = (StyledDocument) editorPane.getDocument();
-		// String labelText = label.getText();
-		doc.setCharacterAttributes(0, text.length(), attr, true);
-		ganzerSchrittGeloeschtStilSetzenWennNochNichtVorhanden();
+	public void setGeloeschtStil(String text, AbstractSchrittView schritt) {
+		setStyle(text, ganzerSchrittGeloeschtStil);
+		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
+		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
+		schritt.getshef().schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
+		schritt.getshef().schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
 	}
 
-	//06.12.2020
-	public void ganzerSchrittGeloeschtStilSetzenWennNochNichtVorhanden() {
-		if (!ganzerSchrittGeloeschtStilGesetzt()) {
-			StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
-			MutableAttributeSet inputAttributes = k.getInputAttributes();
-			inputAttributes.addAttributes(geloeschtStil);
-		}
-
-	}
-	// 06.12.2020
 	public boolean ganzerSchrittGeloeschtStilGesetzt() {
 		StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
 		MutableAttributeSet inputAttributes = k.getInputAttributes();
@@ -185,20 +145,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 				&& currentFontColorValue != null && currentFontColorValue.toString().equalsIgnoreCase(INDIKATOR_GRAU);
 	}
 
-	public boolean ganzerSchrittStandardStilGesetzt() {
-		StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
-		MutableAttributeSet inputAttributes = k.getInputAttributes();
-		Object currentFontColorValue = inputAttributes.getAttribute(CSS.Attribute.COLOR);
-		Object currentBackgroundColorValue = inputAttributes.getAttribute(CSS.Attribute.BACKGROUND_COLOR);
-		if (currentFontColorValue!=null && currentFontColorValue.toString().equals(INDIKATOR_SCHWARZ) && currentBackgroundColorValue.toString().equals(INDIKATOR_WEISS)) {
-			return false && currentFontColorValue!=null && currentFontColorValue.toString().equalsIgnoreCase(INDIKATOR_SCHWARZ) && currentBackgroundColorValue.toString().equals(INDIKATOR_WEISS);
-		}
-		return currentBackgroundColorValue != null
-				&& currentBackgroundColorValue.toString().equalsIgnoreCase(INDIKATOR_WEISS)
-				&& currentFontColorValue != null && currentFontColorValue.toString().equalsIgnoreCase(INDIKATOR_SCHWARZ);
-	}
-
-	//29.12.2020
 	public void ganzerSchrittStandardStilSetzenWennNochNichtVorhanden() {
 		if (!ganzerSchrittGeloeschtStilGesetzt()) {
 			StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
@@ -269,9 +215,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setId(String id) {
 		schrittNummer.setText(id);
 	}
-	// public String getId() {
-	// return schrittNummer.getText();
-	// }
 
 	public void setPlainText(String plainText) {
 		setPlainText(plainText, StyleConstants.ALIGN_LEFT);
@@ -406,6 +349,22 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		// false);
 		// }
 	}
+	//TODO die Liste schreiben um Änderungen in den Zielschritt mit zu übernehmen
+	/*public void aenderungenUebertragen(){
+		StyledDocument doc = (StyledDocument) editorPane.getDocument();
+		java.util.List<Aenderungsmarkierung_V001> ergebnis = findeAenderungsmarkierungen(false);
+		java.util.List<ZielschrittMarkierungen_V001> aenderungen = new List<ZielschrittMarkierungen_V001>() {
+		}
+		for (Aenderungsmarkierung_V001 a : ergebnis) {
+			if (aenderungsStilGesetzt()) {
+				;
+			} else if (geloeschtStilGesetzt()) {
+				doc.remove(a.getVon(),a.getBis()-a.getVon());
+			} else {
+				return;
+			}
+		}
+	}*/
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -421,6 +380,9 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 					// man diese entfernen statt sie als gelÃƒÂ¶scht zu markieren.
 					editorPane.setCaretPosition(p0);
 					doc.setCharacterAttributes(p0, p1 - p0, geloeschtStil, false);
+					StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
+					MutableAttributeSet inputAttributes = k.getInputAttributes();
+					StyleConstants.setStrikeThrough(inputAttributes, true);
 				} else {
 					if (aenderungsStilGesetzt())
 						return;
@@ -432,7 +394,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 						StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
 						MutableAttributeSet inputAttributes = k.getInputAttributes();
 						StyleConstants.setStrikeThrough(inputAttributes, true);
-						geloeschtStilGesetzt();
 					}
 				}
 				e.consume();
@@ -475,6 +436,34 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		}
 	}
 
+	public void aenderungenUebernehmen () throws BadLocationException {
+		StyledDocument doc = (StyledDocument) editorPane.getDocument();
+		java.util.List<Aenderungsmarkierung_V001> ergebnis = findeAenderungsmarkierungen(false);
+		for (Aenderungsmarkierung_V001 a : ergebnis) {
+			if (aenderungsStilGesetzt()) {
+				doc.setCharacterAttributes(a.getVon(),a.getBis()-a.getVon(),standardStil,false);
+			} else if (geloeschtStilGesetzt()) {
+				doc.remove(a.getVon(),a.getBis()-a.getVon());
+			} else {
+
+			}
+
+		}
+	}
+	public void aenderungenVerwerfen() throws BadLocationException{
+		StyledDocument doc = (StyledDocument) editorPane.getDocument();
+		java.util.List<Aenderungsmarkierung_V001> ergebnis = findeAenderungsmarkierungen(false);
+		for (Aenderungsmarkierung_V001 a : ergebnis) {
+			if (aenderungsStilGesetzt()) {
+				doc.remove(a.getVon(),a.getBis()-a.getVon());
+			} else if (geloeschtStilGesetzt()) {
+				doc.setCharacterAttributes(a.getVon(),a.getBis()-a.getVon(),standardStil,false);
+			} else {
+
+			}
+		}
+	}
+
 	private void aenderungsStilSetzenWennNochNichtVorhanden() {
 		// Durch die folgende If-Abfrage verhindert man, dass die als geÃƒÂ¤ndert
 		// markierten Buchstaben
@@ -497,27 +486,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			return false;
 		Object currentBackgroundColorValue = inputAttributes.getAttribute(CSS.Attribute.BACKGROUND_COLOR);
 		return currentBackgroundColorValue != null
-				&& currentBackgroundColorValue.toString().equalsIgnoreCase(INDIKATOR_GELB) && true;
-	}
-
-	//überarbeiten!!!
-	public boolean aenderungsStilCheck() {
-		StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
-		MutableAttributeSet inputAttributes = k.getInputAttributes();
-		Object currentTextDecoration = inputAttributes.getAttribute(CSS.Attribute.TEXT_DECORATION);
-		Object currentBackgroundColorValue = inputAttributes.getAttribute((CSS.Attribute.BACKGROUND_COLOR));
-		if (currentTextDecoration != null && currentTextDecoration.toString().equals(INDIKATOR_GELOESCHT_MARKIERT) && currentBackgroundColorValue.toString().equals(INDIKATOR_GELB)) {
-			return false;
-		}
-		if (currentBackgroundColorValue !=null && currentBackgroundColorValue.toString().equals(INDIKATOR_GELB)){
-			return
-					//currentBackgroundColorValue!=null
-					//&& currentBackgroundColorValue.toString().equalsIgnoreCase(INDIKATOR_GELB)
-					//&&
-			true;
-		}
-		else
-			return false;
+				&& currentBackgroundColorValue.toString().equalsIgnoreCase(INDIKATOR_GELB);
 	}
 
 	public boolean geloeschtStilGesetzt() {
@@ -525,27 +494,18 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		MutableAttributeSet inputAttributes = k.getInputAttributes();
 		Object currentTextDecoration = inputAttributes.getAttribute(CSS.Attribute.TEXT_DECORATION);
 		Object currentBackgroundColorValue = inputAttributes.getAttribute(CSS.Attribute.BACKGROUND_COLOR);
-		if (currentTextDecoration != null && currentTextDecoration.toString().equals(INDIKATOR_GELOESCHT_MARKIERT)) {
+		if (currentTextDecoration != null && currentTextDecoration.toString().equals(INDIKATOR_GELOESCHT_MARKIERT) /*&&
+				currentBackgroundColorValue!=null &&currentBackgroundColorValue.toString().equals(INDIKATOR_GELB)*/) {
 			return currentTextDecoration !=null
-					&& currentBackgroundColorValue !=null
-					&& currentTextDecoration.toString().equalsIgnoreCase(INDIKATOR_GELOESCHT_MARKIERT)
-					&& currentBackgroundColorValue.toString().equalsIgnoreCase(INDIKATOR_GELB);
-		}else {
+					//&& currentBackgroundColorValue !=null
+					&& currentTextDecoration.toString().equalsIgnoreCase(INDIKATOR_GELOESCHT_MARKIERT);
+					//&& currentBackgroundColorValue.toString().equalsIgnoreCase(INDIKATOR_GELB);
+		} else if(currentTextDecoration == null){
 			return false;
 		}
-	}
-
-	public boolean geloeschtStilCheck() {
-		StyledEditorKit k = (StyledEditorKit) editorPane.getEditorKit();
-		MutableAttributeSet inputAttributes = k.getInputAttributes();
-		Object currentTextDecoration = inputAttributes.getAttribute(CSS.Attribute.TEXT_DECORATION);
-		Object currentBackgroundColorValue = inputAttributes.getAttribute(CSS.Attribute.BACKGROUND_COLOR);
-		if (currentTextDecoration !=null && currentTextDecoration.toString().equals(INDIKATOR_GELOESCHT_MARKIERT) &&
-				currentBackgroundColorValue!=null &&currentBackgroundColorValue.toString().equals(INDIKATOR_GELB)){
-			return true;
-		}
-		else
+		else {
 			return false;
+		}
 	}
 
 	@Override
