@@ -142,13 +142,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		// Syntaxtricks von hier: http://manual.openestate.org/extern/forms-1.2.1/reference/variables.html
 		panelLayout.setRowSpec(1, RowSpec.decode(layoutRowSpec1()));
 		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
-		/** @author SD */
-		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow"));
-		panelSonst.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow"));
-		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow"));
-		panelCase.add(text.asJComponent(), CC.xy(2, 1));
-		panelSonst.add(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 1));
-		panelFall1.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(2, 1));
+		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
+		panelSonst.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD*/
+		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD*/ 
+		panelCase.add(text.asJComponent(), CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
+		panelSonst.add(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 1)); //siehe Methode layoutConstraintsSetzen
+		panelFall1.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
 	}
 
 	@Override
@@ -286,13 +285,17 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		}
 		/** @author PVN */
 		if (zweig == caseSequenzen.get(0) && caseSequenzen.size() <=2 ) {
-			System.err.println("1. Fall kann nicht entfernt werden");
+			System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
 			return -1;
 		}
 		/**@author PVN */
 		if (zweig == caseSequenzen.get(1) && caseSequenzen.size() <=2) {
-			System.err.println("2. Fall kann nicht entfernt werden");
+			System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
 			return -1;
+		}
+		/**@author PVN */ 
+		if (zweig == caseSequenzen.get(0)) {
+			panelFall1.remove(caseSequenzen.get(0).ueberschrift.asJComponent());
 		}
 		int caseIndex = caseSequenzen.indexOf(zweig);
 		zweigAusListeUndPanelEntfernen(zweig);
@@ -304,6 +307,11 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		if (zweigIndex == 0) {
 			System.err.println("Noch nicht fertig: Sonst-Sequenz hinzuf�gen");
 			return;
+		}
+		/**@author PVN */
+		if (zweigIndex == 1) {
+//			System.out.println("index=1");
+			panel.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(5, 3));
 		}
 		ArrayList<Integer> spaltenBreiten = zweigbreiteInSpaltenbreitenEinpassen(zweig, zweigIndex);
 		caseSequenzen.add(zweigIndex-1, zweig); // 0 ist Indikator f�r Sonst-Zweig, ab 1 beginnen die Cases
@@ -329,22 +337,10 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	
 	public ZweigSchrittSequenzView neuenZweigHinzufuegen(EditorI editor, ZweigSchrittSequenzView linkerNachbar) {
 		int linkerNachbarIndex = caseSequenzen.indexOf(linkerNachbar);
-		/** @author Stephan D*/
-		if(linkerNachbarIndex ==-1) {
-			for (int i = 0; i < caseSequenzen.size(); i++) {
-				caseSequenzen.get(i).ueberschrift.addFocusListener(this);
-				panel.add(caseSequenzen.get(i).ueberschrift.asJComponent(), INITIAL_DUMMY);
-			}
-			ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), Specman.initialArt(), initialtext("Fall " + (linkerNachbarIndex+2)));
-			neuerZweig.einfachenSchrittAnhaengen(editor);
-			zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
-			return neuerZweig;
-		}else {
-			ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), Specman.initialArt(), initialtext("Case " + (linkerNachbarIndex+2)));
-			neuerZweig.einfachenSchrittAnhaengen(editor);
-			zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
-			return neuerZweig;
-		}
+		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, "Fall " + (linkerNachbarIndex+2));
+		neuerZweig.einfachenSchrittAnhaengen(editor);
+		zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
+		return neuerZweig;
 	}
 	private ArrayList<Integer> zweigbreiteInSpaltenbreitenEinpassen(ZweigSchrittSequenzView zweig, int zweigIndex) {
 		ArrayList<Integer> spaltenBreiten = spaltenbreitenErmitteln();

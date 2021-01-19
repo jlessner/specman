@@ -208,13 +208,12 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	public void skalieren(int prozentNeu, int prozentAktuell) {
 		super.skalieren(prozentNeu, prozentAktuell);
 		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
-		/**@author SD */
-		panelBedingung.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow"));
-		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow"));
-		panelIf.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow"));
-		panelBedingung.add(text.asJComponent(), CC.xy(2, 1));
-		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xy(2, 1));
-		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));
+		panelBedingung.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
+		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */ 
+		panelIf.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD */
+		panelBedingung.add(text.asJComponent(), CC.xy(2, 1)); //siehe Konstruktor
+		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xy(2, 1)); //siehe Methode elseBedingungAnlegen
+		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1)); //siehe Methode ifBedingungAnlegen
 	}
 
 	protected int texteinrueckungNeuberechnen() {
