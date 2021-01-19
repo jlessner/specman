@@ -401,6 +401,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 							ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
 							if (zweig != null) {
+								if(zweig.getAenderungsart() == Aenderungsart.Hinzugefuegt){
+									int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
+									undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+								}
 								zweig.setAenderungsart(Aenderungsart.Geloescht);
 								zweig.getUeberschrift().setStyle(zweig.getUeberschrift().getText(), TextfieldShef.ganzerSchrittGeloeschtStil);
 								zweig.getUeberschrift().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
@@ -1053,14 +1057,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void recrusiv(List<AbstractSchrittView> schritte, Aenderungsart art) {
 		for (AbstractSchrittView schritt: schritte) {
 
+
+
 			//wird beim Verwerfen durchlaufen
 			if (art == null) {
 
 				//Verwerfen von Änderungen, bei Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
 				if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 					CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+
+
 					//nur für caseSequenzen möglich, da man die Sonstsequenz eh nicht löschen kann
-					for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+					//caseSchritt.getCaseSequenzen() = new CopyOnWriteArrayList<ZweigSchrittSequenzView>;
+
+					//TODO es funktioniert, ist aber glaube ich keine schöne Lösung
+					//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
+					List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
+					for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 						if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
 							int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
 							undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
@@ -1078,6 +1091,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					SchrittSequenzView sequenz = schritt.getParent();
 					int schrittIndex = sequenz.schrittEntfernen(schritt);
 					undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+					//continue damit er nicht versucht, die unterschritte eines gelöschten Schrittes zu finden
+					continue;
 				}
 				schritt.setAenderungsart(art);
 				//schritt.getshef().setPlainText(schritt.getshef().getPlainText());
@@ -1093,6 +1108,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
             	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
             	schritt.getText().setEnabled(false);
             	aenderungsMarkierungenAufGeloescht(schritt);
+            	schritt.setAenderungsart(Aenderungsart.Geloescht);
 			}
 
 			//gibt den Schritt zur überprüfung auf Unterschritte
@@ -1109,7 +1125,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 				//nur für caseSequenzen möglich, da man die Sonstsequenz eh nicht löschen kann
-				for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+
+				//TODO es funktioniert, ist aber glaube ich keine schöne Lösung
+				//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
+				List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
+				for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 					if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
 						int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
 						undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
@@ -1117,6 +1137,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
 						caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 						caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+						caseSequenz.setAenderungsart(null);
 						recrusiv(caseSequenz.schritte, null);
 					}
 				}
@@ -1152,6 +1173,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				SchrittSequenzView sequenz = schritt.getParent();
 				int schrittIndex = sequenz.schrittEntfernen(schritt);
 				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+				//continue damit er nicht versucht, die unterschritte eines gelöschten Schrittes zu finden
+				continue;
 			}
 			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
