@@ -420,7 +420,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							}
 							else {
 								schritt.setAenderungsart(Aenderungsart.Geloescht);
-								schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 								schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
 								aenderungsMarkierungenAufGeloescht(schritt);
 								ohneSchleife(schritt, Aenderungsart.Geloescht);
@@ -1105,18 +1104,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					continue;
 				}
 				schritt.setAenderungsart(art);
+				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 				//schritt.getshef().setPlainText(schritt.getshef().getPlainText());
             	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-				schritt.getText().setEnabled(true);
+				//schritt.getText().setEnabled(true);
 				aenderungsMarkierungenUndEnumsEntfernen(schritt);
 			}
 
 			//setzt die Unterschritte eines Schrittes auf die Aenderungsart geloescht
 			if(art == Aenderungsart.Geloescht) {
-            	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-            	schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-            	schritt.getText().setEnabled(false);
+            	//schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+            	schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
+            	//schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+            	//schritt.getText().setEnabled(false);
             	aenderungsMarkierungenAufGeloescht(schritt);
             	schritt.setAenderungsart(Aenderungsart.Geloescht);
 			}
@@ -1339,25 +1340,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 	public void pruefeFuerSchrittnummer() {
-		List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
+		List<AbstractSchrittView> schritte;
 		schritte = hauptSequenz.schritte;
-		if(instance != null && instance.aenderungenVerfolgen()) {
-			for (AbstractSchrittView schritt : schritte) {
-
-				//wird bei keiner gesetzten Änderungsart durchlaufen
-				if (schritt.getAenderungsart() == Aenderungsart.Geloescht) {
-					schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
-				}
-				if (schritt.getAenderungsart() == Aenderungsart.Quellschritt) {
-					schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" + "B" + "</span></body></html>");
-				}
-				if (schritt.getAenderungsart() == Aenderungsart.Zielschritt) {
-					schritt.getshef().schrittNummer.setText("<html><body><span>" + "A" + "</span><span>&lArr</span><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
-				}
-
+		for (AbstractSchrittView schritt : schritte) {
+			if (schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+				schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span></body></html>");
+			}
+			if (schritt.getAenderungsart() == Aenderungsart.Quellschritt) {
+				schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" + "B" + "</span></body></html>");
+			}
+			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt) {
+				schritt.getshef().schrittNummer.setText("<html><body><span>" + "A" + "</span><span>&lArr</span><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span></body></html>");
 			}
 		}
-		else
-			return;
 	}
 }

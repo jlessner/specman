@@ -102,6 +102,16 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		doc.setCharacterAttributes(0, text.length(), attr, false);
 	}
 
+	public void setStandardStil(String text, AbstractSchrittView schritt){
+		setStyle(text, standardStil);
+		schritt.setBackground(Hintergrundfarbe_Standard);
+		schritt.getText().setEnabled(true);
+		schritt.getshef().schrittNummer.setText(schritt.getshef().schrittNummer.getText());
+		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
+		schritt.getshef().schrittNummer.setBackground(SCHRITTNUMMER_HINTERGRUNDFARBE);
+		schritt.getshef().schrittNummer.setForeground(Hintergrundfarbe_Standard);
+	}
+
 	public void setZielschrittStil(String text) {
 		setStyle(text, standardStil);
 		setBackground(Hintergrundfarbe_Standard);
@@ -115,14 +125,15 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		setStyle(text, quellschrittStil);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schrittNummer.getText()+"</span></body></html>");
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
-		schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
-		schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
+		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Geloescht));
+		schrittNummer.setBackground(Hintergrundfarbe_Geloescht);
+		schrittNummer.setForeground(Schriftfarbe_Geloescht);
 	}
 
 	public void setGeloeschtStil(String text, AbstractSchrittView schritt) {
 		setStyle(text, ganzerSchrittGeloeschtStil);
-		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		schritt.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		schritt.getText().setEnabled(false);
 		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
 		schritt.getshef().schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);

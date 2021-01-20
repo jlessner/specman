@@ -31,7 +31,7 @@ public class UndoableSchrittnummerEntfernt extends AbstractUndoableInteraktion{
     }
 
     public void undoSammler(){
-        schritt.getshef().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+        schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
         schritt.getshef().setStyle(schritt.getshef().getPlainText(),TextfieldShef.standardStil);
         schritt.getshef().schrittNummer.setBackground(TextfieldShef.Schriftfarbe_Geloescht);
         schritt.getshef().schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Standard);
@@ -42,7 +42,7 @@ public class UndoableSchrittnummerEntfernt extends AbstractUndoableInteraktion{
     }
 
     public void redoSammler(){
-        schritt.getshef().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+        schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
         schritt.getshef().setStyle(schritt.getshef().getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
         schritt.getshef().schrittNummer.setBackground(TextfieldShef.Schriftfarbe_Standard);
         schritt.getshef().schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
