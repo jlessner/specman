@@ -38,7 +38,7 @@ public class UndoableSchrittnummerEntfernt extends AbstractUndoableInteraktion{
         schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Schriftfarbe_Geloescht));
         schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration:none;'>"+TextSchrittnummer.getText()+"</span></body></html>");
         schritt.setAenderungsart(null);
-        schritt.getText().setEditable(true);
+        schritt.getText().setEnabled(true);
     }
 
     public void redoSammler(){
@@ -49,6 +49,6 @@ public class UndoableSchrittnummerEntfernt extends AbstractUndoableInteraktion{
         schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
         schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+TextSchrittnummer.getText()+"</span></body></html>");
         schritt.setAenderungsart(Aenderungsart.Geloescht);
-        schritt.getText().setEditable(false);
+        schritt.getText().setEnabled(false);
     }
 }

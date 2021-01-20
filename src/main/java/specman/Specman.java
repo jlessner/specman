@@ -420,30 +420,17 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							}
 							else {
 								schritt.setAenderungsart(Aenderungsart.Geloescht);
-								schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
 								schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-								schritt.getText().setEditable(false);
+								schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
 								aenderungsMarkierungenAufGeloescht(schritt);
 								ohneSchleife(schritt, Aenderungsart.Geloescht);
-								/*zweig.getUeberschrift().setStyle(zweig.getUeberschrift().getText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-								zweig.getUeberschrift().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);*/
-								//TODO Schrittnummern!
-								schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
-								schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
-								schritt.getshef().schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
-								schritt.getshef().schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
-								//schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
-
 								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 							}
 						}
 
 						else{
 							schritt.setAenderungsart(Aenderungsart.Geloescht);
-							schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-							schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-							schritt.getText().setEditable(false);
-							schritt.getshef().setStyle(schritt.getshef().getPlainText(),TextfieldShef.ganzerSchrittGeloeschtStil);
+							schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
 							aenderungsMarkierungenAufGeloescht(schritt);
 							ohneSchleife(schritt, Aenderungsart.Geloescht);
 							undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
