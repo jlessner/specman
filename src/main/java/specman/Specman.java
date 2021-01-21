@@ -1082,8 +1082,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 					//TODO es funktioniert, ist aber glaube ich keine schöne Lösung
 					//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
-					List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
-					for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+					//List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
+					for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 						if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
 							int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
 							undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
@@ -1106,8 +1106,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				schritt.setAenderungsart(art);
 				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 				//schritt.getshef().setPlainText(schritt.getshef().getPlainText());
-            	schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+            	////schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
+				////schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 				//schritt.getText().setEnabled(true);
 				aenderungsMarkierungenUndEnumsEntfernen(schritt);
 			}
@@ -1210,7 +1210,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 						caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 						caseSequenz.setAenderungsart(null);
-						recrusiv(caseSequenz.schritte, null);
+						//TODO nach drei Stunden Bugfixing ist der Bug weg (vermutlich), es ist 3: uhr nachts, gucke morgen warum ich in die recrusiv wollte
+						//recrusiv(caseSequenz.schritte, null);
 					}
 
 				}
@@ -1256,6 +1257,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				System.out.println("Zielschritt hinzugefügt");
 				schritt.getshef().aenderungenUebernehmen();
 				schritt.setAenderungsart(null);
+				//schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 				//TODO Auslagern der SchrittnummerMethoden
 				//schritt.getshef().setSchrittnummerStandardStil(schritt);
 				schritt.getshef().schrittNummer.setText(schritt.getshef().schrittNummer.getText());
@@ -1311,7 +1313,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEnabled(true);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 				caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-				caseSequenz.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+				//glaube, dass hat für nen fehler gesorgt, dass die linien zwischen den schritten in den cases verloren gingen
+				//caseSequenz.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 				caseSequenz.getUeberschrift().getTextComponent().setEnabled(true);
 			}
 		}
