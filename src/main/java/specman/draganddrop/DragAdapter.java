@@ -42,7 +42,7 @@ public class DragAdapter extends MouseAdapter {
 			draggingLogic.showInvalidCursor();
 			return;
 		}
-		if(checkGeloeschterSchritt(e)){
+		if(checkGeloeschterSchritt(e) || checkQuellSchritt(e)){
 			draggingLogic.showInvalidCursor();
 			return;
 		}
@@ -72,7 +72,7 @@ public class DragAdapter extends MouseAdapter {
 			spec.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			return;
 		}
-		if(checkGeloeschterSchritt(e)){
+		if(checkGeloeschterSchritt(e) || checkQuellSchritt(e)){
 			spec.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			return;
 		}
@@ -91,7 +91,7 @@ public class DragAdapter extends MouseAdapter {
 			if(checkEinzigerSchritt(e)) {
 				draggingLogic.showInvalidCursor();
 			}
-			if(checkGeloeschterSchritt(e)){
+			if(checkGeloeschterSchritt(e) || checkQuellSchritt(e)){
 				draggingLogic.showInvalidCursor();
 			}
 		}
@@ -119,6 +119,15 @@ public class DragAdapter extends MouseAdapter {
 		}
 		return false;
 	}
+
+	private boolean checkQuellSchritt(MouseEvent e){
+		if(e.getSource() instanceof JLabel){
+			AbstractSchrittView step = labelToStep( (JLabel) e.getSource());
+			return step.getAenderungsart() == Aenderungsart.Quellschritt;
+		}
+		return false;
+	}
+
 
 	private AbstractSchrittView labelToStep(JLabel label) {
 		InsetPanel ip = (InsetPanel) label.getParent().getParent();

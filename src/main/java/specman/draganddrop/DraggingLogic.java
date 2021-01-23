@@ -423,7 +423,7 @@ public class DraggingLogic implements Serializable {
             if(specman.aenderungenVerfolgen()){
 
                 //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
-                if(schritt.getAenderungsart()== Aenderungsart.Geloescht)
+                if(schritt.getAenderungsart()== Aenderungsart.Geloescht || schritt.getAenderungsart() == Aenderungsart.Quellschritt)
                     return;
                 else {
 
