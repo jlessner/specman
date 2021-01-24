@@ -413,10 +413,24 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 									int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
 									undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
 								}
-								zweig.setAenderungsart(Aenderungsart.Geloescht);
-								zweig.getUeberschrift().setStyle(zweig.getUeberschrift().getText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-								zweig.getUeberschrift().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-								recrusiv(zweig.getSchritte(), Aenderungsart.Geloescht);
+
+								//Markieren von Sonstsequenz und fall 1, 2 nicht ermöglichen
+								else if (zweig == caseSchritt.getSonstSequenz()) {
+									System.err.println("Noch nicht fertig: Sonst-Sequenz entfernen");
+								}
+								else if (zweig == caseSchritt.getCaseSequenzen().get(0) && caseSchritt.getCaseSequenzen().size() <=2 ) {
+									System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
+								}
+								else if (zweig == caseSchritt.getCaseSequenzen().get(1) && caseSchritt.getCaseSequenzen().size() <=2) {
+									System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
+								}
+
+								else{
+									zweig.setAenderungsart(Aenderungsart.Geloescht);
+									zweig.getUeberschrift().setStyle(zweig.getUeberschrift().getText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+									zweig.getUeberschrift().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+									recrusiv(zweig.getSchritte(), Aenderungsart.Geloescht);
+								}
 							}
 							else {
 								schritt.setAenderungsart(Aenderungsart.Geloescht);
