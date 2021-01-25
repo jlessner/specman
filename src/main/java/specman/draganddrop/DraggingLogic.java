@@ -218,7 +218,7 @@ public class DraggingLogic implements Serializable {
                     if (schritt instanceof CaseSchrittView) {
                         CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 
-                    checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
+                    //checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
                     checkCaseHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight, (int)caseSchritt.breiteLayoutspalteBerechnen(), insertDecision);
                     dragGlassPanePos(pos, caseSchritt.getSonstSequenz().schritte, insertDecision, e);
 
@@ -275,7 +275,8 @@ public class DraggingLogic implements Serializable {
                             break;
                         }
 
-                    checkfalseGlassPaneforComponent(ifel.getTextShef(), pos, glassPaneHeight);
+                    
+                        //checkfalseGlassPaneforComponent(ifel.getTextShef(), pos, glassPaneHeight);
                     if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
                         checkZweigHeading(ifel.getIfSequenz(), pos, glassPaneHeight, (int)ifel.breiteLayoutspalteBerechnen(),insertDecision, e);
                         dragGlassPanePos(pos, ifel.getIfSequenz().schritte, insertDecision, e);
@@ -314,7 +315,7 @@ public class DraggingLogic implements Serializable {
                     if (checkFirstStep(schritt, pos, glassPaneHeight, insertDecision, e)) {
                         break;
                     }
-                    checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
+                    //checkfalseGlassPaneforComponent(caseSchritt.getTextShef(), pos, glassPaneHeight);
                     checkZweigHeading(caseSchritt.getSonstSequenz(), pos, glassPaneHeight,(int)caseSchritt.breiteLayoutspalteBerechnen(), insertDecision, e);
                     dragGlassPanePos(pos, caseSchritt.getSonstSequenz().schritte, insertDecision, e);
                     for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
