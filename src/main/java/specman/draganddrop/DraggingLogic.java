@@ -437,7 +437,7 @@ public class DraggingLogic implements Serializable {
                     sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
 
                     quellschritt.setAenderungsart(Aenderungsart.Quellschritt);
-                    quellschritt.getshef().setQuellStil(step.getPlainText());
+                    quellschritt.getshef().setQuellStil(step.getPlainText(), quellschritt);
                     quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
                     //TODO Schrittnummer des Quellschritts
                     quellschritt.getshef().schrittNummer.setText("<html><body><span>"+quellschritt.getshef().schrittNummer.getText()+
@@ -457,7 +457,7 @@ public class DraggingLogic implements Serializable {
                         sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
 
                         step.setAenderungsart(Aenderungsart.Zielschritt);
-                        step.getshef().setZielschrittStil(step.getPlainText());
+                        step.getshef().setZielschrittStil(step.getPlainText(), step);
                         step.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
                                 +schritt.getshef().schrittNummer.getText()+"</span><span>&rarr</span><span>"+step.getshef().schrittNummer.getText()+ "</span></body></html>");
                         Specman.instance().ohneSchleife(step, Aenderungsart.Zielschritt);

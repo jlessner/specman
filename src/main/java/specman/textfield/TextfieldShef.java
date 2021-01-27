@@ -114,7 +114,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 	public void setZielschrittStil(String text, AbstractSchrittView schritt) {
 		setStyle(text, standardStil);
-		schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" +schritt.getQuellschritt().getId()+ "</span></body></html>");
+		schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" + "</span></body></html>");
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE));
 		schritt.getshef().schrittNummer.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schritt.getshef().schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Geloescht);

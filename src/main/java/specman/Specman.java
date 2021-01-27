@@ -1250,7 +1250,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			//TODO noch nicht implementiert
 			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
-				schritt.getshef().aenderungenUebernehmen();
+				schritt.getshef().aenderungenUebernehmenTEST();
 				schritt.setAenderungsart(null);
 			}
 
@@ -1269,7 +1269,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
 				System.out.println("Zielschritt hinzugefügt");
-				schritt.getshef().aenderungenUebernehmen();
+				schritt.getshef().aenderungenUebernehmenTEST();
 				schritt.setAenderungsart(null);
 				//schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 				//TODO Auslagern der SchrittnummerMethoden
