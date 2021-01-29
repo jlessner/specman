@@ -16,6 +16,7 @@ import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
+import specman.textfield.TextfieldShef;
 
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
@@ -340,6 +341,9 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, initialtext("Fall " + (linkerNachbarIndex+2)));
 		neuerZweig.einfachenSchrittAnhaengen(editor);
 		zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
+		if (neuerZweig == caseSequenzen.get(0)) {
+			panelFall1.setBackground(Specman.schrittHintergrund());
+		}
 		return neuerZweig;
 	}
 	private ArrayList<Integer> zweigbreiteInSpaltenbreitenEinpassen(ZweigSchrittSequenzView zweig, int zweigIndex) {
@@ -405,5 +409,9 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	//TODO
 	public int getRautenHeight() {
 		return berechneRautenmittelpunkt().y;
+	}
+
+	public JPanel getPanelFall1() {
+		return panelFall1;
 	}
 }

@@ -10,20 +10,12 @@ import specman.draganddrop.DragAdapter;
 import specman.draganddrop.DraggingLogic;
 import specman.draganddrop.GlassPane;
 import specman.model.ModelEnvelope;
+import specman.model.v001.QuellSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.textfield.TextfieldShef;
 import specman.undo.*;
-import specman.view.AbstractSchrittView;
-import specman.view.BreakSchrittView;
-import specman.view.CaseSchrittView;
-import specman.view.CatchSchrittView;
-import specman.view.IfElseSchrittView;
-import specman.view.IfSchrittView;
-import specman.view.SchleifenSchrittView;
-import specman.view.SchrittSequenzView;
-import specman.view.SubsequenzSchrittView;
-import specman.view.ZweigSchrittSequenzView;
+import specman.view.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -429,6 +421,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 									zweig.setAenderungsart(Aenderungsart.Geloescht);
 									zweig.getUeberschrift().setStyle(zweig.getUeberschrift().getText(), TextfieldShef.ganzerSchrittGeloeschtStil);
 									zweig.getUeberschrift().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+									if (zweig == caseSchritt.getCaseSequenzen().get(0)) {
+										caseSchritt.getPanelFall1().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+										caseSchritt.getPanel().repaint();
+									}
 									recrusiv(zweig.getSchritte(), Aenderungsart.Geloescht);
 								}
 							}
@@ -1096,8 +1092,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 					//TODO es funktioniert, ist aber glaube ich keine schöne Lösung
 					//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
-					//List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
-					for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+					List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
+					for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 						if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
 							int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
 							undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
@@ -1156,7 +1152,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					}
 					if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
 						caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-						caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+						//caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+						//TODO das untere ist ein test gegenüber dem oberen
+						caseSequenz.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 						recrusiv(caseSequenz.schritte, null);
 					}
 				}
@@ -1223,6 +1221,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
 						caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 						caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+						//TODO ist erstmal nen test
+						caseSchritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+						//caseSchritt.getPanelFall1().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 						caseSequenz.setAenderungsart(null);
 						//TODO nach drei Stunden Bugfixing ist der Bug weg (vermutlich), es ist 3: uhr nachts, gucke morgen warum ich in die recrusiv wollte
 						//recrusiv(caseSequenz.schritte, null);
@@ -1315,44 +1316,45 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			//schritt.setPlainText(schritt.getshef().getPlainText(), StyleConstants.ALIGN_CENTER);
 			ifel.getElseSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 			//ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText(), StyleConstants.ALIGN_RIGHT);
-			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEnabled(true);
+			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEditable(true);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 				ifel.getIfSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEnabled(true);
+				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEditable(true);
             }
 		}
 		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 			caseSchritt.getSonstSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEnabled(true);
+			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEditable(true);
+			caseSchritt.getPanelFall1().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 				caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				//glaube, dass hat für nen fehler gesorgt, dass die linien zwischen den schritten in den cases verloren gingen
 				//caseSequenz.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-				caseSequenz.getUeberschrift().getTextComponent().setEnabled(true);
+				caseSequenz.getUeberschrift().getTextComponent().setEditable(true);
 			}
 		}
 	}
 
 	//TODO
 	public void aenderungsMarkierungenAufGeloescht(AbstractSchrittView schritt) {
-		schritt.getText().setEnabled(false);
+		schritt.getText().setEditable(false);
 		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
 			ifel.getElseSequenz().getUeberschrift().setStyle(ifel.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEnabled(false);
+			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEditable(false);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 				ifel.getIfSequenz().getUeberschrift().setStyle(ifel.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEnabled(false);
+				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEditable(false);
             }
 		}
 		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 			caseSchritt.getSonstSequenz().getUeberschrift().setStyle(caseSchritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEnabled(false);
+			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEditable(false);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 				caseSequenz.getUeberschrift().setStyle(caseSequenz.getUeberschrift().getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-				caseSequenz.getUeberschrift().getTextComponent().setEnabled(false);
+				caseSequenz.getUeberschrift().getTextComponent().setEditable(false);
 			}
 		}
 	}

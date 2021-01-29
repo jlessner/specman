@@ -105,7 +105,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setStandardStil(String text, AbstractSchrittView schritt){
 		setStyle(text, standardStil);
 		schritt.setBackground(Hintergrundfarbe_Standard);
-		schritt.getText().setEnabled(true);
+		schritt.getText().setEditable(true);
 		schritt.getshef().schrittNummer.setText(schritt.getshef().schrittNummer.getText());
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
 		schritt.getshef().schrittNummer.setBackground(SCHRITTNUMMER_HINTERGRUNDFARBE);
@@ -123,7 +123,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setQuellStil(String text, QuellSchrittView schritt) {
 		setStyle(text, quellschrittStil);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schritt.getText().setEnabled(false);
+		schritt.getText().setEditable(false);
 		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" +"Zielschritt"/*schritt.getZielschritt().getId()*/+"</span></body></html>");
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Geloescht));
 		schritt.getshef().schrittNummer.setBackground(Hintergrundfarbe_Geloescht);
@@ -134,7 +134,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setGeloeschtStil(String text, AbstractSchrittView schritt) {
 		setStyle(text, ganzerSchrittGeloeschtStil);
 		schritt.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schritt.getText().setEnabled(false);
+		schritt.getText().setEditable(false);
 		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
 		schritt.getshef().schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
@@ -364,7 +364,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (Specman.instance().aenderungenVerfolgen()) {
+		if (Specman.instance().aenderungenVerfolgen() && Specman.instance().hauptSequenz.findeSchritt(editorPane).getText().isEditable()) {
 			Specman.instance().hauptSequenz.findeSchritt(editorPane).setAenderungsart(Aenderungsart.Bearbeitet);
 			StyledDocument doc = (StyledDocument) editorPane.getDocument();
 			int p0 = editorPane.getSelectionStart();
@@ -399,7 +399,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		if (Specman.instance().aenderungenVerfolgen()) {
+		if (Specman.instance().aenderungenVerfolgen() && Specman.instance().hauptSequenz.findeSchritt(editorPane).getText().isEditable()) {
 			Specman.instance().hauptSequenz.findeSchritt(editorPane).setAenderungsart(Aenderungsart.Bearbeitet);
 			StyledDocument doc = (StyledDocument) editorPane.getDocument();
 			int p0 = editorPane.getSelectionStart();
