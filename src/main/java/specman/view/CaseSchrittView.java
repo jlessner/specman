@@ -145,7 +145,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
 		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
 		panelSonst.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD*/
-		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD*/ 
+		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD*/
 		panelCase.add(text.asJComponent(), CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
 		panelSonst.add(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 1)); //siehe Methode layoutConstraintsSetzen
 		panelFall1.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
@@ -253,7 +253,9 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			aenderungsart,
 			klappen.isSelected(),
 			sonstSequenz.generiereZweigSchrittSequenzModel(formatierterText),
-			new ArrayList<Float>(spaltenbreitenAnteileBerechnen(spaltenbreitenErmitteln())), getQuellschrittID());
+			new ArrayList<Float>(spaltenbreitenAnteileBerechnen(spaltenbreitenErmitteln())),
+			getQuellschrittID(),
+			getDecorated());
 		caseSequenzen.forEach(sequenz -> model.caseHinzufuegen(sequenz.generiereZweigSchrittSequenzModel(formatierterText)));
 		return model;
 	}
@@ -284,20 +286,6 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			System.err.println("Noch nicht fertig: Sonst-Sequenz entfernen");
 			return -1;
 		}
-		/** @author PVN */
-		if (zweig == caseSequenzen.get(0) && caseSequenzen.size() <=2 ) {
-			System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
-			return -1;
-		}
-		/**@author PVN */
-		if (zweig == caseSequenzen.get(1) && caseSequenzen.size() <=2) {
-			System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
-			return -1;
-		}
-		/**@author PVN */ 
-		if (zweig == caseSequenzen.get(0)) {
-			panelFall1.remove(caseSequenzen.get(0).ueberschrift.asJComponent());
-		}
 		int caseIndex = caseSequenzen.indexOf(zweig);
 		zweigAusListeUndPanelEntfernen(zweig);
 		zweigAnzahlAenderungAbschliessen(editor, spaltenbreitenErmitteln());
@@ -308,11 +296,6 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		if (zweigIndex == 0) {
 			System.err.println("Noch nicht fertig: Sonst-Sequenz hinzuf�gen");
 			return;
-		}
-		/**@author PVN */
-		if (zweigIndex == 1) {
-//			System.out.println("index=1");
-			panel.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(5, 3));
 		}
 		ArrayList<Integer> spaltenBreiten = zweigbreiteInSpaltenbreitenEinpassen(zweig, zweigIndex);
 		caseSequenzen.add(zweigIndex-1, zweig); // 0 ist Indikator f�r Sonst-Zweig, ab 1 beginnen die Cases
@@ -338,14 +321,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	
 	public ZweigSchrittSequenzView neuenZweigHinzufuegen(EditorI editor, ZweigSchrittSequenzView linkerNachbar) {
 		int linkerNachbarIndex = caseSequenzen.indexOf(linkerNachbar);
-		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, initialtext("Fall " + (linkerNachbarIndex+2)));
+		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), "Fall " + (linkerNachbarIndex+2));
 		neuerZweig.einfachenSchrittAnhaengen(editor);
 		zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
-		if (neuerZweig == caseSequenzen.get(0)) {
-			panelFall1.setBackground(Specman.schrittHintergrund());
-		}
 		return neuerZweig;
 	}
+	
 	private ArrayList<Integer> zweigbreiteInSpaltenbreitenEinpassen(ZweigSchrittSequenzView zweig, int zweigIndex) {
 		ArrayList<Integer> spaltenBreiten = spaltenbreitenErmitteln();
 		int summeSpaltenbreiten = spaltenBreiten.stream().mapToInt(i -> i).sum();
@@ -369,20 +350,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	private void layoutConstraintsSetzen() {
-		/** @author PVN */
-		panelLayout.setConstraints(lueckenFueller, CC.xy(1, 1));
-		panelLayout.setConstraints(panelCase, CC.xywh(3, 1, (1 + caseSequenzen.size()*2)-2, 1));
-		panelCase.add(text.asJComponent(), CC.xy(2, 1));
-		panelLayout.setConstraints(panelSonst, CC.xy(1, 3));
-		panelSonst.add(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 1));
-		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5));
-		panelLayout.setConstraints(panelFall1, CC.xy(3, 3));
-		panelFall1.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(2, 1));
-		for (int i = 1; i < caseSequenzen.size(); i++) {
-			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(5 + (i*2)-2, 3));
-		}
-		for (int j = 0; j < caseSequenzen.size(); j++) {
-			panelLayout.setConstraints(caseSequenzen.get(j).getContainer(), CC.xy(3 + j*2, 5));
+		panelLayout.setConstraints(text.asJComponent(), CC.xywh(1, 1, 1 + caseSequenzen.size()*2, 1));
+		panelLayout.setConstraints(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 2));
+		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 4));
+		for (int i = 0; i < caseSequenzen.size(); i++) {
+			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(3 + i*2, 2));
+			panelLayout.setConstraints(caseSequenzen.get(i).getContainer(), CC.xy(3 + i*2, 4));
 		}
 	}
 
@@ -395,23 +368,5 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		caseSequenzen
 			.stream()
 			.forEach(caseSequence -> caseSequence.updateTextfieldDecorationIndentions(caseIndentions));
-	}
-
-	//TODO
-	public ZweigSchrittSequenzView getSonstSequenz() {
-		return sonstSequenz;
-	}
-
-	//TODO
-	public List<ZweigSchrittSequenzView> getCaseSequenzen() {
-		return caseSequenzen;
-	}
-	//TODO
-	public int getRautenHeight() {
-		return berechneRautenmittelpunkt().y;
-	}
-
-	public JPanel getPanelFall1() {
-		return panelFall1;
 	}
 }

@@ -116,7 +116,9 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 			getBackground().getRGB(),
 			aenderungsart,
 			klappen.isSelected(),
-			subsequenz.generiereSchittSequenzModel(formatierterText), getQuellschrittID());
+			subsequenz.generiereSchittSequenzModel(formatierterText),
+			getQuellschrittID(),
+			getDecorated());
 		return model;
 	}
 
@@ -125,7 +127,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		Indentions substepIndentions = indentions.withTop(false).withRight(false);
 		subsequenz.updateTextfieldDecorationIndentions(substepIndentions);
 	}
-	//TODO
+
 	public JPanel getPanel() {
 		return panel;
 	}

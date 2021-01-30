@@ -30,6 +30,7 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 			getBackground().getRGB(),
 			aenderungsart,
 			getQuellschrittID()
+			getDecorated()
 		);
 		return model;
 	}

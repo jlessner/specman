@@ -533,8 +533,18 @@ public class SchrittSequenzView {
 		}
 		return false;
 	}
-//TODO
+
 	public AbstractSchrittView getParent() {
 		return parent;
+	}
+
+	public RoundedBorderDecorationStyle deriveDecorationStyleFromPosition(AbstractSchrittView childStep) {
+		for (int i = 0; i < schritte.size(); i++) {
+			if (schritte.get(i) == childStep) {
+				return (i == 0 || schritte.get(i-1).getDecorated() == None)
+						? Full : Co;
+			}
+		}
+		return Co;
 	}
 }

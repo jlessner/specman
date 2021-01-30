@@ -2,6 +2,7 @@ package specman.model.v001;
 
 import specman.Aenderungsart;
 import specman.SchrittID;
+import specman.view.RoundedBorderDecorationStyle;
 
 public class WhileSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 	public final SchrittSequenzModel_V001 wiederholSequenz;
@@ -19,8 +20,10 @@ public class WhileSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		Aenderungsart aenderungsart,
 		boolean zugeklappt,
 		SchrittSequenzModel_V001 wiederholSequenz,
-		int balkenbreite, SchrittID quellschrittID) {
-		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID);
+		int balkenbreite,
+		SchrittID quellschrittID,
+		RoundedBorderDecorationStyle decorationStyle) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID, decorationStyle);
 		this.wiederholSequenz = wiederholSequenz;
 		this.balkenbreite = balkenbreite;
 	}

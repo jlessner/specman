@@ -12,6 +12,7 @@ import specman.model.ModelEnvelope;
 import specman.model.v001.EinfacherSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
+import specman.view.RoundedBorderDecorationStyle;
 
 import java.awt.*;
 

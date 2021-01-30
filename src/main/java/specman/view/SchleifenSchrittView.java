@@ -182,7 +182,9 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			aenderungsart,
 			klappen.isSelected(),
 			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
-			0, getQuellschrittID());
+			0,
+			getQuellschrittID(),
+			getDecorated());
 		return model;
 	}
 
@@ -193,7 +195,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		// an additional border shielding the inner steps from any rounded border
 		// decorarions outside.
 	}
-	//TODO
+
 	public SchrittSequenzView getWiederholSequenz() {
 		return wiederholSequenz;
 	}
