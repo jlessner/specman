@@ -35,13 +35,17 @@ public class RoundedBorderDecorator extends JPanel {
     skalieren(Specman.instance().getZoomFactor());
   }
 
+  public RoundedBorderDecorationStyle getStyle() { return style; }
+
   public void setStyle(RoundedBorderDecorationStyle style) {
     this.style = style;
+    updateTopInset();
+  }
+
+  private void updateTopInset() {
     int topInset = style.withTopInset() ? inset + INNER_BORDERLINE_WIDTH : INNER_BORDERLINE_WIDTH;
     layout.setRowSpec(1, RowSpec.decode(topInset + "px"));
   }
-
-  public RoundedBorderDecorationStyle getStyle() { return style; }
 
   @Override
   public void paint(Graphics g) {
@@ -103,7 +107,7 @@ public class RoundedBorderDecorator extends JPanel {
   public void skalieren(int percent) {
     inset = (INSET * percent) / 100;
     arc = (ARC_SIZE * percent) / 100;
-    setStyle(style);
+    updateTopInset();
     String otherInsetSpec = (inset + INNER_BORDERLINE_WIDTH) + "px";
     ColumnSpec columnSpec = ColumnSpec.decode(otherInsetSpec);
     layout.setColumnSpec(1, columnSpec);
