@@ -1,6 +1,7 @@
 package specman.model.v001;
 
 import specman.SchrittID;
+import specman.view.RoundedBorderDecorationStyle;
 
 public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 	public final ZweigSchrittSequenzModel_V001 ifSequenz;
@@ -17,11 +18,12 @@ public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		SchrittID id,
 		TextMitAenderungsmarkierungen_V001 inhalt,
 		int farbe,
+		RoundedBorderDecorationStyle decorationStyle,
 		boolean zugeklappt,
 		ZweigSchrittSequenzModel_V001 ifSequenz,
 		ZweigSchrittSequenzModel_V001 elseSequenz,
 		float ifBreitenanteil) {
-		super(id, inhalt, farbe, zugeklappt);
+		super(id, inhalt, farbe, decorationStyle, zugeklappt);
 		this.ifSequenz = ifSequenz;
 		this.elseSequenz = elseSequenz;
 		this.ifBreitenanteil = ifBreitenanteil;

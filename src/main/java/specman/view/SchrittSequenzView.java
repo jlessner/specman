@@ -21,6 +21,7 @@ import java.util.List;
 import static specman.Specman.initialtext;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
+import static specman.view.RoundedBorderDecorationStyle.Full;
 import static specman.view.RoundedBorderDecorationStyle.None;
 
 public class SchrittSequenzView {
@@ -512,5 +513,15 @@ public class SchrittSequenzView {
 			}
 		}
 		return false;
+	}
+
+	public RoundedBorderDecorationStyle deriveDecorationStyleFromPosition(AbstractSchrittView childStep) {
+		for (int i = 0; i < schritte.size(); i++) {
+			if (schritte.get(i) == childStep) {
+				return (i == 0 || schritte.get(i-1).getDecorated() == None)
+						? Full : Co;
+			}
+		}
+		return Co;
 	}
 }

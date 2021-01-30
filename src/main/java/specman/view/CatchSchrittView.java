@@ -235,6 +235,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			getDecorated(),
 			klappen.isSelected(),
 			handlingSequenz.generiereSchittSequenzModel(formatierterText),
 			breakAngekoppelt);

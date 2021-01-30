@@ -18,7 +18,7 @@ public class RoundedBorderDecorator extends JPanel {
 
   private final JComponent decoratedComponent;
   private final FormLayout layout;
-  private boolean withTopInset;
+  private RoundedBorderDecorationStyle style;
   private int inset;
   private int arc;
 
@@ -31,15 +31,17 @@ public class RoundedBorderDecorator extends JPanel {
     setLayout(layout);
     add(componentToDecorate, CC.xy(2, 2));
     decoratedComponent = componentToDecorate;
-    withTopInset = false;
+    style = RoundedBorderDecorationStyle.Co;
     skalieren(Specman.instance().getZoomFactor());
   }
 
-  public void withTopInset(boolean withTopInset) {
-    this.withTopInset = withTopInset;
-    int topInset = withTopInset ? inset + INNER_BORDERLINE_WIDTH : INNER_BORDERLINE_WIDTH;
+  public void setStyle(RoundedBorderDecorationStyle style) {
+    this.style = style;
+    int topInset = style.withTopInset() ? inset + INNER_BORDERLINE_WIDTH : INNER_BORDERLINE_WIDTH;
     layout.setRowSpec(1, RowSpec.decode(topInset + "px"));
   }
+
+  public RoundedBorderDecorationStyle getStyle() { return style; }
 
   @Override
   public void paint(Graphics g) {
@@ -49,7 +51,7 @@ public class RoundedBorderDecorator extends JPanel {
       Color originalColor = g2d.getColor();
 
       int borderX = inset + (INNER_BORDERLINE_WIDTH / 2);
-      int borderY = withTopInset ? borderX : INNER_BORDERLINE_WIDTH / 2;
+      int borderY = style.withTopInset() ? borderX : INNER_BORDERLINE_WIDTH / 2;
       int borderWidthMinus = borderX * 2;
       int borderHeightMinus = borderX + borderY;
 
@@ -98,12 +100,10 @@ public class RoundedBorderDecorator extends JPanel {
 
   public JComponent getDecoratedComponent() { return decoratedComponent; }
 
-  public boolean withTopInset() { return withTopInset; }
-
   public void skalieren(int percent) {
     inset = (INSET * percent) / 100;
     arc = (ARC_SIZE * percent) / 100;
-    withTopInset(withTopInset);
+    setStyle(style);
     String otherInsetSpec = (inset + INNER_BORDERLINE_WIDTH) + "px";
     ColumnSpec columnSpec = ColumnSpec.decode(otherInsetSpec);
     layout.setColumnSpec(1, columnSpec);

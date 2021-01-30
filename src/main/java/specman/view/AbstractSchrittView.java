@@ -254,8 +254,9 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		if (roundedBorderDecorator == null) {
 			JComponent coreComponent = getComponent();
 			roundedBorderDecorator = new RoundedBorderDecorator(coreComponent);
-			boolean withTopInset = decorationRequiresTopInset();
-			roundedBorderDecorator.withTopInset(withTopInset);
+			RoundedBorderDecorationStyle requiredDecorationStyle =
+					parent.deriveDecorationStyleFromPosition(this);
+			roundedBorderDecorator.setStyle(requiredDecorationStyle);
 			toggleResult = roundedBorderDecorator;
 		}
 		else {
@@ -285,12 +286,12 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		if (roundedBorderDecorator == null) {
 			return None;
 		}
-		return roundedBorderDecorator.withTopInset() ? Full : Co;
+		return roundedBorderDecorator.getStyle();
 	}
 
 	public void decorateAsFollower(RoundedBorderDecorationStyle predecessorDeco) {
 		if (getDecorated() != None) {
-			roundedBorderDecorator.withTopInset(predecessorDeco == None);
+			roundedBorderDecorator.setStyle(predecessorDeco == None ? Full : Co);
 		}
 	}
 

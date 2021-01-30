@@ -101,6 +101,7 @@ public class IfSchrittView extends IfElseSchrittView {
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			getDecorated(),
 			klappen.isSelected(),
 			elseSequenz.generiereZweigSchrittSequenzModel(formatierterText),
 			ifSequenz.ueberschrift.getWidth());

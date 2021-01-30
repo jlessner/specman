@@ -177,6 +177,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			getDecorated(),
 			klappen.isSelected(),
 			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
 			0);

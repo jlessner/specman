@@ -1,6 +1,7 @@
 package specman.model.v001;
 
 import specman.SchrittID;
+import specman.view.RoundedBorderDecorationStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,11 @@ public class CaseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 			SchrittID id,
 			TextMitAenderungsmarkierungen_V001 inhalt,
 			int farbe,
+			RoundedBorderDecorationStyle decorationStyle,
 			boolean zugeklappt,
 			ZweigSchrittSequenzModel_V001 sonstSequenz,
 			ArrayList<Float> spaltenbreitenAnteile) {
-		super(id, inhalt, farbe, zugeklappt);
+		super(id, inhalt, farbe, decorationStyle, zugeklappt);
 		this.sonstSequenz = sonstSequenz;
 		this.caseSequenzen = new ArrayList<ZweigSchrittSequenzModel_V001>();
 		this.spaltenbreitenAnteile = spaltenbreitenAnteile;

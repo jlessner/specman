@@ -26,7 +26,8 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 		EinfacherSchrittModel_V001 model = new EinfacherSchrittModel_V001(
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
-			getBackground().getRGB()
+			getBackground().getRGB(),
+			getDecorated()
 		);
 		return model;
 	}

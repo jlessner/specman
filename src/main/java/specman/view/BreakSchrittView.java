@@ -68,7 +68,8 @@ public class BreakSchrittView extends AbstractSchrittView {
 		BreakSchrittModel_V001 model = new BreakSchrittModel_V001(
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
-			getBackground().getRGB()
+			getBackground().getRGB(),
+			getDecorated()
 		);
 		return model;
 	}

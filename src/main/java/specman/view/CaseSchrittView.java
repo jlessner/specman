@@ -224,6 +224,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			getDecorated(),
 			klappen.isSelected(),
 			sonstSequenz.generiereZweigSchrittSequenzModel(formatierterText),
 			new ArrayList<Float>(spaltenbreitenAnteileBerechnen(spaltenbreitenErmitteln())));

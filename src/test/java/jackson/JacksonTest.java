@@ -12,6 +12,7 @@ import specman.model.ModelEnvelope;
 import specman.model.v001.EinfacherSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
+import specman.view.RoundedBorderDecorationStyle;
 
 import java.awt.*;
 
@@ -23,7 +24,8 @@ public class JacksonTest {
 	void testDeserializationWithDerivedTypes() throws Exception {
 		SchrittID id = new SchrittID(0);
 		SchrittSequenzModel_V001 writemodel = new SchrittSequenzModel_V001(id, false, 10);
-		EinfacherSchrittModel_V001 step1 = new EinfacherSchrittModel_V001(id.naechsteID(), null, Color.white.getRGB());
+		EinfacherSchrittModel_V001 step1 = new EinfacherSchrittModel_V001
+				(id.naechsteID(), null, Color.white.getRGB(), RoundedBorderDecorationStyle.None);
 		writemodel.schritte.add(step1);
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    objectMapper.enableDefaultTyping();

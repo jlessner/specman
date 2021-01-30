@@ -226,6 +226,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			getDecorated(),
 			klappen.isSelected(),
 			ifSequenz.generiereZweigSchrittSequenzModel(formatierterText),
 			elseSequenz.generiereZweigSchrittSequenzModel(formatierterText),
