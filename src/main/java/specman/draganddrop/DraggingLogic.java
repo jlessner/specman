@@ -444,7 +444,7 @@ public class DraggingLogic implements Serializable {
                             " </span><span>&larr </span><span style='text-decoration: line-through;'>"+step.getshef().schrittNummer.getText()+"</span></body></html>");
 
                     Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
-                    Specman.instance().ohneSchleife(quellschritt, Aenderungsart.Quellschritt);
+                    Specman.instance().unterschritteVonSchrittDurchlaufen(quellschritt, Aenderungsart.Quellschritt);
 
                     if (step != schritt) {
 
@@ -460,7 +460,7 @@ public class DraggingLogic implements Serializable {
                         step.getshef().setZielschrittStil(step.getPlainText(), step);
                         step.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
                                 +schritt.getshef().schrittNummer.getText()+"</span><span>&rarr</span><span>"+step.getshef().schrittNummer.getText()+ "</span></body></html>");
-                        Specman.instance().ohneSchleife(step, Aenderungsart.Zielschritt);
+                        Specman.instance().unterschritteVonSchrittDurchlaufen(step, Aenderungsart.Zielschritt);
                         //specman.pruefeFuerSchrittnummer();
                     }
                     specman.pruefeFuerSchrittnummer();

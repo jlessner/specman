@@ -10,7 +10,6 @@ import specman.draganddrop.DragAdapter;
 import specman.draganddrop.DraggingLogic;
 import specman.draganddrop.GlassPane;
 import specman.model.ModelEnvelope;
-import specman.model.v001.QuellSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.textfield.TextfieldShef;
@@ -23,13 +22,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledEditorKit;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
-import javax.swing.undo.AbstractUndoableEdit;
-import javax.swing.undo.CompoundEdit;
-import javax.swing.undo.CannotUndoException;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -41,7 +35,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static specman.Specman.schrittHintergrund;
 import static specman.view.RelativeStepPosition.After;
 
 /**
@@ -421,18 +414,19 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 									zweig.setAenderungsart(Aenderungsart.Geloescht);
 									zweig.getUeberschrift().setStyle(zweig.getUeberschrift().getText(), TextfieldShef.ganzerSchrittGeloeschtStil);
 									zweig.getUeberschrift().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+									zweig.getUeberschrift().getTextComponent().setEditable(false);
 									if (zweig == caseSchritt.getCaseSequenzen().get(0)) {
 										caseSchritt.getPanelFall1().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 										caseSchritt.getPanel().repaint();
 									}
-									recrusiv(zweig.getSchritte(), Aenderungsart.Geloescht);
+									rekursiv(zweig.getSchritte(), Aenderungsart.Geloescht);
 								}
 							}
 							else {
 								schritt.setAenderungsart(Aenderungsart.Geloescht);
 								schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
 								aenderungsMarkierungenAufGeloescht(schritt);
-								ohneSchleife(schritt, Aenderungsart.Geloescht);
+								unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
 								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 							}
 						}
@@ -441,7 +435,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							schritt.setAenderungsart(Aenderungsart.Geloescht);
 							schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
 							aenderungsMarkierungenAufGeloescht(schritt);
-							ohneSchleife(schritt, Aenderungsart.Geloescht);
+							unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
 							undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 						}
                     }
@@ -576,14 +570,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		aenderungenVerwerfen.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 
-				List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
-				schritte = hauptSequenz.schritte;
-				recrusiv(schritte, null);
-				/*try{
-					verwerfenAbfrage(schritte);
-				} catch (BadLocationException badLocationException) {
-					badLocationException.printStackTrace();
-				}*/
+				//List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
+				List<AbstractSchrittView> schritte = hauptSequenz.schritte;
+				rekursiv(schritte, null);
+				pruefeFuerSchrittnummer();
 			}
 		});
 
@@ -1039,58 +1029,44 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return caseAnhaengen;
 	}
 
-
-
-	//TODO Ich nehme mir nur einen Schritt und gehe dann durch alle unterschritte.
-	//wird benötigt, wenn z.B. ein Schritt als gelöscht markiert werden soll,
-	//um zu prüfen ob der Schritt unterschritt hat und diese dann auch zu markieren
-	public void ohneSchleife(AbstractSchrittView schritt, Aenderungsart art) {
+	//Aufgabe: Ich nehme mir nur einen Schritt und gehe dann durch alle unterschritte.
+	//wird benötigt, wenn z.B. ein Schritt als gelöscht markiert werden soll
+	public void unterschritteVonSchrittDurchlaufen(AbstractSchrittView schritt, Aenderungsart art) {
 		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
-			recrusiv(ifel.getElseSequenz().schritte, art);
-
+			rekursiv(ifel.getElseSequenz().schritte, art);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
-				recrusiv(ifel.getIfSequenz().schritte, art);
+				rekursiv(ifel.getIfSequenz().schritte, art);
             }
 		}
-
 		else if(schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView") ) {
             SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
-            recrusiv(schleife.getWiederholSequenz().schritte, art);
+            rekursiv(schleife.getWiederholSequenz().schritte, art);
 		}
-
 		else if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-			recrusiv(caseSchritt.getSonstSequenz().schritte, art);
+			rekursiv(caseSchritt.getSonstSequenz().schritte, art);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
-				recrusiv(caseSequenz.schritte, art);
+				rekursiv(caseSequenz.schritte, art);
 			}
 		}
 		else if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
 			SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
-			recrusiv(sub.getSequenz().schritte, art);
+			rekursiv(sub.getSequenz().schritte, art);
 		}
 	}
 
-
-	//TODO Ich durchlaufe alle Schritte, bis ich zum untersten Schritt des Pfades angekommen bin
-	//Kann alle Schritte/Unterschritte der uebergebenen Art zuweisen
+	//wird zum geloescht markieren von Schritten, bzw. deren Unterschritte benutzt und zum verwerfen
 	//Wird benutzt um alle unterschritte einer Schrittliste zu durchlaufen und die gewünschte Aenderungsart hinzuzufügen
-	public void recrusiv(List<AbstractSchrittView> schritte, Aenderungsart art) {
+	public void rekursiv(List<AbstractSchrittView> schritte, Aenderungsart art) {
 		for (AbstractSchrittView schritt: schritte) {
 
 			//wird beim Verwerfen durchlaufen
 			if (art == null) {
 
-				//Verwerfen von Änderungen, bei Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
+				//Verwerfen von Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
 				if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 					CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-
-
-					//nur für caseSequenzen möglich, da man die Sonstsequenz eh nicht löschen kann
-					//caseSchritt.getCaseSequenzen() = new CopyOnWriteArrayList<ZweigSchrittSequenzView>;
-
-					//TODO es funktioniert, ist aber glaube ich keine schöne Lösung
 					//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
 					List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
 					for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
@@ -1101,10 +1077,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
 							caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 							caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-							recrusiv(caseSequenz.schritte, null);
+							caseSequenz.getUeberschrift().getTextComponent().setEditable(true);
+							rekursiv(caseSequenz.schritte, null);
 						}
 					}
 				}
+
 				//hinzugefügter Schritt muss entfernt werden, da verworfen
 				if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 					SchrittSequenzView sequenz = schritt.getParent();
@@ -1113,103 +1091,52 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					//continue damit er nicht versucht, die unterschritte eines gelöschten Schrittes zu finden
 					continue;
 				}
+
+				//TODO Niclas, du hast den Code, füg ihn hier ein
+				if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet){
+
+				}
+
+				//TODO mit team D&D machen, keinen peil davon
+				if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
+
+				}
+
+				//TODO brauchen wir das? nachher löschen wir noch den Zielschritt, den wir eig, zurückmoven wollten
+				if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
+
+				}
+
 				schritt.setAenderungsart(art);
 				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
+				//TODO das auskommentierte hier drunter dient mit zur doku, wie wir angefangen haben, kommt später weg
 				//schritt.getshef().setPlainText(schritt.getshef().getPlainText());
             	////schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				////schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 				//schritt.getText().setEnabled(true);
-				aenderungsMarkierungenUndEnumsEntfernen(schritt);
+				aenderungsmarkierungenUndEnumsEntfernen(schritt);
 			}
 
-			//setzt die Unterschritte eines Schrittes auf die Aenderungsart geloescht
+			//setzt die Unterschritte eines Schrittes auf die Aenderungsart geloescht und fügt die Änderungsmarkierungen hinzu
 			if(art == Aenderungsart.Geloescht) {
-            	//schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
             	schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
-            	//schritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-            	//schritt.getText().setEnabled(false);
             	aenderungsMarkierungenAufGeloescht(schritt);
             	schritt.setAenderungsart(Aenderungsart.Geloescht);
 			}
 
-			//gibt den Schritt zur überprüfung auf Unterschritte
-			ohneSchleife(schritt, art);
+			//gibt den Schritt zur Überprüfung auf Unterschritte
+			unterschritteVonSchrittDurchlaufen(schritt, art);
 		}
 	}
 
-	//TODO Verwerfen Abfrage
-
-	public void verwerfenAbfrage(List<AbstractSchrittView> schritte) throws BadLocationException{
-
-		for (AbstractSchrittView schritt:schritte){
-			if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
-				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-				//nur für caseSequenzen möglich, da man die Sonstsequenz eh nicht löschen kann
-				for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
-					if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
-						int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
-						undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
-					}
-					if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
-						caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-						//caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-						//TODO das untere ist ein test gegenüber dem oberen
-						caseSequenz.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-						recrusiv(caseSequenz.schritte, null);
-					}
-				}
-			}
-			if (schritt.getAenderungsart() == null) {
-				System.out.println("Es liegen keine Aenderungen vor");
-			}
-			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
-				System.out.println("Neuen Schritt entfernt");
-				SchrittSequenzView sequenz = schritt.getParent();
-				int schrittIndex = sequenz.schrittEntfernen(schritt);
-				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
-			}
-			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
-				//TODO verwerfen Methode
-				schritt.getshef().aenderungenVerwerfen();
-				schritt.setAenderungsart(null);
-			}
-			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
-				System.out.println("Alter Schritt wiederhergestellt");
-				schritt.setAenderungsart(null);
-				schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-				aenderungsMarkierungenUndEnumsEntfernen(schritt);
-			}
-			//TODO Quellschritt & Zielschritt
-			/*if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
-				System.out.println("Quellschritt Geloescht");
-				SchrittSequenzView sequenz = schritt.getParent();
-				int schrittIndex = sequenz.schrittEntfernen(schritt);
-			}
-			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-				System.out.println("Zielschritt hinzugefügt");
-				schritt.getshef().aenderungenUebernehmen();
-				schritt.setAenderungsart(null);
-				//TODO Auslagern der SchrittnummerMethoden
-				//schritt.getshef().setSchrittnummerStandardStil(schritt);
-				schritt.getshef().schrittNummer.setText(schritt.getshef().schrittNummer.getText());
-				schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Schriftfarbe_Geloescht));
-				schritt.getshef().schrittNummer.setBackground(TextfieldShef.Schriftfarbe_Geloescht);
-				schritt.getshef().schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Standard);
-			}*/
-		}
-	}
-
-	//TODO Uebernehmen methode mit abfrage welche art zugewiesen ist
+	//TODO Uebernehmen methode mit Abfrage welche art zugewiesen ist
 	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte) throws BadLocationException {
-
 		for (AbstractSchrittView schritt: schritte) {
 
 			//Übernehmen von Änderungen, bei Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
 			if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-				//nur für caseSequenzen möglich, da man die Sonstsequenz eh nicht löschen kann
-
+				//nur für caseSequenzen nötig, da man die Sonstsequenz eh nicht löschen kann
 				//TODO es funktioniert, ist aber glaube ich keine schöne Lösung
 				//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
 				List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
@@ -1221,32 +1148,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
 						caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 						caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-						//TODO ist erstmal nen test
 						caseSchritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-						//caseSchritt.getPanelFall1().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 						caseSequenz.setAenderungsart(null);
-						//TODO nach drei Stunden Bugfixing ist der Bug weg (vermutlich), es ist 3: uhr nachts, gucke morgen warum ich in die recrusiv wollte
-						//recrusiv(caseSequenz.schritte, null);
 					}
-
 				}
 			}
-
-			System.out.println(schritt.getClass());
 
 			//wird bei keiner gesetzten Änderungsart durchlaufen
 			if (schritt.getAenderungsart() == null) {
 				System.out.println("Es liegen keine Aenderungen vor");
 			}
 
-			//wird bei der Aenderungsart hinzugefügt durchlaufen
-			//entfernt alle Text/Schrittmarkierungen
+			//wird bei der Aenderungsart hinzugefuegt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
-				System.out.println("Hinzugefuegt");
 				schritt.setAenderungsart(null);
 				schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-				aenderungsMarkierungenUndEnumsEntfernen(schritt);
+				aenderungsmarkierungenUndEnumsEntfernen(schritt);
 			}
 
 			//TODO noch nicht implementiert
@@ -1255,24 +1173,26 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				schritt.setAenderungsart(null);
 			}
 
+			//wird bei der Änderungsart geloescht durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
-				System.out.println("Geloescht");
 				SchrittSequenzView sequenz = schritt.getParent();
 				int schrittIndex = sequenz.schrittEntfernen(schritt);
+				//TODO ist der undomanager hier notwendig? wenn ja, fehlt er bei quellschritt
 				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
 				//continue damit er nicht versucht, die unterschritte eines gelöschten Schrittes zu finden
 				continue;
 			}
+
+			//wird bei der Änderungsart Quellschritt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
-				System.out.println("Quellschritt Geloescht");
 				SchrittSequenzView sequenz = schritt.getParent();
 				int schrittIndex = sequenz.schrittEntfernen(schritt);
 			}
+
+			//wird bei der Änderungsart Zielschritt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-				System.out.println("Zielschritt hinzugefügt");
 				schritt.getshef().aenderungenUebernehmenTEST();
 				schritt.setAenderungsart(null);
-				//schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 				//TODO Auslagern der SchrittnummerMethoden
 				//schritt.getshef().setSchrittnummerStandardStil(schritt);
 				schritt.getshef().schrittNummer.setText(schritt.getshef().schrittNummer.getText());
@@ -1306,16 +1226,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	//TODO
 	//Überschriften von If/Else und Cases zurücksetzen
-	//Der Teil setzt alle Änderungsmarkierungen auf den Standardwert zurück
-	public void aenderungsMarkierungenUndEnumsEntfernen(AbstractSchrittView schritt) {
+	//Alle Änderungsmarkierungen auf den Standardwert
+	public void aenderungsmarkierungenUndEnumsEntfernen(AbstractSchrittView schritt) {
 		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
 			schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-			//schritt.setPlainText(schritt.getshef().getPlainText(), StyleConstants.ALIGN_CENTER);
 			ifel.getElseSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-			//ifel.getElseSequenz().getUeberschrift().setPlainText(ifel.getElseSequenz().getUeberschrift().getPlainText(), StyleConstants.ALIGN_RIGHT);
 			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEditable(true);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 				ifel.getIfSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
@@ -1329,15 +1246,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			caseSchritt.getPanelFall1().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 				caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-				//glaube, dass hat für nen fehler gesorgt, dass die linien zwischen den schritten in den cases verloren gingen
-				//caseSequenz.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 				caseSequenz.getUeberschrift().getTextComponent().setEditable(true);
 			}
 		}
 	}
 
-	//TODO
 	public void aenderungsMarkierungenAufGeloescht(AbstractSchrittView schritt) {
+		//TODO funkt alles wenn ich setEditable hier entferne?
 		schritt.getText().setEditable(false);
 		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
@@ -1358,6 +1273,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		}
 	}
+
 	public void pruefeFuerSchrittnummer() {
 		List<AbstractSchrittView> schritte;
 		schritte = hauptSequenz.schritte;
