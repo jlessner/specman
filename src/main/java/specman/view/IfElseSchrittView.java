@@ -230,7 +230,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 			aenderungsart,
 			ifSequenz.generiereZweigSchrittSequenzModel(formatierterText),
 			elseSequenz.generiereZweigSchrittSequenzModel(formatierterText),
-			ifBreitenanteil(ifSequenz.ueberschrift.getWidth(), elseSequenz.ueberschrift.getWidth()));
+			ifBreitenanteil(ifSequenz.ueberschrift.getWidth(), elseSequenz.ueberschrift.getWidth()), getQuellschrittID());
 		return model;
 	}
 	

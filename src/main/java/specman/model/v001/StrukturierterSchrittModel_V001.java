@@ -10,8 +10,8 @@ public class StrukturierterSchrittModel_V001 extends AbstractSchrittModel_V001 {
 		zugeklappt = false;
 	}
 
-	public StrukturierterSchrittModel_V001(SchrittID id, TextMitAenderungsmarkierungen_V001 inhalt, int farbe, Aenderungsart aenderungsart, boolean zugeklappt) {
-		super(id, inhalt, farbe, aenderungsart);
+	public StrukturierterSchrittModel_V001(SchrittID id, TextMitAenderungsmarkierungen_V001 inhalt, int farbe, Aenderungsart aenderungsart, boolean zugeklappt, SchrittID quellschrittID) {
+		super(id, inhalt, farbe, aenderungsart, quellschrittID);
 		this.zugeklappt = zugeklappt;
 	}
 }

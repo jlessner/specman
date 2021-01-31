@@ -253,7 +253,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			aenderungsart,
 			klappen.isSelected(),
 			sonstSequenz.generiereZweigSchrittSequenzModel(formatierterText),
-			new ArrayList<Float>(spaltenbreitenAnteileBerechnen(spaltenbreitenErmitteln())));
+			new ArrayList<Float>(spaltenbreitenAnteileBerechnen(spaltenbreitenErmitteln())), getQuellschrittID());
 		caseSequenzen.forEach(sequenz -> model.caseHinzufuegen(sequenz.generiereZweigSchrittSequenzModel(formatierterText)));
 		return model;
 	}

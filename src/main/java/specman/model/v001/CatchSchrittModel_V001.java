@@ -19,8 +19,8 @@ public class CatchSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		boolean zugeklappt,
 		Aenderungsart aenderungsart,
 		SchrittSequenzModel_V001 handlingSequenz,
-		boolean breakAngekoppelt) {
-		super(id, inhalt, farbe, aenderungsart, zugeklappt);
+		boolean breakAngekoppelt, SchrittID quellschrittID) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID);
 		this.handlingSequenz = handlingSequenz;
 		this.breakAngekoppelt = breakAngekoppelt;
 	}

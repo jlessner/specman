@@ -433,16 +433,12 @@ public class DraggingLogic implements Serializable {
                     InsetPanel ip = (InsetPanel) label.getParent().getParent();
                     AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
                     sequenz=step.getParent();
-                    QuellSchrittView quellschritt = new QuellSchrittView(specman, sequenz, "", step.getId(), null, null);
+                    QuellSchrittView quellschritt = new QuellSchrittView(specman, sequenz, ".", step.getId(), null);
                     sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
-
                     quellschritt.setAenderungsart(Aenderungsart.Quellschritt);
+                    schritt.getshef().schrittNummer.setText("abc");
                     quellschritt.getshef().setQuellStil(step.getPlainText(), quellschritt);
                     quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-                    //TODO Schrittnummer des Quellschritts
-                    quellschritt.getshef().schrittNummer.setText("<html><body><span>"+quellschritt.getshef().schrittNummer.getText()+
-                            " </span><span>&larr </span><span style='text-decoration: line-through;'>"+step.getshef().schrittNummer.getText()+"</span></body></html>");
-
                     Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
                     Specman.instance().unterschritteVonSchrittDurchlaufen(quellschritt, Aenderungsart.Quellschritt);
 
@@ -455,19 +451,15 @@ public class DraggingLogic implements Serializable {
                         step.setParent(schritt.getParent());
                         sequenz=schritt.getParent();
                         sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
-
+                        step.setQuellschritt(quellschritt);
                         step.setAenderungsart(Aenderungsart.Zielschritt);
                         step.getshef().setZielschrittStil(step.getPlainText(), step);
-                        step.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
-                                +schritt.getshef().schrittNummer.getText()+"</span><span>&rarr</span><span>"+step.getshef().schrittNummer.getText()+ "</span></body></html>");
                         Specman.instance().unterschritteVonSchrittDurchlaufen(step, Aenderungsart.Zielschritt);
-                        //specman.pruefeFuerSchrittnummer();
                     }
+                    quellschritt.setZielschritt(step);
+                    //quellschritt.setZielschrittID(step.getId());
                     specman.pruefeFuerSchrittnummer();
-                    quellschritt.setReferenzId(step.getId());
-
                 }
-
                 //schritt.getshef().setVerschobenStil(schritt.getshef().getPlainText());
             }else{
                 JLabel label = (JLabel) e.getSource();

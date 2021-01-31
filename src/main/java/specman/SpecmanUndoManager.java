@@ -11,6 +11,7 @@ public class SpecmanUndoManager extends UndoManager {
     private static final String UNSAVED_CHANGES_INDICATOR = " *";
 
     private final Specman specman;
+    private boolean addEditStop = false;
 
     public SpecmanUndoManager(Specman specman) {
         this.specman = specman;
@@ -18,11 +19,15 @@ public class SpecmanUndoManager extends UndoManager {
 
     @Override
     public synchronized boolean addEdit(UndoableEdit anEdit) {
-        boolean success = super.addEdit(anEdit);
-        if (success) {
-            updateUnsavedChangesIndicatorInTitleBar();
+        if(addEditStop == true){
+            boolean success = super.addEdit(anEdit);
+            if (success) {
+                updateUnsavedChangesIndicatorInTitleBar();
+            }
+            return success;
+        } else {
+            return false;
         }
-        return success;
     }
 
 
@@ -61,5 +66,9 @@ public class SpecmanUndoManager extends UndoManager {
                 specman.setTitle(currentTitle.substring(0, currentTitle.length() - UNSAVED_CHANGES_INDICATOR.length()));
             }
         }
+    }
+
+    public void setAddEditStop (boolean addEditStop){
+        this.addEditStop=addEditStop;
     }
 }

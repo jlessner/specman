@@ -182,7 +182,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			aenderungsart,
 			klappen.isSelected(),
 			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
-			0);
+			0, getQuellschrittID());
 		return model;
 	}
 

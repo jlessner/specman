@@ -19,8 +19,8 @@ public class WhileSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		Aenderungsart aenderungsart,
 		boolean zugeklappt,
 		SchrittSequenzModel_V001 wiederholSequenz,
-		int balkenbreite) {
-		super(id, inhalt, farbe, aenderungsart, zugeklappt);
+		int balkenbreite, SchrittID quellschrittID) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID);
 		this.wiederholSequenz = wiederholSequenz;
 		this.balkenbreite = balkenbreite;
 	}

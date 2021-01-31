@@ -28,7 +28,8 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
-			aenderungsart
+			aenderungsart,
+			getQuellschrittID()
 		);
 		return model;
 	}

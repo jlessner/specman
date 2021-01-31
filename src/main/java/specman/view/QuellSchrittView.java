@@ -8,19 +8,21 @@ import specman.model.v001.QuellSchrittModel_V001;
 import javax.swing.*;
 import java.awt.*;
 
-public class QuellSchrittView extends EinfacherSchrittView{
+public class QuellSchrittView extends AbstractSchrittView{
 
-    protected SchrittID referenzId;
+    protected AbstractSchrittView zielschritt;
+    protected SchrittID zielschrittID;
 
-    public QuellSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, SchrittID referenzId) {
+    public QuellSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
         super(editor, parent, initialerText, id, aenderungsart);
-        this.referenzId=referenzId;
     }
+
+    @Override
+    public JComponent getComponent() { return decorated(text.asJComponent()); }
 
     public QuellSchrittView(EditorI editor, SchrittSequenzView parent, QuellSchrittModel_V001 model) {
         super(editor, parent, model.inhalt.text, model.id, model.aenderungsart);
         setBackground(new Color(model.farbe));
-        this.referenzId=referenzId;
     }
 
     @Override
@@ -30,17 +32,40 @@ public class QuellSchrittView extends EinfacherSchrittView{
                 getTextMitAenderungsmarkierungen(formatierterText),
                 getBackground().getRGB(),
                 aenderungsart,
-                referenzId
+                getZielschrittID()
         );
         return model;
     }
 
-    public SchrittID getReferenzId() {
-        return referenzId;
+    @Override
+    public JComponent getPanel() {
+        return text.asJComponent();
     }
 
-    public void setReferenzId(SchrittID id) {
-        this.id = id;
-        text.setId(id.toString());
+    public AbstractSchrittView getZielschrittSN(){
+        return zielschritt;
     }
+    /*
+    public void setZielschritt(AbstractSchrittView zielschritt) {
+        if (zielschritt != null) {
+            this.zielschritt = zielschritt;
+        }
+    }*/
+
+    public SchrittID getZielschrittID(){
+        return zielschritt!=null?zielschritt.getId():null;
+    }
+    //
+    public AbstractSchrittView getZielschritt() {
+        return quellschritt;
+    }
+
+    public void setZielschritt(AbstractSchrittView zielschritt) {
+        if (zielschritt != null) {
+            this.zielschritt = zielschritt;
+        }
+    }
+    /*public void setZielschrittID(SchrittID zielschrittID){
+        this.zielschrittID=zielschrittID;
+    }*/
 }

@@ -116,7 +116,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 			getBackground().getRGB(),
 			aenderungsart,
 			klappen.isSelected(),
-			subsequenz.generiereSchittSequenzModel(formatierterText));
+			subsequenz.generiereSchittSequenzModel(formatierterText), getQuellschrittID());
 		return model;
 	}
 

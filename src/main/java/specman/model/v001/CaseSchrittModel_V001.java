@@ -18,8 +18,8 @@ public class CaseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 			Aenderungsart aenderungsart,
 			boolean zugeklappt,
 			ZweigSchrittSequenzModel_V001 sonstSequenz,
-			ArrayList<Float> spaltenbreitenAnteile) {
-		super(id, inhalt, farbe, aenderungsart, zugeklappt);
+			ArrayList<Float> spaltenbreitenAnteile, SchrittID quellschrittID) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID);
 		this.sonstSequenz = sonstSequenz;
 		this.caseSequenzen = new ArrayList<ZweigSchrittSequenzModel_V001>();
 		this.spaltenbreitenAnteile = spaltenbreitenAnteile;

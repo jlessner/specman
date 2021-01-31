@@ -16,8 +16,8 @@ public class SubsequenzSchrittModel_V001 extends StrukturierterSchrittModel_V001
 		int farbe,
 		Aenderungsart aenderungsart,
 		boolean zugeklappt,
-		SchrittSequenzModel_V001 subsequenz) {
-		super(id, inhalt, farbe, aenderungsart, zugeklappt);
+		SchrittSequenzModel_V001 subsequenz, SchrittID quellschrittID) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID);
 		this.subsequenz = subsequenz;
 	}
 }

@@ -4,18 +4,7 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.Aenderungsmarkierung_V001;
-import specman.model.v001.BreakSchrittModel_V001;
-import specman.model.v001.CaseSchrittModel_V001;
-import specman.model.v001.CatchSchrittModel_V001;
-import specman.model.v001.EinfacherSchrittModel_V001;
-import specman.model.v001.IfElseSchrittModel_V001;
-import specman.model.v001.IfSchrittModel_V001;
-import specman.model.v001.SubsequenzSchrittModel_V001;
-import specman.model.v001.TextMitAenderungsmarkierungen_V001;
-import specman.model.v001.WhileSchrittModel_V001;
-import specman.model.v001.WhileWhileSchrittModel_V001;
+import specman.model.v001.*;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 
@@ -38,7 +27,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public static final String ZEILENLAYOUT_INHALT_SICHTBAR = "fill:pref:grow";
 	public static final String ZEILENLAYOUT_INHALT_VERBORGEN = "0px";
 	public static final int SPALTENLAYOUT_UMGEHUNG_GROESSE = 18;
-	
+
 	protected static final List<SchrittSequenzView> KEINE_SEQUENZEN = new ArrayList<SchrittSequenzView>();
 
 	protected final TextfieldShef text;
@@ -46,7 +35,8 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	protected Aenderungsart aenderungsart;
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
-	 
+	protected QuellSchrittView quellschritt;
+
 	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
 		this.aenderungsart = aenderungsart;
@@ -68,7 +58,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		this.id = id;
 		text.setId(id.toString());
 	}
-	
+
 	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
 		return direction == RelativeStepPosition.After ? id.naechsteID() : id.sameID();
 	}
@@ -160,6 +150,11 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		if (model instanceof CatchSchrittModel_V001) {
 			return new CatchSchrittView(editor, parent, (CatchSchrittModel_V001) model);
 		}
+		//TODO TEST
+		if (model instanceof QuellSchrittModel_V001){
+			return new QuellSchrittView(editor, parent, (QuellSchrittModel_V001) model);
+		}
+		// TEST ENDE
 		return new EinfacherSchrittView(editor, parent, (EinfacherSchrittModel_V001)model);
 	}
 
@@ -339,7 +334,19 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 	
 	public abstract JComponent getPanel();
-	
+
+	public void setQuellschritt(QuellSchrittView quellschritt){
+		this.quellschritt=quellschritt;
+	}
+
+	public QuellSchrittView getQuellschritt(){
+		return quellschritt;
+	}
+
+	public SchrittID getQuellschrittID(){
+		return quellschritt!=null?quellschritt.getId():null;
+	}
+
 }
 
 

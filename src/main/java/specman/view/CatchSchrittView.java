@@ -208,7 +208,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 			klappen.isSelected(),
 			aenderungsart,
 			handlingSequenz.generiereSchittSequenzModel(formatierterText),
-			breakAngekoppelt);
+			breakAngekoppelt, getQuellschrittID());
 		return model;
 	}
 

@@ -18,32 +18,22 @@ public class UndoableQuellschritt extends AbstractUndoableInteraktion{
 
     @Override
     public void undo() throws CannotUndoException {
-
-    }
-
-    @Override
-    public void redo() throws CannotRedoException {
-
-    }
-
-    public void undoSammler(){
         schritt.getshef().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
         schritt.getshef().setStyle(schritt.getshef().getPlainText(),TextfieldShef.standardStil);
         schritt.getshef().schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
         schritt.getshef().schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Standard);
         schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
-        //test = TextSchrittnummer.getText();
-        //schritt.getshef().schrittNummer.setText(TextSchrittnummer.getText());
         schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration:none;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
         schritt.setAenderungsart(null);
         schritt.getText().setEditable(false);
     }
-    public void redoSammler (){
+
+    @Override
+    public void redo() throws CannotRedoException {
         schritt.getshef().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
         schritt.getshef().setStyle(schritt.getshef().getPlainText(), TextfieldShef.quellschrittStil);
         schritt.getshef().schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
         schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
-        //schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+TextSchrittnummer.getText()+"</span></body></html>");
         schritt.setAenderungsart(Aenderungsart.Quellschritt);
         schritt.getText().setEditable(true);
     }

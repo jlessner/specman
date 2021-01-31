@@ -37,6 +37,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 		panel.setLayout(layout);
 		
 		panel.add(text.asJComponent(), CC.xy(2, 1));
+
 	}
 
 	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, BreakSchrittModel_V001 model) {
@@ -63,7 +64,9 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() { return decorated(panel); }
+	public JComponent getComponent(){
+		return decorated(panel);
+	}
 
 	@Override
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
@@ -71,7 +74,8 @@ public class BreakSchrittView extends AbstractSchrittView {
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(), 
-			aenderungsart
+			aenderungsart,
+			getQuellschrittID()
 		);
 		return model;
 	}
@@ -118,5 +122,5 @@ public class BreakSchrittView extends AbstractSchrittView {
 		return panel;
 	}
 
-	
+
 }

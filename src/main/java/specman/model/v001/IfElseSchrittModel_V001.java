@@ -22,8 +22,8 @@ public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		Aenderungsart aenderungsart,
 		ZweigSchrittSequenzModel_V001 ifSequenz,
 		ZweigSchrittSequenzModel_V001 elseSequenz,
-		float ifBreitenanteil) {
-		super(id, inhalt, farbe, aenderungsart, zugeklappt);
+		float ifBreitenanteil, SchrittID quellschrittID) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID);
 		this.ifSequenz = ifSequenz;
 		this.elseSequenz = elseSequenz;
 		this.ifBreitenanteil = ifBreitenanteil;

@@ -21,8 +21,8 @@ public class IfSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		boolean zugeklappt,
 		Aenderungsart aenderungsart,
 		ZweigSchrittSequenzModel_V001 ifSequenz,
-		int leerBreite) {
-		super(id, inhalt, farbe, aenderungsart, zugeklappt);
+		int leerBreite, SchrittID quellschrittID) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID);
 		this.ifSequenz = ifSequenz;
 //		this.leerBreite = leerBreite;
 		this.leerBreite = 20*Specman.instance().getZoomFactor()/100; /**@author PVN */

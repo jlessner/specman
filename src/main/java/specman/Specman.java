@@ -9,9 +9,8 @@ import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import specman.draganddrop.DragAdapter;
 import specman.draganddrop.DraggingLogic;
 import specman.draganddrop.GlassPane;
-import specman.model.ModelEnvelope;
-import specman.model.v001.SchrittSequenzModel_V001;
-import specman.model.v001.StruktogrammModel_V001;
+import specman.model.*;
+import specman.model.v001.*;
 import specman.textfield.TextfieldShef;
 import specman.undo.*;
 import specman.view.*;
@@ -557,11 +556,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 				List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
 				schritte = hauptSequenz.schritte;
-				try {
 					uebernehmenAbfrage(schritte);
-				} catch (BadLocationException badLocationException) {
-					badLocationException.printStackTrace();
-				}
 
 			}
 		});
@@ -682,13 +677,169 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			outro.skalieren(zoomFaktor, 0);
 			setName(model.name);
 			hauptSequenz = new SchrittSequenzView(this, null, model.hauptSequenz);
+
 			hauptSequenzInitialisieren();
 			neueSchritteNachinitialisieren();
+			modelsNachinitialisieren(model.hauptSequenz.schritte);
+			viewsNachinitialisieren(hauptSequenz.getSchritte());
 			recentFiles.add(diagramFile);
 			undoManager.discardAllEdits();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void modelsNachinitialisieren(List<AbstractSchrittModel_V001> models){
+		for(AbstractSchrittModel_V001 model: models){
+			System.out.println(model.quellschrittID);
+			if(model.quellschrittID != null){
+				findeGleicheId(hauptSequenz.getSchritte(), model);
+			}
+			miniRecrusiv3(model);
+		}
+	}
+
+	private void findeGleicheId(List<AbstractSchrittView> schritte, AbstractSchrittModel_V001 model){
+		for(AbstractSchrittView view: schritte){
+			if(model.quellschrittID.toString().equals(view.getId().toString())){
+				//view.setQuellschritt((QuellSchrittView) findeSchrittZuId(schritte, view.getId()));
+				findeSchrittZuId(schritte, model.id).setQuellschritt((QuellSchrittView) findeSchrittZuId(schritte, view.getId()));
+			}
+			miniRecrusiv2(view, model);
+		}
+	}
+
+	private AbstractSchrittView findeSchrittZuId(List<AbstractSchrittView> schritte, SchrittID id){
+		for(AbstractSchrittView schritt: schritte){
+			if(id == schritt.getId()){
+				return schritt;
+			}
+			miniRecrusiv4(schritt, id);
+		}
+		return null;
+	}
+
+	private void miniRecrusiv4(AbstractSchrittView schritt, SchrittID id){
+		if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+			IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+			findeSchrittZuId(ifel.getElseSequenz().schritte, id);
+			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+				findeSchrittZuId(ifel.getIfSequenz().schritte, id);
+			}
+		}
+		if (schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView")) {
+			SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+			findeSchrittZuId(schleife.getWiederholSequenz().schritte, id);
+		}
+		if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+			findeSchrittZuId(caseSchritt.getSonstSequenz().schritte, id);
+			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+				findeSchrittZuId(caseSequenz.schritte, id);
+			}
+		}
+		if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
+			SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+			findeSchrittZuId(sub.getSequenz().schritte, id);
+		}
+
+	}
+
+	private void miniRecrusiv3(AbstractSchrittModel_V001 model){
+		if (model.getClass().getName().equals("specman.model.v001.IfElseSchrittModel_V001") || model.getClass().getName().equals("specman.model.IfSchrittModel_001")) {
+			IfElseSchrittModel_V001 ifel = (IfElseSchrittModel_V001) model;
+			modelsNachinitialisieren(ifel.elseSequenz.schritte);
+			if (model.getClass().getName().equals("specman.model.v001.IfElseSchrittModel_V001")) {
+				modelsNachinitialisieren(ifel.ifSequenz.schritte);
+			}
+		}
+		if (model.getClass().getName().equals("specman.model.v001.WhileSchrittModel_V001") || model.getClass().getName().equals("specman.model.WhileWhileSchrittModel_V001")) {
+			WhileSchrittModel_V001 schleife = (WhileSchrittModel_V001) model;
+			modelsNachinitialisieren(schleife.wiederholSequenz.schritte);
+		}
+		if (model.getClass().getName().equals("specman.model.v001.CaseSchrittModel_V001")) {
+			CaseSchrittModel_V001 caseSchritt = (CaseSchrittModel_V001) model;
+			modelsNachinitialisieren(caseSchritt.sonstSequenz.schritte);
+			for (ZweigSchrittSequenzModel_V001 caseSequenz : caseSchritt.caseSequenzen) {
+				modelsNachinitialisieren(caseSequenz.schritte);
+			}
+		}
+		if (model.getClass().getName().equals("specman,model.v001.SubsequenzSchrittModel_V001")) {
+			SubsequenzSchrittModel_V001 sub = (SubsequenzSchrittModel_V001) model;
+			modelsNachinitialisieren(sub.subsequenz.schritte);
+		}
+
+	}
+
+	private void miniRecrusiv2(AbstractSchrittView schritt, AbstractSchrittModel_V001 model){
+		if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+			IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+			findeGleicheId(ifel.getElseSequenz().schritte, model);
+			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+				findeGleicheId(ifel.getIfSequenz().schritte, model);
+			}
+		}
+		if (schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView")) {
+			SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+			findeGleicheId(schleife.getWiederholSequenz().schritte, model);
+		}
+		if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+			findeGleicheId(caseSchritt.getSonstSequenz().schritte, model);
+			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+				findeGleicheId(caseSequenz.schritte, model);
+			}
+		}
+		if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
+			SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+			findeGleicheId(sub.getSequenz().schritte, model);
+		}
+
+	}
+
+
+
+	//TODO testen ob set enabled übernommen wird ansonsten in der methode nochmal setzen
+	private void viewsNachinitialisieren(List<AbstractSchrittView> schritte){
+		for(AbstractSchrittView schritt: schritte){
+			System.out.println(schritt.getQuellschritt());
+			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
+				//schritt.getshef().setQuellStil(schritt.getshef().getPlainText(), schritt);
+			}
+			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt || schritt.getAenderungsart() == Aenderungsart.Geloescht){
+				schritt.getshef().getTextComponent().setEditable(false);
+				System.out.println("Schritt auf flase gesetzt");
+			}
+			miniRecrusiv(schritt);
+		}
+	}
+
+
+	//TODO
+	private void miniRecrusiv(AbstractSchrittView schritt){
+		if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+			IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+			viewsNachinitialisieren(ifel.getElseSequenz().schritte);
+			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+				viewsNachinitialisieren(ifel.getIfSequenz().schritte);
+			}
+		}
+		if (schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView")) {
+			SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+			viewsNachinitialisieren(schleife.getWiederholSequenz().schritte);
+		}
+		if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+			viewsNachinitialisieren(caseSchritt.getSonstSequenz().schritte);
+			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+				viewsNachinitialisieren(caseSequenz.schritte);
+			}
+		}
+		if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
+			SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+			viewsNachinitialisieren(sub.getSequenz().schritte);
+		}
+
 	}
 
 	@Override
@@ -1094,17 +1245,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 				//TODO Niclas, du hast den Code, füg ihn hier ein
 				if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet){
-
+					//schritt.getshef().AenderungsmarkierungenVerwerfen(false);
+					schritt.setAenderungsart(null);
 				}
 
 				//TODO mit team D&D machen, keinen peil davon
 				if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
-
+					//int schrittIndex = sequenz.schrittEntfernen(schritt);
 				}
 
 				//TODO brauchen wir das? nachher löschen wir noch den Zielschritt, den wir eig, zurückmoven wollten
 				if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-
+					schritt.setAenderungsart(null);
+					//schritt.getshef().AenderungsmarkierungenVerwerfen(false);
+					schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 				}
 
 				schritt.setAenderungsart(art);
@@ -1130,7 +1284,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	//TODO Uebernehmen methode mit Abfrage welche art zugewiesen ist
-	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte) throws BadLocationException {
+	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte){
 		for (AbstractSchrittView schritt: schritte) {
 
 			//Übernehmen von Änderungen, bei Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
@@ -1151,6 +1305,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						caseSchritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 						caseSequenz.setAenderungsart(null);
 					}
+					if (caseSequenz.getAenderungsart() == Aenderungsart.Bearbeitet){
+
+						//TODO triggert nicht auf der Überschrift | Grund:?
+						caseSequenz.getUeberschrift().AenderungsmarkierungenUebernehmen(false);
+					}
 				}
 			}
 
@@ -1162,15 +1321,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			//wird bei der Aenderungsart hinzugefuegt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 				schritt.setAenderungsart(null);
-				schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-				schritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 				aenderungsmarkierungenUndEnumsEntfernen(schritt);
 			}
 
 			//TODO noch nicht implementiert
 			if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet) {
-				schritt.getshef().aenderungenUebernehmenTEST();
+				schritt.getshef().AenderungsmarkierungenUebernehmen(false);
 				schritt.setAenderungsart(null);
+				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 			}
 
 			//wird bei der Änderungsart geloescht durchlaufen
@@ -1178,7 +1337,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				SchrittSequenzView sequenz = schritt.getParent();
 				int schrittIndex = sequenz.schrittEntfernen(schritt);
 				//TODO ist der undomanager hier notwendig? wenn ja, fehlt er bei quellschritt
-				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+				//undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
 				//continue damit er nicht versucht, die unterschritte eines gelöschten Schrittes zu finden
 				continue;
 			}
@@ -1191,14 +1350,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			//wird bei der Änderungsart Zielschritt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-				schritt.getshef().aenderungenUebernehmenTEST();
 				schritt.setAenderungsart(null);
+				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 				//TODO Auslagern der SchrittnummerMethoden
-				//schritt.getshef().setSchrittnummerStandardStil(schritt);
-				schritt.getshef().schrittNummer.setText(schritt.getshef().schrittNummer.getText());
-				schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Schriftfarbe_Geloescht));
+				/*schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Schriftfarbe_Geloescht));
 				schritt.getshef().schrittNummer.setBackground(TextfieldShef.Schriftfarbe_Geloescht);
-				schritt.getshef().schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Standard);
+				schritt.getshef().schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Standard);*/
+				schritt.getshef().AenderungsmarkierungenUebernehmen(false);
 			}
 
 			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
@@ -1282,10 +1440,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span></body></html>");
 			}
 			if (schritt.getAenderungsart() == Aenderungsart.Quellschritt) {
-				schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" + "B" + "</span></body></html>");
+				schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" +((QuellSchrittView) schritt).getZielschrittID()+"</span></body></html>");
 			}
 			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt) {
-				schritt.getshef().schrittNummer.setText("<html><body><span>" + "A" + "</span><span>&lArr</span><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span></body></html>");
+				schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" +schritt.getQuellschritt().getId()+ "</span></body></html>");
 			}
 		}
 	}
