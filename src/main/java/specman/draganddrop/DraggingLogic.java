@@ -201,7 +201,7 @@ public class DraggingLogic implements Serializable {
 
             if(schritt.getAenderungsart()==Aenderungsart.Geloescht){
                 //Auf einem Gelöschten Schritt nur verbot zeigen
-                showInvalidCursor();
+                
             }else {
 
                 //Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört // Zusätzliche Abfrage da Marker beim CaseAnängen angezeigt wurde
@@ -392,9 +392,18 @@ public class DraggingLogic implements Serializable {
     private boolean checkFirstStep(AbstractSchrittView schritt, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent e) {
         Point p = SwingUtilities.convertPoint(schritt.getPanel(), 0, 0, specman);
         Rectangle r = schritt.getPanel().getBounds();
+        String id = "1";
         r.setLocation(p);
         if (r.contains(pos)) {
-            if (schritt.getId().toString().equals("1") && (pos.y < (r.y + glassPaneHeight))) {
+        	for( AbstractSchrittView vergleichsstep :  specman.hauptSequenz.schritte) {
+        		if(!(vergleichsstep.getAenderungsart() == Aenderungsart.Geloescht || vergleichsstep.getAenderungsart() == Aenderungsart.Quellschritt )) {
+        			id = vergleichsstep.getId().toString();
+        			break;
+        		}
+        	}
+        	
+        	
+            if (schritt.getId().toString().equals(id) && (pos.y < (r.y + glassPaneHeight))) {
                 GlassPane glassPane = (GlassPane) specman.getGlassPane();
                 glassPane.setInputRecBounds(r.x,r.y, r.width, glassPaneHeight);
                 glassPane.setVisible(true);
@@ -424,9 +433,10 @@ public class DraggingLogic implements Serializable {
             if(specman.aenderungenVerfolgen()){
 
                 //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
-                if(schritt.getAenderungsart()== Aenderungsart.Geloescht || schritt.getAenderungsart() == Aenderungsart.Quellschritt)
-                    return;
-                else {
+                //if(schritt.getAenderungsart()== Aenderungsart.Geloescht || schritt.getAenderungsart() == Aenderungsart.Quellschritt)
+                if(false) {
+                	
+                } else {
 
                     JLabel label = (JLabel) e.getSource();
 
