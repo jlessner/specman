@@ -323,6 +323,21 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		return ergebnis;
 	}
 
+	public java.util.List<ZielschrittMarkierungen_V001> AenderungsmarkierungenInZielschrittUebernehmen() {
+		java.util.List<ZielschrittMarkierungen_V001> ergebnis = new ArrayList<>();
+		StyledDocument doc = (StyledDocument) editorPane.getDocument();
+		for (Element e : doc.getRootElements()) {
+			if (elementHatAenderungshintergrund(e)) {
+				if (elementHatDurchgestrichenenText(e)){
+					ergebnis.add(new ZielschrittMarkierungen_V001(e.getStartOffset(), e.getEndOffset(), geloeschtStil));
+				} else {
+					ergebnis.add(new ZielschrittMarkierungen_V001(e.getStartOffset(), e.getEndOffset(), geaendertStil));
+				}
+			}
+		}
+		return ergebnis;
+	}
+
 	private void findeAenderungsmarkierungen(Element e, java.util.List<Aenderungsmarkierung_V001> ergebnis, boolean nurErste) {
 		if (elementHatAenderungshintergrund(e)) {
 			ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset(), e.getEndOffset()));

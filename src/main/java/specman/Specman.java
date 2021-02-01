@@ -1228,12 +1228,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			//wird beim Verwerfen durchlaufen
 			if (art == null) {
 
+				//Hier werden bearbeitete Überschriften von IfElseSchrittViews und IfSchrittViews verworfen
+				if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+					IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+					ifel.getElseSequenz().getUeberschrift().AenderungsmarkierungenVerwerfen(false);
+					if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+						ifel.getIfSequenz().getUeberschrift().AenderungsmarkierungenVerwerfen(false);
+					}
+				}
+
 				//Verwerfen von Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
 				if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 					CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+					caseSchritt.getSonstSequenz().getUeberschrift().AenderungsmarkierungenVerwerfen(false);
 					//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
 					List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
 					for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+						caseSequenz.getUeberschrift().AenderungsmarkierungenVerwerfen(false);
 						if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
 							int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
 							undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
@@ -1312,14 +1323,26 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte){
 		for (AbstractSchrittView schritt: schritte) {
 
+			//Hier werden bearbeitete Überschriften von IfElseSchrittViews und IfSchrittViews übernommen
+			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+				ifel.getElseSequenz().getUeberschrift().AenderungsmarkierungenUebernehmen(false);
+				if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+					ifel.getIfSequenz().getUeberschrift().AenderungsmarkierungenUebernehmen(false);
+				}
+			}
+
+
 			//Übernehmen von Änderungen, bei Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
 			if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+				caseSchritt.getSonstSequenz().getUeberschrift().AenderungsmarkierungenUebernehmen(false);
 				//nur für caseSequenzen nötig, da man die Sonstsequenz eh nicht löschen kann
 				//TODO es funktioniert, ist aber glaube ich keine schöne Lösung
 				//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
 				List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
 				for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+					caseSequenz.getUeberschrift().AenderungsmarkierungenUebernehmen(false);
 					if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
 						int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
 						undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, caseSequenz, caseSchritt, zweigIndex));
@@ -1474,6 +1497,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+				ifel.getElseSequenz().getUeberschrift().AenderungsmarkierungenVerwerfen(false);
 				pruefeFuerSchrittnummer(ifel.getElseSequenz().schritte);
 				if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 					pruefeFuerSchrittnummer(ifel.getIfSequenz().schritte);
