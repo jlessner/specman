@@ -1267,6 +1267,16 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					//Aenderungen muessen erst verworfen werden und dann die SchrittID ändern! - Attribute gehen sonst verloren
 					schritt.getshef().AenderungsmarkierungenVerwerfen(false);
 					schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
+					
+                    int schrittindex = schritt.getParent().schrittEntfernen(schritt);
+
+                    schritt.setId(schritt.getQuellschritt().newStepIDInSameSequence(After));
+                   
+
+                    schritt.setParent(schritt.getQuellschritt().getParent());
+                    schritt.getQuellschritt().getParent().schrittZwischenschieben(schritt, After, schritt.getQuellschritt(), Specman.instance);
+					schritt.getQuellschritt().getParent().schrittEntfernen(schritt.getQuellschritt());
+					
 				}
 
 				schritt.setAenderungsart(art);
