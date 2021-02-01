@@ -698,17 +698,24 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			miniRecrusiv3(model);
 		}
 	}
-
+	//TODO Tim & der Debugger
 	private void findeGleicheId(List<AbstractSchrittView> schritte, AbstractSchrittModel_V001 model){
 		for(AbstractSchrittView view: schritte){
 			if(model.quellschrittID.toString().equals(view.getId().toString())){
 				//view.setQuellschritt((QuellSchrittView) findeSchrittZuId(schritte, view.getId()));
-				findeSchrittZuId(schritte, model.id).setQuellschritt((QuellSchrittView) findeSchrittZuId(schritte, view.getId()));
+				if (Aenderungsart.Zielschritt == view.getAenderungsart()) {
+					//findeSchrittZuId(schritte, model.id).setQuellschritt((QuellSchrittView) findeSchrittZuId(schritte, view.getId()));
+					((QuellSchrittView)findeSchrittZuId(schritte, model.id)).setZielschritt(findeSchrittZuId(schritte, view.getId()));
+				}
+				if (Aenderungsart.Quellschritt == view.getAenderungsart()){
+					//((QuellSchrittView)findeSchrittZuId(schritte, model.id)).setZielschritt(findeSchrittZuId(schritte, view.getId()));
+					findeSchrittZuId(schritte, model.id).setQuellschritt((QuellSchrittView) findeSchrittZuId(schritte, view.getId()));
+				}
 			}
 			miniRecrusiv2(view, model);
 		}
 	}
-
+	//TODO Tim & der Debugger
 	private AbstractSchrittView findeSchrittZuId(List<AbstractSchrittView> schritte, SchrittID id){
 		for(AbstractSchrittView schritt: schritte){
 			if(id == schritt.getId()){

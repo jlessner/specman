@@ -23,6 +23,7 @@ public class QuellSchrittView extends AbstractSchrittView{
     public QuellSchrittView(EditorI editor, SchrittSequenzView parent, QuellSchrittModel_V001 model) {
         super(editor, parent, model.inhalt.text, model.id, model.aenderungsart);
         setBackground(new Color(model.farbe));
+        //setZielschrittID(model.quellschrittID);
     }
 
     @Override
@@ -45,8 +46,8 @@ public class QuellSchrittView extends AbstractSchrittView{
     public AbstractSchrittView getZielschrittSN(){
         return zielschritt;
     }
-    /*
-    public void setZielschritt(AbstractSchrittView zielschritt) {
+
+    /*public void setZielschritt(AbstractSchrittView zielschritt) {
         if (zielschritt != null) {
             this.zielschritt = zielschritt;
         }
@@ -65,7 +66,7 @@ public class QuellSchrittView extends AbstractSchrittView{
             this.zielschritt = zielschritt;
         }
     }
-    /*public void setZielschrittID(SchrittID zielschrittID){
+    public void setZielschrittID(SchrittID zielschrittID){
         this.zielschrittID=zielschrittID;
-    }*/
+    }
 }
