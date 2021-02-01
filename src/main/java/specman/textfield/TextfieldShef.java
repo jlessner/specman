@@ -358,6 +358,26 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		return ergebnis;
 	}
 
+	public java.util.List<Aenderungsmarkierung_V001> AenderungsmarkierungenVerwerfen(boolean nurErste) {
+		java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<>();
+		StyledDocument doc = (StyledDocument) editorPane.getDocument();
+		List <GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
+		for (Element e : doc.getRootElements()) {
+			AenderungsmarkierungenVerwerfen(e, ergebnis, nurErste, loeschungen);
+			if (ergebnis.size() > 0 && nurErste)
+				break;
+		}
+		for (int i = 0; i < loeschungen.size();i++){
+			GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) -1 - i);
+			try{
+				doc.remove(loeschung.getVon(), loeschung.getBis());
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		return ergebnis;
+	}
+
 	private void AenderungsmarkierungenUebernehmen(Element e, java.util.List<Aenderungsmarkierung_V001> ergebnis,
 											 boolean nurErste, List <GeloeschtMarkierung_V001> loeschungen) {
 		StyledDocument doc = (StyledDocument) e.getDocument();
@@ -384,6 +404,36 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			}
 		}
 	}
+
+	private void AenderungsmarkierungenVerwerfen(Element e, java.util.List<Aenderungsmarkierung_V001> ergebnis,
+												   boolean nurErste, List <GeloeschtMarkierung_V001> loeschungen) {
+		StyledDocument doc = (StyledDocument) e.getDocument();
+		if (elementHatAenderungshintergrund(e)) {
+			if (!elementHatDurchgestrichenenText(e)){
+				loeschungen.add(new GeloeschtMarkierung_V001(e.getStartOffset(), e.getEndOffset()-e.getStartOffset()));
+			}
+			else{
+				AttributeSet attribute = e.getAttributes();
+				MutableAttributeSet entfaerbt = new SimpleAttributeSet();
+				entfaerbt.addAttributes(attribute);
+				StyleConstants.setBackground(entfaerbt, Color.white);
+				StyleConstants.setStrikeThrough(entfaerbt, false);
+				doc.setCharacterAttributes(e.getStartOffset(),e.getEndOffset()-e.getStartOffset(),entfaerbt,true);
+			}
+			ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset(), e.getEndOffset()));
+			if (ergebnis.size() > 0 && nurErste)
+				return;
+		}
+		if (ergebnis.size() == 0 || !nurErste) {
+			for (int i = 0; i < e.getElementCount(); i++) {
+				AenderungsmarkierungenVerwerfen(e.getElement(i), ergebnis, nurErste, loeschungen);
+				if (ergebnis.size() > 0 && nurErste)
+					break;
+			}
+		}
+	}
+
+
 
 	private boolean elementHatDurchgestrichenenText (Element e){
 		AttributeSet attr = e.getAttributes();

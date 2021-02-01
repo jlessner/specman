@@ -1252,7 +1252,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 				//TODO Niclas, du hast den Code, füg ihn hier ein
 				if(schritt.getAenderungsart() == Aenderungsart.Bearbeitet){
-					//schritt.getshef().AenderungsmarkierungenVerwerfen(false);
+					schritt.getshef().AenderungsmarkierungenVerwerfen(false);
 					schritt.setAenderungsart(null);
 				}
 
@@ -1264,7 +1264,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				//TODO brauchen wir das? nachher löschen wir noch den Zielschritt, den wir eig, zurückmoven wollten
 				if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
 					schritt.setAenderungsart(null);
-					//schritt.getshef().AenderungsmarkierungenVerwerfen(false);
+					//Aenderungen muessen erst verworfen werden und dann die SchrittID ändern! - Attribute gehen sonst verloren
+					schritt.getshef().AenderungsmarkierungenVerwerfen(false);
 					schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
 				}
 
