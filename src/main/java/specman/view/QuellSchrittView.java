@@ -11,7 +11,6 @@ import java.awt.*;
 public class QuellSchrittView extends AbstractSchrittView{
 
     protected AbstractSchrittView zielschritt;
-    protected SchrittID zielschrittID;
 
     public QuellSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
         super(editor, parent, initialerText, id, aenderungsart);
@@ -23,7 +22,6 @@ public class QuellSchrittView extends AbstractSchrittView{
     public QuellSchrittView(EditorI editor, SchrittSequenzView parent, QuellSchrittModel_V001 model) {
         super(editor, parent, model.inhalt.text, model.id, model.aenderungsart);
         setBackground(new Color(model.farbe));
-        //setZielschrittID(model.quellschrittID);
     }
 
     @Override
@@ -43,30 +41,14 @@ public class QuellSchrittView extends AbstractSchrittView{
         return text.asJComponent();
     }
 
-    public AbstractSchrittView getZielschrittSN(){
-        return zielschritt;
-    }
-
-    /*public void setZielschritt(AbstractSchrittView zielschritt) {
-        if (zielschritt != null) {
-            this.zielschritt = zielschritt;
-        }
-    }*/
-
     public SchrittID getZielschrittID(){
         return zielschritt!=null?zielschritt.getId():null;
     }
-    //
-    public AbstractSchrittView getZielschritt() {
-        return quellschritt;
-    }
+
 
     public void setZielschritt(AbstractSchrittView zielschritt) {
         if (zielschritt != null) {
             this.zielschritt = zielschritt;
         }
-    }
-    public void setZielschrittID(SchrittID zielschrittID){
-        this.zielschrittID=zielschrittID;
     }
 }

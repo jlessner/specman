@@ -227,7 +227,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -240,7 +240,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -253,7 +253,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -266,7 +266,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -279,7 +279,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -292,7 +292,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -305,7 +305,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -318,7 +318,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.breakSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -331,7 +331,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -354,7 +354,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
 				schritt.skalieren(zoomFaktor, 100);
 				diagrammAktualisieren(schritt);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 		
@@ -568,7 +568,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				//List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
 				List<AbstractSchrittView> schritte = hauptSequenz.schritte;
 				rekursiv(schritte, null);
-				pruefeFuerSchrittnummer();
+				pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
 
@@ -810,12 +810,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private void viewsNachinitialisieren(List<AbstractSchrittView> schritte){
 		for(AbstractSchrittView schritt: schritte){
 			System.out.println(schritt.getQuellschritt());
+			if (schritt.getAenderungsart() == Aenderungsart.Geloescht){
+				schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(), schritt);
+			}
 			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
-				//schritt.getshef().setQuellStil(schritt.getshef().getPlainText(), schritt);
+				schritt.getshef().setQuellStil(schritt.getshef().getPlainText(), ((QuellSchrittView) schritt));
 			}
 			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt || schritt.getAenderungsart() == Aenderungsart.Geloescht){
 				schritt.getshef().getTextComponent().setEditable(false);
 				System.out.println("Schritt auf flase gesetzt");
+			}
+			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt){
+				schritt.getshef().setZielschrittStil(schritt.getshef().getPlainText(), schritt);
 			}
 			miniRecrusiv(schritt);
 		}
@@ -1281,6 +1287,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 				schritt.setAenderungsart(art);
 				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
+				schritt.getshef().schrittNummer.repaint();
 				//TODO das auskommentierte hier drunter dient mit zur doku, wie wir angefangen haben, kommt später weg
 				//schritt.getshef().setPlainText(schritt.getshef().getPlainText());
             	////schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
@@ -1400,6 +1407,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				uebernehmenAbfrage(sub.getSequenz().schritte);
 			}
 		}
+		pruefeFuerSchrittnummer(schritte);
 	}
 
 	//Überschriften von If/Else und Cases zurücksetzen
@@ -1450,10 +1458,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	public void pruefeFuerSchrittnummer() {
-		List<AbstractSchrittView> schritte;
-		schritte = hauptSequenz.schritte;
+	public void pruefeFuerSchrittnummer(List<AbstractSchrittView> schritte) {
+
 		for (AbstractSchrittView schritt : schritte) {
+
 			if (schritt.getAenderungsart() == Aenderungsart.Geloescht) {
 				schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span></body></html>");
 			}
@@ -1463,6 +1471,30 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt) {
 				schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" +schritt.getQuellschritt().getId()+ "</span></body></html>");
 			}
+
+			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+				pruefeFuerSchrittnummer(ifel.getElseSequenz().schritte);
+				if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+					pruefeFuerSchrittnummer(ifel.getIfSequenz().schritte);
+				}
+			}
+			else if (schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView")) {
+				SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+				pruefeFuerSchrittnummer(schleife.getWiederholSequenz().schritte);
+			}
+			else if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+				pruefeFuerSchrittnummer(caseSchritt.getSonstSequenz().schritte);
+				for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+					pruefeFuerSchrittnummer(caseSequenz.schritte);
+				}
+			}
+			else if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
+				SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+				pruefeFuerSchrittnummer(sub.getSequenz().schritte);
+			}
+
 		}
 	}
 }
