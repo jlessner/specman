@@ -105,8 +105,14 @@ public class DragAdapter extends MouseAdapter {
 	//Letzter Schritt darf nicht verschoben werden
 	private boolean checkEinzigerSchritt(MouseEvent e) {
 		if(e.getSource() instanceof JLabel){
+			int counter = 0;
 			AbstractSchrittView step = labelToStep( (JLabel) e.getSource());
-			return step.getParent().schritte.size() <= 1;
+			for(AbstractSchrittView Schritt: step.getParent().schritte) {
+				if(!(Schritt.getAenderungsart() == Aenderungsart.Geloescht || Schritt.getAenderungsart() == Aenderungsart.Quellschritt)) {
+					counter++;
+				}
+			}
+			return counter <= 1;
 		}
 		return false;
 	}
