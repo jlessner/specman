@@ -96,7 +96,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		StyleConstants.setBackground(quellschrittStil, AENDERUNGSMARKIERUNG_FARBE);
 		StyleConstants.setStrikeThrough(quellschrittStil, true);
 		StyleConstants.setForeground(quellschrittStil, Schriftfarbe_Geloescht);
-		StyleConstants.setFontSize(quellschrittStil, 10);
+		StyleConstants.setFontSize(quellschrittStil, 7);
 	}
 	public void setStyle(String text, MutableAttributeSet attr) {
 		StyledDocument doc = (StyledDocument) editorPane.getDocument();
@@ -115,7 +115,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 	public void setZielschrittStil(String text, AbstractSchrittView schritt) {
 		setStyle(text, standardStil);
-		schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" +schritt.getQuellschritt().getId()+ "</span></body></html>");
+		schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span>"+
+				"<span style='text-decoration: line-through;'>" +schritt.getQuellschritt().getId()+ "</span></body></html>");
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE));
 		schritt.getshef().schrittNummer.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schritt.getshef().schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Geloescht);
@@ -124,7 +125,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setQuellStil(String text, QuellSchrittView schritt) {
 		setStyle(text, quellschrittStil);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" +((QuellSchrittView) schritt).getZielschrittID()+"</span></body></html>");
+		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() +
+				"</span><span>&rArr</span><span>" +((QuellSchrittView) schritt).getZielschrittID()+"</span></body></html>");
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Geloescht));
 		schritt.getshef().schrittNummer.setBackground(Hintergrundfarbe_Geloescht);
 		schritt.getshef().schrittNummer.setForeground(Schriftfarbe_Geloescht);
@@ -135,7 +137,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setGeloeschtStil(String text, AbstractSchrittView schritt) {
 		setStyle(text, ganzerSchrittGeloeschtStil);
 		schritt.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
+		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
+				+schritt.getshef().schrittNummer.getText()+"</span></body></html>");
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
 		schritt.getshef().schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
 		schritt.getshef().schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
@@ -312,6 +315,9 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			schrittNummer.repaint();
 	}
 
+
+
+	//TODO Zielschrittmarkierungen
 	public java.util.List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen(boolean nurErste) {
 		java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<Aenderungsmarkierung_V001>();
 		StyledDocument doc = (StyledDocument)editorPane.getDocument();
@@ -319,21 +325,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			findeAenderungsmarkierungen(e, ergebnis, nurErste);
 			if (ergebnis.size() > 0 && nurErste)
 				break;
-		}
-		return ergebnis;
-	}
-
-	public java.util.List<ZielschrittMarkierungen_V001> AenderungsmarkierungenInZielschrittUebernehmen() {
-		java.util.List<ZielschrittMarkierungen_V001> ergebnis = new ArrayList<>();
-		StyledDocument doc = (StyledDocument) editorPane.getDocument();
-		for (Element e : doc.getRootElements()) {
-			if (elementHatAenderungshintergrund(e)) {
-				if (elementHatDurchgestrichenenText(e)){
-					ergebnis.add(new ZielschrittMarkierungen_V001(e.getStartOffset(), e.getEndOffset(), geloeschtStil));
-				} else {
-					ergebnis.add(new ZielschrittMarkierungen_V001(e.getStartOffset(), e.getEndOffset(), geaendertStil));
-				}
-			}
 		}
 		return ergebnis;
 	}

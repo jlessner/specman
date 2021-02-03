@@ -431,10 +431,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						}
 
 						else{
+							//(SpecmanUndoManager)undoManager.get
 							schritt.setAenderungsart(Aenderungsart.Geloescht);
 							schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
 							aenderungsMarkierungenAufGeloescht(schritt);
 							unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
+							//undoManager.setAddEditStop(false);
 							undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 						}
                     }

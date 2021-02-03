@@ -19,14 +19,16 @@ public class SpecmanUndoManager extends UndoManager {
 
     @Override
     public synchronized boolean addEdit(UndoableEdit anEdit) {
-        if(addEditStop == true){
+        if(addEditStop == false){
             boolean success = super.addEdit(anEdit);
             if (success) {
                 updateUnsavedChangesIndicatorInTitleBar();
+                //System.out.println("Wert false");
             }
             return success;
         } else {
-            return false;
+            //System.out.println("Wert true");
+            return true;
         }
     }
 
@@ -71,4 +73,5 @@ public class SpecmanUndoManager extends UndoManager {
     public void setAddEditStop (boolean addEditStop){
         this.addEditStop=addEditStop;
     }
+    public boolean getAddEditStop (){ return addEditStop;}
 }

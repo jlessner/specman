@@ -2,6 +2,8 @@ package specman.draganddrop;
 
 import specman.Aenderungsart;
 import specman.Specman;
+import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.ZielschrittMarkierungen_V001;
 import specman.textfield.InsetPanel;
 import specman.textfield.TextfieldShef;
 import specman.undo.UndoableSchrittEntfernt;
@@ -428,16 +430,18 @@ public class DraggingLogic implements Serializable {
     //Neuen Schritt zwischenschieben abhängig vom Button
     private void addNeuerSchritt(RelativeStepPosition insertionPosition,AbstractSchrittView schritt, MouseEvent e) {
         SchrittSequenzView sequenz = schritt.getParent();
+        //List<Aenderungsmarkierung_V001> markierungen = null;
+
         //ToDo Löschen und hinzufügen beim verschieben
         if (e.getSource() instanceof JLabel) {
             if(specman.aenderungenVerfolgen()){
-
+                //System.out.println(markierungen);
                 //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
                 //if(schritt.getAenderungsart()== Aenderungsart.Geloescht || schritt.getAenderungsart() == Aenderungsart.Quellschritt)
                 if(false) {
                 	
                 } else {
-
+                    //System.out.println(markierungen);
                     JLabel label = (JLabel) e.getSource();
 
                     InsetPanel ip = (InsetPanel) label.getParent().getParent();
@@ -450,7 +454,6 @@ public class DraggingLogic implements Serializable {
                     quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
                     Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
                     Specman.instance().unterschritteVonSchrittDurchlaufen(quellschritt, Aenderungsart.Quellschritt);
-
                     if (step != schritt) {
 
                         int schrittindex = step.getParent().schrittEntfernen(step);
