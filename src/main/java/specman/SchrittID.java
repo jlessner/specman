@@ -2,6 +2,7 @@ package specman;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Die ID eines Schrittes ist aus mehreren laufenden Nummern aufgebaut, die der üblichen Notation wie 1.19.7 entsprechen
@@ -48,4 +49,19 @@ public class SchrittID {
 		return new SchrittID(naechsteNummern);
 	}
 
+	//Equals herstellen
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		SchrittID schrittID = (SchrittID) o;
+		return Objects.equals(nummern, schrittID.nummern);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nummern);
+	}
 }
