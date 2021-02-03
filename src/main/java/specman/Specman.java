@@ -688,11 +688,32 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	private void modelsNachinitialisieren(List<AbstractSchrittModel_V001> models){
+	/*private void modelsNachinitialisieren(List<AbstractSchrittModel_V001> models){
 		for(AbstractSchrittModel_V001 model: models){
 			System.out.println(model.quellschrittID);
 			if(model.quellschrittID != null){
 				findeGleicheId(hauptSequenz.getSchritte(), model);
+			}
+			modelsNachinitialisierenRekursiv(model);
+		}
+	}*/
+
+	private void modelsNachinitialisieren(List<AbstractSchrittModel_V001> models){
+		for(AbstractSchrittModel_V001 model: models){
+			if(model.quellschrittID != null){
+				//findeGleicheId(hauptSequenz.getSchritte(), model);
+				//Zielschritt
+				AbstractSchrittView zielschritt = findeSchrittZuId(hauptSequenz.schritte, model.id);
+				if(zielschritt instanceof QuellSchrittView) {
+					continue;
+				} else {
+					QuellSchrittView quellSchritt = (QuellSchrittView) findeSchrittZuId(hauptSequenz.schritte, model.quellschrittID);
+					zielschritt.setQuellschritt(quellSchritt);
+					quellSchritt.setZielschritt(zielschritt);
+					//System.out.println("Ziel:"+zielschritt);
+					//System.out.println("Quelle:" + quellSchritt);
+				}
+
 			}
 			modelsNachinitialisierenRekursiv(model);
 		}
@@ -714,10 +735,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			findeGleicheIdRekursiv(view, model);
 		}
 	}
+
 	//TODO Tim & der Debugger
 	private AbstractSchrittView findeSchrittZuId(List<AbstractSchrittView> schritte, SchrittID id){
 		for(AbstractSchrittView schritt: schritte){
-			if(id == schritt.getId()){
+			if(id.equals(schritt.getId())){
 				return schritt;
 			}
 			findeSchrittZuIdRekursiv(schritt, id);
@@ -814,7 +836,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt || schritt.getAenderungsart() == Aenderungsart.Geloescht){
 				schritt.getshef().getTextComponent().setEditable(false);
-				System.out.println("Schritt auf flase gesetzt");
+				/*System.out.println("Schritt auf flase gesetzt");*/
 			}
 			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt){
 				schritt.getshef().setZielschrittStil(schritt.getshef().getPlainText(), schritt);
@@ -1271,15 +1293,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt.getQuellschritt().getParent().schrittEntfernen(schritt.getQuellschritt());
 				}
 
+				/*if(schritt.getAenderungsart() == Aenderungsart.Geloescht){
+					schritt.getshef().schrittNummer.setText(String.valueOf(schritt.getId()));
+				}*/
+
 				schritt.setAenderungsart(art);
 				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
-				schritt.getshef().schrittNummer.repaint();
 				aenderungsmarkierungenUndEnumsEntfernen(schritt);
 			}
 
 			//setzt die Unterschritte eines Schrittes auf die Aenderungsart geloescht und fügt die Änderungsmarkierungen hinzu
 			if(art == Aenderungsart.Geloescht) {
-            	schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
+				schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
             	aenderungsMarkierungenAufGeloescht(schritt);
             	schritt.setAenderungsart(Aenderungsart.Geloescht);
 			}

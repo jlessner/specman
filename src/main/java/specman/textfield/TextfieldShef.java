@@ -104,17 +104,16 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	}
 
 	public void setStandardStil(String text, AbstractSchrittView schritt){
-		setStyle(text, standardStil);
+		setStyle(text,standardStil);
 		schritt.setBackground(Hintergrundfarbe_Standard);
 		schritt.getText().setEditable(true);
-		schritt.getshef().schrittNummer.setText(schritt.getshef().schrittNummer.getText());
+		schritt.getshef().schrittNummer.setText(String.valueOf(schritt.getId()));
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
 		schritt.getshef().schrittNummer.setBackground(SCHRITTNUMMER_HINTERGRUNDFARBE);
 		schritt.getshef().schrittNummer.setForeground(Hintergrundfarbe_Standard);
 	}
 
 	public void setZielschrittStil(String text, AbstractSchrittView schritt) {
-		setStyle(text, standardStil);
 		schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span>"+
 				"<span style='text-decoration: line-through;'>" +schritt.getQuellschritt().getId()+ "</span></body></html>");
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE));
