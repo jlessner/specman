@@ -431,12 +431,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						}
 
 						else{
-							//(SpecmanUndoManager)undoManager.get
 							schritt.setAenderungsart(Aenderungsart.Geloescht);
 							schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
 							aenderungsMarkierungenAufGeloescht(schritt);
 							unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
-							//undoManager.setAddEditStop(false);
 							undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 						}
                     }
@@ -1353,7 +1351,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			//wird bei der Änderungsart geloescht durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
 				SchrittSequenzView sequenz = schritt.getParent();
-				int schrittIndex = sequenz.schrittEntfernen(schritt);
+				sequenz.schrittEntfernen(schritt);
 				//continue damit er nicht versucht, die unterschritte eines gelöschten Schrittes zu finden
 				continue;
 			}
@@ -1361,7 +1359,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			//wird bei der Änderungsart Quellschritt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
 				SchrittSequenzView sequenz = schritt.getParent();
-				int schrittIndex = sequenz.schrittEntfernen(schritt);
+				sequenz.schrittEntfernen(schritt);
 			}
 
 			//wird bei der Änderungsart Zielschritt durchlaufen
