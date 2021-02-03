@@ -19,7 +19,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
@@ -695,7 +694,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if(model.quellschrittID != null){
 				findeGleicheId(hauptSequenz.getSchritte(), model);
 			}
-			miniRecrusiv3(model);
+			modelsNachinitialisierenRekursiv(model);
 		}
 	}
 	//TODO Tim & der Debugger
@@ -712,7 +711,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					findeSchrittZuId(schritte, model.id).setQuellschritt((QuellSchrittView) findeSchrittZuId(schritte, view.getId()));
 				}
 			}
-			miniRecrusiv2(view, model);
+			findeGleicheIdRekursiv(view, model);
 		}
 	}
 	//TODO Tim & der Debugger
@@ -721,12 +720,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if(id == schritt.getId()){
 				return schritt;
 			}
-			miniRecrusiv4(schritt, id);
+			findeSchrittZuIdRekursiv(schritt, id);
 		}
 		return null;
 	}
 
-	private void miniRecrusiv4(AbstractSchrittView schritt, SchrittID id){
+	private void findeSchrittZuIdRekursiv(AbstractSchrittView schritt, SchrittID id){
 		if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel = (IfElseSchrittView) schritt;
 			findeSchrittZuId(ifel.getElseSequenz().schritte, id);
@@ -752,7 +751,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	}
 
-	private void miniRecrusiv3(AbstractSchrittModel_V001 model){
+	private void modelsNachinitialisierenRekursiv(AbstractSchrittModel_V001 model){
 		if (model.getClass().getName().equals("specman.model.v001.IfElseSchrittModel_V001") || model.getClass().getName().equals("specman.model.IfSchrittModel_001")) {
 			IfElseSchrittModel_V001 ifel = (IfElseSchrittModel_V001) model;
 			modelsNachinitialisieren(ifel.elseSequenz.schritte);
@@ -778,7 +777,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	}
 
-	private void miniRecrusiv2(AbstractSchrittView schritt, AbstractSchrittModel_V001 model){
+	private void findeGleicheIdRekursiv(AbstractSchrittView schritt, AbstractSchrittModel_V001 model){
 		if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel = (IfElseSchrittView) schritt;
 			findeGleicheId(ifel.getElseSequenz().schritte, model);
@@ -820,12 +819,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt){
 				schritt.getshef().setZielschrittStil(schritt.getshef().getPlainText(), schritt);
 			}
-			miniRecrusiv(schritt);
+			viewsNachinitialisierenRekursiv(schritt);
 		}
 	}
 
 	//TODO
-	private void miniRecrusiv(AbstractSchrittView schritt){
+	private void viewsNachinitialisierenRekursiv(AbstractSchrittView schritt){
 		if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel = (IfElseSchrittView) schritt;
 			viewsNachinitialisieren(ifel.getElseSequenz().schritte);
