@@ -804,9 +804,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	}
 
-
-
-	//TODO testen ob set enabled übernommen wird ansonsten in der methode nochmal setzen
 	private void viewsNachinitialisieren(List<AbstractSchrittView> schritte){
 		for(AbstractSchrittView schritt: schritte){
 			System.out.println(schritt.getQuellschritt());
@@ -826,7 +823,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			miniRecrusiv(schritt);
 		}
 	}
-
 
 	//TODO
 	private void miniRecrusiv(AbstractSchrittView schritt){
@@ -1134,7 +1130,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Color.white;
 	}
 
-	//TODO Methode um die Aenderugnsart von neuen Schritten auf hinzugefügt zu ändern, wenn die Änderungsverfolgung aktiviert ist
+	//Methode um die Aenderugnsart von neuen Schritten auf hinzugefügt zu ändern, wenn die Änderungsverfolgung aktiviert ist
 	public static Aenderungsart initialArt() {
 		return (instance() != null && instance().aenderungenVerfolgen()) ?
 				Aenderungsart.Hinzugefuegt : null;
@@ -1265,20 +1261,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					continue;
 				}
 
-				//TODO brauchen wir das? nachher löschen wir noch den Zielschritt, den wir eig, zurückmoven wollten
+				//Verschieben des Zielschrittes auf Quellschrittposition und löschen des Quellschrittes
 				if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
 					schritt.setAenderungsart(null);
 					schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
-					
                     schritt.getParent().schrittEntfernen(schritt);
-
                     schritt.setId(schritt.getQuellschritt().newStepIDInSameSequence(After));
-                   
-
                     schritt.setParent(schritt.getQuellschritt().getParent());
                     schritt.getQuellschritt().getParent().schrittZwischenschieben(schritt, After, schritt.getQuellschritt(), Specman.instance);
 					schritt.getQuellschritt().getParent().schrittEntfernen(schritt.getQuellschritt());
-					
 				}
 
 				schritt.setAenderungsart(art);
@@ -1299,7 +1290,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	//TODO Uebernehmen methode mit Abfrage welche art zugewiesen ist
+	//Uebernehmen methode mit Abfrage welche art zugewiesen ist
 	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte){
 		for (AbstractSchrittView schritt: schritte) {
 			schritt.getshef().AenderungsmarkierungenUebernehmen(false);
@@ -1318,7 +1309,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 				caseSchritt.getSonstSequenz().getUeberschrift().AenderungsmarkierungenUebernehmen(false);
 				//nur für caseSequenzen nötig, da man die Sonstsequenz eh nicht löschen kann
-				//TODO es funktioniert, ist aber glaube ich keine schöne Lösung
 				//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
 				List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
 				for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
@@ -1421,7 +1411,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public void aenderungsMarkierungenAufGeloescht(AbstractSchrittView schritt) {
-		//TODO funkt alles wenn ich setEditable hier entferne?
+		//TODO funkt alles wenn ich setEditable hier entferne? - Müssen wir noch testen
 		schritt.getText().setEditable(false);
 		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
@@ -1444,9 +1434,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public void pruefeFuerSchrittnummer(List<AbstractSchrittView> schritte) {
-
 		for (AbstractSchrittView schritt : schritte) {
-
 			if (schritt.getAenderungsart() == Aenderungsart.Geloescht) {
 				schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span></body></html>");
 			}
@@ -1456,7 +1444,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt) {
 				schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" +schritt.getQuellschritt().getId()+ "</span></body></html>");
 			}
-
 			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
 				pruefeFuerSchrittnummer(ifel.getElseSequenz().schritte);
@@ -1479,7 +1466,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
 				pruefeFuerSchrittnummer(sub.getSequenz().schritte);
 			}
-
 		}
 	}
 }

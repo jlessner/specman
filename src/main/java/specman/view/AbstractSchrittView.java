@@ -74,8 +74,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public String getPlainText() {
 		return text.getText();
 	}
-	
-	//TODO
+
 	public TextfieldShef getshef() {
 		return text;
 	}
@@ -231,12 +230,6 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public void entfernen(SchrittSequenzView container) {
 		unterSequenzen().forEach(sequenz -> sequenz.entfernen(this));
 	}
-	
-	//TODO funkt noch nicht richtig setzen der Aenderungsart bei unterschritten
-	public void unterschritteAenderungsartGeloescht(SchrittSequenzView container) {
-		unterSequenzen().forEach(sequenz -> sequenz.setAenderungsart(Aenderungsart.Geloescht));
-	}
-	
 
 	public void nachinitialisieren() {}
 
@@ -320,7 +313,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public SchrittSequenzView getParent() { return parent; }
-	//TODO
+
 	public void setParent(SchrittSequenzView parent){
 		this.parent = parent;
 	}
