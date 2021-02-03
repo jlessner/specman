@@ -472,7 +472,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (Specman.instance().aenderungenVerfolgen() && Specman.instance().hauptSequenz.findeSchritt(editorPane).getText().isEditable()) {
-			Specman.instance().hauptSequenz.findeSchritt(editorPane).setAenderungsart(Aenderungsart.Bearbeitet);
+			//Specman.instance().hauptSequenz.findeSchritt(editorPane).setAenderungsart(Aenderungsart.Bearbeitet);
 			StyledDocument doc = (StyledDocument) editorPane.getDocument();
 			int p0 = editorPane.getSelectionStart();
 			int p1 = editorPane.getSelectionEnd();
@@ -505,7 +505,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		if (Specman.instance().aenderungenVerfolgen() && Specman.instance().hauptSequenz.findeSchritt(editorPane).getText().isEditable()) {
-			Specman.instance().hauptSequenz.findeSchritt(editorPane).setAenderungsart(Aenderungsart.Bearbeitet);
+			//Specman.instance().hauptSequenz.findeSchritt(editorPane).setAenderungsart(Aenderungsart.Bearbeitet);
 			StyledDocument doc = (StyledDocument) editorPane.getDocument();
 			int p0 = editorPane.getSelectionStart();
 			int p1 = editorPane.getSelectionEnd();
