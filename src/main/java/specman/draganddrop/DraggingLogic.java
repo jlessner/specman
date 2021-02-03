@@ -443,17 +443,21 @@ public class DraggingLogic implements Serializable {
                 } else {
                     //System.out.println(markierungen);
                     JLabel label = (JLabel) e.getSource();
-
+                    QuellSchrittView quellschritt;
                     InsetPanel ip = (InsetPanel) label.getParent().getParent();
                     AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
                     sequenz=step.getParent();
-                    QuellSchrittView quellschritt = new QuellSchrittView(specman, sequenz, ".", step.getId(), null);
-                    sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
-                    quellschritt.setAenderungsart(Aenderungsart.Quellschritt);
-                    quellschritt.getshef().setQuellStil(step.getPlainText(), quellschritt);
-                    quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-                    Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
-                    Specman.instance().unterschritteVonSchrittDurchlaufen(quellschritt, Aenderungsart.Quellschritt);
+                    if(step.getQuellschritt() ==null) {
+	                    quellschritt = new QuellSchrittView(specman, sequenz, ".", step.getId(), null);
+	                    sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
+	                    quellschritt.setAenderungsart(Aenderungsart.Quellschritt);
+	                    quellschritt.getshef().setQuellStil(step.getPlainText(), quellschritt);
+	                    quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+	                    Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
+	                    Specman.instance().unterschritteVonSchrittDurchlaufen(quellschritt, Aenderungsart.Quellschritt);
+                    }else {
+                    	quellschritt = step.getQuellschritt();
+                    }
                     if (step != schritt) {
 
                         int schrittindex = step.getParent().schrittEntfernen(step);
