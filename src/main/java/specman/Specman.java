@@ -1236,13 +1236,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 				//Verschieben des Zielschrittes auf Quellschrittposition und löschen des Quellschrittes
 				if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-					schritt.setAenderungsart(null);
 					schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
                     schritt.getParent().schrittEntfernen(schritt);
                     schritt.setId(schritt.getQuellschritt().newStepIDInSameSequence(After));
                     schritt.setParent(schritt.getQuellschritt().getParent());
                     schritt.getQuellschritt().getParent().schrittZwischenschieben(schritt, After, schritt.getQuellschritt(), Specman.instance);
 					schritt.getQuellschritt().getParent().schrittEntfernen(schritt.getQuellschritt());
+					schritt.setAenderungsart(null);
+					schritt.setQuellschritt(null);
 				}
 
 				/*if(schritt.getAenderungsart() == Aenderungsart.Geloescht){
