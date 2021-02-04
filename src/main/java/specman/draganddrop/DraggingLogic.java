@@ -471,7 +471,7 @@ public class DraggingLogic implements Serializable {
                         Specman.instance().unterschritteVonSchrittDurchlaufen(step, Aenderungsart.Zielschritt);
                     }
                     quellschritt.setZielschritt(step);
-                    specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+                    schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
                 }
             }else{
                 JLabel label = (JLabel) e.getSource();
@@ -495,39 +495,39 @@ public class DraggingLogic implements Serializable {
         if (e.getSource().equals(specman.getSchrittAnhaengen())) {
             schritt = sequenz.einfachenSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
         } else if (e.getSource().equals(specman.getWhileSchrittAnhaengen())) {
             schritt = sequenz.whileSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
         } else if (e.getSource().equals(specman.getWhileWhileSchrittAnhaengen())) {
             schritt = sequenz.whileWhileSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
         } else if (e.getSource().equals(specman.getIfElseSchrittAnhaengen())) {
             schritt = sequenz.ifElseSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
         } else if (e.getSource().equals(specman.getIfSchrittAnhaengen())) {
             schritt = sequenz.ifSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
         } else if (e.getSource().equals(specman.getCaseSchrittAnhaengen())) {
             schritt = sequenz.caseSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
         } else if (e.getSource().equals(specman.getSubsequenzSchrittAnhaengen())) {
             schritt = sequenz.subsequenzSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
         } else if (e.getSource().equals(specman.getBreakSchrittAnhaengen())) {
             schritt = sequenz.breakSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
         } else if (e.getSource().equals(specman.getCatchSchrittAnhaengen())) {
             schritt = sequenz.catchSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
         }
     }
 
