@@ -37,7 +37,7 @@ public class SchrittSequenzView {
 	final JPanel sequenzBereich;
 	final CatchBereich catchBereich;
 	final JPanel panel;
-	//TODO CopyOnWriteArrayList Arraylisten ermöglichen das removen von Schritten während man eine Liste durchläuft
+	//CopyOnWriteArrayList Arraylisten ermöglichen das removen von Schritten während man eine Liste durchläuft
 	//wird benötigt um mehre als gelöscht markierte Schritte auf einmal zu löschen
 	public final List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
 	final FormLayout sequenzbereichLayout;

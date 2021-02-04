@@ -30,7 +30,6 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart, String initialerText) {
 		super(parent, sequenzBasisId, aenderungsart);
 		ueberschriftInitialisieren(editor, initialerText);
-		//TODO etwas sehr unschön, wird später geändert, muss in die einzelkonstruktoren
 		this.aenderungsart = Specman.instance().initialArt();
 	}
 
@@ -74,7 +73,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		return ueberschrift;
 	}
 	
-	//TODO Die Backgroundcolor in IfSchrittViews anpassen
+	//Die Backgroundcolor in IfSchrittViews anpassen
 	public void setBackground(Color bg) {
 		sequenzBereich.setBackground(bg);
 		panel.repaint(); // Damit die Linien nachgezeichnet werden

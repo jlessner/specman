@@ -387,7 +387,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
                     	return;
                     else {
 
-                    	//TODO einzelne Casees entfernen
+                    	//einzelne Casees entfernen
 						if (schritt instanceof CaseSchrittView) {
 							CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 							ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
