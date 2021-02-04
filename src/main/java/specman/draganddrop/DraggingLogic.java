@@ -435,13 +435,11 @@ public class DraggingLogic implements Serializable {
         //ToDo Löschen und hinzufügen beim verschieben
         if (e.getSource() instanceof JLabel) {
             if(specman.aenderungenVerfolgen()){
-                //System.out.println(markierungen);
                 //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
                 //if(schritt.getAenderungsart()== Aenderungsart.Geloescht || schritt.getAenderungsart() == Aenderungsart.Quellschritt)
                 if(false) {
                 	
                 } else {
-                    //System.out.println(markierungen);
                     JLabel label = (JLabel) e.getSource();
                     QuellSchrittView quellschritt;
                     InsetPanel ip = (InsetPanel) label.getParent().getParent();
@@ -451,7 +449,7 @@ public class DraggingLogic implements Serializable {
 	                    quellschritt = new QuellSchrittView(specman, sequenz, ".", step.getId(), null);
 	                    sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
 	                    quellschritt.setAenderungsart(Aenderungsart.Quellschritt);
-	                    quellschritt.getshef().setQuellStil(step.getPlainText(), quellschritt);
+	                    quellschritt.getshef().setQuellStil(quellschritt);
 	                    quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 	                    Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
 	                    Specman.instance().unterschritteVonSchrittDurchlaufen(quellschritt, Aenderungsart.Quellschritt);
@@ -469,14 +467,12 @@ public class DraggingLogic implements Serializable {
                         sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
                         step.setQuellschritt(quellschritt);
                         step.setAenderungsart(Aenderungsart.Zielschritt);
-                        step.getshef().setZielschrittStil(step.getPlainText(), step);
+                        step.getshef().setZielschrittStil(step);
                         Specman.instance().unterschritteVonSchrittDurchlaufen(step, Aenderungsart.Zielschritt);
                     }
                     quellschritt.setZielschritt(step);
-                    //quellschritt.setZielschrittID(step.getId());
                     specman.pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
                 }
-                //schritt.getshef().setVerschobenStil(schritt.getshef().getPlainText());
             }else{
                 JLabel label = (JLabel) e.getSource();
 

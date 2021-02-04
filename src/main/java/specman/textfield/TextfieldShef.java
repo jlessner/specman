@@ -103,8 +103,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		doc.setCharacterAttributes(0, text.length(), attr, false);
 	}
 
-	public void setStandardStil(String text, AbstractSchrittView schritt){
-		setStyle(text,standardStil);
+	public void setStandardStil(AbstractSchrittView schritt){
+		setStyle(schritt.getshef().getPlainText(),standardStil);
 		schritt.setBackground(Hintergrundfarbe_Standard);
 		schritt.getText().setEditable(true);
 		schritt.getshef().schrittNummer.setText(String.valueOf(schritt.getId()));
@@ -113,7 +113,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		schritt.getshef().schrittNummer.setForeground(Hintergrundfarbe_Standard);
 	}
 
-	public void setZielschrittStil(String text, AbstractSchrittView schritt) {
+	public void setZielschrittStil(AbstractSchrittView schritt) {
 		schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span>"+
 				"<span style='text-decoration: line-through;'>" +schritt.getQuellschritt().getId()+ "</span></body></html>");
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE));
@@ -121,8 +121,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		schritt.getshef().schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Geloescht);
 		schritt.setAenderungsart(Aenderungsart.Zielschritt);
 	}
-	public void setQuellStil(String text, QuellSchrittView schritt) {
-		setStyle(text, quellschrittStil);
+	public void setQuellStil(QuellSchrittView schritt) {
+		setStyle(schritt.getshef().getPlainText(), quellschrittStil);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() +
 				"</span><span>&rArr</span><span>" +((QuellSchrittView) schritt).getZielschrittID()+"</span></body></html>");
@@ -133,8 +133,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		schritt.getText().setEditable(false);
 	}
 
-	public void setGeloeschtStil(String text, AbstractSchrittView schritt) {
-		setStyle(text, ganzerSchrittGeloeschtStil);
+	public void setGeloeschtStil(AbstractSchrittView schritt) {
+		setStyle(schritt.getshef().getPlainText(), ganzerSchrittGeloeschtStil);
 		schritt.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
 				+schritt.getshef().schrittNummer.getText()+"</span></body></html>");

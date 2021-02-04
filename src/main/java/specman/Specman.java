@@ -422,7 +422,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							}
 							else {
 								schritt.setAenderungsart(Aenderungsart.Geloescht);
-								schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
+								schritt.getshef().setGeloeschtStil(schritt);
 								aenderungsMarkierungenAufGeloescht(schritt);
 								unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
 								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
@@ -431,7 +431,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 						else{
 							schritt.setAenderungsart(Aenderungsart.Geloescht);
-							schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
+							schritt.getshef().setGeloeschtStil(schritt);
 							aenderungsMarkierungenAufGeloescht(schritt);
 							unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
 							undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
@@ -781,17 +781,17 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		for(AbstractSchrittView schritt: schritte){
 			System.out.println(schritt.getQuellschritt());
 			if (schritt.getAenderungsart() == Aenderungsart.Geloescht){
-				schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(), schritt);
+				schritt.getshef().setGeloeschtStil(schritt);
 			}
 			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
-				schritt.getshef().setQuellStil(schritt.getshef().getPlainText(), ((QuellSchrittView) schritt));
+				schritt.getshef().setQuellStil(((QuellSchrittView) schritt));
 			}
 			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt || schritt.getAenderungsart() == Aenderungsart.Geloescht){
 				schritt.getshef().getTextComponent().setEditable(false);
 				/*System.out.println("Schritt auf flase gesetzt");*/
 			}
 			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-				schritt.getshef().setZielschrittStil(schritt.getshef().getPlainText(), schritt);
+				schritt.getshef().setZielschrittStil(schritt);
 			}
 			viewsNachinitialisierenRekursiv(schritt);
 		}
@@ -1236,7 +1236,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 				//Verschieben des Zielschrittes auf Quellschrittposition und löschen des Quellschrittes
 				if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-					schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
+					//schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
                     schritt.getParent().schrittEntfernen(schritt);
                     schritt.setId(schritt.getQuellschritt().newStepIDInSameSequence(After));
                     schritt.setParent(schritt.getQuellschritt().getParent());
@@ -1251,13 +1251,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}*/
 
 				schritt.setAenderungsart(art);
-				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
+				schritt.getshef().setStandardStil(schritt);
 				aenderungsmarkierungenUndEnumsEntfernen(schritt);
 			}
 
 			//setzt die Unterschritte eines Schrittes auf die Aenderungsart geloescht und fügt die Änderungsmarkierungen hinzu
 			if(art == Aenderungsart.Geloescht) {
-				schritt.getshef().setGeloeschtStil(schritt.getshef().getPlainText(),schritt);
+				schritt.getshef().setGeloeschtStil(schritt);
             	aenderungsMarkierungenAufGeloescht(schritt);
             	schritt.setAenderungsart(Aenderungsart.Geloescht);
 			}
@@ -1311,7 +1311,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			//wird bei der Aenderungsart hinzugefuegt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 				schritt.setAenderungsart(null);
-				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
+				schritt.getshef().setStandardStil(schritt);
 				aenderungsmarkierungenUndEnumsEntfernen(schritt);
 			}
 
@@ -1332,7 +1332,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			//wird bei der Änderungsart Zielschritt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
 				schritt.setAenderungsart(null);
-				schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
+				schritt.getshef().setStandardStil(schritt);
 			}
 
 			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
