@@ -548,23 +548,16 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 
-		//TODO
 		aenderungenUebernehmen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
-				schritte = hauptSequenz.schritte;
-					uebernehmenAbfrage(schritte);
-
+				List<AbstractSchrittView> schritte = hauptSequenz.schritte;
+				uebernehmenAbfrage(schritte);
 			}
 		});
 
-		//TODO
 		aenderungenVerwerfen.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
-
-				//List<AbstractSchrittView> schritte = new CopyOnWriteArrayList<AbstractSchrittView>();
 				List<AbstractSchrittView> schritte = hauptSequenz.schritte;
 				verwerfenOderUnterschritteAufGeloescht(schritte, null);
 				pruefeFuerSchrittnummer(hauptSequenz.schritte);
@@ -688,16 +681,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	/*private void modelsNachinitialisieren(List<AbstractSchrittModel_V001> models){
-		for(AbstractSchrittModel_V001 model: models){
-			System.out.println(model.quellschrittID);
-			if(model.quellschrittID != null){
-				findeGleicheId(hauptSequenz.getSchritte(), model);
-			}
-			modelsNachinitialisierenRekursiv(model);
-		}
-	}*/
-
 	private void quellZielZuweisung(List<AbstractSchrittModel_V001> models){
 		for(AbstractSchrittModel_V001 model: models){
 			if(model.quellschrittID != null){
@@ -711,7 +694,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 
 			}
-			modelsNachinitialisierenRekursiv(model);
+			quellZielZuweisungRekursiv(model);
 		}
 	}
 
@@ -751,7 +734,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	}
 
-	private void modelsNachinitialisierenRekursiv(AbstractSchrittModel_V001 model){
+	private void quellZielZuweisungRekursiv(AbstractSchrittModel_V001 model){
 		if (model.getClass().getName().equals("specman.model.v001.IfElseSchrittModel_V001") || model.getClass().getName().equals("specman.model.IfSchrittModel_001")) {
 			IfElseSchrittModel_V001 ifel = (IfElseSchrittModel_V001) model;
 			quellZielZuweisung(ifel.elseSequenz.schritte);
@@ -788,7 +771,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt || schritt.getAenderungsart() == Aenderungsart.Geloescht){
 				schritt.getshef().getTextComponent().setEditable(false);
-				/*System.out.println("Schritt auf flase gesetzt");*/
 			}
 			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt){
 				schritt.getshef().setZielschrittStil(schritt);
@@ -797,7 +779,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	//TODO
 	private void viewsNachinitialisierenRekursiv(AbstractSchrittView schritt){
 		if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel = (IfElseSchrittView) schritt;
@@ -1246,10 +1227,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					schritt.setQuellschritt(null);
 				}
 
-				/*if(schritt.getAenderungsart() == Aenderungsart.Geloescht){
-					schritt.getshef().schrittNummer.setText(String.valueOf(schritt.getId()));
-				}*/
-
 				schritt.setAenderungsart(art);
 				schritt.getshef().setStandardStil(schritt);
 				aenderungsmarkierungenUndEnumsEntfernen(schritt);
@@ -1303,11 +1280,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 			}
 
-			//wird bei keiner gesetzten Änderungsart durchlaufen
-			if (schritt.getAenderungsart() == null) {
-				System.out.println("Es liegen keine Aenderungen vor");
-			}
-
 			//wird bei der Aenderungsart hinzugefuegt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 				schritt.setAenderungsart(null);
@@ -1332,6 +1304,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			//wird bei der Änderungsart Zielschritt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
 				schritt.setAenderungsart(null);
+				schritt.setQuellschritt(null);
 				schritt.getshef().setStandardStil(schritt);
 			}
 
@@ -1368,25 +1341,28 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			schritt.getshef().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 			ifel.getElseSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 			ifel.getElseSequenz().getUeberschrift().getTextComponent().setEditable(true);
+			ifel.getElseSequenz().setAenderungsart(null);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 				ifel.getIfSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				ifel.getIfSequenz().getUeberschrift().getTextComponent().setEditable(true);
+				ifel.getIfSequenz().setAenderungsart(null);
             }
 		}
 		if(schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
 			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
 			caseSchritt.getSonstSequenz().getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 			caseSchritt.getSonstSequenz().getUeberschrift().getTextComponent().setEditable(true);
+			caseSchritt.getSonstSequenz().setAenderungsart(null);
 			caseSchritt.getPanelFall1().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
 				caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
 				caseSequenz.getUeberschrift().getTextComponent().setEditable(true);
+				caseSequenz.setAenderungsart(null);
 			}
 		}
 	}
 
 	public void aenderungsMarkierungenAufGeloescht(AbstractSchrittView schritt) {
-		//TODO funkt alles wenn ich setEditable hier entferne? - Müssen wir noch testen
 		schritt.getText().setEditable(false);
 		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
 			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
