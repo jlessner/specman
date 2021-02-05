@@ -461,9 +461,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						}
 						return;
 					}
-					SchrittSequenzView sequenz = schritt.getParent();
-					int schrittIndex = sequenz.schrittEntfernen(schritt);
-					undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+					int geloeschtzaehler = 1;
+					for(AbstractSchrittView suchSchritt : schritt.getParent().schritte){
+						if(suchSchritt.getAenderungsart() == Aenderungsart.Geloescht){
+							geloeschtzaehler++;
+						}
+					}
+					if(schritt.getParent().schritte.size() <= geloeschtzaehler){
+						System.err.println("Letzten Schritt entfernen ist nicht");
+					}
+					else {
+						SchrittSequenzView sequenz = schritt.getParent();
+						int schrittIndex = sequenz.schrittEntfernen(schritt);
+						undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+					}
 				}
 			}
 		});
