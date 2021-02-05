@@ -430,14 +430,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 							}
 						}
+
 						//Es wird geschaut, ob der Schritt nurnoch alleine ist und überhaupt gelöscht werden darf
-						int geloeschtzaehler = 1;
-						for(AbstractSchrittView suchSchritt : schritt.getParent().schritte){
-							if(suchSchritt.getAenderungsart() == Aenderungsart.Geloescht){
-								geloeschtzaehler++;
-							}
-						}
-						if(schritt.getParent().schritte.size() <= geloeschtzaehler){
+						if(darfSchrittGeloeschtWerden(schritt)){
 							System.err.println("Letzten Schritt entfernen ist nicht");
 						}
 						else{
@@ -461,13 +456,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						}
 						return;
 					}
-					int geloeschtzaehler = 1;
-					for(AbstractSchrittView suchSchritt : schritt.getParent().schritte){
-						if(suchSchritt.getAenderungsart() == Aenderungsart.Geloescht){
-							geloeschtzaehler++;
-						}
-					}
-					if(schritt.getParent().schritte.size() <= geloeschtzaehler){
+					if(darfSchrittGeloeschtWerden(schritt)){
 						System.err.println("Letzten Schritt entfernen ist nicht");
 					}
 					else {
@@ -478,6 +467,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 			}
 		});
+
 
 		toggleBorderType.addActionListener(new ActionListener() {
 			@Override
@@ -1407,6 +1397,21 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				caseSequenz.getUeberschrift().setStyle(caseSequenz.getUeberschrift().getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
 				caseSequenz.getUeberschrift().getTextComponent().setEditable(false);
 			}
+		}
+	}
+
+	public boolean darfSchrittGeloeschtWerden(AbstractSchrittView schritt){
+		int geloeschtzaehler = 1;
+		for(AbstractSchrittView suchSchritt : schritt.getParent().schritte){
+			if(suchSchritt.getAenderungsart() == Aenderungsart.Geloescht){
+				geloeschtzaehler++;
+			}
+		}
+		if(schritt.getParent().schritte.size() <= geloeschtzaehler){
+			return true;
+		}
+		else{
+			return false;
 		}
 	}
 }
