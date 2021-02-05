@@ -399,7 +399,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 								//Markieren von Sonstsequenz und fall 1, 2 nicht ermöglichen
 								else if (zweig == caseSchritt.getSonstSequenz()) {
-									System.err.println("Noch nicht fertig: Sonst-Sequenz entfernen");
+									System.err.println("Sonst-Sequenz kann nicht entfernt werden");
 								}
 								else if (zweig == caseSchritt.getCaseSequenzen().get(0) && caseSchritt.getCaseSequenzen().size() <=2 ) {
 									System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
@@ -430,9 +430,17 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 							}
 						}
-
+						//Es wird geschaut, ob der Schritt nurnoch alleine ist und überhaupt gelöscht werden darf
+						int geloeschtzaehler = 1;
+						for(AbstractSchrittView suchSchritt : schritt.getParent().schritte){
+							if(suchSchritt.getAenderungsart() == Aenderungsart.Geloescht){
+								geloeschtzaehler++;
+							}
+						}
+						if(schritt.getParent().schritte.size() <= geloeschtzaehler){
+							System.err.println("Letzten Schritt entfernen ist nicht");
+						}
 						else{
-							schritt.getshef().AenderungsmarkierungenVerwerfen(false);
 							schritt.setAenderungsart(Aenderungsart.Geloescht);
 							schritt.getshef().setGeloeschtStil(schritt);
 							aenderungsMarkierungenAufGeloescht(schritt);
