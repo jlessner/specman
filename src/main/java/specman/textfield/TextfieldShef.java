@@ -9,8 +9,7 @@ import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.model.v001.ZielschrittMarkierungen_V001;
-import specman.view.AbstractSchrittView;
-import specman.view.QuellSchrittView;
+import specman.view.*;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -111,6 +110,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
 		schritt.getshef().schrittNummer.setBackground(SCHRITTNUMMER_HINTERGRUNDFARBE);
 		schritt.getshef().schrittNummer.setForeground(Hintergrundfarbe_Standard);
+		schritt.setAenderungsart(null);
 	}
 
 	public void setZielschrittStil(AbstractSchrittView schritt) {
@@ -545,6 +545,42 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		Object currentBackgroundColorValue = inputAttributes.getAttribute(CSS.Attribute.BACKGROUND_COLOR);
 		return currentBackgroundColorValue != null
 				&& currentBackgroundColorValue.toString().equalsIgnoreCase(INDIKATOR_GELB);
+	}
+
+	public void pruefeFuerSchrittnummer(List<AbstractSchrittView> schritte) {
+		for (AbstractSchrittView schritt : schritte) {
+			if (schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+				schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span></body></html>");
+			}
+			if (schritt.getAenderungsart() == Aenderungsart.Quellschritt) {
+				schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schritt.getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" +((QuellSchrittView) schritt).getZielschrittID()+"</span></body></html>");
+			}
+			if (schritt.getAenderungsart() == Aenderungsart.Zielschritt) {
+				schritt.getshef().schrittNummer.setText("<html><body><span>"+schritt.getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" +schritt.getQuellschritt().getId()+ "</span></body></html>");
+			}
+			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
+				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
+				pruefeFuerSchrittnummer(ifel.getElseSequenz().schritte);
+				if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
+					pruefeFuerSchrittnummer(ifel.getIfSequenz().schritte);
+				}
+			}
+			else if (schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView")) {
+				SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
+				pruefeFuerSchrittnummer(schleife.getWiederholSequenz().schritte);
+			}
+			else if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
+				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+				pruefeFuerSchrittnummer(caseSchritt.getSonstSequenz().schritte);
+				for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
+					pruefeFuerSchrittnummer(caseSequenz.schritte);
+				}
+			}
+			else if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
+				SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
+				pruefeFuerSchrittnummer(sub.getSequenz().schritte);
+			}
+		}
 	}
 
 	@Override
