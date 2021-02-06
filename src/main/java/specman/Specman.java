@@ -430,17 +430,19 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 							}
 						}
+						else {
 
-						//Es wird geschaut, ob der Schritt nurnoch alleine ist und überhaupt gelöscht werden darf
-						if(darfSchrittGeloeschtWerden(schritt)){
-							System.err.println("Letzten Schritt entfernen ist nicht");
-						}
-						else{
-							schritt.setAenderungsart(Aenderungsart.Geloescht);
-							schritt.getshef().setGanzerSchrittGeloeschtStil(schritt);
-							aenderungsMarkierungenAufGeloescht(schritt);
-							unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
-							undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
+
+							//Es wird geschaut, ob der Schritt nurnoch alleine ist und überhaupt gelöscht werden darf
+							if (darfSchrittGeloeschtWerden(schritt)) {
+								System.err.println("Letzten Schritt entfernen ist nicht");
+							} else {
+								schritt.setAenderungsart(Aenderungsart.Geloescht);
+								schritt.getshef().setGeloeschtStil(schritt);
+								aenderungsMarkierungenAufGeloescht(schritt);
+								unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
+								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt, schritt.getshef().schrittNummer));
+							}
 						}
                     }
 				}
@@ -1229,11 +1231,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 				//Verschieben des Zielschrittes auf Quellschrittposition und löschen des Quellschrittes
 				if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-					//schritt.getshef().setStandardStil(schritt.getshef().getPlainText(), schritt);
-                    schritt.getParent().schrittEntfernen(schritt);
-                    schritt.setId(schritt.getQuellschritt().newStepIDInSameSequence(After));
-                    schritt.setParent(schritt.getQuellschritt().getParent());
-                    schritt.getQuellschritt().getParent().schrittZwischenschieben(schritt, After, schritt.getQuellschritt(), Specman.instance);
+                   			schritt.getParent().schrittEntfernen(schritt);
+                   			schritt.setId(schritt.getQuellschritt().newStepIDInSameSequence(After));
+                    			schritt.setParent(schritt.getQuellschritt().getParent());
+                    			schritt.getQuellschritt().getParent().schrittZwischenschieben(schritt, After, schritt.getQuellschritt(), Specman.instance);
 					schritt.getQuellschritt().getParent().schrittEntfernen(schritt.getQuellschritt());
 					schritt.setAenderungsart(null);
 					schritt.setQuellschritt(null);
