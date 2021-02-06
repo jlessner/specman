@@ -430,17 +430,19 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
 							}
 						}
+						else {
 
-						//Es wird geschaut, ob der Schritt nurnoch alleine ist und überhaupt gelöscht werden darf
-						if(darfSchrittGeloeschtWerden(schritt)){
-							System.err.println("Letzten Schritt entfernen ist nicht");
-						}
-						else{
-							schritt.setAenderungsart(Aenderungsart.Geloescht);
-							schritt.getshef().setGeloeschtStil(schritt);
-							aenderungsMarkierungenAufGeloescht(schritt);
-							unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
-							undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt,schritt.getshef().schrittNummer));
+
+							//Es wird geschaut, ob der Schritt nurnoch alleine ist und überhaupt gelöscht werden darf
+							if (darfSchrittGeloeschtWerden(schritt)) {
+								System.err.println("Letzten Schritt entfernen ist nicht");
+							} else {
+								schritt.setAenderungsart(Aenderungsart.Geloescht);
+								schritt.getshef().setGeloeschtStil(schritt);
+								aenderungsMarkierungenAufGeloescht(schritt);
+								unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
+								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt, schritt.getshef().schrittNummer));
+							}
 						}
                     }
 				}
