@@ -438,7 +438,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 								System.err.println("Letzten Schritt entfernen ist nicht");
 							} else {
 								schritt.setAenderungsart(Aenderungsart.Geloescht);
-								schritt.getshef().setGeloeschtStil(schritt);
+								schritt.getshef().setGanzerSchrittGeloeschtStil(schritt);
 								aenderungsMarkierungenAufGeloescht(schritt);
 								unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
 								undoManager.addEdit(new UndoableSchrittnummerEntfernt(schritt, schritt.getshef().schrittNummer));
