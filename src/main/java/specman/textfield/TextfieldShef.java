@@ -1,6 +1,5 @@
 package specman.textfield;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 import specman.EditorI;
 import specman.Specman;
 import specman.draganddrop.DragAdapter;
@@ -8,7 +7,6 @@ import specman.Aenderungsart;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
-import specman.model.v001.ZielschrittMarkierungen_V001;
 import specman.view.*;
 
 import javax.swing.*;
@@ -133,7 +131,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		schritt.getText().setEditable(false);
 	}
 
-	public void setGeloeschtStil(AbstractSchrittView schritt) {
+	public void setGanzerSchrittGeloeschtStil(AbstractSchrittView schritt) {
 		setStyle(schritt.getshef().getPlainText(), ganzerSchrittGeloeschtStil);
 		schritt.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schritt.getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
@@ -343,12 +341,12 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		}
 	}
 
-	public java.util.List<Aenderungsmarkierung_V001> AenderungsmarkierungenUebernehmen(boolean nurErste) {
+	public java.util.List<Aenderungsmarkierung_V001> aenderungsmarkierungenUebernehmen(boolean nurErste) {
 		java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<>();
 		StyledDocument doc = (StyledDocument) editorPane.getDocument();
 		List <GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
 		for (Element e : doc.getRootElements()) {
-			AenderungsmarkierungenUebernehmen(e, ergebnis, nurErste, loeschungen);
+			aenderungsmarkierungenUebernehmen(e, ergebnis, nurErste, loeschungen);
 			if (ergebnis.size() > 0 && nurErste)
 				break;
 		}
@@ -363,12 +361,12 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		return ergebnis;
 	}
 
-	public java.util.List<Aenderungsmarkierung_V001> AenderungsmarkierungenVerwerfen(boolean nurErste) {
+	public java.util.List<Aenderungsmarkierung_V001> aenderungsmarkierungenVerwerfen(boolean nurErste) {
 		java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<>();
 		StyledDocument doc = (StyledDocument) editorPane.getDocument();
 		List <GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
 		for (Element e : doc.getRootElements()) {
-			AenderungsmarkierungenVerwerfen(e, ergebnis, nurErste, loeschungen);
+			aenderungsmarkierungenVerwerfen(e, ergebnis, nurErste, loeschungen);
 			if (ergebnis.size() > 0 && nurErste)
 				break;
 		}
@@ -383,8 +381,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		return ergebnis;
 	}
 
-	private void AenderungsmarkierungenUebernehmen(Element e, java.util.List<Aenderungsmarkierung_V001> ergebnis,
-											 boolean nurErste, List <GeloeschtMarkierung_V001> loeschungen) {
+	private void aenderungsmarkierungenUebernehmen(Element e, java.util.List<Aenderungsmarkierung_V001> ergebnis,
+												   boolean nurErste, List <GeloeschtMarkierung_V001> loeschungen) {
 		StyledDocument doc = (StyledDocument) e.getDocument();
 		if (elementHatAenderungshintergrund(e)) {
 			if (elementHatDurchgestrichenenText(e)){
@@ -403,15 +401,15 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		}
 		if (ergebnis.size() == 0 || !nurErste) {
 			for (int i = 0; i < e.getElementCount(); i++) {
-				AenderungsmarkierungenUebernehmen(e.getElement(i), ergebnis, nurErste, loeschungen);
+				aenderungsmarkierungenUebernehmen(e.getElement(i), ergebnis, nurErste, loeschungen);
 				if (ergebnis.size() > 0 && nurErste)
 					break;
 			}
 		}
 	}
 
-	private void AenderungsmarkierungenVerwerfen(Element e, java.util.List<Aenderungsmarkierung_V001> ergebnis,
-												   boolean nurErste, List <GeloeschtMarkierung_V001> loeschungen) {
+	private void aenderungsmarkierungenVerwerfen(Element e, java.util.List<Aenderungsmarkierung_V001> ergebnis,
+												 boolean nurErste, List <GeloeschtMarkierung_V001> loeschungen) {
 		StyledDocument doc = (StyledDocument) e.getDocument();
 		if (elementHatAenderungshintergrund(e)) {
 			if (!elementHatDurchgestrichenenText(e)){
@@ -431,7 +429,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		}
 		if (ergebnis.size() == 0 || !nurErste) {
 			for (int i = 0; i < e.getElementCount(); i++) {
-				AenderungsmarkierungenVerwerfen(e.getElement(i), ergebnis, nurErste, loeschungen);
+				aenderungsmarkierungenVerwerfen(e.getElement(i), ergebnis, nurErste, loeschungen);
 				if (ergebnis.size() > 0 && nurErste)
 					break;
 			}
