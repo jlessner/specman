@@ -775,7 +775,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	private void viewsNachinitialisieren(List<AbstractSchrittView> schritte){
 		for(AbstractSchrittView schritt: schritte){
-			System.out.println(schritt.getQuellschritt());
 			if (schritt.getAenderungsart() == Aenderungsart.Geloescht){
 				schritt.getshef().setGeloeschtStil(schritt);
 			}
