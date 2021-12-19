@@ -501,9 +501,9 @@ public class SchrittSequenzView {
 		if (s < schritte.size()) {
 			forwardTextfieldDecorationIndentions(s, lastStepIndention);
 		}
-    }
+  }
 
-    private void forwardTextfieldDecorationIndentions(int substepIndex, Indentions indentions) {
+  private void forwardTextfieldDecorationIndentions(int substepIndex, Indentions indentions) {
 		AbstractSchrittView substep = schritte.get(substepIndex);
 		if (substep.getDecorated() == None) {
 			substep.updateTextfieldDecorationIndentions(indentions);

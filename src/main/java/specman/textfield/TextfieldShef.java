@@ -57,8 +57,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		// beim Editieren in der Oberflche sieht. Allerdings taucht sie dann nicht im
 		// abgespeicherten HTML
 		// auf und geht auch verloren, sobald man einen Zeilenumbruch im Text
-		// einfÃƒÂ¼gt. Also braucht man noch
-		// ein weiteres, persistentes Styling ÃƒÂ¼ber ein Span-Tag, wie ich es hier
+		// eingefügt. Also braucht man noch
+		// ein weiteres, persistentes Styling über ein Span-Tag, wie ich es hier
 		// gefunden habe:
 		// https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
 		String htmlStyle = "background-color:" + getHTMLColor(Color.yellow);
@@ -590,7 +590,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		if (schrittNummer != null) {
 			schrittNummer.setFont(labelFont.deriveFont((float) SCHRITTNR_FONTSIZE * prozentNeu / 100));
 		}
-		// prozentAktuell = 0 ist ein Indikator fÃƒÂ¼r initiales Laden. Da brauchen wir
+		// prozentAktuell = 0 ist ein Indikator für initiales Laden. Da brauchen wir
 		// nur den Font
 		// anpassen. Die Bilder stehen bereits entsprechend des im Modell
 		// abgespeicherten Zoomfaktors
