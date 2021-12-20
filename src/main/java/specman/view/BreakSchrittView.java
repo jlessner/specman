@@ -75,7 +75,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
 			aenderungsart,
-			getQuellschrittID()
+			getQuellschrittID(),
 			getDecorated()
 		);
 		return model;

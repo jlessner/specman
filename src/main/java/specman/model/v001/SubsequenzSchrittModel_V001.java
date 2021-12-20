@@ -19,7 +19,7 @@ public class SubsequenzSchrittModel_V001 extends StrukturierterSchrittModel_V001
 		boolean zugeklappt,
 		SchrittSequenzModel_V001 subsequenz,
 		SchrittID quellschrittID,
-		oundedBorderDecorationStyle decorationStyle) {
+		RoundedBorderDecorationStyle decorationStyle) {
 		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID, decorationStyle);
 		this.subsequenz = subsequenz;
 	}

@@ -1,5 +1,6 @@
 package specman.model.v001;
 
+import specman.Aenderungsart;
 import specman.SchrittID;
 import specman.view.RoundedBorderDecorationStyle;
 

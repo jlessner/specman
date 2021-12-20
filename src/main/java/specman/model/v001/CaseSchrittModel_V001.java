@@ -17,11 +17,12 @@ public class CaseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 			TextMitAenderungsmarkierungen_V001 inhalt,
 			int farbe,
 			Aenderungsart aenderungsart,
-			RoundedBorderDecorationStyle decorationStyle,
 			boolean zugeklappt,
 			ZweigSchrittSequenzModel_V001 sonstSequenz,
-			ArrayList<Float> spaltenbreitenAnteile, SchrittID quellschrittID) {
-		super(id, inhalt, farbe, aenderungsart, decorationStyle, zugeklappt, quellschrittID);
+			ArrayList<Float> spaltenbreitenAnteile,
+			SchrittID quellschrittID,
+			RoundedBorderDecorationStyle decorationStyle) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID, decorationStyle);
 		this.sonstSequenz = sonstSequenz;
 		this.caseSequenzen = new ArrayList<ZweigSchrittSequenzModel_V001>();
 		this.spaltenbreitenAnteile = spaltenbreitenAnteile;
