@@ -9,6 +9,7 @@
       "id" : {
         "nummern" : [ "java.util.ArrayList", [ 0 ] ]
       },
+      "aenderungsart" : null,
       "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.SubsequenzSchrittModel_V001", {
         "id" : {
           "nummern" : [ "java.util.ArrayList", [ 1 ] ]
@@ -18,11 +19,15 @@
           "aenderungen" : [ "java.util.ArrayList", [ ] ]
         },
         "farbe" : -986896,
+        "aenderungsart" : null,
+        "quellschrittID" : null,
+        "decorationStyle" : "Full",
         "zugeklappt" : false,
         "subsequenz" : {
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 1, 0 ] ]
           },
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 1, 1 ] ]
@@ -31,7 +36,10 @@
               "text" : "<html>  <head>      </head>  <body>    Der USER w&#228;hlt im Men&#252; Allgemein &#61664; Global Format Administration den     Men&#252;punkt <b>Local GAAP Versionsmanagement</b> aus. Der Men&#252;punkt ist     nur sichtbar, wenn der USER das Recht ViewIDA innehat.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 1, 2 ] ]
@@ -46,7 +54,10 @@
                 "bis" : 1690
               } ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
@@ -61,11 +72,15 @@
           "aenderungen" : [ "java.util.ArrayList", [ ] ]
         },
         "farbe" : -986896,
+        "aenderungsart" : null,
+        "quellschrittID" : null,
+        "decorationStyle" : "Co",
         "zugeklappt" : false,
         "subsequenz" : {
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 2, 0 ] ]
           },
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 2, 1 ] ]
@@ -74,7 +89,10 @@
               "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER die f&#252;r ein Erfassungsschema verf&#252;gbaren IDA-Versionen     sehen, w&#228;hlt er das entsprechende Schema im Auswahlfeld <b>Erfassungschema</b>     aus.<i>Bedingungen, unter denen das Auswahlfeld aktiv ist, siehe Schritt     1.1</i>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 2, 2 ] ]
@@ -83,7 +101,10 @@
               "text" : "<html>  <head>      </head>  <body>    Das System listet alle IDA-Versionen auf, die mit der Schemagruppe des     ausgew&#228;hlten Erfassungsschemas verkn&#252;pft sind. Liegt f&#252;r eine Version     bereits eine Versionssichtbarkeit im ausgew&#228;hlten Erfassungsschema vor,     zeigt das System in den entsprechenden Spalten der Tabelle den     Sichtbarkeitszeitraum und die letzte &#196;nderung des Zeitraums an. Wo diese     Datumsbereiche abweichen, ist die Zeile mit einem &#8222;X&#8220; in der Spalte <b>zur     Freigabe</b> markiert. Daran ist f&#252;r den USER erkennbar, dass die letzten     &#196;nderungen noch nicht freigegeben sind.Die Tabelle ist absteigend nach <i>g&#252;ltig     ab</i> der IDA-Versionen sortiert.<i>Designanmerkung: man kann technisch     auch nach versionKey sortieren, wenn das einfacher ist. Das ergibt     dieselbe Reihenfolge.</i>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 2, 3 ] ]
@@ -92,7 +113,10 @@
               "text" : "<html>  <head>      </head>  <body>    Liegen f&#252;r das Erfassungsschema Freigaben f&#252;r Versionssichtbarkeiten vor,     zeigt das System USER und Zeitpunkte in den entsprechenden Feldern im     Bereich <b>Freigabe</b> an.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
@@ -107,11 +131,15 @@
           "aenderungen" : [ "java.util.ArrayList", [ ] ]
         },
         "farbe" : -986896,
+        "aenderungsart" : null,
+        "quellschrittID" : null,
+        "decorationStyle" : "Co",
         "zugeklappt" : false,
         "subsequenz" : {
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 3, 0 ] ]
           },
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 1 ] ]
@@ -120,7 +148,10 @@
               "text" : "<html>  <head>      </head>  <body>    Ggf. &#196;nderungen speichern  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 2 ] ]
@@ -129,7 +160,10 @@
               "text" : "<html>  <head>      </head>  <body>    Weichen die Angaben in den Spalten <b>sichtbar ab/bis letzte &#196;nderung</b>     jetzt von den Daten in den Spalten <b>sichtbar ab/bis</b> ab, setzt das     System eine Markierung in die Spalte <b>zur Freigabe</b>. Andernfalls     entfernt es eine ggf. vorhandene Markierung.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 3 ] ]
@@ -138,7 +172,10 @@
               "text" : "<html>  <head>      </head>  <body>    Der USER dr&#252;ckt Speichern.Bedingungen, unter denen der Button <b>Speichern</b>     aktiv ist, siehe Schritt 1.1  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 4 ] ]
@@ -147,7 +184,10 @@
               "text" : "<html>  <head>      </head>  <body>    <div>      Das System stellt sicher, dass    </div>    <ul>      <li>        In jeder Zeile entweder sowohl <b>sichtbar ab letzte &#196;nderung</b>         als auch <b>sichtbar bis letzte &#196;nderung</b> angegeben sind oder         beide Felder leer sind un      </li>      <li>        Dass alle Eingaben g&#252;ltige Datumswerte darstellen un      </li>      <li>        Dass kein <b>sichtbar ab letzte &#196;nderung</b> gr&#246;&#223;er ist als das         jeweils zugeh&#246;rige <b>sichtbar bis letzte &#196;nderung</b>      </li>    </ul>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.BreakSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 5 ] ]
@@ -156,21 +196,28 @@
               "text" : "<html>  <head>      </head>  <body>    <b>Exception: Felder nicht korrekt gef&#252;llt</b>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.CaseSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 6 ] ]
             },
             "inhalt" : {
-              "text" : "<html>  <head>      </head>  <body>    <div>      \tDas System speichert die &#196;nderungen und legt dabei ggf. neue    </div>    <div>      \tVersionssichtbarkeiten an oder l&#246;scht vorhandene nach    </div>    <div>      \tfolgenden Kriterien pro Zeile der    </div>    <div>      \tVersionstabelle:    </div>  </body></html>",
+              "text" : "<html>  <head>      </head>  <body>    <div>      Das System speichert die &#196;nderungen und legt dabei ggf. neue    </div>    <div>      Versionssichtbarkeiten an oder l&#246;scht vorhandene nach    </div>    <div>      folgenden Kriterien pro Zeile der    </div>    <div>      Versionstabelle:    </div>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
             "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None",
             "zugeklappt" : false,
             "sonstSequenz" : {
               "id" : {
                 "nummern" : [ "java.util.ArrayList", [ 3, 6, 0 ] ]
               },
+              "aenderungsart" : null,
               "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
                 "id" : {
                   "nummern" : [ "java.util.ArrayList", [ 3, 6, 1 ] ]
@@ -179,7 +226,10 @@
                   "text" : "<html>  <head>      </head>  <body>    Keine Aktion  </body></html>",
                   "aenderungen" : [ "java.util.ArrayList", [ ] ]
                 },
-                "farbe" : -1
+                "farbe" : -1,
+                "aenderungsart" : null,
+                "quellschrittID" : null,
+                "decorationStyle" : "None"
               } ] ] ],
               "catchBloecke" : [ "java.util.ArrayList", [ ] ],
               "catchBloeckeZugeklappt" : false,
@@ -193,6 +243,7 @@
               "id" : {
                 "nummern" : [ "java.util.ArrayList", [ 3, 7, 0 ] ]
               },
+              "aenderungsart" : null,
               "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
                 "id" : {
                   "nummern" : [ "java.util.ArrayList", [ 3, 7, 1 ] ]
@@ -201,7 +252,10 @@
                   "text" : "<html>  <head>      </head>  <body>    Update  </body></html>",
                   "aenderungen" : [ "java.util.ArrayList", [ ] ]
                 },
-                "farbe" : -1
+                "farbe" : -1,
+                "aenderungsart" : null,
+                "quellschrittID" : null,
+                "decorationStyle" : "None"
               } ] ] ],
               "catchBloecke" : [ "java.util.ArrayList", [ ] ],
               "catchBloeckeZugeklappt" : false,
@@ -214,6 +268,7 @@
               "id" : {
                 "nummern" : [ "java.util.ArrayList", [ 3, 8, 0 ] ]
               },
+              "aenderungsart" : null,
               "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
                 "id" : {
                   "nummern" : [ "java.util.ArrayList", [ 3, 8, 1 ] ]
@@ -222,7 +277,10 @@
                   "text" : "<html>  <head>      </head>  <body>    L&#246;schung  </body></html>",
                   "aenderungen" : [ "java.util.ArrayList", [ ] ]
                 },
-                "farbe" : -1
+                "farbe" : -1,
+                "aenderungsart" : null,
+                "quellschrittID" : null,
+                "decorationStyle" : "None"
               } ] ] ],
               "catchBloecke" : [ "java.util.ArrayList", [ ] ],
               "catchBloeckeZugeklappt" : false,
@@ -235,6 +293,7 @@
               "id" : {
                 "nummern" : [ "java.util.ArrayList", [ 3, 9, 0 ] ]
               },
+              "aenderungsart" : null,
               "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
                 "id" : {
                   "nummern" : [ "java.util.ArrayList", [ 3, 9, 1 ] ]
@@ -243,7 +302,10 @@
                   "text" : "<html>  <head>      </head>  <body>    Neuanlage  </body></html>",
                   "aenderungen" : [ "java.util.ArrayList", [ ] ]
                 },
-                "farbe" : -1
+                "farbe" : -1,
+                "aenderungsart" : null,
+                "quellschrittID" : null,
+                "decorationStyle" : "None"
               } ] ] ],
               "catchBloecke" : [ "java.util.ArrayList", [ ] ],
               "catchBloeckeZugeklappt" : false,
@@ -253,7 +315,7 @@
                 "aenderungen" : [ "java.util.ArrayList", [ ] ]
               }
             } ] ],
-            "spaltenbreitenAnteile" : [ 0.1980728, 0.2987152, 0.24946466, 0.24732333 ]
+            "spaltenbreitenAnteile" : [ 0.19798657, 0.29865772, 0.24944071, 0.24720357 ]
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 10 ] ]
@@ -265,7 +327,10 @@
                 "bis" : 144
               } ] ]
             },
-            "farbe" : -56
+            "farbe" : -56,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 11 ] ]
@@ -274,7 +339,10 @@
               "text" : "<html>  <head>      </head>  <body>    Liegen aus einem fr&#252;heren Freigabeprozess noch Freigaben vor, l&#246;scht das     System diese und legt ein Backup f&#252;r eine etwaige sp&#228;tere     Wiederherstellung an (siehe Schritt ).<i>Hinweis: l&#228;ge nur eine 1.     Freigabe aus einem laufenden Freigabeprozess vor, w&#228;ren Eingaben und     Speichern gar nicht m&#246;glich gewesen. Siehe Schritt 1.1</i>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
@@ -289,11 +357,15 @@
           "aenderungen" : [ "java.util.ArrayList", [ ] ]
         },
         "farbe" : -986896,
+        "aenderungsart" : null,
+        "quellschrittID" : null,
+        "decorationStyle" : "Co",
         "zugeklappt" : false,
         "subsequenz" : {
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 4, 0 ] ]
           },
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 4, 1 ] ]
@@ -302,7 +374,10 @@
               "text" : "<html>  <head>      </head>  <body>    Hat der USER &#196;nderungen der Sichtbarkeitszeitr&#228;ume vorgenommen, die er     nicht speichern m&#246;chte, dr&#252;ckt er den Button <b>Verwerfen</b>.<i>Bedingungen,     unter denen der Button <b>Verwerfen</b> aktiv ist, siehe Schritt 1.1</i>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 4, 2 ] ]
@@ -311,7 +386,10 @@
               "text" : "<html>  <head>      </head>  <body>    Das System stellt in der Tabelle wieder den Zustand vor den &#196;nderungen her.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
@@ -326,11 +404,15 @@
           "aenderungen" : [ "java.util.ArrayList", [ ] ]
         },
         "farbe" : -986896,
+        "aenderungsart" : null,
+        "quellschrittID" : null,
+        "decorationStyle" : "Co",
         "zugeklappt" : false,
         "subsequenz" : {
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 5, 0 ] ]
           },
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 5, 1 ] ]
@@ -339,7 +421,10 @@
               "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER f&#252;r gespeicherte &#196;nderungen der Sichtbarkeitszeitr&#228;ume     einen Freigabeprozess initiieren, dr&#252;ckt er den Button <b>Freigeben</b>     f&#252;r die 1. Freigabe.<i>Bedingungen, unter denen der Button <b>Freigeben</b>     aktiv ist, siehe Schritt 1.1. &#220;berblick Freigabeprozess siehe     Gesch&#228;ftsregeln.</i>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 5, 2 ] ]
@@ -348,7 +433,10 @@
               "text" : "<html>  <head>      </head>  <body>    Liegen noch ungespeicherte &#196;nderungen in der Versionstabelle vor, f&#252;hrt     das System zun&#228;chst Essenzschritt 3 aus.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 5, 3 ] ]
@@ -357,7 +445,10 @@
               "text" : "<html>  <head>      </head>  <body>    Das System vermerkt den aktuell angemeldeten USER und den aktuellen     Zeitpunkt in der 1. Freigabe und aktualisiert die entsprechenden Felder im     Bereich <b>Freigabe</b>.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 5, 4 ] ]
@@ -369,7 +460,10 @@
                 "bis" : 88
               } ] ]
             },
-            "farbe" : -56
+            "farbe" : -56,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
@@ -384,11 +478,15 @@
           "aenderungen" : [ "java.util.ArrayList", [ ] ]
         },
         "farbe" : -986896,
+        "aenderungsart" : null,
+        "quellschrittID" : null,
+        "decorationStyle" : "Co",
         "zugeklappt" : false,
         "subsequenz" : {
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 6, 0 ] ]
           },
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 6, 1 ] ]
@@ -397,7 +495,10 @@
               "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER einen laufenden Freigabeprozess abschlie&#223;en, dr&#252;ckt er den     Button <b>Freigeben</b> f&#252;r die 2. Freigabe.<i>Bedingungen, unter     denen der Button <b>Freigeben</b> aktiv ist, siehe Schritt 1.1. &#220;berblick     Freigabeprozess siehe Gesch&#228;ftsregeln.</i>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 6, 2 ] ]
@@ -406,7 +507,10 @@
               "text" : "<html>  <head>      </head>  <body>    Das System vermerkt den aktuell angemeldeten USER und den aktuellen     Zeitpunkt in der 2. Freigabe und aktualisiert die entsprechenden Felder im     Bereich <b>Freigabe</b>.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 6, 3 ] ]
@@ -415,7 +519,10 @@
               "text" : "<html>  <head>      </head>  <body>    Das System &#252;bernimmt alle <b>sichtbar ab/bis letzte &#196;nderung</b>     nach <b>sichtbar ab/bis</b>.<i>Hinweis: obwohl der Freigabeprozess damit     abgeschlossen ist, bleiben 1. und 2. Freigabe zu Informationenzwecken bis     zur n&#228;chsten &#196;nderung von Sichtbarkeiten erhalten (siehe Schritt 3.5). <b>Sichtbar     ab/bis letzte &#196;nderung</b> bleiben ebenfalls erhalten, um daran     sp&#228;ter L&#246;schungen erkennen zu k&#246;nnen (siehe Schritt 3.4).</i>  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 6, 4 ] ]
@@ -424,7 +531,10 @@
               "text" : "<html>  <head>      </head>  <body>    Das System entfernt alle Markierungen in der Spalte zur Freigabe  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 6, 5 ] ]
@@ -433,7 +543,10 @@
               "text" : "<html>  <head>      </head>  <body>    Liegt ein Backup &#228;lterer Freigaben vor, l&#246;scht das System dieses.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 6, 6 ] ]
@@ -445,7 +558,10 @@
                 "bis" : 88
               } ] ]
             },
-            "farbe" : -56
+            "farbe" : -56,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
@@ -460,11 +576,15 @@
           "aenderungen" : [ "java.util.ArrayList", [ ] ]
         },
         "farbe" : -986896,
+        "aenderungsart" : null,
+        "quellschrittID" : null,
+        "decorationStyle" : "Co",
         "zugeklappt" : false,
         "subsequenz" : {
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 7, 0 ] ]
           },
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 7, 1 ] ]
@@ -473,7 +593,10 @@
               "text" : "<html>  <head>      </head>  <body>    M&#246;chte der USER einen laufenden Freigabeprozess abbrechen, dr&#252;ckt er den     Button <b>Freigabe zur&#252;cksetzen</b>.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 7, 2 ] ]
@@ -482,7 +605,10 @@
               "text" : "<html>  <head>      </head>  <body>    Das System l&#246;scht die 1. Freigabe  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 7, 3 ] ]
@@ -491,7 +617,10 @@
               "text" : "<html>  <head>      </head>  <body>    Das System &#252;bernimmt alle <b>sichtbar ab/bis</b> nach <b>sichtbar     ab/bis letzte &#196;nderung</b>. D.h. etwaige, noch nicht freigegebene     &#196;nderungen werden verworfen und jegliche &#196;nderungsmarkierungen in der     Spalte <b>zur Freigabe</b> verschwinden.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 7, 4 ] ]
@@ -500,7 +629,10 @@
               "text" : "<html>  <head>      </head>  <body>    Liegt ein Backup &#228;lterer Freigaben vor (siehe Schritt 3.7), stellt das     System daraus die 1. und 2. Freigabe zu Informationszwecken wieder her und     entfernt das Backup.  </body></html>",
               "aenderungen" : [ "java.util.ArrayList", [ ] ]
             },
-            "farbe" : -1
+            "farbe" : -1,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 7, 5 ] ]
@@ -512,7 +644,10 @@
                 "bis" : 98
               } ] ]
             },
-            "farbe" : -56
+            "farbe" : -56,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
@@ -530,11 +665,15 @@
           } ] ]
         },
         "farbe" : -56,
+        "aenderungsart" : null,
+        "quellschrittID" : null,
+        "decorationStyle" : "Co",
         "zugeklappt" : false,
         "subsequenz" : {
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 8, 0 ] ]
           },
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 8, 1 ] ]
@@ -546,7 +685,10 @@
                 "bis" : 160
               } ] ]
             },
-            "farbe" : -56
+            "farbe" : -56,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ], [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 8, 2 ] ]
@@ -558,7 +700,10 @@
                 "bis" : 203
               } ] ]
             },
-            "farbe" : -56
+            "farbe" : -56,
+            "aenderungsart" : null,
+            "quellschrittID" : null,
+            "decorationStyle" : "None"
           } ] ] ],
           "catchBloecke" : [ "java.util.ArrayList", [ ] ],
           "catchBloeckeZugeklappt" : false,
