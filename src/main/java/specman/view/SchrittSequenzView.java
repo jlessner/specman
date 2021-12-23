@@ -17,13 +17,13 @@ import specman.textfield.TextfieldShef;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static specman.Specman.initialtext;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
+import static specman.view.RoundedBorderDecorationStyle.Full;
 import static specman.view.RoundedBorderDecorationStyle.None;
 
 public class SchrittSequenzView {
@@ -301,6 +301,7 @@ public class SchrittSequenzView {
 		}
 
 		schritte.add(newStepIndex, newStep);
+		updateFollowingStepDecoration(newStepIndex+1);
 		updateLayoutRowspecsForAllsStepsAndGaps();
 		folgeschritteRenummerieren(newStep);
 		return newStep;
@@ -454,7 +455,7 @@ public class SchrittSequenzView {
 
 	public void toggleBorderType(AbstractSchrittView schritt) {
 		int stepIndex = stepIndex(schritt);
-		int componentIndex = stepComppnentIndex(schritt);
+		int componentIndex = stepComponentIndex(schritt);
 		sequenzBereich.remove(componentIndex);
 		JComponent switchedStepComponent = schritt.toggleBorderType();
 		CellConstraints constraints = constraints4step(stepIndex);
@@ -469,7 +470,7 @@ public class SchrittSequenzView {
 	}
 
 	/** Find the index of a step's grafical root component within this sequence' panel */
-	int stepComppnentIndex(AbstractSchrittView step) {
+	int stepComponentIndex(AbstractSchrittView step) {
 		JComponent stepComponent = step.getComponent();
 		Component[] sequenceChildren = sequenzBereich.getComponents();
 		for (int componentIndex = 0; componentIndex < sequenceChildren.length; componentIndex++) {

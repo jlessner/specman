@@ -27,11 +27,12 @@ public class QuellSchrittView extends AbstractSchrittView{
     @Override
     public QuellSchrittModel_V001 generiereModel(boolean formatierterText) {
         QuellSchrittModel_V001 model = new QuellSchrittModel_V001(
-                id,
-                getTextMitAenderungsmarkierungen(formatierterText),
-                getBackground().getRGB(),
-                aenderungsart,
-                getZielschrittID()
+            id,
+            getTextMitAenderungsmarkierungen(formatierterText),
+            getBackground().getRGB(),
+            aenderungsart,
+            getZielschrittID(),
+            getDecorated()
         );
         return model;
     }
