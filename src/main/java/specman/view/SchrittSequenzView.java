@@ -83,6 +83,11 @@ public class SchrittSequenzView {
 		for (AbstractSchrittModel_V001 schritt : model.schritte) {
 			AbstractSchrittView schrittView = AbstractSchrittView.baueSchrittView(editor, this, schritt);
 			schrittAnhaengen(schrittView, editor);
+			// TODO JL: Das hier ist schön einfach hinzuschreiben, aber ziemlich ineffizient
+			// Wir sollten schauen, ob das herstellen einer *initialen* Dekoration nicht leichtgewichtiger geht
+			if (schritt.decorationStyle != None) {
+				toggleBorderType(schrittView);
+			}
 		}
 		for (AbstractSchrittModel_V001 catchSchritt : model.catchBloecke) {
 			CatchSchrittView schrittView = (CatchSchrittView) AbstractSchrittView.baueSchrittView(editor, this, catchSchritt);
