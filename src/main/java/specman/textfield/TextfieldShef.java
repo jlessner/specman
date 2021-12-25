@@ -1,6 +1,7 @@
 package specman.textfield;
 
 import specman.EditorI;
+import specman.SchrittID;
 import specman.Specman;
 import specman.draganddrop.DragAdapter;
 import specman.Aenderungsart;
@@ -100,15 +101,12 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		doc.setCharacterAttributes(0, text.length(), attr, false);
 	}
 
-	public void setStandardStil(AbstractSchrittView schritt){
-		setStyle(schritt.getshef().getPlainText(),standardStil);
-		schritt.setBackground(Hintergrundfarbe_Standard);
-		schritt.getText().setEditable(true);
-		schritt.getshef().schrittNummer.setText(String.valueOf(schritt.getId()));
-		schritt.getshef().schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
-		schritt.getshef().schrittNummer.setBackground(SCHRITTNUMMER_HINTERGRUNDFARBE);
-		schritt.getshef().schrittNummer.setForeground(Hintergrundfarbe_Standard);
-		schritt.setAenderungsart(null);
+	public void setStandardStil(SchrittID id) {
+		setStyle(getPlainText(),standardStil);
+		schrittNummer.setText(String.valueOf(id));
+		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
+		schrittNummer.setBackground(SCHRITTNUMMER_HINTERGRUNDFARBE);
+		schrittNummer.setForeground(Hintergrundfarbe_Standard);
 	}
 
 	public void setZielschrittStil(AbstractSchrittView schritt) {

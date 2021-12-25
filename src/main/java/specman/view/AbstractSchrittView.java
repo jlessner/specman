@@ -9,6 +9,7 @@ import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -169,6 +170,13 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 				return getrimmteZeile;
 		}
 		return null;
+	}
+
+	public void setStandardStil() {
+		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		getText().setEditable(true);
+		getshef().setStandardStil(getId());
+		setAenderungsart(null);
 	}
 
 	public boolean enthaeltAenderungsmarkierungen() {

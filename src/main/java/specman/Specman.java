@@ -60,7 +60,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	File diagrammDatei;
 	List<AbstractSchrittView> postInitSchritte;
 	RecentFiles recentFiles;
-	private WelcomeMessagePanel welcomeMessage;
+	private JComponent welcomeMessage;
 
 	//TODO window for dragging
 	public final JWindow window = new JWindow();
@@ -356,7 +356,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				schritt.getshef().pruefeFuerSchrittnummer(hauptSequenz.schritte);
 			}
 		});
-		
+
+		imageAnhaengen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AbstractSchrittView currentStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+
+			}
+		});
+
 		einfaerben.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -875,6 +883,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		breakSchrittAnhaengen = new JButton();
 		catchSchrittAnhaengen = new JButton();
 		caseAnhaengen = new JButton();
+		imageAnhaengen = new JButton();
 		einfaerben = new JButton();
 		loeschen = new JButton();
 		toggleBorderType = new JButton();
@@ -908,6 +917,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolbarButtonHinzufuegen(breakSchrittAnhaengen, "break-schritt", "Break anh\u00E4ngen", buttonBar);
 		toolbarButtonHinzufuegen(catchSchrittAnhaengen, "catch-schritt", "Catchblock anh\u00E4ngen", buttonBar);
 		toolbarButtonHinzufuegen(caseAnhaengen, "zweig", "Case anh\u00E4ngen", buttonBar);
+		buttonBar.addSeparator();
+		toolbarButtonHinzufuegen(imageAnhaengen, "image", "Image hinzufügen", buttonBar);
 		//toolBar.addSeparator();   //ToDo
 		toolbarButtonHinzufuegen(einfaerben, "helligkeit", "Hintergrund schattieren", toolBar);
 		toolbarButtonHinzufuegen(loeschen, "loeschen", "Schritt l\u00F6schen", toolBar);
@@ -1021,6 +1032,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JButton breakSchrittAnhaengen;
 	private JButton catchSchrittAnhaengen;
 	private JButton caseAnhaengen;
+	private JButton imageAnhaengen;
 	private JButton einfaerben;
 	private JButton loeschen;
 	private JButton toggleBorderType;
@@ -1157,6 +1169,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return caseAnhaengen;
 	}
 
+	public JButton getImageAnhaengen() {
+		return imageAnhaengen;
+	}
+
 	//Aufgabe: Ich nehme mir nur einen Schritt und gehe dann durch alle unterschritte.
 	//wird benötigt, wenn z.B. ein Schritt als gelöscht markiert werden soll
 	public void unterschritteVonSchrittDurchlaufen(AbstractSchrittView schritt, Aenderungsart art) {
@@ -1241,7 +1257,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 
 				schritt.setAenderungsart(art);
-				schritt.getshef().setStandardStil(schritt);
+				schritt.setStandardStil();
 				aenderungsmarkierungenUndEnumsEntfernen(schritt);
 			}
 
@@ -1296,8 +1312,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			//wird bei der Aenderungsart hinzugefuegt durchlaufen
 			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
-				schritt.setAenderungsart(null);
-				schritt.getshef().setStandardStil(schritt);
+				schritt.setStandardStil();
 				aenderungsmarkierungenUndEnumsEntfernen(schritt);
 			}
 
@@ -1316,10 +1331,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 
 			//wird bei der Änderungsart Zielschritt durchlaufen
-			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-				schritt.setAenderungsart(null);
+			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt) {
 				schritt.setQuellschritt(null);
-				schritt.getshef().setStandardStil(schritt);
+				schritt.setStandardStil();
 			}
 
 			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
