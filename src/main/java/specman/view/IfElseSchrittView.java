@@ -268,8 +268,14 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 
 	@Override public void viewsNachinitialisieren() {
 		super.viewsNachinitialisieren();
-		getElseSequenz().viewsNachinitialisieren();
-		getIfSequenz().viewsNachinitialisieren();
+		elseSequenz.viewsNachinitialisieren();
+		ifSequenz.viewsNachinitialisieren();
+	}
+
+	@Override public void alsGeloeschtMarkieren() {
+		super.alsGeloeschtMarkieren();
+		elseSequenz.alsGeloeschtMarkieren();
+		ifSequenz.alsGeloeschtMarkieren();
 	}
 
 	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {

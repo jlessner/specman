@@ -78,5 +78,10 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		sequenzBereich.setBackground(bg);
 		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}
-	
+
+	public void alsGeloeschtMarkieren() {
+		ueberschrift.aenderungsmarkierungenVerwerfen();
+		ueberschrift.setStyle(ueberschrift.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+		ueberschrift.getTextComponent().setEditable(false);
+	}
 }

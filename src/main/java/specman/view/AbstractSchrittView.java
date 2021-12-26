@@ -200,8 +200,9 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		getText().setEnabled(true);
 	}
 
-	public void setSchrittnummerGeloeschtStil() {
-
+	public void alsGeloeschtMarkieren() {
+		setGeloeschtMarkiertStil();
+		getText().setEditable(false);
 	}
 
 	public boolean enthaeltAenderungsmarkierungen() {

@@ -445,14 +445,17 @@ public class DraggingLogic implements Serializable {
                     InsetPanel ip = (InsetPanel) label.getParent().getParent();
                     AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
                     sequenz=step.getParent();
-                    if(step.getQuellschritt() ==null) {
+                    if(step.getQuellschritt() == null) {
+                      //TODO JL: der Punkt sorgt für eine Mindesthöhe des Quellschritts. Muss noch gesäubert werden.
+                      //Die Höhe des Schrittnummer-Labels sollte die Höhe bestimmen.
 	                    quellschritt = new QuellSchrittView(specman, sequenz, ".", step.getId(), null);
 	                    sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
 	                    quellschritt.setQuellStil();
 	                    quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-	                    Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
+	                    quellschritt.alsGeloeschtMarkieren();
 	                    Specman.instance().unterschritteVonSchrittDurchlaufen(quellschritt, Aenderungsart.Quellschritt);
-                    }else {
+                    }
+                    else {
                     	quellschritt = step.getQuellschritt();
                     }
                     if (step != schritt) {

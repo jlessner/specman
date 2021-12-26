@@ -15,6 +15,7 @@ import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
+import specman.textfield.TextfieldShef;
 
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
@@ -381,6 +382,14 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		sonstSequenz.viewsNachinitialisieren();
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			caseSequenz.viewsNachinitialisieren();
+		}
+	}
+
+	@Override public void alsGeloeschtMarkieren() {
+		super.alsGeloeschtMarkieren();
+		sonstSequenz.alsGeloeschtMarkieren();
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			caseSequenz.alsGeloeschtMarkieren();
 		}
 	}
 
