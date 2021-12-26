@@ -4,11 +4,9 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.draganddrop.DragAdapter;
-import specman.Aenderungsart;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
-import specman.view.*;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -26,6 +24,7 @@ import java.util.List;
 import static specman.Specman.schrittHintergrund;
 
 public class TextfieldShef implements ComponentListener, KeyListener {
+	public static final Color Hintergrundfarbe_Schrittenummer = Color.LIGHT_GRAY;
 	public static final Color Schriftfarbe_Geloescht = Color.LIGHT_GRAY;
 	public static final Color Hintergrundfarbe_Geloescht = Color.BLACK;
 	public static final Color Schriftfarbe_Standard = Color.BLACK;
@@ -152,11 +151,19 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	}
 
 	public void setStandardStil(SchrittID id) {
-		setStyle(getPlainText(),standardStil);
+		setStyle(getPlainText(), standardStil);
 		schrittNummer.setText(String.valueOf(id));
 		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
 		schrittNummer.setBackground(SCHRITTNUMMER_HINTERGRUNDFARBE);
 		schrittNummer.setForeground(Hintergrundfarbe_Standard);
+	}
+
+	public void setNichtGeloeschtMarkiertStil() {
+		setStyle(getPlainText(), standardStil);
+		schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Schrittenummer);
+		schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Standard);
+		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Schrittenummer));
+		schrittNummer.setText("<html><body><span style='text-decoration:none;'>" + schrittNummer.getText() + "</span></body></html>");
 	}
 
 	public void setZielschrittStil(SchrittID quellschrittId) {
@@ -177,13 +184,13 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		schrittNummer.setForeground(Schriftfarbe_Geloescht);
 	}
 
-	public void setGanzerSchrittGeloeschtStil() {
-		setStyle(getPlainText(), ganzerSchrittGeloeschtStil);
-		schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
-				+ schrittNummer.getText() +"</span></body></html>");
+	public void setGeloeschtMarkiertStil() {
+		setStyle(getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
 		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
 		schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
 		schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
+		schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
+				+ schrittNummer.getText()+"</span></body></html>");
 	}
 
 	public boolean ganzerSchrittGeloeschtStilGesetzt() {
@@ -337,14 +344,13 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		}
 	}
 
-	public java.util.List<Aenderungsmarkierung_V001> aenderungsmarkierungenUebernehmen(boolean nurErste) {
+	// TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
+	public java.util.List<Aenderungsmarkierung_V001> aenderungsmarkierungenUebernehmen() {
 		java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<>();
 		StyledDocument doc = (StyledDocument) editorPane.getDocument();
 		List <GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
 		for (Element e : doc.getRootElements()) {
-			aenderungsmarkierungenUebernehmen(e, ergebnis, nurErste, loeschungen);
-			if (ergebnis.size() > 0 && nurErste)
-				break;
+			aenderungsmarkierungenUebernehmen(e, ergebnis, loeschungen);
 		}
 		for (int i = 0; i < loeschungen.size();i++){
 			GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) -1 - i);
@@ -357,6 +363,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		return ergebnis;
 	}
 
+	// TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
 	public java.util.List<Aenderungsmarkierung_V001> aenderungsmarkierungenVerwerfen() {
 		java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<>();
 		StyledDocument doc = (StyledDocument) editorPane.getDocument();
@@ -375,8 +382,11 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		return ergebnis;
 	}
 
-	private void aenderungsmarkierungenUebernehmen(Element e, java.util.List<Aenderungsmarkierung_V001> ergebnis,
-												   boolean nurErste, List <GeloeschtMarkierung_V001> loeschungen) {
+	// TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
+	private void aenderungsmarkierungenUebernehmen(
+			Element e,
+			List<Aenderungsmarkierung_V001> ergebnis,
+			List <GeloeschtMarkierung_V001> loeschungen) {
 		StyledDocument doc = (StyledDocument) e.getDocument();
 		if (elementHatAenderungshintergrund(e)) {
 			if (elementHatDurchgestrichenenText(e)){
@@ -390,21 +400,17 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 				doc.setCharacterAttributes(e.getStartOffset(),e.getEndOffset()-e.getStartOffset(),entfaerbt,true);
 			}
 			ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset(), e.getEndOffset()));
-			if (ergebnis.size() > 0 && nurErste)
-				return;
 		}
-		if (ergebnis.size() == 0 || !nurErste) {
-			for (int i = 0; i < e.getElementCount(); i++) {
-				aenderungsmarkierungenUebernehmen(e.getElement(i), ergebnis, nurErste, loeschungen);
-				if (ergebnis.size() > 0 && nurErste)
-					break;
-			}
+
+		for (int i = 0; i < e.getElementCount(); i++) {
+			aenderungsmarkierungenUebernehmen(e.getElement(i), ergebnis, loeschungen);
 		}
 	}
 
+	// TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
 	private void aenderungsmarkierungenVerwerfen(
 			Element e,
-			java.util.List<Aenderungsmarkierung_V001> ergebnis,
+			List<Aenderungsmarkierung_V001> ergebnis,
 			List <GeloeschtMarkierung_V001> loeschungen) {
 		StyledDocument doc = (StyledDocument) e.getDocument();
 		if (elementHatAenderungshintergrund(e)) {
@@ -421,10 +427,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			}
 			ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset(), e.getEndOffset()));
 		}
-		if (ergebnis.size() == 0) {
-			for (int i = 0; i < e.getElementCount(); i++) {
-				aenderungsmarkierungenVerwerfen(e.getElement(i), ergebnis, loeschungen);
-			}
+		for (int i = 0; i < e.getElementCount(); i++) {
+			aenderungsmarkierungenVerwerfen(e.getElement(i), ergebnis, loeschungen);
 		}
 	}
 

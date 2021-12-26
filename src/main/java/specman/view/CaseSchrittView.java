@@ -376,6 +376,20 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	}
 
+	@Override public void viewsNachinitialisieren() {
+		super.viewsNachinitialisieren();
+		sonstSequenz.viewsNachinitialisieren();
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			caseSequenz.viewsNachinitialisieren();
+		}
+	}
+
+	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+		AbstractSchrittView result = findeSchrittZuIdIncludingSubSequences(
+				id, caseSequenzen.toArray(ZweigSchrittSequenzView[]::new));
+		return (result != null) ? result : sonstSequenz.findeSchrittZuId(id);
+	}
+
 	private void layoutConstraintsSetzen() {
 		/** @author PVN */
 		panelLayout.setConstraints(lueckenFueller, CC.xy(1, 1));

@@ -464,6 +464,22 @@ public class SchrittSequenzView {
 		}
 	}
 
+	public void viewsNachinitialisieren() {
+		for(AbstractSchrittView schritt: schritte) {
+			schritt.viewsNachinitialisieren();
+		}
+	}
+
+	public AbstractSchrittView findeSchrittZuId(SchrittID id){
+		for(AbstractSchrittView schritt: schritte) {
+			AbstractSchrittView result = schritt.findeSchrittZuId(id);
+			if (result != null) {
+				return result;
+			}
+		}
+		return null;
+	}
+
 	public void toggleBorderType(AbstractSchrittView schritt) {
 		int stepIndex = stepIndex(schritt);
 		int componentIndex = stepComponentIndex(schritt);

@@ -163,9 +163,6 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelBedingung.setBackground(bg);
 
 		//Raute
-
-
-
 		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}
 
@@ -267,6 +264,16 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		super.resyncSchrittnummerStil();
 		getElseSequenz().resyncSchrittnummerStil();
 		getIfSequenz().resyncSchrittnummerStil();
+	}
+
+	@Override public void viewsNachinitialisieren() {
+		super.viewsNachinitialisieren();
+		getElseSequenz().viewsNachinitialisieren();
+		getIfSequenz().viewsNachinitialisieren();
+	}
+
+	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+		return findeSchrittZuIdIncludingSubSequences(id, elseSequenz, ifSequenz);
 	}
 
 	@Override

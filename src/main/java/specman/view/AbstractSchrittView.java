@@ -17,7 +17,9 @@ import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
 import static specman.view.RoundedBorderDecorationStyle.None;
@@ -184,10 +186,22 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		setAenderungsart(Aenderungsart.Zielschritt);
 	}
 
-	public void setGanzerSchrittGeloeschtStil() {
-		getshef().setGanzerSchrittGeloeschtStil();
+	public void setGeloeschtMarkiertStil() {
+		getshef().setGeloeschtMarkiertStil();
 		setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		setAenderungsart(Aenderungsart.Geloescht);
+		getText().setEnabled(false);
+	}
+
+	public void setNichtGeloeschtMarkiertStil() {
+		getshef().setNichtGeloeschtMarkiertStil();
+		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		setAenderungsart(null);
+		getText().setEnabled(true);
+	}
+
+	public void setSchrittnummerGeloeschtStil() {
+
 	}
 
 	public boolean enthaeltAenderungsmarkierungen() {
@@ -370,6 +384,38 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 			getshef().schrittNummer.setText("<html><body><span>" + getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" + getQuellschritt().getId() + "</span></body></html>");
 		}
 	}
+
+	public void viewsNachinitialisieren() {
+		switch(aenderungsart) {
+			case Geloescht:
+				setGeloeschtMarkiertStil();
+				getshef().getTextComponent().setEditable(false);
+				break;
+			case Quellschritt:
+				((QuellSchrittView)this).setQuellStil();
+				getshef().getTextComponent().setEditable(false);
+				break;
+			case Zielschritt:
+				setZielschrittStil();
+				break;
+		}
+	}
+
+	public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+		return (this.id.equals(id)) ? this : null;
+	}
+
+	protected AbstractSchrittView findeSchrittZuIdIncludingSubSequences(SchrittID id, SchrittSequenzView... subsequenzen) {
+		AbstractSchrittView result = (this.id.equals(id)) ? this : null;
+		if (result == null) {
+			for (SchrittSequenzView subsequenz: subsequenzen) {
+				result = subsequenz.findeSchrittZuId(id);
+				if (result != null) {
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
 }
-
-

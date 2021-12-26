@@ -6,13 +6,16 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
+import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.textfield.Indentions;
+import specman.textfield.TextfieldShef;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SubsequenzSchrittView extends AbstractSchrittView {
 	public static final int TEXTEINRUECKUNG = 18;
@@ -125,6 +128,15 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	@Override public void resyncSchrittnummerStil() {
 		super.resyncSchrittnummerStil();
 		subsequenz.resyncSchrittnummerStil();
+	}
+
+	@Override public void viewsNachinitialisieren() {
+		super.viewsNachinitialisieren();
+		subsequenz.viewsNachinitialisieren();
+	}
+
+	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+		return findeSchrittZuIdIncludingSubSequences(id, subsequenz);
 	}
 
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {

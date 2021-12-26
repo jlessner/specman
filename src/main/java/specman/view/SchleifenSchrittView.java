@@ -188,7 +188,16 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 
 	@Override public void resyncSchrittnummerStil() {
 		super.resyncSchrittnummerStil();
-		getWiederholSequenz().resyncSchrittnummerStil();
+		wiederholSequenz.resyncSchrittnummerStil();
+	}
+
+	@Override public void viewsNachinitialisieren() {
+		super.viewsNachinitialisieren();
+		wiederholSequenz.viewsNachinitialisieren();
+	}
+
+	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+		return findeSchrittZuIdIncludingSubSequences(id, wiederholSequenz);
 	}
 
 	@Override
