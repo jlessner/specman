@@ -90,4 +90,8 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		ueberschrift.setStyle(ueberschrift.getPlainText(), TextfieldShef.standardStil);
 		ueberschrift.getTextComponent().setEditable(true);
 	}
+
+	public void ueberschriftAenderungenUebernehmen() {
+		ueberschrift.aenderungsmarkierungenUebernehmen();
+	}
 }

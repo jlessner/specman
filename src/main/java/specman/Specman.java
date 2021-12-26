@@ -569,8 +569,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		aenderungenUebernehmen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				List<AbstractSchrittView> schritte = hauptSequenz.schritte;
-				uebernehmenAbfrage(schritte);
+				hauptSequenz.aenderungenUebernehmen(Specman.this);
 			}
 		});
 
@@ -1182,92 +1181,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			//gibt den Schritt zur Überprüfung auf Unterschritte
 			unterschritteVonSchrittDurchlaufen(schritt, art);
-		}
-	}
-
-	//Uebernehmen methode mit Abfrage welche art zugewiesen ist
-	public void uebernehmenAbfrage(List<AbstractSchrittView> schritte){
-		for (AbstractSchrittView schritt: schritte) {
-			schritt.getshef().aenderungsmarkierungenUebernehmen();
-			//Hier werden bearbeitete Überschriften von IfElseSchrittViews und IfSchrittViews übernommen
-			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
-				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
-				ifel.getElseSequenz().getUeberschrift().aenderungsmarkierungenUebernehmen();
-				if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
-					ifel.getIfSequenz().getUeberschrift().aenderungsmarkierungenUebernehmen();
-				}
-			}
-
-
-			//Übernehmen von Änderungen, bei Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
-			if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
-				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-				caseSchritt.getSonstSequenz().getUeberschrift().aenderungsmarkierungenUebernehmen();
-				//nur für caseSequenzen nötig, da man die Sonstsequenz eh nicht löschen kann
-				//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
-				List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
-				for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
-					caseSequenz.getUeberschrift().aenderungsmarkierungenUebernehmen();
-					if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
-						caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
-						caseSchritt.getPanelFall1().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-					}
-					if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
-						caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-						caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-						caseSchritt.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-						caseSequenz.setAenderungsart(null);
-					}
-				}
-			}
-
-			//wird bei der Aenderungsart hinzugefuegt durchlaufen
-			if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
-				schritt.aenderungsmarkierungenEntfernen();
-			}
-
-			//wird bei der Änderungsart geloescht durchlaufen
-			if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
-				SchrittSequenzView sequenz = schritt.getParent();
-				sequenz.schrittEntfernen(schritt);
-				//continue damit er nicht versucht, die unterschritte eines gelöschten Schrittes zu finden
-				continue;
-			}
-
-			//wird bei der Änderungsart Quellschritt durchlaufen
-			if(schritt.getAenderungsart() == Aenderungsart.Quellschritt){
-				SchrittSequenzView sequenz = schritt.getParent();
-				sequenz.schrittEntfernen(schritt);
-			}
-
-			//wird bei der Änderungsart Zielschritt durchlaufen
-			if(schritt.getAenderungsart() == Aenderungsart.Zielschritt) {
-				schritt.setQuellschritt(null);
-				schritt.setStandardStil();
-			}
-
-			if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
-				IfElseSchrittView ifel = (IfElseSchrittView) schritt;
-				uebernehmenAbfrage(ifel.getElseSequenz().schritte);
-				if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
-					uebernehmenAbfrage(ifel.getIfSequenz().schritte);
-				}
-			}
-			else if (schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView")) {
-				SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
-				uebernehmenAbfrage(schleife.getWiederholSequenz().schritte);
-			}
-			else if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
-				CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-				uebernehmenAbfrage(caseSchritt.getSonstSequenz().schritte);
-				for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
-					uebernehmenAbfrage(caseSequenz.schritte);
-				}
-			}
-			else if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
-				SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
-				uebernehmenAbfrage(sub.getSequenz().schritte);
-			}
 		}
 	}
 

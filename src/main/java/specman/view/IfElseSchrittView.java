@@ -284,6 +284,18 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.aenderungsmarkierungenEntfernen();
 	}
 
+	@Override protected void textAenderungenUebernehmen() {
+		super.textAenderungenUebernehmen();
+		elseSequenz.ueberschriftAenderungenUebernehmen();
+		ifSequenz.ueberschriftAenderungenUebernehmen();
+	}
+
+	@Override public void aenderungenUebernehmen(EditorI editor) {
+		super.aenderungenUebernehmen(editor);
+		elseSequenz.aenderungenUebernehmen(editor);
+		ifSequenz.aenderungenUebernehmen(editor);
+	}
+
 	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
 		return findeSchrittZuIdIncludingSubSequences(id, elseSequenz, ifSequenz);
 	}
@@ -308,6 +320,4 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		// TODO Auto-generated method stub
 		return berechneRautenmittelpunkt().y;
 	}
-
-
 }

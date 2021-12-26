@@ -200,6 +200,11 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		return findeSchrittZuIdIncludingSubSequences(id, wiederholSequenz);
 	}
 
+	@Override public void aenderungenUebernehmen(EditorI editor) {
+		super.aenderungenUebernehmen(editor);
+		wiederholSequenz.aenderungenUebernehmen(editor);
+	}
+
 	@Override
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
 		super.updateTextfieldDecorationIndentions(indentions.withLeft(false));

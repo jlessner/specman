@@ -480,6 +480,13 @@ public class SchrittSequenzView {
 		return null;
 	}
 
+	public void aenderungenUebernehmen(EditorI editor) {
+		setAenderungsart(null);
+		for (AbstractSchrittView schritt: schritte) {
+			schritt.aenderungenUebernehmen(editor);
+		}
+	}
+
 	public void toggleBorderType(AbstractSchrittView schritt) {
 		int stepIndex = stepIndex(schritt);
 		int componentIndex = stepComponentIndex(schritt);

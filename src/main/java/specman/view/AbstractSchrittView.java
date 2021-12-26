@@ -423,4 +423,25 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return result;
 	}
 
+	public void aenderungenUebernehmen(EditorI editor) {
+		textAenderungenUebernehmen();
+		if (aenderungsart != null) {
+			switch (aenderungsart) {
+				case Hinzugefuegt:
+					aenderungsmarkierungenEntfernen();
+					break;
+				case Geloescht:
+				case Quellschritt:
+					getParent().schrittEntfernen(this);
+					break;
+				case Zielschritt:
+					setQuellschritt(null);
+					setStandardStil();
+			}
+		}
+	}
+
+	protected void textAenderungenUebernehmen() {
+		getshef().aenderungsmarkierungenUebernehmen();
+	}
 }

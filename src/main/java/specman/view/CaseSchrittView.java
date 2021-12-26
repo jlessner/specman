@@ -26,6 +26,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import static specman.Specman.initialtext;
@@ -453,5 +454,29 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	public JPanel getPanelFall1() {
 		return panelFall1;
+	}
+
+	@Override protected void textAenderungenUebernehmen() {
+		super.textAenderungenUebernehmen();
+		sonstSequenz.ueberschriftAenderungenUebernehmen();
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			caseSequenz.ueberschriftAenderungenUebernehmen();
+		}
+	}
+
+	@Override public void aenderungenUebernehmen(EditorI editor) {
+		super.aenderungenUebernehmen(editor);
+		panelFall1.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		sonstSequenz.aenderungenUebernehmen(editor);
+		List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(this.caseSequenzen);
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			if (caseSequenz.getAenderungsart() == Aenderungsart.Geloescht) {
+				zweigEntfernen(editor, caseSequenz);
+			}
+			else {
+				caseSequenz.aenderungenUebernehmen(editor);
+			}
+		}
 	}
 }

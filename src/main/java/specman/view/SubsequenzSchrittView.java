@@ -139,6 +139,11 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return findeSchrittZuIdIncludingSubSequences(id, subsequenz);
 	}
 
+	@Override public void aenderungenUebernehmen(EditorI editor) {
+		super.aenderungenUebernehmen(editor);
+		subsequenz.aenderungenUebernehmen(editor);
+	}
+
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
 		super.updateTextfieldDecorationIndentions(indentions);
 		Indentions substepIndentions = indentions.withTop(false).withRight(false);
