@@ -11,12 +11,10 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.geometry.LineIntersect;
 import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
-import specman.textfield.TextfieldShef;
 
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
@@ -24,7 +22,6 @@ import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -368,6 +365,15 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		caseSequenzen.remove(zweig);
 		panel.remove(zweig.getContainer());
 		panel.remove(zweig.ueberschrift.asJComponent());
+	}
+
+	@Override public void resyncSchrittnummerStil() {
+		super.resyncSchrittnummerStil();
+		getSonstSequenz().resyncSchrittnummerStil();
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			caseSequenz.resyncSchrittnummerStil();
+		}
+
 	}
 
 	private void layoutConstraintsSetzen() {

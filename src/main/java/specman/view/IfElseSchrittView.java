@@ -21,7 +21,6 @@ import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.geom.Line2D;
 import java.util.List;
 
 import static specman.Specman.initialtext;
@@ -262,6 +261,12 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		return super.enthaelt(textComponent) ||
 			ifSequenz.hatUeberschrift(textComponent) ||
 			elseSequenz.hatUeberschrift(textComponent);
+	}
+
+	@Override public void resyncSchrittnummerStil() {
+		super.resyncSchrittnummerStil();
+		getElseSequenz().resyncSchrittnummerStil();
+		getIfSequenz().resyncSchrittnummerStil();
 	}
 
 	@Override

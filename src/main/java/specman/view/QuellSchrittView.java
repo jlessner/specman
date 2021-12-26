@@ -6,6 +6,7 @@ import specman.SchrittID;
 import specman.model.v001.QuellSchrittModel_V001;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 public class QuellSchrittView extends AbstractSchrittView{
@@ -46,6 +47,11 @@ public class QuellSchrittView extends AbstractSchrittView{
         return zielschritt!=null?zielschritt.getId():null;
     }
 
+    public void setQuellStil() {
+        getshef().setQuellStil(getZielschrittID());
+        setAenderungsart(Aenderungsart.Quellschritt);
+        getText().setEditable(false);
+    }
 
     public void setZielschritt(AbstractSchrittView zielschritt) {
         if (zielschritt != null) {

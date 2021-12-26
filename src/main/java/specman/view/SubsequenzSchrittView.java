@@ -122,6 +122,11 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return model;
 	}
 
+	@Override public void resyncSchrittnummerStil() {
+		super.resyncSchrittnummerStil();
+		subsequenz.resyncSchrittnummerStil();
+	}
+
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
 		super.updateTextfieldDecorationIndentions(indentions);
 		Indentions substepIndentions = indentions.withTop(false).withRight(false);

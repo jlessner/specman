@@ -12,8 +12,6 @@ import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.SchrittSequenzModel_V001;
-import specman.model.v001.StrukturierterSchrittModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.textfield.Indentions;
 
@@ -186,6 +184,11 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			getQuellschrittID(),
 			getDecorated());
 		return model;
+	}
+
+	@Override public void resyncSchrittnummerStil() {
+		super.resyncSchrittnummerStil();
+		getWiederholSequenz().resyncSchrittnummerStil();
 	}
 
 	@Override

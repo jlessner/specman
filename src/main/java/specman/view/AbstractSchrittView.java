@@ -179,6 +179,17 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		setAenderungsart(null);
 	}
 
+	public void setZielschrittStil() {
+		getshef().setZielschrittStil(getQuellschritt().getId());
+		setAenderungsart(Aenderungsart.Zielschritt);
+	}
+
+	public void setGanzerSchrittGeloeschtStil() {
+		getshef().setGanzerSchrittGeloeschtStil();
+		setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		setAenderungsart(Aenderungsart.Geloescht);
+	}
+
 	public boolean enthaeltAenderungsmarkierungen() {
 		if (text.findeAenderungsmarkierungen(true).size() > 0)
 			return true;
@@ -348,6 +359,17 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return quellschritt!=null?quellschritt.getId():null;
 	}
 
+	public void resyncSchrittnummerStil() {
+		if (getAenderungsart() == Aenderungsart.Geloescht) {
+			getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + getshef().schrittNummer.getText() + "</span></body></html>");
+		}
+		if (getAenderungsart() == Aenderungsart.Quellschritt) {
+			getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" + ((QuellSchrittView)this).getZielschrittID() + "</span></body></html>");
+		}
+		if (getAenderungsart() == Aenderungsart.Zielschritt) {
+			getshef().schrittNummer.setText("<html><body><span>" + getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" + getQuellschritt().getId() + "</span></body></html>");
+		}
+	}
 }
 
 

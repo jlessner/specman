@@ -448,8 +448,7 @@ public class DraggingLogic implements Serializable {
                     if(step.getQuellschritt() ==null) {
 	                    quellschritt = new QuellSchrittView(specman, sequenz, ".", step.getId(), null);
 	                    sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
-	                    quellschritt.setAenderungsart(Aenderungsart.Quellschritt);
-	                    quellschritt.getshef().setQuellStil(quellschritt);
+	                    quellschritt.setQuellStil();
 	                    quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 	                    Specman.instance().aenderungsMarkierungenAufGeloescht(quellschritt);
 	                    Specman.instance().unterschritteVonSchrittDurchlaufen(quellschritt, Aenderungsart.Quellschritt);
@@ -466,12 +465,11 @@ public class DraggingLogic implements Serializable {
                         sequenz=schritt.getParent();
                         sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
                         step.setQuellschritt(quellschritt);
-                        step.setAenderungsart(Aenderungsart.Zielschritt);
-                        step.getshef().setZielschrittStil(step);
+                        step.setZielschrittStil();
                         Specman.instance().unterschritteVonSchrittDurchlaufen(step, Aenderungsart.Zielschritt);
                     }
                     quellschritt.setZielschritt(step);
-                    schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+                    specman.hauptSequenz.resyncSchrittnummerStil();
                 }
             }else{
                 JLabel label = (JLabel) e.getSource();
@@ -495,39 +493,39 @@ public class DraggingLogic implements Serializable {
         if (e.getSource().equals(specman.getSchrittAnhaengen())) {
             schritt = sequenz.einfachenSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            specman.hauptSequenz.resyncSchrittnummerStil();
         } else if (e.getSource().equals(specman.getWhileSchrittAnhaengen())) {
             schritt = sequenz.whileSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            specman.hauptSequenz.resyncSchrittnummerStil();
         } else if (e.getSource().equals(specman.getWhileWhileSchrittAnhaengen())) {
             schritt = sequenz.whileWhileSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            specman.hauptSequenz.resyncSchrittnummerStil();
         } else if (e.getSource().equals(specman.getIfElseSchrittAnhaengen())) {
             schritt = sequenz.ifElseSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            specman.hauptSequenz.resyncSchrittnummerStil();
         } else if (e.getSource().equals(specman.getIfSchrittAnhaengen())) {
             schritt = sequenz.ifSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            specman.hauptSequenz.resyncSchrittnummerStil();
         } else if (e.getSource().equals(specman.getCaseSchrittAnhaengen())) {
             schritt = sequenz.caseSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            specman.hauptSequenz.resyncSchrittnummerStil();
         } else if (e.getSource().equals(specman.getSubsequenzSchrittAnhaengen())) {
             schritt = sequenz.subsequenzSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            specman.hauptSequenz.resyncSchrittnummerStil();
         } else if (e.getSource().equals(specman.getBreakSchrittAnhaengen())) {
             schritt = sequenz.breakSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            specman.hauptSequenz.resyncSchrittnummerStil();
         } else if (e.getSource().equals(specman.getCatchSchrittAnhaengen())) {
             schritt = sequenz.catchSchrittZwischenschieben(insertionPosition, schritt, specman);
             specman.newStepPostInit(schritt);
-            schritt.getshef().pruefeFuerSchrittnummer(specman.hauptSequenz.schritte);
+            specman.hauptSequenz.resyncSchrittnummerStil();
         }
     }
 

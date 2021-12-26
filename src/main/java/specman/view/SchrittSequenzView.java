@@ -458,6 +458,12 @@ public class SchrittSequenzView {
 		catchBereich.skalieren(prozentNeu, prozentAktuell);
 	}
 
+	public void resyncSchrittnummerStil() {
+		for (AbstractSchrittView schritt : schritte) {
+			schritt.resyncSchrittnummerStil();
+		}
+	}
+
 	public void toggleBorderType(AbstractSchrittView schritt) {
 		int stepIndex = stepIndex(schritt);
 		int componentIndex = stepComponentIndex(schritt);
