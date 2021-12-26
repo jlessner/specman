@@ -278,6 +278,12 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.alsGeloeschtMarkieren();
 	}
 
+	@Override public void aenderungsmarkierungenEntfernen() {
+		super.aenderungsmarkierungenEntfernen();
+		elseSequenz.aenderungsmarkierungenEntfernen();
+		ifSequenz.aenderungsmarkierungenEntfernen();
+	}
+
 	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
 		return findeSchrittZuIdIncludingSubSequences(id, elseSequenz, ifSequenz);
 	}

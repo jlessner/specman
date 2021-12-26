@@ -205,6 +205,10 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		getText().setEditable(false);
 	}
 
+	public void aenderungsmarkierungenEntfernen() {
+		setStandardStil();
+	}
+
 	public boolean enthaeltAenderungsmarkierungen() {
 		if (text.findeAenderungsmarkierungen(true).size() > 0)
 			return true;

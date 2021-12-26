@@ -393,6 +393,15 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		}
 	}
 
+	@Override public void aenderungsmarkierungenEntfernen() {
+		super.aenderungsmarkierungenEntfernen();
+		panelFall1.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		sonstSequenz.aenderungsmarkierungenEntfernen();
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			caseSequenz.aenderungsmarkierungenEntfernen();
+		}
+	}
+
 	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
 		AbstractSchrittView result = findeSchrittZuIdIncludingSubSequences(
 				id, caseSequenzen.toArray(ZweigSchrittSequenzView[]::new));
