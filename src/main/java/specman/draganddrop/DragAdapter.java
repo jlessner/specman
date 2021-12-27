@@ -23,13 +23,13 @@ import static specman.draganddrop.InsertDecision.NoInsert;
 
 
 public class DragAdapter extends MouseAdapter {
-	private final Specman spec;
+	private final Specman specman;
 	private	JTextField dummy;
 	private final DraggingLogic draggingLogic;
 
-	public DragAdapter(Specman spec) {
-		this.spec = spec;
-		this.draggingLogic = new DraggingLogic(spec);
+	public DragAdapter(Specman specman) {
+		this.specman = specman;
+		this.draggingLogic = new DraggingLogic(specman);
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -48,41 +48,41 @@ public class DragAdapter extends MouseAdapter {
 		}
 		Point pt = e.getPoint();
 		JComponent parent = (JComponent) e.getComponent();
-		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, spec);
-		if(!spec.getGlassPane().isVisible() ) {
-			spec.setCursor(Cursor.DEFAULT_CURSOR);
+		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, specman);
+		if(!specman.getGlassPane().isVisible() ) {
+			specman.setCursor(Cursor.DEFAULT_CURSOR);
 		}
-		spec.getGlassPane().setVisible(false);
-		spec.window.add(dummy);
-		spec.window.pack();
+		specman.getGlassPane().setVisible(false);
+		specman.window.add(dummy);
+		specman.window.pack();
 		updateWindowLocation(pt, parent);
-		spec.window.setVisible(true);
-		draggingLogic.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,NoInsert,e);
+		specman.window.setVisible(true);
+		draggingLogic.dragGlassPanePos(ptCon, specman.hauptSequenz.schritte,NoInsert,e);
 	}
 
 	//Updates the Window Location
 	private void updateWindowLocation(Point pt, JComponent parent){
 		Point p = new Point(pt.x  +3, pt.y +3);
 		SwingUtilities.convertPointToScreen(p,parent);
-		spec.window.setLocation(p);
+		specman.window.setLocation(p);
 	}
 
 	public void mouseReleased(MouseEvent e) {
 		if(checkEinzigerSchritt(e)){
-			spec.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			return;
 		}
 		if(checkGeloeschterSchritt(e) || checkQuellSchritt(e)){
-			spec.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			return;
 		}
-		spec.window.setVisible(false);
-		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, spec);
-		draggingLogic.dragGlassPanePos(ptCon, spec.hauptSequenz.schritte,Insert,e);
+		specman.window.setVisible(false);
+		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, specman);
+		draggingLogic.dragGlassPanePos(ptCon, specman.hauptSequenz.schritte,Insert,e);
 		//System.out.println(e.getSource());
-		spec.getGlassPane().setVisible(false);
-		spec.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		spec.window.remove(dummy);
+		specman.getGlassPane().setVisible(false);
+		specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		specman.window.remove(dummy);
 	}
 
 
@@ -99,7 +99,7 @@ public class DragAdapter extends MouseAdapter {
 	}
 
 	public void mouseExited(MouseEvent e) {
-		spec.setCursor(Cursor.getDefaultCursor());
+		specman.setCursor(Cursor.getDefaultCursor());
 	}
 
 	//Letzter Schritt darf nicht verschoben werden
@@ -137,11 +137,11 @@ public class DragAdapter extends MouseAdapter {
 
 	private AbstractSchrittView labelToStep(JLabel label) {
 		InsetPanel ip = (InsetPanel) label.getParent().getParent();
-		return spec.hauptSequenz.findeSchritt(ip.getTextfeld().getTextComponent());
+		return specman.hauptSequenz.findeSchritt(ip.getTextfeld().getTextComponent());
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		spec.getGlassPane().setVisible(false);
+		specman.getGlassPane().setVisible(false);
 	}
 
 	//sets Dummy depending on new Step oder dragged Step

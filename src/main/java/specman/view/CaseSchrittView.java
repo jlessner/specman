@@ -517,6 +517,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	@Override public void aenderungenVerwerfen(EditorI editor) {
 		//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
 		List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(this.caseSequenzen);
+		sonstSequenz.aenderungenVerwerfen(editor);
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 				zweigEntfernen(editor, caseSequenz);

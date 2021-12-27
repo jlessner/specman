@@ -177,8 +177,22 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public void setStandardStil() {
 		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 		getText().setEditable(true);
-		getshef().setStandardStil(getId());
+		getshef().setStandardStil(id);
 		setAenderungsart(null);
+	}
+
+	public void setNichtGeloeschtMarkiertStil() {
+		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		getText().setEditable(true);
+		getshef().setNichtGeloeschtMarkiertStil(id);
+		setAenderungsart(null);
+	}
+
+	public void setGeloeschtMarkiertStil() {
+		setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		getText().setEditable(false);
+		getshef().setGeloeschtMarkiertStil(id);
+		setAenderungsart(Aenderungsart.Geloescht);
 	}
 
 	public void setZielschrittStil() {
@@ -186,25 +200,11 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		setAenderungsart(Aenderungsart.Zielschritt);
 	}
 
-	public void setGeloeschtMarkiertStil() {
-		getshef().setGeloeschtMarkiertStil();
-		setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		setAenderungsart(Aenderungsart.Geloescht);
-		getText().setEnabled(false);
-	}
-
-	public void setNichtGeloeschtMarkiertStil() {
-		getshef().setNichtGeloeschtMarkiertStil();
-		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-		setAenderungsart(null);
-		getText().setEnabled(true);
-	}
-
-	public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor){
+	public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
 		getshef().aenderungsmarkierungenVerwerfen();
-		setGeloeschtMarkiertStil();
 		getText().setEditable(false);
-		return new UndoableSchrittAlsEntferntMarkiert(this);
+		setGeloeschtMarkiertStil();
+		return new UndoableSchrittAlsEntferntMarkiert(this, editor);
 	}
 
 	public void aenderungsmarkierungenEntfernen() {

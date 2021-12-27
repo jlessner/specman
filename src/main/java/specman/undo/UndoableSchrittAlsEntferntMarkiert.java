@@ -1,35 +1,28 @@
 package specman.undo;
 
-import javax.swing.JLabel;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
+import specman.EditorI;
 import specman.view.AbstractSchrittView;
 public class UndoableSchrittAlsEntferntMarkiert extends AbstractUndoableInteraktion{
 
     private final AbstractSchrittView schritt;
-    private final JLabel textSchrittnummer;
+    private final EditorI editor;
 
-    public UndoableSchrittAlsEntferntMarkiert(AbstractSchrittView schritt) {
+    public UndoableSchrittAlsEntferntMarkiert(AbstractSchrittView schritt, EditorI editor) {
         this.schritt = schritt;
-        this.textSchrittnummer = schritt.getshef().schrittNummer;
+        this.editor = editor;
     }
 
     @Override
     public void undo() throws CannotUndoException {
-        undoSammler();
+        schritt.aenderungenVerwerfen(editor);
     }
 
     @Override
     public void redo() throws CannotRedoException {
-        redoSammler();
+        schritt.alsGeloeschtMarkieren(editor);
     }
 
-    public void undoSammler() {
-        schritt.setNichtGeloeschtMarkiertStil();
-    }
-
-    public void redoSammler(){
-        schritt.setGeloeschtMarkiertStil();
-    }
 }

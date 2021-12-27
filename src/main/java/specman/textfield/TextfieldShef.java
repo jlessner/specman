@@ -7,6 +7,7 @@ import specman.draganddrop.DragAdapter;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
+import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -31,6 +32,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public static final Color Hintergrundfarbe_Standard = Color.WHITE;
 	public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
 	public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
+	public static final Color SCHRITTNUMMER_VORDERGRUNDFARBE = Hintergrundfarbe_Standard;
+	public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
 	public static final String INDIKATOR_GELB = toHTMLColor(AENDERUNGSMARKIERUNG_FARBE);
 	public static final String INDIKATOR_GELOESCHT_MARKIERT = "line-through";
 	public static final int FONTSIZE = 15;
@@ -45,9 +48,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
 	public static Font labelFont = new Font(Font.SANS_SERIF, Font.BOLD, SCHRITTNR_FONTSIZE);
 
-	public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE = Color.LIGHT_GRAY;
-	public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
-	public static final String INDIKATOR_GRAU = toHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE);
+	public static final String INDIKATOR_GRAU = toHTMLColor(Hintergrundfarbe_Schrittenummer);
 	public static final String INDIKATOR_SCHWARZ = toHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE2);
 
 	static {
@@ -153,17 +154,17 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setStandardStil(SchrittID id) {
 		setStyle(getPlainText(), standardStil);
 		schrittNummer.setText(String.valueOf(id));
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, SCHRITTNUMMER_HINTERGRUNDFARBE));
-		schrittNummer.setBackground(SCHRITTNUMMER_HINTERGRUNDFARBE);
-		schrittNummer.setForeground(Hintergrundfarbe_Standard);
+		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittenummer));
+		schrittNummer.setBackground(Hintergrundfarbe_Schrittenummer);
+		schrittNummer.setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
 	}
 
-	public void setNichtGeloeschtMarkiertStil() {
+	public void setNichtGeloeschtMarkiertStil(SchrittID id) {
 		setStyle(getPlainText(), standardStil);
 		schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Schrittenummer);
-		schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Standard);
+		schrittNummer.setForeground(TextfieldShef.SCHRITTNUMMER_VORDERGRUNDFARBE);
 		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Schrittenummer));
-		schrittNummer.setText("<html><body><span style='text-decoration:none;'>" + schrittNummer.getText() + "</span></body></html>");
+		schrittNummer.setText("<html><body><span style='text-decoration:none;'>" + id + "</span></body></html>");
 	}
 
 	public void setZielschrittStil(SchrittID quellschrittId) {
@@ -184,13 +185,13 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		schrittNummer.setForeground(Schriftfarbe_Geloescht);
 	}
 
-	public void setGeloeschtMarkiertStil() {
+	public void setGeloeschtMarkiertStil(SchrittID id) {
 		setStyle(getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
 		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
 		schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
 		schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
 		schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
-				+ schrittNummer.getText()+"</span></body></html>");
+				+ id +"</span></body></html>");
 	}
 
 	public boolean ganzerSchrittGeloeschtStilGesetzt() {
@@ -495,8 +496,11 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		if (Specman.instance().aenderungenVerfolgen() && Specman.instance().hauptSequenz.findeSchritt(editorPane).getText().isEditable()) {
-			//Specman.instance().hauptSequenz.findeSchritt(editorPane).setAenderungsart(Aenderungsart.Bearbeitet);
+		if (!Specman.instance().aenderungenVerfolgen()) {
+			return;
+		}
+		AbstractSchrittView textOwner = Specman.instance().hauptSequenz.findeSchritt(editorPane);
+		if (textOwner != null && textOwner.getText().isEditable()) {
 			StyledDocument doc = (StyledDocument) editorPane.getDocument();
 			int p0 = editorPane.getSelectionStart();
 			int p1 = editorPane.getSelectionEnd();
