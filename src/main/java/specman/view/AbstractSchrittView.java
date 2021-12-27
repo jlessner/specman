@@ -393,18 +393,20 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public void viewsNachinitialisieren() {
-		switch(aenderungsart) {
-			case Geloescht:
-				setGeloeschtMarkiertStil();
-				getshef().getTextComponent().setEditable(false);
-				break;
-			case Quellschritt:
-				((QuellSchrittView)this).setQuellStil();
-				getshef().getTextComponent().setEditable(false);
-				break;
-			case Zielschritt:
-				setZielschrittStil();
-				break;
+		if (aenderungsart != null) {
+			switch(aenderungsart) {
+				case Geloescht:
+					setGeloeschtMarkiertStil();
+					getshef().getTextComponent().setEditable(false);
+					break;
+				case Quellschritt:
+					((QuellSchrittView)this).setQuellStil();
+					getshef().getTextComponent().setEditable(false);
+					break;
+				case Zielschritt:
+					setZielschrittStil();
+					break;
+			}
 		}
 	}
 
