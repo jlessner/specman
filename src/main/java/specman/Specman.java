@@ -647,7 +647,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			hauptSequenzInitialisieren();
 			neueSchritteNachinitialisieren();
-			quellZielZuweisung(model.hauptSequenz.schritte);
+			quellZielZuweisung(model.queryAllSteps());
 			hauptSequenz.viewsNachinitialisieren();
 			recentFiles.add(diagramFile);
 			undoManager.discardAllEdits();
@@ -656,47 +656,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	private void quellZielZuweisung(List<AbstractSchrittModel_V001> models){
-		for(AbstractSchrittModel_V001 model: models){
-			if(model.quellschrittID != null){
-				AbstractSchrittView zielschritt = hauptSequenz.findeSchrittZuId(model.id);
+	private void quellZielZuweisung(List<AbstractSchrittModel_V001> allModelSteps) {
+		for(AbstractSchrittModel_V001 modelStep: allModelSteps) {
+			if (modelStep.quellschrittID != null) {
+				AbstractSchrittView zielschritt = hauptSequenz.findeSchrittZuId(modelStep.id);
 				if(zielschritt instanceof QuellSchrittView) {
 					continue;
 				}
 				else {
-					QuellSchrittView quellSchritt = (QuellSchrittView) hauptSequenz.findeSchrittZuId(model.quellschrittID);
+					QuellSchrittView quellSchritt = (QuellSchrittView) hauptSequenz.findeSchrittZuId(modelStep.quellschrittID);
 					zielschritt.setQuellschritt(quellSchritt);
 					quellSchritt.setZielschritt(zielschritt);
 				}
 			}
-			quellZielZuweisungRekursiv(model);
 		}
-	}
-
-	private void quellZielZuweisungRekursiv(AbstractSchrittModel_V001 model){
-		if (model.getClass().getName().equals("specman.model.v001.IfElseSchrittModel_V001") || model.getClass().getName().equals("specman.model.IfSchrittModel_001")) {
-			IfElseSchrittModel_V001 ifel = (IfElseSchrittModel_V001) model;
-			quellZielZuweisung(ifel.elseSequenz.schritte);
-			if (model.getClass().getName().equals("specman.model.v001.IfElseSchrittModel_V001")) {
-				quellZielZuweisung(ifel.ifSequenz.schritte);
-			}
-		}
-		if (model.getClass().getName().equals("specman.model.v001.WhileSchrittModel_V001") || model.getClass().getName().equals("specman.model.WhileWhileSchrittModel_V001")) {
-			WhileSchrittModel_V001 schleife = (WhileSchrittModel_V001) model;
-			quellZielZuweisung(schleife.wiederholSequenz.schritte);
-		}
-		if (model.getClass().getName().equals("specman.model.v001.CaseSchrittModel_V001")) {
-			CaseSchrittModel_V001 caseSchritt = (CaseSchrittModel_V001) model;
-			quellZielZuweisung(caseSchritt.sonstSequenz.schritte);
-			for (ZweigSchrittSequenzModel_V001 caseSequenz : caseSchritt.caseSequenzen) {
-				quellZielZuweisung(caseSequenz.schritte);
-			}
-		}
-		if (model.getClass().getName().equals("specman,model.v001.SubsequenzSchrittModel_V001")) {
-			SubsequenzSchrittModel_V001 sub = (SubsequenzSchrittModel_V001) model;
-			quellZielZuweisung(sub.subsequenz.schritte);
-		}
-
 	}
 
 	@Override
@@ -1043,49 +1016,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	public JButton getImageAnhaengen() {
 		return imageAnhaengen;
-	}
-
-	//Aufgabe: Ich nehme mir nur einen Schritt und gehe dann durch alle unterschritte.
-	//wird benötigt, wenn z.B. ein Schritt als gelöscht markiert werden soll
-	public void unterschritteVonSchrittDurchlaufen(AbstractSchrittView schritt, Aenderungsart art) {
-		if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
-			IfElseSchrittView ifel= (IfElseSchrittView) schritt;
-			verwerfenOderUnterschritteAufGeloescht(ifel.getElseSequenz().schritte, art);
-			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
-				verwerfenOderUnterschritteAufGeloescht(ifel.getIfSequenz().schritte, art);
-      }
-		}
-		else if(schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView") ) {
-            SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
-            verwerfenOderUnterschritteAufGeloescht(schleife.getWiederholSequenz().schritte, art);
-		}
-		else if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
-			CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-			verwerfenOderUnterschritteAufGeloescht(caseSchritt.getSonstSequenz().schritte, art);
-			for (ZweigSchrittSequenzView caseSequenz : caseSchritt.getCaseSequenzen()) {
-				verwerfenOderUnterschritteAufGeloescht(caseSequenz.schritte, art);
-			}
-		}
-		else if (schritt.getClass().getName().equals("specman.view.SubsequenzSchrittView")) {
-			SubsequenzSchrittView sub = (SubsequenzSchrittView) schritt;
-			verwerfenOderUnterschritteAufGeloescht(sub.getSequenz().schritte, art);
-		}
-	}
-
-	//wird zum geloescht markieren von Schritten, bzw. deren Unterschritte benutzt und zum verwerfen
-	//Wird benutzt um alle unterschritte einer Schrittliste zu durchlaufen und die gewünschte Aenderungsart hinzuzufügen
-	public void verwerfenOderUnterschritteAufGeloescht(List<AbstractSchrittView> schritte, Aenderungsart art) {
-		for (AbstractSchrittView schritt: schritte) {
-
-			//setzt die Unterschritte eines Schrittes auf die Aenderungsart geloescht und fügt die Änderungsmarkierungen hinzu
-			if(art == Aenderungsart.Geloescht) {
-				schritt.getshef().aenderungsmarkierungenVerwerfen();
-				schritt.alsGeloeschtMarkieren(this);
-			}
-
-			//gibt den Schritt zur Überprüfung auf Unterschritte
-			unterschritteVonSchrittDurchlaufen(schritt, art);
-		}
 	}
 
 	public boolean darfSchrittGeloeschtWerden(AbstractSchrittView schritt){

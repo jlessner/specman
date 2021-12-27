@@ -38,4 +38,12 @@ public class CaseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		caseSequenzen.add(sequenz);
 	}
 
+	@Override public void addStepRecursively(List<AbstractSchrittModel_V001> allSteps) {
+		super.addStepRecursively(allSteps);
+		sonstSequenz.addStepsRecursively(allSteps);
+		for (ZweigSchrittSequenzModel_V001 caseSequenz: caseSequenzen) {
+			caseSequenz.addStepsRecursively(allSteps);
+		}
+	}
+
 }

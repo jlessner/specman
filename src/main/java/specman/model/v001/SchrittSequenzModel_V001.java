@@ -35,4 +35,10 @@ public class SchrittSequenzModel_V001 {
 		this.catchBloeckeZugeklappt = catchBloeckeZugeklappt;
 		this.catchBloeckeUmgehungBreite = catchBloeckeUmgehungBreite;
 	}
+
+	public void addStepsRecursively(List<AbstractSchrittModel_V001> allSteps) {
+		for (AbstractSchrittModel_V001 schritt: schritte) {
+			schritt.addStepRecursively(allSteps);
+		}
+	}
 }

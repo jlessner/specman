@@ -4,6 +4,8 @@ import specman.Aenderungsart;
 import specman.SchrittID;
 import specman.view.RoundedBorderDecorationStyle;
 
+import java.util.List;
+
 import static specman.view.RoundedBorderDecorationStyle.None;
 
 public abstract class AbstractSchrittModel_V001 {
@@ -31,5 +33,9 @@ public abstract class AbstractSchrittModel_V001 {
 		this.aenderungsart = aenderungsart;
 		this.quellschrittID=quellschrittID;
 		this.decorationStyle = decorationStyle;
+	}
+
+	public void addStepRecursively(List<AbstractSchrittModel_V001> allSteps) {
+		allSteps.add(this);
 	}
 }

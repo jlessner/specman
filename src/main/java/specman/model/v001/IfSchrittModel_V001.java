@@ -5,6 +5,8 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.view.RoundedBorderDecorationStyle;
 
+import java.util.List;
+
 public class IfSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 	public final ZweigSchrittSequenzModel_V001 ifSequenz;
 	public final int leerBreite;
@@ -28,5 +30,10 @@ public class IfSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		this.ifSequenz = ifSequenz;
 //		this.leerBreite = leerBreite;
 		this.leerBreite = 20*Specman.instance().getZoomFactor()/100; /**@author PVN */
+	}
+
+	@Override public void addStepRecursively(List<AbstractSchrittModel_V001> allSteps) {
+		super.addStepRecursively(allSteps);
+		ifSequenz.addStepsRecursively(allSteps);
 	}
 }
