@@ -3,6 +3,8 @@ package specman.view;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -19,8 +21,8 @@ public class BreakSchrittView extends AbstractSchrittView {
 	final FormLayout layout;
 	CatchSchrittView zielSchritt;
 
-	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
-		super(editor, parent, initialerText, id);
+	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
+		super(editor, parent, initialerText, id, aenderungsart);
 		panel = new JPanel() {
 			@Override
 			public void paint(Graphics g) {
@@ -35,10 +37,11 @@ public class BreakSchrittView extends AbstractSchrittView {
 		panel.setLayout(layout);
 		
 		panel.add(text.asJComponent(), CC.xy(2, 1));
+
 	}
 
 	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, BreakSchrittModel_V001 model) {
-		this(editor, parent, model.inhalt.text, model.id);
+		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart);
 		setBackground(new Color(model.farbe));
 	}
 
@@ -61,7 +64,9 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() { return decorated(panel); }
+	public JComponent getComponent(){
+		return decorated(panel);
+	}
 
 	@Override
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
@@ -69,6 +74,8 @@ public class BreakSchrittView extends AbstractSchrittView {
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			aenderungsart,
+			getQuellschrittID(),
 			getDecorated()
 		);
 		return model;
@@ -112,5 +119,9 @@ public class BreakSchrittView extends AbstractSchrittView {
 		layout.setColumnSpec(1, ColumnSpec.decode(umgehungLayout()));
 	}
 
-	
+	public JPanel getPanel() {
+		return panel;
+	}
+
+
 }

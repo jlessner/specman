@@ -1,5 +1,8 @@
 package specman.model.v001;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StruktogrammModel_V001 {
 	public final String name;
 	public final int breite;
@@ -23,5 +26,11 @@ public class StruktogrammModel_V001 {
 		this.hauptSequenz = hauptSequenz;
 		this.intro = intro;
 		this.outro = outro;
+	}
+
+	public List<AbstractSchrittModel_V001> queryAllSteps() {
+		List<AbstractSchrittModel_V001> allSteps = new ArrayList<>();
+		hauptSequenz.addStepsRecursively(allSteps);
+		return allSteps;
 	}
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static specman.view.RoundedBorderDecorationStyle.None;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,9 +24,8 @@ public class JacksonTest {
 	 * auch mit Objekten abgeleiteter Klassen klar kommt */
 	void testDeserializationWithDerivedTypes() throws Exception {
 		SchrittID id = new SchrittID(0);
-		SchrittSequenzModel_V001 writemodel = new SchrittSequenzModel_V001(id, false, 10);
-		EinfacherSchrittModel_V001 step1 = new EinfacherSchrittModel_V001
-				(id.naechsteID(), null, Color.white.getRGB(), RoundedBorderDecorationStyle.None);
+		SchrittSequenzModel_V001 writemodel = new SchrittSequenzModel_V001(id, null, false, 10);
+		EinfacherSchrittModel_V001 step1 = new EinfacherSchrittModel_V001(id.naechsteID(), null, Color.white.getRGB(), null, null, None);
 		writemodel.schritte.add(step1);
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    objectMapper.enableDefaultTyping();

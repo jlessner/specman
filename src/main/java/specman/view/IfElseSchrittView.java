@@ -3,6 +3,8 @@ package specman.view;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenContainerI;
@@ -12,13 +14,14 @@ import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
+import specman.undo.AbstractUndoableInteraktion;
 
+import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.geom.Line2D;
 import java.util.List;
 
 import static specman.Specman.initialtext;
@@ -26,25 +29,37 @@ import static specman.Specman.initialtext;
 public class IfElseSchrittView extends VerzweigungSchrittView implements ComponentListener, SpaltenContainerI {
 	ZweigSchrittSequenzView ifSequenz;
 	ZweigSchrittSequenzView elseSequenz;
-	boolean dreieckBisUnten = true;
-	
-	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, boolean withDefaultContent) {
-		super(editor, parent, initialerText, id, createPanelLayout());
-		panel.add(text.asJComponent(), CC.xywh(1, 1, 3, 1));
-		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 4));
+	boolean mittelpunktRaute = true;
+	JPanel leeresFeld;
+	JPanel panelBedingung;
+	JPanel panelElse;
+	JPanel panelIf;
+
+	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id,Aenderungsart anderungsart,  boolean withDefaultContent) {
+		super(editor, parent, initialerText, id, anderungsart, createPanelLayout());
+		/** @author PVN */
+		leeresFeld = new JPanel();
+		leeresFeld.setBackground(Specman.schrittHintergrund());
+		panelBedingung = new JPanel();
+		panelBedingung.setBackground(Specman.schrittHintergrund());
+		panelBedingung.setLayout(createSpalteLinks());
+		panelBedingung.add(text.asJComponent(), "2,1");
+		panel.add(panelBedingung, CC.xywh(3, 1, 1, 1));
+		panel.add(leeresFeld, CC.xywh(1, 1, 1, 1));
+		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 5));
 		text.addFocusListener(new FocusAdapter() {
 			@Override public void focusLost(FocusEvent e) {
 				berechneHoeheFuerVollstaendigUnberuehrtenText();
 			}
 		});
 		if(withDefaultContent) {
-			initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), initialtext("Ja")));
-			initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), TextfieldShef.right("Nein")));
+			initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, initialtext("Ja")));
+			initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, TextfieldShef.right("Nein")));
 		}
 	}
 
 	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, IfElseSchrittModel_V001 model) {
-		this(editor, parent, model.inhalt.text, model.id, false);
+		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, false);
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.elseSequenz));
 		setBackground(new Color(model.farbe));
@@ -52,83 +67,46 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		klappen.init(model.zugeklappt);
 	}
 
-	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
-		this(editor, parent, initialerText, id, true);
+	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
+		this(editor, parent, initialerText, id, aenderungsart, true);
 	}
 
 	protected void initIfSequenz(ZweigSchrittSequenzView pIfSequenz) {
 		this.ifSequenz = pIfSequenz;
 		ifBedingungAnlegen(ifSequenz);
-		panel.add(ifSequenz.getContainer(), CC.xy(1, 4));
+		panel.add(ifSequenz.getContainer(), CC.xy(1, 5)); /**@author PVN */
 	}
 
 	protected void initElseSequenz(ZweigSchrittSequenzView pElseSequenz) {
 		this.elseSequenz = pElseSequenz;
 		elseBedingungAnlegen(elseSequenz);
-		panel.add(elseSequenz.getContainer(), CC.xy(3, 4));
+		panel.add(elseSequenz.getContainer(), CC.xy(3, 5)); /**@author PVN */
 	}
 
 	protected static FormLayout createPanelLayout() {
 		return new FormLayout(
 				"10px:grow, " + FORMLAYOUT_GAP + ", 10px:grow",
-				layoutRowSpec1() + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
+				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref:grow, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR); /**@author PVN */
 	}
 
 	protected void elseBedingungAnlegen(ZweigSchrittSequenzView elseSequenz) {
 		elseSequenz.ueberschrift.addFocusListener(this);
-		panel.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 2, 2, 1));
-		elseSequenz.ueberschrift.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textueberschneidungenMitDreiecksliniePruefen();
-			}
-		});
-	}
-
-	private void textueberschneidungenMitDreiecksliniePruefen() {
-		Point dreieckSpitze = berechneDreieckspitze(true);
-		Line2D.Double abfallendeLinie = new Line2D.Double
-				(0, 0, dreieckSpitze.getX(), dreieckSpitze.getY());
-		Line2D.Double aufsteigendeLinie = new Line2D.Double
-				(dreieckSpitze.getX(), dreieckSpitze.getY(), panel.getWidth(), 0);
-		boolean volleBreiteBenoetigt =
-			textUeberschneidetDreieckslinie(elseSequenz.ueberschrift.getLinkeZeilenraender(), elseSequenz.ueberschrift.getBounds(), aufsteigendeLinie) ||
-			textUeberschneidetDreieckslinie(ifSequenz.ueberschrift.getRechteZeilenraender(), ifSequenz.ueberschrift.getBounds(), abfallendeLinie);
-;
-		layoutAnTexteFuerIfElseBedingungenAnpassen(volleBreiteBenoetigt);
-	}
-
-	private boolean textUeberschneidetDreieckslinie(List<Line2D.Double> textRaender, Rectangle offset, Line2D.Double dreieckslinie) {
-		for (Line2D.Double rand: textRaender) {
-			// Randlinie des Textfelds auf die Koordinates des Panels umrechnen und bis zum unteren Rand des Kopfbereichs verl�ngern
-			Line2D.Double senkrechte = new Line2D.Double(
-					rand.x1 + offset.getX(),
-					rand.y1 + offset.getY(),
-					rand.x2 + offset.getX(),
-					panel.getHeight());
-			if (senkrechte.intersectsLine(dreieckslinie)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private void layoutAnTexteFuerIfElseBedingungenAnpassen(boolean volleBreiteBenoetigt) {
-		dreieckBisUnten = !volleBreiteBenoetigt;
-		panelLayout.setConstraints(elseSequenz.ueberschrift.asJComponent(),
-				volleBreiteBenoetigt ? CC.xywh(3, 2, 1, 1) : CC.xywh(2, 2, 2, 1));
-		Specman.instance().diagrammAktualisieren(null);
+		/** @author PVN */
+		panelElse = new JPanel();
+		panelElse.setBackground(Specman.schrittHintergrund());
+		panelElse.setLayout(createSpalteLinks());
+		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 1, 1, 1));
+		panel.add(panelElse, CC.xywh(3, 3, 1, 1));
 	}
 	
 	protected void ifBedingungAnlegen(ZweigSchrittSequenzView ifSequenz) {
 		ifSequenz.ueberschrift.addFocusListener(this);
-		panel.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1, 2));
-		ifSequenz.ueberschrift.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textueberschneidungenMitDreiecksliniePruefen();
-			}
-		});
+		/**@author PVN */
+		panelIf = new JPanel();
+		panelIf.setBackground(Specman.schrittHintergrund());
+		panelIf.setLayout(createSpalteRechts());
+		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));
+		panel.add(panelIf, CC.xy(1, 3));
 	}
 
 	@Override
@@ -165,11 +143,11 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		return super.newStepIDInSameSequence(direction).naechsteID();
 	}
 
-	protected Point berechneDreieckspitze() {
-		return berechneDreieckspitze(dreieckBisUnten);
+	protected Point berechneRautenmittelpunkt() { //umbenannt
+		return berechneRautenmittelpunkt(mittelpunktRaute);
 	}
 
-	protected Point berechneDreieckspitze(boolean bisUnten) {
+	protected Point berechneRautenmittelpunkt(boolean bisUnten) { //umbenannt
 		return new Point(
 				ifSequenz.getContainer().getWidth(),
 				ifSequenz.ueberschrift.getY() + (bisUnten ? ifSequenz.ueberschrift.getHeight() : 0));
@@ -180,6 +158,12 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		super.setBackground(bg);
 		ifSequenz.ueberschrift.setBackground(bg);
 		elseSequenz.ueberschrift.setBackground(bg);
+		panelIf.setBackground(bg);
+		panelElse.setBackground(bg);
+		leeresFeld.setBackground(bg);
+		panelBedingung.setBackground(bg);
+
+		//Raute
 		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}
 
@@ -211,13 +195,26 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		elseSequenz.zusammenklappenFuerReview();
 	}
 	
+	/** @author PVN */
+	public static int spalteUmrechnen(int prozentNeu) {
+		int breiteSpaltenLayout = 20*prozentNeu/100;
+		return breiteSpaltenLayout;
+	}
+
 	@Override
 	public void skalieren(int prozentNeu, int prozentAktuell) {
 		super.skalieren(prozentNeu, prozentAktuell);
+		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
+		panelBedingung.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
+		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */ 
+		panelIf.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD */
+		panelBedingung.add(text.asJComponent(), CC.xy(2, 1)); //siehe Konstruktor
+		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xy(2, 1)); //siehe Methode elseBedingungAnlegen
+		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1)); //siehe Methode ifBedingungAnlegen
 	}
 
 	protected int texteinrueckungNeuberechnen() {
-		return ifSequenz.ueberschrift.getWidth() / 2;
+		return 0; /**@author PVN */
 	}
 
 	@Override
@@ -228,9 +225,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 			getBackground().getRGB(),
 			getDecorated(),
 			klappen.isSelected(),
+			aenderungsart,
 			ifSequenz.generiereZweigSchrittSequenzModel(formatierterText),
 			elseSequenz.generiereZweigSchrittSequenzModel(formatierterText),
-			ifBreitenanteil(ifSequenz.ueberschrift.getWidth(), elseSequenz.ueberschrift.getWidth()));
+			ifBreitenanteil(ifSequenz.ueberschrift.getWidth(), elseSequenz.ueberschrift.getWidth()), getQuellschrittID());
 		return model;
 	}
 	
@@ -263,6 +261,58 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 			elseSequenz.hatUeberschrift(textComponent);
 	}
 
+	@Override public void resyncSchrittnummerStil() {
+		super.resyncSchrittnummerStil();
+		getElseSequenz().resyncSchrittnummerStil();
+		getIfSequenz().resyncSchrittnummerStil();
+	}
+
+	@Override public void viewsNachinitialisieren() {
+		super.viewsNachinitialisieren();
+		elseSequenz.viewsNachinitialisieren();
+		ifSequenz.viewsNachinitialisieren();
+	}
+
+	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
+		elseSequenz.alsGeloeschtMarkieren(editor);
+		ifSequenz.alsGeloeschtMarkieren(editor);
+		return super.alsGeloeschtMarkieren(editor);
+	}
+
+	@Override public void aenderungsmarkierungenEntfernen() {
+		super.aenderungsmarkierungenEntfernen();
+		elseSequenz.aenderungsmarkierungenEntfernen();
+		ifSequenz.aenderungsmarkierungenEntfernen();
+	}
+
+	@Override protected void textAenderungenUebernehmen() {
+		super.textAenderungenUebernehmen();
+		elseSequenz.ueberschriftAenderungenUebernehmen();
+		ifSequenz.ueberschriftAenderungenUebernehmen();
+	}
+
+	@Override public void aenderungenUebernehmen(EditorI editor) {
+		super.aenderungenUebernehmen(editor);
+		elseSequenz.aenderungenUebernehmen(editor);
+		ifSequenz.aenderungenUebernehmen(editor);
+	}
+
+	@Override protected void textAenderungenVerwerfen() {
+		super.textAenderungenVerwerfen();
+		elseSequenz.ueberschriftAenderungenVerwerfen();
+		ifSequenz.ueberschriftAenderungenVerwerfen();
+	}
+
+	@Override public void aenderungenVerwerfen(EditorI editor) {
+		super.aenderungenVerwerfen(editor);
+		elseSequenz.aenderungenVerwerfen(editor);
+		ifSequenz.aenderungenVerwerfen(editor);
+	}
+
+	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+		return findeSchrittZuIdIncludingSubSequences(id, elseSequenz, ifSequenz);
+	}
+
 	@Override
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
 		super.updateTextfieldDecorationIndentions(indentions);
@@ -270,5 +320,17 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.updateTextfieldDecorationIndentions(ifIndentions);
 		Indentions elseIndentions = ifIndentions.withLeft(false);
 		elseSequenz.updateTextfieldDecorationIndentions(elseIndentions);
+	}
+
+	public ZweigSchrittSequenzView getIfSequenz() {
+        return ifSequenz;
+    }
+
+    public ZweigSchrittSequenzView getElseSequenz() {
+        return elseSequenz;
+    }
+	public int getRautenHeight() {
+		// TODO Auto-generated method stub
+		return berechneRautenmittelpunkt().y;
 	}
 }

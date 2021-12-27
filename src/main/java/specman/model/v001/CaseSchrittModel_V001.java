@@ -1,5 +1,6 @@
 package specman.model.v001;
 
+import specman.Aenderungsart;
 import specman.SchrittID;
 import specman.view.RoundedBorderDecorationStyle;
 
@@ -15,11 +16,13 @@ public class CaseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 			SchrittID id,
 			TextMitAenderungsmarkierungen_V001 inhalt,
 			int farbe,
-			RoundedBorderDecorationStyle decorationStyle,
+			Aenderungsart aenderungsart,
 			boolean zugeklappt,
 			ZweigSchrittSequenzModel_V001 sonstSequenz,
-			ArrayList<Float> spaltenbreitenAnteile) {
-		super(id, inhalt, farbe, decorationStyle, zugeklappt);
+			ArrayList<Float> spaltenbreitenAnteile,
+			SchrittID quellschrittID,
+			RoundedBorderDecorationStyle decorationStyle) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID, decorationStyle);
 		this.sonstSequenz = sonstSequenz;
 		this.caseSequenzen = new ArrayList<ZweigSchrittSequenzModel_V001>();
 		this.spaltenbreitenAnteile = spaltenbreitenAnteile;
@@ -33,6 +36,14 @@ public class CaseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 
 	public void caseHinzufuegen(ZweigSchrittSequenzModel_V001 sequenz) {
 		caseSequenzen.add(sequenz);
+	}
+
+	@Override public void addStepRecursively(List<AbstractSchrittModel_V001> allSteps) {
+		super.addStepRecursively(allSteps);
+		sonstSequenz.addStepsRecursively(allSteps);
+		for (ZweigSchrittSequenzModel_V001 caseSequenz: caseSequenzen) {
+			caseSequenz.addStepsRecursively(allSteps);
+		}
 	}
 
 }

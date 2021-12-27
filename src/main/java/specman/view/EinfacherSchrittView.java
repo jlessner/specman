@@ -1,5 +1,6 @@
 package specman.view;
 
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.EinfacherSchrittModel_V001;
@@ -9,12 +10,12 @@ import java.awt.*;
 
 public class EinfacherSchrittView extends AbstractSchrittView {
 
-	public EinfacherSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
-		super(editor, parent, initialerText, id);
+	public EinfacherSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
+		super(editor, parent, initialerText, id, aenderungsart);
 	}
 
 	public EinfacherSchrittView(EditorI editor, SchrittSequenzView parent, EinfacherSchrittModel_V001 model) {
-		super(editor, parent, model.inhalt.text, model.id);
+		super(editor, parent, model.inhalt.text, model.id, model.aenderungsart);
 		setBackground(new Color(model.farbe));
 	}
 
@@ -27,9 +28,17 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 			id,
 			getTextMitAenderungsmarkierungen(formatierterText),
 			getBackground().getRGB(),
+			aenderungsart,
+			getQuellschrittID(),
 			getDecorated()
 		);
 		return model;
+	}
+
+	@Override
+	public JComponent getPanel() {
+		// TODO Auto-generated method stub
+		return text.asJComponent();
 	}
 
 }

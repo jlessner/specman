@@ -1,22 +1,14 @@
 package specman.view;
 
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.Aenderungsmarkierung_V001;
-import specman.model.v001.BreakSchrittModel_V001;
-import specman.model.v001.CaseSchrittModel_V001;
-import specman.model.v001.CatchSchrittModel_V001;
-import specman.model.v001.EinfacherSchrittModel_V001;
-import specman.model.v001.IfElseSchrittModel_V001;
-import specman.model.v001.IfSchrittModel_V001;
-import specman.model.v001.SubsequenzSchrittModel_V001;
-import specman.model.v001.TextMitAenderungsmarkierungen_V001;
-import specman.model.v001.WhileSchrittModel_V001;
-import specman.model.v001.WhileWhileSchrittModel_V001;
+import specman.model.v001.*;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
+import specman.undo.AbstractUndoableInteraktion;
+import specman.undo.UndoableSchrittAlsEntferntMarkiert;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -27,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
 import static specman.view.RoundedBorderDecorationStyle.None;
@@ -37,27 +30,38 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public static final String ZEILENLAYOUT_INHALT_SICHTBAR = "fill:pref:grow";
 	public static final String ZEILENLAYOUT_INHALT_VERBORGEN = "0px";
 	public static final int SPALTENLAYOUT_UMGEHUNG_GROESSE = 18;
-	
+
 	protected static final List<SchrittSequenzView> KEINE_SEQUENZEN = new ArrayList<SchrittSequenzView>();
 
 	protected final TextfieldShef text;
 	protected SchrittID id;
+	protected Aenderungsart aenderungsart;
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
-	 
-	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id) {
+	protected QuellSchrittView quellschritt;
+
+	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
+		this.aenderungsart = aenderungsart;
 		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
 		this.parent = parent;
 		text.addFocusListener(editor);
 		text.addFocusListener(this);
 	}
 
+	public Aenderungsart getAenderungsart() {
+		return aenderungsart;
+	}
+
+	public void setAenderungsart(Aenderungsart aenderungsart) {
+		this.aenderungsart = aenderungsart;
+	}
+
 	public void setId(SchrittID id) {
 		this.id = id;
 		text.setId(id.toString());
 	}
-	
+
 	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
 		return direction == RelativeStepPosition.After ? id.naechsteID() : id.sameID();
 	}
@@ -72,6 +76,10 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	public String getPlainText() {
 		return text.getText();
+	}
+
+	public TextfieldShef getshef() {
+		return text;
 	}
 
 	protected void setAenderungsmarkierungen(List<Aenderungsmarkierung_V001> aenderungen) {
@@ -144,6 +152,11 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		if (model instanceof CatchSchrittModel_V001) {
 			return new CatchSchrittView(editor, parent, (CatchSchrittModel_V001) model);
 		}
+		//TODO TEST
+		if (model instanceof QuellSchrittModel_V001){
+			return new QuellSchrittView(editor, parent, (QuellSchrittModel_V001) model);
+		}
+		// TEST ENDE
 		return new EinfacherSchrittView(editor, parent, (EinfacherSchrittModel_V001)model);
 	}
 
@@ -159,6 +172,43 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 				return getrimmteZeile;
 		}
 		return null;
+	}
+
+	public void setStandardStil() {
+		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		getText().setEditable(true);
+		getshef().setStandardStil(getId());
+		setAenderungsart(null);
+	}
+
+	public void setZielschrittStil() {
+		getshef().setZielschrittStil(getQuellschritt().getId());
+		setAenderungsart(Aenderungsart.Zielschritt);
+	}
+
+	public void setGeloeschtMarkiertStil() {
+		getshef().setGeloeschtMarkiertStil();
+		setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		setAenderungsart(Aenderungsart.Geloescht);
+		getText().setEnabled(false);
+	}
+
+	public void setNichtGeloeschtMarkiertStil() {
+		getshef().setNichtGeloeschtMarkiertStil();
+		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		setAenderungsart(null);
+		getText().setEnabled(true);
+	}
+
+	public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor){
+		getshef().aenderungsmarkierungenVerwerfen();
+		setGeloeschtMarkiertStil();
+		getText().setEditable(false);
+		return new UndoableSchrittAlsEntferntMarkiert(this);
+	}
+
+	public void aenderungsmarkierungenEntfernen() {
+		setStandardStil();
 	}
 
 	public boolean enthaeltAenderungsmarkierungen() {
@@ -198,6 +248,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	 * spart man sich das rekursive Absteigen in allen Ableitungen für jede dieser
 	 * Funktionen zu dublizieren
 	 */
+	
 	protected List<SchrittSequenzView> unterSequenzen() {
 		return KEINE_SEQUENZEN;
 	}
@@ -304,4 +355,129 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	public SchrittSequenzView getParent() { return parent; }
 
+	public void setParent(SchrittSequenzView parent){
+		this.parent = parent;
+	}
+
+	public TextfieldShef getTextShef() {
+		return text;
+	}
+
+	public SchrittID getId() {
+		return id;
+	}
+	
+	public abstract JComponent getPanel();
+
+	public void setQuellschritt(QuellSchrittView quellschritt){
+		this.quellschritt=quellschritt;
+	}
+
+	public QuellSchrittView getQuellschritt(){
+		return quellschritt;
+	}
+
+	public SchrittID getQuellschrittID(){
+		return quellschritt!=null?quellschritt.getId():null;
+	}
+
+	public void resyncSchrittnummerStil() {
+		if (getAenderungsart() == Aenderungsart.Geloescht) {
+			getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + getshef().schrittNummer.getText() + "</span></body></html>");
+		}
+		if (getAenderungsart() == Aenderungsart.Quellschritt) {
+			getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" + ((QuellSchrittView)this).getZielschrittID() + "</span></body></html>");
+		}
+		if (getAenderungsart() == Aenderungsart.Zielschritt) {
+			getshef().schrittNummer.setText("<html><body><span>" + getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" + getQuellschritt().getId() + "</span></body></html>");
+		}
+	}
+
+	public void viewsNachinitialisieren() {
+		if (aenderungsart != null) {
+			switch(aenderungsart) {
+				case Geloescht:
+					setGeloeschtMarkiertStil();
+					getshef().getTextComponent().setEditable(false);
+					break;
+				case Quellschritt:
+					((QuellSchrittView)this).setQuellStil();
+					getshef().getTextComponent().setEditable(false);
+					break;
+				case Zielschritt:
+					setZielschrittStil();
+					break;
+			}
+		}
+	}
+
+	public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+		return (this.id.equals(id)) ? this : null;
+	}
+
+	protected AbstractSchrittView findeSchrittZuIdIncludingSubSequences(SchrittID id, SchrittSequenzView... subsequenzen) {
+		AbstractSchrittView result = (this.id.equals(id)) ? this : null;
+		if (result == null) {
+			for (SchrittSequenzView subsequenz: subsequenzen) {
+				result = subsequenz.findeSchrittZuId(id);
+				if (result != null) {
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	public void aenderungenUebernehmen(EditorI editor) {
+		textAenderungenUebernehmen();
+		if (aenderungsart != null) {
+			switch (aenderungsart) {
+				case Hinzugefuegt:
+					aenderungsmarkierungenEntfernen();
+					break;
+				case Geloescht:
+				case Quellschritt:
+					getParent().schrittEntfernen(this);
+					break;
+				case Zielschritt:
+					setQuellschritt(null);
+					setStandardStil();
+			}
+			setAenderungsart(null);
+		}
+	}
+
+	protected void textAenderungenUebernehmen() {
+		getshef().aenderungsmarkierungenUebernehmen();
+	}
+
+	public void aenderungenVerwerfen(EditorI editor) {
+		textAenderungenVerwerfen();
+		if (aenderungsart != null) {
+			switch (aenderungsart) {
+				case Hinzugefuegt:
+					getParent().schrittEntfernen(this);
+					break;
+				case Geloescht:
+					aenderungsmarkierungenEntfernen();
+					break;
+				case Quellschritt:
+					break;
+				case Zielschritt:
+					getParent().schrittEntfernen(this);
+					setId(getQuellschritt().newStepIDInSameSequence(After));
+					setParent(getQuellschritt().getParent());
+					getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
+					getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
+					setQuellschritt(null);
+					this.setStandardStil();
+			}
+			setAenderungsart(null);
+		}
+
+	}
+
+	protected void textAenderungenVerwerfen() {
+		getshef().aenderungsmarkierungenVerwerfen();
+	}
 }

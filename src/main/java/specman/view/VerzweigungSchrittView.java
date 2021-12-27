@@ -1,6 +1,8 @@
 package specman.view;
 
 import com.jgoodies.forms.layout.FormLayout;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenContainerI;
@@ -19,21 +21,22 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	KlappButton klappen;
 	FormLayout panelLayout;
 
-	public VerzweigungSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, FormLayout panelLayout) {
-		super(editor, parent, initialerText, id);
+	public VerzweigungSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, FormLayout panelLayout) {
+		super(editor, parent, initialerText, id, aenderungsart);
 		this.panelLayout = panelLayout;
 		panel = new JPanel() {
 			@Override
 			public void paint(Graphics g) {
 				super.paint(g);
-				dreieckUndTrennerZeichnen((Graphics2D)g);
+				rauteZeichnen((Graphics2D)g);
 			}
 		};
+		
 		panel.setBackground(Color.black);
 		//createPanelLayout(caseInitialtexte.length);
 		panel.setLayout(panelLayout);
 		panel.addComponentListener(this);
-
+		panel.setEnabled(false);
 		// TODO JL: Die Platzierung des Klappbuttons muss neu gebaut werden. Weder das Textfeld noch
 		// das Hauptpanel sind geeignet, weil diese ein Formlayout haben. Allerdings dürfte sich das
 		// Problem erledigen, wenn die Aktogramm-Darstellung kommt. Dann ist links oben gar kein Text
@@ -53,7 +56,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 
 	protected static String layoutRowSpec1() {
 		int aktuellerZoomfaktor = Specman.instance().zoomFaktor();
-		return "fill:[" + (30 * aktuellerZoomfaktor / 100) + "dlu,pref]";
+		return "fill:[" + (1 * aktuellerZoomfaktor / 100) + "dlu,pref]"; /**@author PVN */
 	}
 	
 	@Override
@@ -86,16 +89,43 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		super.focusLost(e);
 		panel.repaint(); // Zeichnet Dreieck und Case-Trenner nach, wenn man mit Editieren der Texte fertig ist
 	}
+	
+	/** @author PVN */ 
+	public static FormLayout createSpalteLinks() {
+		return new FormLayout(breiteLayoutspalteBerechnen() + ", 10px:grow", "fill:pref:grow");
+	}
+	
+	/** @author PVN */
+	public static FormLayout createSpalteRechts() {
+		return new FormLayout("10px:grow, " + breiteLayoutspalteBerechnen(), "fill:pref:grow");
+	}
+	
+	/** @author PVN */
+	public static double breiteLayoutspalteBerechnen() {
+		double breiteSpaltenLayout = 20*Specman.instance().getZoomFactor()/100; 
+		return breiteSpaltenLayout;
+	}
 
-	protected Point dreieckUndTrennerZeichnen(Graphics2D g) {
-		int breite = panel.getWidth();
-		Point dreieckSpitze = berechneDreieckspitze();
+	protected Point rauteZeichnen(Graphics2D g) { //umbenannt
+		Point mittelpunktRaute = berechneRautenmittelpunkt(); //umbenannt
+		/** @author PVN */ 
+		int[] polygonXinnen = {(mittelpunktRaute.x-(int)breiteLayoutspalteBerechnen()), mittelpunktRaute.x+1, (mittelpunktRaute.x+2+(int)breiteLayoutspalteBerechnen()), mittelpunktRaute.x+1};
+		int[] polygonYinnen = {text.getHeight()+1, (text.getHeight()-1-(int)breiteLayoutspalteBerechnen()), text.getHeight()+1, (text.getHeight()+1+(int)breiteLayoutspalteBerechnen())}; /** @author PVN, SD */
+		g.setRenderingHint(
+			RenderingHints.KEY_ANTIALIASING, 
+			RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setColor(Color.WHITE);
+		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
+		
+		int[] polygonXaussen = {(mittelpunktRaute.x-(int)breiteLayoutspalteBerechnen()), mittelpunktRaute.x+1, (mittelpunktRaute.x+2+(int)breiteLayoutspalteBerechnen()), mittelpunktRaute.x+1};
+		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-1-(int)breiteLayoutspalteBerechnen()), text.getHeight()+1, (text.getHeight()+1+(int)breiteLayoutspalteBerechnen()+1)}; /** @author PVN, SD */ 
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, 
                 RenderingHints.VALUE_ANTIALIAS_ON);
-		g.drawLine(0,  0,  dreieckSpitze.x,  dreieckSpitze.y);
-		g.drawLine(dreieckSpitze.x,  dreieckSpitze.y, breite, 0);
+		g.setColor(Color.BLACK);
+		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
+		
 		
 		// Dis folgenden beiden Zeilen stellen sicher, dass *nach* dem Zeichnen des Dreiecks
 		// die evt. �ber den Linien liegenden Grafikkomponenten noch einmal gezeichnet werden.
@@ -105,11 +135,15 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		klappen.repaint();
 		text.repaintSchrittId();
 		
-		return dreieckSpitze;
+		return mittelpunktRaute;
 	}
-
-	abstract protected Point berechneDreieckspitze();
+	
+	abstract protected Point berechneRautenmittelpunkt(); //umbenannt
 
 	abstract protected int texteinrueckungNeuberechnen();
 	
+	//TODO get Panel
+	public JPanel getPanel() {
+		return panel;
+	}
 }

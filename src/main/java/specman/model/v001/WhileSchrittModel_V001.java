@@ -1,7 +1,10 @@
 package specman.model.v001;
 
+import specman.Aenderungsart;
 import specman.SchrittID;
 import specman.view.RoundedBorderDecorationStyle;
+
+import java.util.List;
 
 public class WhileSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 	public final SchrittSequenzModel_V001 wiederholSequenz;
@@ -16,12 +19,19 @@ public class WhileSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		SchrittID id,
 		TextMitAenderungsmarkierungen_V001 inhalt,
 		int farbe,
-		RoundedBorderDecorationStyle decorationStyle,
+		Aenderungsart aenderungsart,
 		boolean zugeklappt,
 		SchrittSequenzModel_V001 wiederholSequenz,
-		int balkenbreite) {
-		super(id, inhalt, farbe, decorationStyle, zugeklappt);
+		int balkenbreite,
+		SchrittID quellschrittID,
+		RoundedBorderDecorationStyle decorationStyle) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID, decorationStyle);
 		this.wiederholSequenz = wiederholSequenz;
 		this.balkenbreite = balkenbreite;
+	}
+
+	@Override public void addStepRecursively(List<AbstractSchrittModel_V001> allSteps) {
+		super.addStepRecursively(allSteps);
+		wiederholSequenz.addStepsRecursively(allSteps);
 	}
 }

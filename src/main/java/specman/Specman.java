@@ -6,23 +6,14 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
-import specman.model.ModelEnvelope;
-import specman.model.v001.SchrittSequenzModel_V001;
-import specman.model.v001.StruktogrammModel_V001;
+import specman.draganddrop.DragAdapter;
+import specman.draganddrop.DraggingLogic;
+import specman.draganddrop.GlassPane;
+import specman.model.*;
+import specman.model.v001.*;
 import specman.textfield.TextfieldShef;
-import specman.undo.UndoableDiagrammSkaliert;
-import specman.undo.UndoableSchrittEingefaerbt;
-import specman.undo.UndoableSchrittEntfernt;
-import specman.undo.UndoableSchrittHinzugefuegt;
-import specman.undo.UndoableToggleStepBorder;
-import specman.undo.UndoableZweigEntfernt;
-import specman.undo.UndoableZweigHinzugefuegt;
-import specman.view.AbstractSchrittView;
-import specman.view.BreakSchrittView;
-import specman.view.CaseSchrittView;
-import specman.view.CatchSchrittView;
-import specman.view.SchrittSequenzView;
-import specman.view.ZweigSchrittSequenzView;
+import specman.undo.*;
+import specman.view.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,11 +23,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -56,9 +43,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private static final String PROJEKTDATEI_EXTENSION = ".nsd";
 	private static final BasicStroke GESTRICHELTE_LINIE =
 			new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 1.0f, new float[] {10.0f, 10.0f }, 0f);
+	private final DraggingLogic draggingLogic = new DraggingLogic(this);
 
 	JTextComponent zuletztFokussierterText;
-	SchrittSequenzView hauptSequenz;
+	public SchrittSequenzView hauptSequenz;
 	JPanel arbeitsbereich;
 	JPanel hauptSequenzContainer;
 	SpaltenResizer breitenAnpasser;
@@ -71,7 +59,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	File diagrammDatei;
 	List<AbstractSchrittView> postInitSchritte;
 	RecentFiles recentFiles;
-	private WelcomeMessagePanel welcomeMessage;
+	private JComponent welcomeMessage;
+
+	//TODO window for dragging
+	public final JWindow window = new JWindow();
 
 	public Specman() throws Exception {
 		setApplicationIcon();
@@ -87,8 +78,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		hauptSequenz = new SchrittSequenzView();
 
 		scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, CC.xy(1, 3));
-		
+		//TODO
+		scrollPane.addMouseWheelListener(new DragAdapter(this));
+		getContentPane().add(scrollPane, CC.xy(2, 3));
+		// ToDo Sidebar change from getContentPane().add(scrollPane, CC.xy(1, 3));
+
 		arbeitsbereich = new JPanel() {
 			@Override
 			public void paint(Graphics g) {
@@ -121,10 +115,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		setInitialWindowSizeAndScreenCenteredLocation();
 		setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+
 		// Falls jemand nicht aufgepasst hat und beim Initialisieren irgendwelche Funktionen verwendet hat,
 		// die schon etwas im Undo-Manager hinterlassen.
 		undoManager.discardAllEdits();
+		this.setGlassPane(new GlassPane((SwingUtilities.convertPoint(this.getContentPane(), 0, 0,this).y)-getJMenuBar().getHeight()));
 	}
 
 	private void setInitialWindowSizeAndScreenCenteredLocation() {
@@ -142,7 +137,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		arbeitsbereich.add(welcomeMessage, CC.xy(2, 3));
 	}
 
-	private void dropWelcomeMessage() {
+	public void dropWelcomeMessage() {
 		if (welcomeMessage != null) {
 			arbeitsbereich.remove(welcomeMessage);
 			welcomeMessage = null;
@@ -230,6 +225,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
 		
@@ -242,6 +238,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
 		
@@ -254,6 +251,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
 		
@@ -266,6 +264,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
 		
@@ -278,6 +277,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
 		
@@ -290,6 +290,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
 		
@@ -302,6 +303,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
 		
@@ -314,6 +316,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.breakSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
 		
@@ -326,6 +329,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
 		
@@ -348,9 +352,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
 				schritt.skalieren(zoomFaktor, 100);
 				diagrammAktualisieren(schritt);
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
+		imageAnhaengen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AbstractSchrittView currentStep = hauptSequenz.findeSchritt(zuletztFokussierterText);
+
+			}
+		});
+
 		einfaerben.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -373,21 +386,42 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					return;
 				}
 				
-				if (schritt instanceof CaseSchrittView) {
-					CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
-					ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
-					if (zweig != null) {
-						int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
-						undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+				//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
+				if(instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt){
+
+					//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
+					if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+						return;
 					}
-					return;
+					else {
+						schrittAlsGeloeschtMarkieren(schritt);
+					}
 				}
-				
-				SchrittSequenzView sequenz = schritt.getParent();
-				int schrittIndex = sequenz.schrittEntfernen(schritt);
-				undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+
+				//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
+				else {
+					if (schritt instanceof CaseSchrittView) {
+						CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
+						ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
+						if (zweig != null) {
+							int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
+							undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+						}
+						return;
+					}
+					if(darfSchrittGeloeschtWerden(schritt)){
+						System.err.println("Letzten Schritt entfernen ist nicht");
+					}
+					else {
+						SchrittSequenzView sequenz = schritt.getParent();
+						int schrittIndex = sequenz.schrittEntfernen(schritt);
+						undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+					}
+				}
+				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
+
 
 		toggleBorderType.addActionListener(new ActionListener() {
 			@Override
@@ -450,7 +484,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenzContainer.paint(g);
 				final JPanel p = new JPanel();
 				p.setLayout(new BorderLayout());
-		        final Image scaledImage = i.getScaledInstance(breite / 5, hoehe / 5,  java.awt.Image.SCALE_SMOOTH);
+				final Image scaledImage = i.getScaledInstance(breite / 5, hoehe / 5,  java.awt.Image.SCALE_SMOOTH);
 				ImageIcon icon = new ImageIcon(scaledImage);
 				final JLabel l = new JLabel(icon);
 				p.add(l, BorderLayout.CENTER);
@@ -479,7 +513,32 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				d.setVisible(true);
 			}
 		});
-		
+
+		aenderungenUebernehmen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				hauptSequenz.aenderungenUebernehmen(Specman.this);
+			}
+		});
+
+		aenderungenVerwerfen.addActionListener(new ActionListener() {
+			@Override public void actionPerformed(ActionEvent e) {
+				hauptSequenz.aenderungenVerwerfen(Specman.this);
+			}
+		});
+
+	}
+
+	private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) {
+		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
+		if (darfSchrittGeloeschtWerden(schritt)) {
+			System.err.println("Letzten Schritt entfernen ist nicht");
+			return;
+		}
+		AbstractUndoableInteraktion undo = schritt.alsGeloeschtMarkieren(this);
+		if (undo != null) {
+			undoManager.addEdit(undo);
+		}
 	}
 
 	public int skalieren(int prozent) {
@@ -585,12 +644,31 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			outro.skalieren(zoomFaktor, 0);
 			setName(model.name);
 			hauptSequenz = new SchrittSequenzView(this, null, model.hauptSequenz);
+
 			hauptSequenzInitialisieren();
 			neueSchritteNachinitialisieren();
+			quellZielZuweisung(model.queryAllSteps());
+			hauptSequenz.viewsNachinitialisieren();
 			recentFiles.add(diagramFile);
 			undoManager.discardAllEdits();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void quellZielZuweisung(List<AbstractSchrittModel_V001> allModelSteps) {
+		for(AbstractSchrittModel_V001 modelStep: allModelSteps) {
+			if (modelStep.quellschrittID != null) {
+				AbstractSchrittView zielschritt = hauptSequenz.findeSchrittZuId(modelStep.id);
+				if(zielschritt instanceof QuellSchrittView) {
+					continue;
+				}
+				else {
+					QuellSchrittView quellSchritt = (QuellSchrittView) hauptSequenz.findeSchrittZuId(modelStep.quellschrittID);
+					zielschritt.setQuellschritt(quellSchritt);
+					quellSchritt.setZielschritt(zielschritt);
+				}
+			}
 		}
 	}
 
@@ -627,7 +705,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		});
 	}
 
-	private void newStepPostInit(AbstractSchrittView newStep) {
+	public void newStepPostInit(AbstractSchrittView newStep) {
 		addEdit(new UndoableSchrittHinzugefuegt(newStep, newStep.getParent()));
 		newStep.skalieren(zoomFaktor, 100);
 		newStep.initInheritedTextFieldIndentions();
@@ -637,6 +715,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		toolBar = new JToolBar();
+		toolBar.setFloatable(false); //ToDo Sidebar added
+		buttonBar = new JToolBar(JToolBar.VERTICAL); //ToDo Sidebar added
+
 		schrittAnhaengen = new JButton();
 		whileSchrittAnhaengen = new JButton();
 		whileWhileSchrittAnhaengen = new JButton();
@@ -647,12 +728,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		breakSchrittAnhaengen = new JButton();
 		catchSchrittAnhaengen = new JButton();
 		caseAnhaengen = new JButton();
+		imageAnhaengen = new JButton();
 		einfaerben = new JButton();
 		loeschen = new JButton();
 		toggleBorderType = new JButton();
 		review = new JButton();
 		birdsview = new JButton();
 		aenderungenVerfolgen = new JToggleButton();
+		aenderungenUebernehmen = new JButton();
+		aenderungenVerwerfen = new JButton();
 		zoom = new JComboBox<ZoomFaktor>();
 		for (ZoomFaktor faktor: ZoomFaktor.values())
 			zoom.addItem(faktor);
@@ -665,33 +749,60 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		export = new JMenuItem("Exportieren");
 		//======== this ========
 		Container contentPane = getContentPane();
-		contentPane.setLayout(new FormLayout("default:grow", "default, default, fill:10px:grow"));
+		contentPane.setLayout(new FormLayout("pref, default:grow", "default, default, fill:10px:grow")); //ToDo Sidebar added "pref"
 
 		//======== toolBar ========
-		toolbarButtonHinzufuegen(schrittAnhaengen, "einfacher-schritt", "Einfachen Schritt anhängen");
-		toolbarButtonHinzufuegen(whileSchrittAnhaengen, "while-schritt", "While-Schritt anhängen");
-		toolbarButtonHinzufuegen(whileWhileSchrittAnhaengen, "whilewhile-schritt", "While-While-Schritt anhängen");
-		toolbarButtonHinzufuegen(ifElseSchrittAnhaengen, "ifelse-schritt", "If-Else-Schritt anhängen");
-		toolbarButtonHinzufuegen(ifSchrittAnhaengen, "if-schritt", "If-Schritt anhängen");
-		toolbarButtonHinzufuegen(caseSchrittAnhaengen, "case-schritt", "Case-Schritt anhängen");
-		toolbarButtonHinzufuegen(subsequenzSchrittAnhaengen, "subsequenz-schritt", "Subsequenz anhängen");
-		toolbarButtonHinzufuegen(breakSchrittAnhaengen, "break-schritt", "Break anhängen");
-		toolbarButtonHinzufuegen(catchSchrittAnhaengen, "catch-schritt", "Catchblock anhängen");
-		toolbarButtonHinzufuegen(caseAnhaengen, "zweig", "Case anhängen");
+		toolbarButtonHinzufuegen(schrittAnhaengen, "einfacher-schritt", "Einfachen Schritt anh\u00E4ngen", buttonBar);
+		toolbarButtonHinzufuegen(whileSchrittAnhaengen, "while-schritt", "While-Schritt anh\u00E4ngen", buttonBar);
+		toolbarButtonHinzufuegen(whileWhileSchrittAnhaengen, "whilewhile-schritt", "While-While-Schritt anh\u00E4ngen", buttonBar);
+		toolbarButtonHinzufuegen(ifElseSchrittAnhaengen, "ifelse-schritt", "If-Else-Schritt anh\u00E4ngen", buttonBar);
+		toolbarButtonHinzufuegen(ifSchrittAnhaengen, "if-schritt", "If-Schritt anh\u00E4ngen", buttonBar);
+		toolbarButtonHinzufuegen(caseSchrittAnhaengen, "case-schritt", "Case-Schritt anh\u00E4ngen", buttonBar);
+		toolbarButtonHinzufuegen(subsequenzSchrittAnhaengen, "subsequenz-schritt", "Subsequenz anh\u00E4ngen", buttonBar);
+		toolbarButtonHinzufuegen(breakSchrittAnhaengen, "break-schritt", "Break anh\u00E4ngen", buttonBar);
+		toolbarButtonHinzufuegen(catchSchrittAnhaengen, "catch-schritt", "Catchblock anh\u00E4ngen", buttonBar);
+		toolbarButtonHinzufuegen(caseAnhaengen, "zweig", "Case anh\u00E4ngen", buttonBar);
+		buttonBar.addSeparator();
+		toolbarButtonHinzufuegen(imageAnhaengen, "image", "Image hinzufügen", buttonBar);
+		//toolBar.addSeparator();   //ToDo
+		toolbarButtonHinzufuegen(einfaerben, "helligkeit", "Hintergrund schattieren", toolBar);
+		toolbarButtonHinzufuegen(loeschen, "loeschen", "Schritt l\u00F6schen", toolBar);
+		toolbarButtonHinzufuegen(toggleBorderType, "switch-border", "Rahmen umschalten", toolBar);
 		toolBar.addSeparator();
-		toolbarButtonHinzufuegen(einfaerben, "helligkeit", "Hintergrund schattieren");
-		toolbarButtonHinzufuegen(loeschen, "loeschen", "Schritt löschen");
-		toolbarButtonHinzufuegen(toggleBorderType, "switch-border", "Rahmen umschalten");
+		toolbarButtonHinzufuegen(aenderungenVerfolgen, "aenderungen", "\u00C4nderungen verfolgen", toolBar);
+		toolbarButtonHinzufuegen(aenderungenUebernehmen, "uebernehmen", "\u00C4nderungen \u00FCbernehmen", toolBar);
+		toolbarButtonHinzufuegen(aenderungenVerwerfen, "verwerfen", "\u00C4nderungen verwerfen", toolBar);
+		toolbarButtonHinzufuegen(review, "review", "F\u00FCr Review zusammenklappen", toolBar);
 		toolBar.addSeparator();
-		toolbarButtonHinzufuegen(aenderungenVerfolgen, "aenderungen", "Änderungen verfolgen");
-		toolbarButtonHinzufuegen(review, "review", "Für Review zusammenklappen");
-		toolBar.addSeparator();
-		toolbarButtonHinzufuegen(birdsview, "birdsview", "Bird's View");
+		toolbarButtonHinzufuegen(birdsview, "birdsview", "Bird's View", toolBar);
 		toolBar.add(zoom);
-		contentPane.add(toolBar, CC.xywh(1, 1, 1, 1));
+
+		//ToDo SideBar Change from contentPane.add(toolBar, CC.xywh(1, 1, 1, 1));
+		contentPane.add(toolBar, CC.xywh(1, 1, 2, 1));
+		contentPane.add(buttonBar, CC.xy(1, 3));
 		pack();
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+		//TODO
+		DragAdapter dragButtonAdapter = new DragAdapter(this);
+		addDragAdapter(schrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(whileSchrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(whileWhileSchrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(ifElseSchrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(ifSchrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(caseSchrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(subsequenzSchrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(breakSchrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(catchSchrittAnhaengen,dragButtonAdapter);
+		//TODO caseAnhängen
+		addDragAdapter(caseAnhaengen,dragButtonAdapter);
+
+
+	}
+
+	private void addDragAdapter(JButton button, DragAdapter adapter) {
+		button.addMouseListener(adapter);
+		button.addMouseMotionListener(adapter);
 	}
 
 	public static ImageIcon readImageIcon(String iconBasename) {
@@ -710,20 +821,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	private void toolbarButtonHinzufuegen(AbstractButton button, String iconBasename, String tooltip) {
+	private void toolbarButtonHinzufuegen(AbstractButton button, String iconBasename, String tooltip, JToolBar tb) {
 		button.setIcon(readImageIcon(iconBasename));
 		button.setMargin(new Insets(0, 0, 0, 0));
 		button.setToolTipText(tooltip);
-		toolBar.add(button);
+		tb.add(button);
 	}
-	
+
 	HTMLEditorPane shefEditorPane;
 	UndoManager undoManager;
 
-    @Override
-    public void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation) {
-        shefEditorPane.instrumentWysEditor(ed, initialText, orientation);
-    }
+	@Override
+	public void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation) {
+		shefEditorPane.instrumentWysEditor(ed, initialText, orientation);
+	}
 
     private void initShefController() throws Exception {
 		shefEditorPane = new HTMLEditorPane(undoManager);
@@ -734,7 +845,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		menuBar.add(shefEditorPane.getInsertMenu());
 
 		setJMenuBar(menuBar);
-		getContentPane().add(shefEditorPane.getFormatToolBar(), CC.xywh(1, 2, 1, 1));
+		getContentPane().add(shefEditorPane.getFormatToolBar(), CC.xywh(1, 2, 2, 1));
+
 	}
 
 	@Override
@@ -754,6 +866,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JToolBar toolBar;
+	private JToolBar buttonBar; // Sidebar ergänzt
 	private JButton schrittAnhaengen;
 	private JButton whileSchrittAnhaengen;
 	private JButton whileWhileSchrittAnhaengen;
@@ -764,11 +877,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JButton breakSchrittAnhaengen;
 	private JButton catchSchrittAnhaengen;
 	private JButton caseAnhaengen;
+	private JButton imageAnhaengen;
 	private JButton einfaerben;
 	private JButton loeschen;
 	private JButton toggleBorderType;
 	private JButton review;
 	private JButton birdsview;
+	private JButton aenderungenUebernehmen;
+	private JButton aenderungenVerwerfen;
 	private JComboBox<ZoomFaktor> zoom;
 	private JToggleButton aenderungenVerfolgen;
 	private JMenuItem speichern;
@@ -839,7 +955,85 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Color.white;
 	}
 
+	//Methode um die Aenderugnsart von neuen Schritten auf hinzugefügt zu ändern, wenn die Änderungsverfolgung aktiviert ist
+	public static Aenderungsart initialArt() {
+		return (instance() != null && instance().aenderungenVerfolgen()) ?
+				Aenderungsart.Hinzugefuegt : null;
+	}
+
+
 	@Override public int getZoomFactor() {
 		return zoomFaktor;
+	}
+
+	public SchrittSequenzView getHauptSequenz() {
+		return hauptSequenz;
+	}
+
+	public UndoManager getUndoManager() {
+		return undoManager;
+	}
+
+	public JButton getSchrittAnhaengen() {
+		return schrittAnhaengen;
+	}
+
+	public JButton getWhileSchrittAnhaengen() {
+		return whileSchrittAnhaengen;
+	}
+
+	public JButton getWhileWhileSchrittAnhaengen() {
+		return whileWhileSchrittAnhaengen;
+	}
+
+	public JButton getIfElseSchrittAnhaengen() {
+		return ifElseSchrittAnhaengen;
+	}
+
+	public JButton getIfSchrittAnhaengen() {
+		return ifSchrittAnhaengen;
+	}
+
+	public JButton getCaseSchrittAnhaengen() {
+		return caseSchrittAnhaengen;
+	}
+
+	public JButton getSubsequenzSchrittAnhaengen() {
+		return subsequenzSchrittAnhaengen;
+	}
+
+	public JButton getBreakSchrittAnhaengen() {
+		return breakSchrittAnhaengen;
+	}
+
+	public JButton getCatchSchrittAnhaengen() {
+		return catchSchrittAnhaengen;
+	}
+
+	public JButton getCaseAnhaengen() {
+		return caseAnhaengen;
+	}
+
+	public JButton getImageAnhaengen() {
+		return imageAnhaengen;
+	}
+
+	public boolean darfSchrittGeloeschtWerden(AbstractSchrittView schritt){
+		int geloeschtzaehler = 1;
+		for(AbstractSchrittView suchSchritt : schritt.getParent().schritte){
+			if(suchSchritt.getAenderungsart() == Aenderungsart.Geloescht){
+				geloeschtzaehler++;
+			}
+		}
+		if(schritt.getParent().schritte.size() <= geloeschtzaehler){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	@Override public JTextComponent getZuletztFokussierterText() {
+		return zuletztFokussierterText;
 	}
 }

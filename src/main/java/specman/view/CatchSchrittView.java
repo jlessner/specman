@@ -4,6 +4,8 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -25,15 +27,14 @@ public class CatchSchrittView extends AbstractSchrittView {
 	
 	final JPanel schrittPanel;
 	final JPanel fussPanel;
-	final JPanel dreiecksPanel;
 	final FormLayout layout;
 	final HandlingSchrittSequenz handlingSequenz;
 	boolean hatNachfolger;
 	KlappButton klappen;
 	boolean breakAngekoppelt;
 
-	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, SchrittSequenzModel_V001 handlingModel) {
-		super(editor, parent, initialerText, id);
+	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, SchrittSequenzModel_V001 handlingModel) {
+		super(editor, parent, initialerText, id, aenderungsart);
 		schrittPanel = new JPanel();
 		schrittPanel.setBackground(Color.black);
 		layout = new FormLayout(
@@ -43,16 +44,6 @@ public class CatchSchrittView extends AbstractSchrittView {
 		
 		schrittPanel.add(text.asJComponent(), CC.xy(2, 2));
 		
-		dreiecksPanel = new JPanel() {
-			@Override
-			public void paint(Graphics g) {
-				super.paint(g);
-				dreieckZeichnen((Graphics2D)g);
-			}
-		};
-		dreiecksPanel.setBackground(Specman.schrittHintergrund());
-		dreiecksPanel.setLayout(null);
-		schrittPanel.add(dreiecksPanel, CC.xy(1, 2));
 		
 		JPanel doppellinie = new JPanel();
 		doppellinie.setBackground(Specman.schrittHintergrund());
@@ -63,38 +54,17 @@ public class CatchSchrittView extends AbstractSchrittView {
 		fussPanel.setBackground(Specman.schrittHintergrund());
 		schrittPanel.add(fussPanel, CC.xyw(1, 6, 2));
 		
-		klappen = new KlappButton(this, dreiecksPanel, layout, 4);
-		klappen.addComponentListener(new ComponentAdapter() {
-			// Kleine Sch�nheitsgeschichte, vergleiche {@link IfElseSchrittView#addComponentListener}
-			@Override public void componentHidden(ComponentEvent e) {
-				dreiecksPanel.repaint();
-			}
-		});
 
 		if (handlingModel != null) {
 			handlingSequenz = new HandlingSchrittSequenz(editor, this, handlingModel);
 		}
 		else {
-			handlingSequenz = new HandlingSchrittSequenz(this, id.naechsteEbene());
+			handlingSequenz = new HandlingSchrittSequenz(this, id.naechsteEbene(), aenderungsart);
 			handlingSequenz.einfachenSchrittAnhaengen(editor);
 			schrittnummerSichtbarkeitSetzen(false);
 		}
 		schrittPanel.add(handlingSequenz.getContainer(), CC.xywh(1, 4, 2, 1));
 
-	}
-
-	private void dreieckZeichnen(Graphics2D g) {
-		int hoehe = text.getHeight();
-		int dreieckSpitzeY = hoehe / 2;
-		int dreieckSpitzeX = text.getX() - LINIENBREITE;
-		g.setStroke(new BasicStroke(1));
-		g.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING, 
-                RenderingHints.VALUE_ANTIALIAS_ON);
-		g.drawLine(0,  0,  dreieckSpitzeX,  dreieckSpitzeY);
-		g.drawLine(dreieckSpitzeX,  dreieckSpitzeY, - LINIENBREITE, hoehe); // Wieso -LINIENBREITE statt 0 ist mir selber nicht ganz klar ;-)
-		// Folgende Zeile vergleiche {@link IfElseSchrittView#dreieckZeichnen}
-		klappen.repaint();
 	}
 
 	@Override
@@ -113,7 +83,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, CatchSchrittModel_V001 model) {
-		this(editor, parent, model.inhalt.text, model.id, model.handlingSequenz);
+		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, model.handlingSequenz);
 		setBackground(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
 		breakAngekoppelt = model.breakAngekoppelt;
@@ -122,7 +92,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText) {
-		this(editor, parent, initialerText, null, null);
+		this(editor, parent, initialerText, null, null, null);
 	}
 	
 	@Override
@@ -137,7 +107,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 		super.setBackground(bg);
 		schrittPanel.setBackground(bg);
 		text.setBackground(bg);
-		dreiecksPanel.setBackground(bg);
+//		dreiecksPanel.setBackground(bg);
 		fussPanel.setBackground(bg);
 	}
 
@@ -237,8 +207,11 @@ public class CatchSchrittView extends AbstractSchrittView {
 			getBackground().getRGB(),
 			getDecorated(),
 			klappen.isSelected(),
+			aenderungsart,
 			handlingSequenz.generiereSchittSequenzModel(formatierterText),
-			breakAngekoppelt);
+			breakAngekoppelt,
+			getQuellschrittID(),
+			getDecorated());
 		return model;
 	}
 
@@ -253,8 +226,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 			super(editor, parent, model);
 		}
 
-		public HandlingSchrittSequenz(AbstractSchrittView parent, SchrittID sequenzBasisId) {
-			super(parent, sequenzBasisId);
+		public HandlingSchrittSequenz(AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart) {
+			super(parent, sequenzBasisId, aenderungsart);
 		}
 
 		@Override public AbstractSchrittView schrittAnhaengen(AbstractSchrittView schritt, EditorI editor) {
@@ -314,6 +287,11 @@ public class CatchSchrittView extends AbstractSchrittView {
 			return "fill:" + schmalsterSchritt + "px";
 		}
 
+	}
+	//TODO Catchbereich noch nicht definiert
+	@Override
+	public JComponent getPanel() {
+		return null;
 	}
 
 }

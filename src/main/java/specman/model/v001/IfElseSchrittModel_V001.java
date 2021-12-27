@@ -1,7 +1,10 @@
 package specman.model.v001;
 
+import specman.Aenderungsart;
 import specman.SchrittID;
 import specman.view.RoundedBorderDecorationStyle;
+
+import java.util.List;
 
 public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 	public final ZweigSchrittSequenzModel_V001 ifSequenz;
@@ -20,12 +23,19 @@ public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		int farbe,
 		RoundedBorderDecorationStyle decorationStyle,
 		boolean zugeklappt,
+		Aenderungsart aenderungsart,
 		ZweigSchrittSequenzModel_V001 ifSequenz,
 		ZweigSchrittSequenzModel_V001 elseSequenz,
-		float ifBreitenanteil) {
-		super(id, inhalt, farbe, decorationStyle, zugeklappt);
+		float ifBreitenanteil, SchrittID quellschrittID) {
+		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID, decorationStyle);
 		this.ifSequenz = ifSequenz;
 		this.elseSequenz = elseSequenz;
 		this.ifBreitenanteil = ifBreitenanteil;
+	}
+
+	@Override public void addStepRecursively(List<AbstractSchrittModel_V001> allSteps) {
+		super.addStepRecursively(allSteps);
+		ifSequenz.addStepsRecursively(allSteps);
+		elseSequenz.addStepsRecursively(allSteps);
 	}
 }
