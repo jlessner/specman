@@ -7,9 +7,10 @@ import specman.Specman;
 import specman.model.v001.*;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
+import specman.undo.AbstractUndoableInteraktion;
+import specman.undo.UndoableSchrittAlsEntferntMarkiert;
 
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -17,7 +18,6 @@ import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
@@ -200,9 +200,11 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		getText().setEnabled(true);
 	}
 
-	public void alsGeloeschtMarkieren(){
+	public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor){
+		getshef().aenderungsmarkierungenVerwerfen();
 		setGeloeschtMarkiertStil();
 		getText().setEditable(false);
+		return new UndoableSchrittAlsEntferntMarkiert(this);
 	}
 
 	public void aenderungsmarkierungenEntfernen() {
@@ -438,10 +440,41 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 					setQuellschritt(null);
 					setStandardStil();
 			}
+			setAenderungsart(null);
 		}
 	}
 
 	protected void textAenderungenUebernehmen() {
 		getshef().aenderungsmarkierungenUebernehmen();
+	}
+
+	public void aenderungenVerwerfen(EditorI editor) {
+		textAenderungenVerwerfen();
+		if (aenderungsart != null) {
+			switch (aenderungsart) {
+				case Hinzugefuegt:
+					getParent().schrittEntfernen(this);
+					break;
+				case Geloescht:
+					aenderungsmarkierungenEntfernen();
+					break;
+				case Quellschritt:
+					break;
+				case Zielschritt:
+					getParent().schrittEntfernen(this);
+					setId(getQuellschritt().newStepIDInSameSequence(After));
+					setParent(getQuellschritt().getParent());
+					getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
+					getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
+					setQuellschritt(null);
+					this.setStandardStil();
+			}
+			setAenderungsart(null);
+		}
+
+	}
+
+	protected void textAenderungenVerwerfen() {
+		getshef().aenderungsmarkierungenVerwerfen();
 	}
 }

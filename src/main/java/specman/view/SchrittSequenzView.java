@@ -481,10 +481,24 @@ public class SchrittSequenzView {
 	}
 
 	public void aenderungenUebernehmen(EditorI editor) {
-		setAenderungsart(null);
 		for (AbstractSchrittView schritt: schritte) {
 			schritt.aenderungenUebernehmen(editor);
 		}
+		setAenderungsart(null);
+	}
+
+	public void aenderungenVerwerfen(EditorI editor) {
+		for (AbstractSchrittView schritt: schritte) {
+			schritt.aenderungenVerwerfen(editor);
+		}
+		setAenderungsart(null);
+	}
+
+	public void alsGeloeschtMarkieren(EditorI editor) {
+		for (AbstractSchrittView schritt: schritte) {
+			schritt.alsGeloeschtMarkieren(editor);
+		}
+		setAenderungsart(Aenderungsart.Geloescht);
 	}
 
 	public void toggleBorderType(AbstractSchrittView schritt) {

@@ -16,6 +16,8 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
+import specman.undo.AbstractUndoableInteraktion;
+import specman.undo.UndoableZweigEntfernt;
 
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
@@ -386,12 +388,36 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		}
 	}
 
-	@Override public void alsGeloeschtMarkieren() {
-		super.alsGeloeschtMarkieren();
-		sonstSequenz.alsGeloeschtMarkieren();
-		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
-			caseSequenz.alsGeloeschtMarkieren();
+	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
+		ZweigSchrittSequenzView zweig = istZweigUeberschrift(editor.getZuletztFokussierterText());
+		if (zweig != null) {
+			if (zweig.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
+				int zweigIndex = zweigEntfernen(editor, zweig);
+				return new UndoableZweigEntfernt(editor, zweig, this, zweigIndex);
+			}
+
+			//Markieren von Sonstsequenz und fall 1, 2 nicht ermöglichen
+			else if (zweig == sonstSequenz) {
+				System.err.println("Sonst-Sequenz kann nicht entfernt werden");
+			} else if (zweig == caseSequenzen.get(0) && caseSequenzen.size() <= 2) {
+				System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
+			} else if (zweig == caseSequenzen.get(1) && caseSequenzen.size() <= 2) {
+				System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
+			} else {
+				zweig.alsGeloeschtMarkieren(editor);
+				if (zweig == caseSequenzen.get(0)) {
+					panelFall1.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+					panel.repaint();
+				}
+			}
+			return null;
 		}
+
+		sonstSequenz.alsGeloeschtMarkieren(editor);
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			caseSequenz.alsGeloeschtMarkieren(editor);
+		}
+		return super.alsGeloeschtMarkieren(editor);
 	}
 
 	@Override public void aenderungsmarkierungenEntfernen() {
@@ -465,7 +491,6 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	@Override public void aenderungenUebernehmen(EditorI editor) {
-		super.aenderungenUebernehmen(editor);
 		panelFall1.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 		sonstSequenz.aenderungenUebernehmen(editor);
@@ -478,5 +503,31 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 				caseSequenz.aenderungenUebernehmen(editor);
 			}
 		}
+		super.aenderungenUebernehmen(editor);
+	}
+
+	@Override protected void textAenderungenVerwerfen() {
+		super.textAenderungenVerwerfen();
+		sonstSequenz.ueberschriftAenderungenVerwerfen();
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			caseSequenz.ueberschriftAenderungenVerwerfen();
+		}
+	}
+
+	@Override public void aenderungenVerwerfen(EditorI editor) {
+		//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
+		List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(this.caseSequenzen);
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
+				zweigEntfernen(editor, caseSequenz);
+			}
+			else {
+				if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht) {
+					caseSequenz.aenderungsmarkierungenEntfernen();
+				}
+				caseSequenz.aenderungenVerwerfen(editor);
+			}
+		}
+		super.aenderungenVerwerfen(editor);
 	}
 }

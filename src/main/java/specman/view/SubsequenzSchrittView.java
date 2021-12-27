@@ -11,6 +11,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
+import specman.undo.AbstractUndoableInteraktion;
 
 import javax.swing.*;
 import java.awt.*;
@@ -142,6 +143,16 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	@Override public void aenderungenUebernehmen(EditorI editor) {
 		super.aenderungenUebernehmen(editor);
 		subsequenz.aenderungenUebernehmen(editor);
+	}
+
+	@Override public void aenderungenVerwerfen(EditorI editor) {
+		super.aenderungenVerwerfen(editor);
+		subsequenz.aenderungenVerwerfen(editor);
+	}
+
+	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
+		subsequenz.alsGeloeschtMarkieren(editor);
+		return super.alsGeloeschtMarkieren(editor);
 	}
 
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {

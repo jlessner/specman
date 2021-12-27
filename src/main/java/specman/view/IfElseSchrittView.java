@@ -14,6 +14,7 @@ import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
+import specman.undo.AbstractUndoableInteraktion;
 
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
@@ -272,10 +273,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.viewsNachinitialisieren();
 	}
 
-	@Override public void alsGeloeschtMarkieren() {
-		super.alsGeloeschtMarkieren();
-		elseSequenz.alsGeloeschtMarkieren();
-		ifSequenz.alsGeloeschtMarkieren();
+	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
+		elseSequenz.alsGeloeschtMarkieren(editor);
+		ifSequenz.alsGeloeschtMarkieren(editor);
+		return super.alsGeloeschtMarkieren(editor);
 	}
 
 	@Override public void aenderungsmarkierungenEntfernen() {
@@ -294,6 +295,18 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		super.aenderungenUebernehmen(editor);
 		elseSequenz.aenderungenUebernehmen(editor);
 		ifSequenz.aenderungenUebernehmen(editor);
+	}
+
+	@Override protected void textAenderungenVerwerfen() {
+		super.textAenderungenVerwerfen();
+		elseSequenz.ueberschriftAenderungenVerwerfen();
+		ifSequenz.ueberschriftAenderungenVerwerfen();
+	}
+
+	@Override public void aenderungenVerwerfen(EditorI editor) {
+		super.aenderungenVerwerfen(editor);
+		elseSequenz.aenderungenVerwerfen(editor);
+		ifSequenz.aenderungenVerwerfen(editor);
 	}
 
 	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {

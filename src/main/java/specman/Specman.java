@@ -31,7 +31,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import static specman.view.RelativeStepPosition.After;
 
@@ -395,59 +394,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						return;
 					}
 					else {
-            //einzelne Cases entfernen
-						if (schritt instanceof CaseSchrittView) {
-							CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-							ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
-							if (zweig != null) {
-								if(zweig.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
-									int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
-									undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
-								}
-
-								//Markieren von Sonstsequenz und fall 1, 2 nicht ermöglichen
-								else if (zweig == caseSchritt.getSonstSequenz()) {
-									System.err.println("Sonst-Sequenz kann nicht entfernt werden");
-								}
-								else if (zweig == caseSchritt.getCaseSequenzen().get(0) && caseSchritt.getCaseSequenzen().size() <=2 ) {
-									System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
-								}
-								else if (zweig == caseSchritt.getCaseSequenzen().get(1) && caseSchritt.getCaseSequenzen().size() <=2) {
-									System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
-								}
-
-								else{
-									zweig.alsGeloeschtMarkieren();
-									zweig.getUeberschrift().aenderungsmarkierungenVerwerfen();
-									zweig.setAenderungsart(Aenderungsart.Geloescht);
-									zweig.getUeberschrift().setStyle(zweig.getUeberschrift().getText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-									zweig.getUeberschrift().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-									zweig.getUeberschrift().getTextComponent().setEditable(false);
-									if (zweig == caseSchritt.getCaseSequenzen().get(0)) {
-										caseSchritt.getPanelFall1().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-										caseSchritt.getPanel().repaint();
-									}
-									verwerfenOderUnterschritteAufGeloescht(zweig.getSchritte(), Aenderungsart.Geloescht);
-								}
-							}
-							else {
-								schritt.getshef().aenderungsmarkierungenVerwerfen();
-								schritt.alsGeloeschtMarkieren();
-								unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
-								undoManager.addEdit(new UndoableSchrittAlsEntferntMarkiert(schritt));
-							}
-						}
-						else {
-							//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
-							if (darfSchrittGeloeschtWerden(schritt)) {
-								System.err.println("Letzten Schritt entfernen ist nicht");
-							} else {
-								schritt.alsGeloeschtMarkieren();
-								unterschritteVonSchrittDurchlaufen(schritt, Aenderungsart.Geloescht);
-								undoManager.addEdit(new UndoableSchrittAlsEntferntMarkiert(schritt));
-							}
-						}
-          }
+						schrittAlsGeloeschtMarkieren(schritt);
+					}
 				}
 
 				//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
@@ -575,11 +523,22 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		aenderungenVerwerfen.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
-				List<AbstractSchrittView> schritte = hauptSequenz.schritte;
-				verwerfenOderUnterschritteAufGeloescht(schritte, null);
+				hauptSequenz.aenderungenVerwerfen(Specman.this);
 			}
 		});
 
+	}
+
+	private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) {
+		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
+		if (darfSchrittGeloeschtWerden(schritt)) {
+			System.err.println("Letzten Schritt entfernen ist nicht");
+			return;
+		}
+		AbstractUndoableInteraktion undo = schritt.alsGeloeschtMarkieren(this);
+		if (undo != null) {
+			undoManager.addEdit(undo);
+		}
 	}
 
 	public int skalieren(int prozent) {
@@ -1094,7 +1053,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			verwerfenOderUnterschritteAufGeloescht(ifel.getElseSequenz().schritte, art);
 			if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
 				verwerfenOderUnterschritteAufGeloescht(ifel.getIfSequenz().schritte, art);
-            }
+      }
 		}
 		else if(schritt.getClass().getName().equals("specman.view.WhileSchrittView") || schritt.getClass().getName().equals("specman.view.WhileWhileSchrittView") ) {
             SchleifenSchrittView schleife = (SchleifenSchrittView) schritt;
@@ -1118,65 +1077,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void verwerfenOderUnterschritteAufGeloescht(List<AbstractSchrittView> schritte, Aenderungsart art) {
 		for (AbstractSchrittView schritt: schritte) {
 
-			//wird beim Verwerfen durchlaufen
-			if (art == null) {
-				schritt.getshef().aenderungsmarkierungenVerwerfen();
-				//Hier werden bearbeitete Überschriften von IfElseSchrittViews und IfSchrittViews verworfen
-				if(schritt.getClass().getName().equals("specman.view.IfElseSchrittView") || schritt.getClass().getName().equals("specman.view.IfSchrittView")) {
-					IfElseSchrittView ifel = (IfElseSchrittView) schritt;
-					ifel.getElseSequenz().getUeberschrift().aenderungsmarkierungenVerwerfen();
-					if (schritt.getClass().getName().equals("specman.view.IfElseSchrittView")) {
-						ifel.getIfSequenz().getUeberschrift().aenderungsmarkierungenVerwerfen();
-					}
-				}
-
-				//Verwerfen von Änderungen an den Zweigen, diese werden nicht in der Schritte liste durchlaufen
-				if (schritt.getClass().getName().equals("specman.view.CaseSchrittView")) {
-					CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-					caseSchritt.getSonstSequenz().getUeberschrift().aenderungsmarkierungenVerwerfen();
-					//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
-					List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(caseSchritt.getCaseSequenzen());
-					for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
-						caseSequenz.getUeberschrift().aenderungsmarkierungenVerwerfen();
-						if(caseSequenz.getAenderungsart() == Aenderungsart.Hinzugefuegt){
-							caseSchritt.zweigEntfernen(Specman.this, caseSequenz);
-						}
-						if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht){
-							caseSequenz.getUeberschrift().setStyle(schritt.getPlainText(), TextfieldShef.standardStil);
-							caseSequenz.getUeberschrift().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-							caseSequenz.getUeberschrift().getTextComponent().setEditable(true);
-							verwerfenOderUnterschritteAufGeloescht(caseSequenz.schritte, null);
-						}
-					}
-				}
-
-				//hinzugefügter Schritt muss entfernt werden, da verworfen
-				if(schritt.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
-					SchrittSequenzView sequenz = schritt.getParent();
-					sequenz.schrittEntfernen(schritt);
-					//continue damit er nicht versucht, die unterschritte eines gelöschten Schrittes zu finden
-					continue;
-				}
-
-				//Verschieben des Zielschrittes auf Quellschrittposition und löschen des Quellschrittes
-				if(schritt.getAenderungsart() == Aenderungsart.Zielschritt){
-                   			schritt.getParent().schrittEntfernen(schritt);
-                   			schritt.setId(schritt.getQuellschritt().newStepIDInSameSequence(After));
-                    			schritt.setParent(schritt.getQuellschritt().getParent());
-                    			schritt.getQuellschritt().getParent().schrittZwischenschieben(schritt, After, schritt.getQuellschritt(), Specman.instance);
-					schritt.getQuellschritt().getParent().schrittEntfernen(schritt.getQuellschritt());
-					schritt.setAenderungsart(null);
-					schritt.setQuellschritt(null);
-				}
-
-				schritt.setAenderungsart(art);
-				schritt.aenderungsmarkierungenEntfernen();
-			}
-
 			//setzt die Unterschritte eines Schrittes auf die Aenderungsart geloescht und fügt die Änderungsmarkierungen hinzu
 			if(art == Aenderungsart.Geloescht) {
 				schritt.getshef().aenderungsmarkierungenVerwerfen();
-				schritt.alsGeloeschtMarkieren();
+				schritt.alsGeloeschtMarkieren(this);
 			}
 
 			//gibt den Schritt zur Überprüfung auf Unterschritte
@@ -1197,5 +1101,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		else{
 			return false;
 		}
+	}
+
+	@Override public JTextComponent getZuletztFokussierterText() {
+		return zuletztFokussierterText;
 	}
 }

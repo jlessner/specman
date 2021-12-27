@@ -2,8 +2,6 @@ package specman.draganddrop;
 
 import specman.Aenderungsart;
 import specman.Specman;
-import specman.model.v001.Aenderungsmarkierung_V001;
-import specman.model.v001.ZielschrittMarkierungen_V001;
 import specman.textfield.InsetPanel;
 import specman.textfield.TextfieldShef;
 import specman.undo.UndoableSchrittEntfernt;
@@ -452,7 +450,7 @@ public class DraggingLogic implements Serializable {
 	                    sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
 	                    quellschritt.setQuellStil();
 	                    quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-	                    quellschritt.alsGeloeschtMarkieren();
+	                    quellschritt.alsGeloeschtMarkieren(specman);
 	                    Specman.instance().unterschritteVonSchrittDurchlaufen(quellschritt, Aenderungsart.Quellschritt);
                     }
                     else {

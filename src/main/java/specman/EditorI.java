@@ -4,6 +4,7 @@ import specman.view.AbstractSchrittView;
 import specman.view.SchrittSequenzView;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoableEdit;
 import java.awt.event.FocusListener;
 import java.io.File;
@@ -27,4 +28,6 @@ public interface EditorI extends FocusListener {
 	void addEdit(UndoableEdit edit);
 
 	void diagrammAktualisieren(AbstractSchrittView schrittImFokus);
+
+	JTextComponent getZuletztFokussierterText();
 }

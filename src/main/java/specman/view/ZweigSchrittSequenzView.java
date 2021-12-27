@@ -79,19 +79,26 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}
 
-	public void alsGeloeschtMarkieren() {
+	public void alsGeloeschtMarkieren(EditorI editor) {
+		super.alsGeloeschtMarkieren(editor);
 		ueberschrift.aenderungsmarkierungenVerwerfen();
 		ueberschrift.setStyle(ueberschrift.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
+		ueberschrift.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		ueberschrift.getTextComponent().setEditable(false);
 	}
 
 	public void aenderungsmarkierungenEntfernen() {
 		setAenderungsart(null);
 		ueberschrift.setStyle(ueberschrift.getPlainText(), TextfieldShef.standardStil);
+		ueberschrift.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 		ueberschrift.getTextComponent().setEditable(true);
 	}
 
 	public void ueberschriftAenderungenUebernehmen() {
 		ueberschrift.aenderungsmarkierungenUebernehmen();
+	}
+
+	public void ueberschriftAenderungenVerwerfen() {
+		ueberschrift.aenderungsmarkierungenVerwerfen();
 	}
 }

@@ -14,6 +14,7 @@ import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.textfield.Indentions;
+import specman.undo.AbstractUndoableInteraktion;
 
 import javax.swing.*;
 import java.awt.*;
@@ -203,6 +204,16 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	@Override public void aenderungenUebernehmen(EditorI editor) {
 		super.aenderungenUebernehmen(editor);
 		wiederholSequenz.aenderungenUebernehmen(editor);
+	}
+
+	@Override public void aenderungenVerwerfen(EditorI editor) {
+		super.aenderungenVerwerfen(editor);
+		wiederholSequenz.aenderungenVerwerfen(editor);
+	}
+
+	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
+		wiederholSequenz.alsGeloeschtMarkieren(editor);
+		return super.alsGeloeschtMarkieren(editor);
 	}
 
 	@Override
