@@ -1,9 +1,6 @@
 package specman.draganddrop;
 
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -22,12 +19,12 @@ import static specman.draganddrop.InsertDecision.Insert;
 import static specman.draganddrop.InsertDecision.NoInsert;
 
 
-public class DragAdapter extends MouseAdapter {
+public class DragMouseAdapter extends MouseAdapter {
 	private final Specman specman;
 	private	JTextField dummy;
 	private final DraggingLogic draggingLogic;
 
-	public DragAdapter(Specman specman) {
+	public DragMouseAdapter(Specman specman) {
 		this.specman = specman;
 		this.draggingLogic = new DraggingLogic(specman);
 	}

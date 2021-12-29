@@ -1,34 +1,48 @@
-Abschluss für Go-Live
-- Änderungsverfolgung beim Einfügen und Entfernen von Schritten / Zweigen (nicht bei Resizing)
-- Annehmen der Änderungen
-- Verwerfen der Änderungen
-- Überschneidungsfreiheit von Dreieckslinien und Text in Case/If/If-Else
-- Darstellung von Catch-Bereichen überarbeiten
-- Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
-- Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
-- Undo / Redo in Menü aufnehmen
+Abschluss fÃ¼r Go-Live
+- Bilder als separate Elemente statt Teil von Texten
+  - Automatische Skalierung auf die Breite des Textbereichs
+  - Wahlweise embedded oder als Link
+  - Erlaubt saubere Skalierung
+  - MenÃ¼punkt zum EinfÃ¼gen von Bildern in Texte entfernen
+  - KÃ¼r: EinfÃ¼gen per Drag&Drop mit automatischem "Zerschneiden" eines
+    ggf. vorhandenen Textes an der EinfÃ¼gestelle. Dazu mÃ¼sste man allerdings
+    herausfinden, wie man aus der Mausposition die Position im Text berechnet.
+- Neue Position der Klapp-Buttons, die auch fÃ¼r abgesetzte Darstellung geeignet ist
+  - Idee: links neben das Schrittnummer-Label
+  - AuÃŸerdem Idee: KontextmenÃ¼ fÃ¼r Schrittnummer-Label fÃ¼r LÃ¶schen/Aufklappen/Zuklappen
+    und spÃ¤ter auch noch Ã„nderungen annehmen/verwerfen fÃ¼r einzelnen Schritt (rekursiv)
+- Schrittnummer-Label nach rechts verlÃ¤ngern in abgesetzter Darstellung
+- Darstellung von Catch-Bereichen Ã¼berarbeiten
+- Verfahren der VerknÃ¼pfung von Break und Catch Ã¼berarbeiten / sÃ¤ubern
+- Undo/Redo fÃ¼r Catch- und Breakschritte inkl. VerknÃ¼pfung
+- Undo / Redo in MenÃ¼ aufnehmen
 - Ordentliche Fehlermeldungsanzeige
 - Permanente Aktualisierung der Birdsview oder vielleicht erst mal Birdsview rausnehmen
-- Vielleicht eine kleiner Top-Inset für Schritt-Texte, um die Überschneidung mit den Labels zu verringern?
+- Vielleicht eine kleiner Top-Inset fÃ¼r Schritt-Texte, um die Ãœberschneidung mit den Labels zu verringern?
 - Doku aktualisieren
 
 
 Bugs fixen
-x Renummerierung von Folgezweigen und -schritten beim Hinzufügen / Löschen von Zweigen
+- Undo fÃ¼r Verschiebung von Schritten funktioniert nicht sauber
+  - ohne Ã„nderungsverfolgung
+  - mit Ã„nderungsverfolgung
+- Text-Backup beim LÃ¶schen mit Ã„nderungsverfolgung. Aktuell sind beim Undo einer LÃ¶schung alle vorherigen inhaltlichen TextÃ¤nderungen weg
+- Doppeltes EinfÃ¼gen durch DraggingLogic, wenn Fokus in einer Ãœberschrift eines Zweigs steht
+- Komplettest Rewrite von DraggingLogic
 - Exception beim Undo, wenn kein Textfeld mehr fokussiert ist
 - Fokus setzen beim Entfernen des vorletzten Schritts
-- Löschen des vorletzten Zweigs erlauben
-- Abfangen des Löschens des letzten Zweigs im Case
+- LÃ¶schen des vorletzten Zweigs erlauben
+- Abfangen des LÃ¶schens des letzten Zweigs im Case
 
 
-Auf längere Sicht - nicht notwendig für ersten Go-Live:
+Auf lÃ¤ngere Sicht - nicht notwendig fÃ¼r ersten Go-Live:
 - Zooming aus Undo-Liste entfernen
 - Kommentare
-- Code auf Englisch übersetzen
-- Texte internationalisieren / Sprache wählen
-- Sonst-Zweig in Cases Entfernen / Hinzufügen
+- Code auf Englisch Ã¼bersetzen
+- Texte internationalisieren / Sprache wÃ¤hlen
+- Sonst-Zweig in Cases Entfernen / HinzufÃ¼gen
 - Button-Enabling
 - Spellchecker
 - Schritte verschieben
 - Mehrere Changesets
-- Annehmen *einzelner* Änderungen
+- Annehmen *einzelner* Ã„nderungen

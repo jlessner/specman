@@ -50,6 +50,10 @@ public class RoundedBorderDecorator extends JPanel {
   @Override
   public void paint(Graphics g) {
     super.paint(g);
+    drawDecoration(g);
+  }
+
+  void drawDecoration(Graphics g) {
     if (g instanceof Graphics2D) {
       Graphics2D g2d = (Graphics2D) g;
       Color originalColor = g2d.getColor();

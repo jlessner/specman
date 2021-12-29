@@ -3,7 +3,7 @@ package specman.textfield;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.draganddrop.DragAdapter;
+import specman.draganddrop.DragMouseAdapter;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
@@ -126,7 +126,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			schrittNummer.setForeground(Color.WHITE);
 			schrittNummer.setOpaque(true);
 
-            DragAdapter ada = new DragAdapter(Specman.instance());
+            DragMouseAdapter ada = new DragMouseAdapter(Specman.instance());
             schrittNummer.addMouseListener(ada);
             schrittNummer.addMouseMotionListener(ada);
 

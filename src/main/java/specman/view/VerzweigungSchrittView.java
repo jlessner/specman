@@ -29,9 +29,10 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 			public void paint(Graphics g) {
 				super.paint(g);
 				rauteZeichnen((Graphics2D)g);
+				restoreDecorationGraphics(g);
 			}
 		};
-		
+
 		panel.setBackground(Color.black);
 		//createPanelLayout(caseInitialtexte.length);
 		panel.setLayout(panelLayout);
@@ -54,6 +55,18 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		
 	}
 
+	/** If the step is placed into a {@link RoundedBorderDecorator}, painting the step
+	 * sometimes causes a corruption of the rounded corners. So we repaint the decorator
+	 * afterwards. However: we can't just call its repaint method which causes a
+	 * <i>recursive</i> repaint and thus an endless loop. So we only run a decoration
+	 * redraw with an appropriate translated graphics context. */
+	private void restoreDecorationGraphics(Graphics g) {
+		if (roundedBorderDecorator != null) {
+			g.translate(-panel.getX(), -panel.getY());
+			roundedBorderDecorator.drawDecoration(g);
+		}
+	}
+
 	protected static String layoutRowSpec1() {
 		int aktuellerZoomfaktor = Specman.instance().zoomFaktor();
 		return "fill:[" + (1 * aktuellerZoomfaktor / 100) + "dlu,pref]"; /**@author PVN */
@@ -74,10 +87,9 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	@Override
 	public void componentResized(ComponentEvent e) {
 		double textEinrueckung = texteinrueckungNeuberechnen();
-//		berechneHoeheFuerVollstaendigUnberuehrtenText();
 		text.setLeftInset((int)textEinrueckung);
 		text.setRightInset((int)textEinrueckung);
-		panel.repaint(); // Sorgt daf�r, dass das umplazierte Textfeld und alles andere auf dem Panel sofort neu gezeichnet wird
+		panel.repaint(); // Sorgt dafür, dass das umplazierte Textfeld und alles andere auf dem Panel sofort neu gezeichnet wird
 	}
 
 	@Override public void componentMoved(ComponentEvent e) {}
