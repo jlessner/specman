@@ -24,7 +24,7 @@ Abschluss für Go-Live
 
 Bugs fixen
 - Undo für Verschiebung von Schritten funktioniert nicht sauber
-  - ohne Änderungsverfolgung
+  x ohne Änderungsverfolgung
   - mit Änderungsverfolgung
 - Text-Backup beim Löschen mit Änderungsverfolgung. Aktuell sind beim Undo einer Löschung alle vorherigen inhaltlichen Textänderungen weg
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
