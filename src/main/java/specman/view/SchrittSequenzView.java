@@ -321,6 +321,8 @@ public class SchrittSequenzView {
 		}
 	}
 
+	public void renummerieren() { renummerieren(sequenzBasisId); }
+
 	public void renummerieren(SchrittID sequenzBasisId) {
 		this.sequenzBasisId = sequenzBasisId;
 		if (schritte.size() > 0) {

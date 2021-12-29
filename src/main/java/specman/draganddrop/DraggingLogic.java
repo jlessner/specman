@@ -5,6 +5,7 @@ import specman.Specman;
 import specman.textfield.InsetPanel;
 import specman.textfield.TextfieldShef;
 import specman.undo.UndoableSchrittEntfernt;
+import specman.undo.UndoableSchrittVerschoben;
 import specman.undo.UndoableZweigHinzugefuegt;
 import specman.view.*;
 
@@ -473,14 +474,12 @@ public class DraggingLogic implements Serializable {
                 AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
                 //Abfrage da der Schritt nicht vor oder nach sich selbst eingefügt werden kann
                 if (step != schritt) {
-
-                    int schrittindex = step.getParent().schrittEntfernen(step);
-
+                    SchrittSequenzView originalParent = step.getParent();
+                    int originalIndex = originalParent.schrittEntfernen(step);
                     step.setId(schritt.newStepIDInSameSequence(insertionPosition));
-                    specman.getUndoManager().addEdit(new UndoableSchrittEntfernt(step, step.getParent(), schrittindex));
-
                     step.setParent(schritt.getParent());
                     sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
+                    specman.getUndoManager().addEdit(new UndoableSchrittVerschoben(step, originalParent, originalIndex));
                 }
             }
         }
