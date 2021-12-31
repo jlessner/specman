@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import static specman.Specman.initialtext;
 import static specman.view.RelativeStepPosition.After;
+import static specman.view.RelativeStepPosition.Before;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
 import static specman.view.RoundedBorderDecorationStyle.None;
@@ -371,8 +372,14 @@ public class SchrittSequenzView {
 				schrittAnhaengen(schritt, Specman.instance());
 			}
 			else {
-				AbstractSchrittView vorgaengerSchritt = schritte.get(schrittIndex-1);
-				schrittZwischenschieben(schritt, After, vorgaengerSchritt, Specman.instance());
+				if (schrittIndex == 0) {
+					AbstractSchrittView ersterSchritt = schritte.get(schrittIndex);
+					schrittZwischenschieben(schritt, Before, ersterSchritt, Specman.instance());
+				}
+				else {
+					AbstractSchrittView vorgaengerSchritt = schritte.get(schrittIndex-1);
+					schrittZwischenschieben(schritt, After, vorgaengerSchritt, Specman.instance());
+				}
 			}
 		}
 		Specman.instance().diagrammAktualisieren(schritt);
