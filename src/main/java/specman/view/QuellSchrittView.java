@@ -4,6 +4,7 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.QuellSchrittModel_V001;
+import specman.textfield.TextfieldShef;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -13,8 +14,13 @@ public class QuellSchrittView extends AbstractSchrittView{
 
     protected AbstractSchrittView zielschritt;
 
-    public QuellSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
-        super(editor, parent, initialerText, id, aenderungsart);
+    public QuellSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id) {
+        //TODO JL: der "." sorgt für eine Mindesthöhe des Quellschritts. Muss noch gesäubert werden.
+        //Die Höhe des Schrittnummer-Labels sollte die Höhe bestimmen.
+        super(editor, parent, ".", id, Aenderungsart.Quellschritt);
+        setQuellStil();
+        setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+        alsGeloeschtMarkieren(editor);
     }
 
     @Override

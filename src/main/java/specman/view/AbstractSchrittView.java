@@ -8,7 +8,7 @@ import specman.model.v001.*;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 import specman.undo.AbstractUndoableInteraktion;
-import specman.undo.UndoableSchrittAlsEntferntMarkiert;
+import specman.undo.UndoableSchrittEntferntMarkiert;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -204,7 +204,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		getshef().aenderungsmarkierungenVerwerfen();
 		getText().setEditable(false);
 		setGeloeschtMarkiertStil();
-		return new UndoableSchrittAlsEntferntMarkiert(this, editor);
+		return new UndoableSchrittEntferntMarkiert(this, editor);
 	}
 
 	public void aenderungsmarkierungenEntfernen() {

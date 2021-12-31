@@ -12,6 +12,7 @@ Abschluss für Go-Live
   - Außerdem Idee: Kontextmenü für Schrittnummer-Label für Löschen/Aufklappen/Zuklappen
     und später auch noch Änderungen annehmen/verwerfen für einzelnen Schritt (rekursiv)
 - Schrittnummer-Label nach rechts verlängern in abgesetzter Darstellung
+- Schrittnummer-Referenzen im Text
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
@@ -29,6 +30,8 @@ Bugs fixen
 - Text-Backup beim Löschen mit Änderungsverfolgung. Aktuell sind beim Undo einer Löschung alle vorherigen inhaltlichen Textänderungen weg
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Komplettest Rewrite von DraggingLogic
+- resyncSchrittnummerStil sollte nur beim Aufbau aus Modell verwendet werden. Ansonsten sollte
+  beim (Neu-)Setzen der ID der Stil immer erhalten bleiben, abhängig von Geloescht und Quellschritt
 - Exception beim Undo, wenn kein Textfeld mehr fokussiert ist
 - Fokus setzen beim Entfernen des vorletzten Schritts
 - Löschen des vorletzten Zweigs erlauben

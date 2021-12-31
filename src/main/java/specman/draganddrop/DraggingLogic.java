@@ -6,6 +6,7 @@ import specman.textfield.InsetPanel;
 import specman.textfield.TextfieldShef;
 import specman.undo.UndoableSchrittEntfernt;
 import specman.undo.UndoableSchrittVerschoben;
+import specman.undo.UndoableSchrittVerschobenMarkiert;
 import specman.undo.UndoableZweigHinzugefuegt;
 import specman.view.*;
 
@@ -433,34 +434,28 @@ public class DraggingLogic implements Serializable {
 
         //ToDo Löschen und hinzufügen beim verschieben
         if (e.getSource() instanceof JLabel) {
-            if(specman.aenderungenVerfolgen()) {
+            JLabel label = (JLabel) e.getSource();
+            InsetPanel ip = (InsetPanel) label.getParent().getParent();
+            AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
+            if(specman.aenderungenVerfolgen() && step.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
                 //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
                 //if(schritt.getAenderungsart()== Aenderungsart.Geloescht || schritt.getAenderungsart() == Aenderungsart.Quellschritt)
-                JLabel label = (JLabel) e.getSource();
                 QuellSchrittView quellschritt;
-                InsetPanel ip = (InsetPanel) label.getParent().getParent();
-                AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
                 sequenz = step.getParent();
                 if(step.getQuellschritt() == null) {
-                  //TODO JL: der Punkt sorgt für eine Mindesthöhe des Quellschritts. Muss noch gesäubert werden.
-                  //Die Höhe des Schrittnummer-Labels sollte die Höhe bestimmen.
-                  quellschritt = new QuellSchrittView(specman, sequenz, ".", step.getId(), null);
+                  quellschritt = new QuellSchrittView(specman, sequenz, step.getId());
                   sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
-                  quellschritt.setQuellStil();
-                  quellschritt.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-                  quellschritt.alsGeloeschtMarkieren(specman);
                 }
                 else {
                   quellschritt = step.getQuellschritt();
                 }
                 if (step != schritt) {
-                    int schrittindex = step.getParent().schrittEntfernen(step);
+                    SchrittSequenzView originalParent = step.getParent();
+                    int originalIndex = originalParent.schrittEntfernen(step);
                     step.setId(schritt.newStepIDInSameSequence(insertionPosition));
-                    specman.getUndoManager().addEdit(new UndoableSchrittEntfernt(step, step.getParent(), schrittindex));
-
                     step.setParent(schritt.getParent());
-                    sequenz=schritt.getParent();
                     sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
+                    specman.getUndoManager().addEdit(new UndoableSchrittVerschobenMarkiert(step, originalParent, originalIndex, quellschritt, specman));
                     step.setQuellschritt(quellschritt);
                     step.setZielschrittStil();
                 }
@@ -468,10 +463,6 @@ public class DraggingLogic implements Serializable {
                 specman.hauptSequenz.resyncSchrittnummerStil();
             }
             else {
-                JLabel label = (JLabel) e.getSource();
-
-                InsetPanel ip = (InsetPanel) label.getParent().getParent();
-                AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
                 //Abfrage da der Schritt nicht vor oder nach sich selbst eingefügt werden kann
                 if (step != schritt) {
                     SchrittSequenzView originalParent = step.getParent();

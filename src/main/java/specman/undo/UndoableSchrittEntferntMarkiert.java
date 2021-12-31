@@ -5,12 +5,12 @@ import javax.swing.undo.CannotUndoException;
 
 import specman.EditorI;
 import specman.view.AbstractSchrittView;
-public class UndoableSchrittAlsEntferntMarkiert extends AbstractUndoableInteraktion{
+public class UndoableSchrittEntferntMarkiert extends AbstractUndoableInteraktion{
 
     private final AbstractSchrittView schritt;
     private final EditorI editor;
 
-    public UndoableSchrittAlsEntferntMarkiert(AbstractSchrittView schritt, EditorI editor) {
+    public UndoableSchrittEntferntMarkiert(AbstractSchrittView schritt, EditorI editor) {
         this.schritt = schritt;
         this.editor = editor;
     }

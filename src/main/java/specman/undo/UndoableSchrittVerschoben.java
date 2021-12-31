@@ -7,9 +7,9 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 public class UndoableSchrittVerschoben extends AbstractUndoableInteraktion {
-  private final AbstractSchrittView step;
-  private SchrittSequenzView originalParent;
-  private int originalIndex;
+  protected final AbstractSchrittView step;
+  protected SchrittSequenzView originalParent;
+  protected int originalIndex;
 
   public UndoableSchrittVerschoben(AbstractSchrittView step, SchrittSequenzView originalParent, int originalIndex) {
     this.step = step;
@@ -25,13 +25,12 @@ public class UndoableSchrittVerschoben extends AbstractUndoableInteraktion {
     togglePosition();
   }
 
-  private void togglePosition() {
+  protected void togglePosition() {
     SchrittSequenzView toggledOriginalParent = step.getParent();
     int toggledOriginalIndex = toggledOriginalParent.schrittEntfernen(step);
     step.setParent(originalParent);
     originalParent.schrittHinzufuegen(step, originalIndex);
     originalParent.renummerieren();
-    step.setAenderungsart(null);
     originalParent = toggledOriginalParent;
     originalIndex = toggledOriginalIndex;
   }
