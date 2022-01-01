@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.Specman;
 import specman.textfield.InsetPanel;
 import specman.view.AbstractSchrittView;
@@ -35,26 +36,31 @@ public class DragMouseAdapter extends MouseAdapter {
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		if(checkEinzigerSchritt(e)){
-			draggingLogic.showInvalidCursor();
-			return;
+		try {
+			if(checkEinzigerSchritt(e)){
+				draggingLogic.showInvalidCursor();
+				return;
+			}
+			if(checkGeloeschterSchritt(e) || checkQuellSchritt(e)){
+				draggingLogic.showInvalidCursor();
+				return;
+			}
+			Point pt = e.getPoint();
+			JComponent parent = (JComponent) e.getComponent();
+			Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, specman);
+			if(!specman.getGlassPane().isVisible() ) {
+				specman.setCursor(Cursor.DEFAULT_CURSOR);
+			}
+			specman.getGlassPane().setVisible(false);
+			specman.window.add(dummy);
+			specman.window.pack();
+			updateWindowLocation(pt, parent);
+			specman.window.setVisible(true);
+			draggingLogic.dragGlassPanePos(ptCon, specman.hauptSequenz.schritte,NoInsert,e);
 		}
-		if(checkGeloeschterSchritt(e) || checkQuellSchritt(e)){
-			draggingLogic.showInvalidCursor();
-			return;
+		catch(EditException ex) {
+			specman.showError(ex);
 		}
-		Point pt = e.getPoint();
-		JComponent parent = (JComponent) e.getComponent();
-		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, specman);
-		if(!specman.getGlassPane().isVisible() ) {
-			specman.setCursor(Cursor.DEFAULT_CURSOR);
-		}
-		specman.getGlassPane().setVisible(false);
-		specman.window.add(dummy);
-		specman.window.pack();
-		updateWindowLocation(pt, parent);
-		specman.window.setVisible(true);
-		draggingLogic.dragGlassPanePos(ptCon, specman.hauptSequenz.schritte,NoInsert,e);
 	}
 
 	//Updates the Window Location
@@ -65,21 +71,26 @@ public class DragMouseAdapter extends MouseAdapter {
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		if(checkEinzigerSchritt(e)){
+		try {
+			if(checkEinzigerSchritt(e)){
+				specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				return;
+			}
+			if(checkGeloeschterSchritt(e) || checkQuellSchritt(e)){
+				specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				return;
+			}
+			specman.window.setVisible(false);
+			Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, specman);
+			draggingLogic.dragGlassPanePos(ptCon, specman.hauptSequenz.schritte,Insert,e);
+			//System.out.println(e.getSource());
+			specman.getGlassPane().setVisible(false);
 			specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			return;
+			specman.window.remove(dummy);
 		}
-		if(checkGeloeschterSchritt(e) || checkQuellSchritt(e)){
-			specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			return;
+		catch(EditException ex) {
+			specman.showError(ex);
 		}
-		specman.window.setVisible(false);
-		Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, specman);
-		draggingLogic.dragGlassPanePos(ptCon, specman.hauptSequenz.schritte,Insert,e);
-		//System.out.println(e.getSource());
-		specman.getGlassPane().setVisible(false);
-		specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		specman.window.remove(dummy);
 	}
 
 

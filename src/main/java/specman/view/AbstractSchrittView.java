@@ -1,6 +1,7 @@
 package specman.view;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -428,7 +429,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return result;
 	}
 
-	public void aenderungenUebernehmen(EditorI editor) {
+	public void aenderungenUebernehmen(EditorI editor) throws EditException {
 		textAenderungenUebernehmen();
 		if (aenderungsart != null) {
 			switch (aenderungsart) {
@@ -451,7 +452,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		getshef().aenderungsmarkierungenUebernehmen();
 	}
 
-	public void aenderungenVerwerfen(EditorI editor) {
+	public void aenderungenVerwerfen(EditorI editor) throws EditException {
 		textAenderungenVerwerfen();
 		if (aenderungsart != null) {
 			switch (aenderungsart) {

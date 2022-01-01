@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenContainerI;
@@ -291,7 +292,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.ueberschriftAenderungenUebernehmen();
 	}
 
-	@Override public void aenderungenUebernehmen(EditorI editor) {
+	@Override public void aenderungenUebernehmen(EditorI editor) throws EditException {
 		super.aenderungenUebernehmen(editor);
 		elseSequenz.aenderungenUebernehmen(editor);
 		ifSequenz.aenderungenUebernehmen(editor);
@@ -303,7 +304,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.ueberschriftAenderungenVerwerfen();
 	}
 
-	@Override public void aenderungenVerwerfen(EditorI editor) {
+	@Override public void aenderungenVerwerfen(EditorI editor) throws EditException {
 		super.aenderungenVerwerfen(editor);
 		elseSequenz.aenderungenVerwerfen(editor);
 		ifSequenz.aenderungenVerwerfen(editor);

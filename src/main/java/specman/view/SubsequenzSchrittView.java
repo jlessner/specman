@@ -4,6 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -140,12 +141,12 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return findeSchrittZuIdIncludingSubSequences(id, subsequenz);
 	}
 
-	@Override public void aenderungenUebernehmen(EditorI editor) {
+	@Override public void aenderungenUebernehmen(EditorI editor) throws EditException {
 		super.aenderungenUebernehmen(editor);
 		subsequenz.aenderungenUebernehmen(editor);
 	}
 
-	@Override public void aenderungenVerwerfen(EditorI editor) {
+	@Override public void aenderungenVerwerfen(EditorI editor) throws EditException {
 		super.aenderungenVerwerfen(editor);
 		subsequenz.aenderungenVerwerfen(editor);
 	}

@@ -3,6 +3,7 @@ package specman.undo;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
+import specman.EditException;
 import specman.EditorI;
 import specman.view.AbstractSchrittView;
 public class UndoableSchrittEntferntMarkiert extends AbstractUndoableInteraktion{
@@ -17,9 +18,17 @@ public class UndoableSchrittEntferntMarkiert extends AbstractUndoableInteraktion
 
     @Override
     public void undo() throws CannotUndoException {
-        editor.pauseUndoRecording();
-        schritt.aenderungenVerwerfen(editor);
-        editor.resumeUndoRecording();
+        try {
+            editor.pauseUndoRecording();
+            schritt.aenderungenVerwerfen(editor);
+        }
+        catch(EditException ex) {
+            editor.showError(ex);
+            throw new CannotUndoException();
+        }
+        finally {
+            editor.resumeUndoRecording();
+        }
     }
 
     @Override

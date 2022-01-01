@@ -6,6 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -333,19 +334,24 @@ public class SchrittSequenzView {
 		}
 	}
 
+	public void checkSchrittEntfernen(AbstractSchrittView schritt) throws EditException {
+		if (!(schritt instanceof CatchSchrittView)) {
+			if (schritte.size() == 1) {
+				throw new EditException("Letzten Schritt entfernen is nich!");
+			}
+		}
+	}
+
 	/**
 	 * @return Den Index des entfernten Schritts in der Sequenz. Dient der Wiedereingliederung beim Redo
 	 */
-	public int schrittEntfernen(AbstractSchrittView schritt) {
+	public int schrittEntfernen(AbstractSchrittView schritt) throws EditException {
 		int schrittIndex;
 		if (schritt instanceof CatchSchrittView) {
 			schrittIndex = catchBereich.catchEntfernen((CatchSchrittView)schritt);
 		}
 		else {
-			if (schritte.size() == 1) {
-				System.err.println("Letzten Schritt entfernen is nich!");
-				return -1;
-			}
+			checkSchrittEntfernen(schritt);
 			schritt.entfernen(this);
 			sequenzBereich.remove(schritt.getComponent());
 			schrittIndex = schritte.indexOf(schritt);
@@ -489,14 +495,14 @@ public class SchrittSequenzView {
 		return null;
 	}
 
-	public void aenderungenUebernehmen(EditorI editor) {
+	public void aenderungenUebernehmen(EditorI editor) throws EditException {
 		for (AbstractSchrittView schritt: schritte) {
 			schritt.aenderungenUebernehmen(editor);
 		}
 		setAenderungsart(null);
 	}
 
-	public void aenderungenVerwerfen(EditorI editor) {
+	public void aenderungenVerwerfen(EditorI editor) throws EditException {
 		for (AbstractSchrittView schritt: schritte) {
 			schritt.aenderungenVerwerfen(editor);
 		}

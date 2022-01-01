@@ -6,6 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -241,7 +242,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 			return ergebnis;
 		}
 
-		@Override public int schrittEntfernen(AbstractSchrittView schritt) {
+		@Override public int schrittEntfernen(AbstractSchrittView schritt) throws EditException {
 			int index = super.schrittEntfernen(schritt);
 			rahmenanzeigeAnpassen();
 			return index;

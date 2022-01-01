@@ -379,46 +379,46 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		loeschen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt = hauptSequenz.findeSchritt(zuletztFokussierterText);
-				if (schritt == null) {
-					// Sollte nur der Fall sein, wenn man den Fokus im Intro oder Outro stehen hat
-					fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + zuletztFokussierterText.getText());
-					return;
-				}
-				
-				//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
-				if(instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt){
-
-					//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
-					if(schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+				try {
+					AbstractSchrittView schritt = hauptSequenz.findeSchritt(zuletztFokussierterText);
+					if (schritt == null) {
+						// Sollte nur der Fall sein, wenn man den Fokus im Intro oder Outro stehen hat
+						fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + zuletztFokussierterText.getText());
 						return;
 					}
-					else {
-						schrittAlsGeloeschtMarkieren(schritt);
-					}
-				}
 
-				//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
-				else {
-					if (schritt instanceof CaseSchrittView) {
-						CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
-						ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
-						if (zweig != null) {
-							int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
-							undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+					//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
+					if (instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
+
+						//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
+						if (schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+							return;
+						} else {
+							schrittAlsGeloeschtMarkieren(schritt);
 						}
-						return;
 					}
-					if(darfSchrittGeloeschtWerden(schritt)){
-						System.err.println("Letzten Schritt entfernen ist nicht");
-					}
+
+					//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
 					else {
+						if (schritt instanceof CaseSchrittView) {
+							CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+							ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(zuletztFokussierterText);
+							if (zweig != null) {
+								int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
+								undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+							}
+							return;
+						}
+						darfSchrittGeloeschtWerden(schritt);
 						SchrittSequenzView sequenz = schritt.getParent();
 						int schrittIndex = sequenz.schrittEntfernen(schritt);
 						undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
 					}
+					hauptSequenz.resyncSchrittnummerStil();
 				}
-				hauptSequenz.resyncSchrittnummerStil();
+				catch (EditException ex) {
+					showError(ex);
+				}
 			}
 		});
 
@@ -517,24 +517,31 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		aenderungenUebernehmen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				hauptSequenz.aenderungenUebernehmen(Specman.this);
+				try {
+					hauptSequenz.aenderungenUebernehmen(Specman.this);
+				}
+				catch(EditException ex) {
+					showError(ex);
+				}
 			}
 		});
 
 		aenderungenVerwerfen.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
-				hauptSequenz.aenderungenVerwerfen(Specman.this);
+				try {
+					hauptSequenz.aenderungenVerwerfen(Specman.this);
+				}
+				catch(EditException ex) {
+					showError(ex);
+				}
 			}
 		});
 
 	}
 
-	private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) {
+	private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) throws EditException {
 		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
-		if (darfSchrittGeloeschtWerden(schritt)) {
-			System.err.println("Letzten Schritt entfernen ist nicht");
-			return;
-		}
+		darfSchrittGeloeschtWerden(schritt);
 		AbstractUndoableInteraktion undo = schritt.alsGeloeschtMarkieren(this);
 		if (undo != null) {
 			undoManager.addEdit(undo);
@@ -836,7 +843,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		shefEditorPane.instrumentWysEditor(ed, initialText, orientation);
 	}
 
-    private void initShefController() throws Exception {
+  private void initShefController() throws Exception {
 		shefEditorPane = new HTMLEditorPane(undoManager);
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(baueDateiMenu());
@@ -1022,22 +1029,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return imageAnhaengen;
 	}
 
-	public boolean darfSchrittGeloeschtWerden(AbstractSchrittView schritt){
+	public void darfSchrittGeloeschtWerden(AbstractSchrittView schritt) throws EditException {
 		int geloeschtzaehler = 1;
 		for(AbstractSchrittView suchSchritt : schritt.getParent().schritte){
 			if(suchSchritt.getAenderungsart() == Aenderungsart.Geloescht){
 				geloeschtzaehler++;
 			}
 		}
-		if(schritt.getParent().schritte.size() <= geloeschtzaehler){
-			return true;
-		}
-		else{
-			return false;
+		if(schritt.getParent().schritte.size() > geloeschtzaehler) {
+			throw new EditException("Letzten Schritt entfernen ist nicht");
 		}
 	}
 
 	@Override public JTextComponent getZuletztFokussierterText() {
 		return zuletztFokussierterText;
+	}
+
+	public void showError(EditException ex) {
+		System.err.println(ex.getMessage());
 	}
 }

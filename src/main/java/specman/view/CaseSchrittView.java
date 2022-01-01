@@ -7,6 +7,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenResizer;
@@ -490,7 +491,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		}
 	}
 
-	@Override public void aenderungenUebernehmen(EditorI editor) {
+	@Override public void aenderungenUebernehmen(EditorI editor) throws EditException {
 		panelFall1.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
 		sonstSequenz.aenderungenUebernehmen(editor);
@@ -514,7 +515,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		}
 	}
 
-	@Override public void aenderungenVerwerfen(EditorI editor) {
+	@Override public void aenderungenVerwerfen(EditorI editor) throws EditException {
 		//Wir spiegeln die Liste einmal auf eine CopyOnWriteArrayList um zweige während des durchlaufens bearbeiten zu können
 		List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(this.caseSequenzen);
 		sonstSequenz.aenderungenVerwerfen(editor);

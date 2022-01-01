@@ -1,6 +1,7 @@
 package specman.draganddrop;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.Specman;
 import specman.textfield.InsetPanel;
 import specman.textfield.TextfieldShef;
@@ -27,7 +28,7 @@ public class DraggingLogic implements Serializable {
     }
 
     // GlassPane and add Step to sequence
-    private void checkZweigHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) {
+    private void checkZweigHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) throws EditException {
         Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
@@ -41,7 +42,7 @@ public class DraggingLogic implements Serializable {
     }
 
     // GlassPane and add Step to sequence
-    private void checkZweigHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, int offsetRaute, InsertDecision insertDecision, MouseEvent mE) {
+    private void checkZweigHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, int offsetRaute, InsertDecision insertDecision, MouseEvent mE) throws EditException {
         Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
         if(offsetRaute<0) {
         	p.x= p.x+offsetRaute;
@@ -59,7 +60,7 @@ public class DraggingLogic implements Serializable {
     }
     
     // GlassPane over Cases
-    private void checkCaseHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight,int offsetRaute, InsertDecision insertDecision) {
+    private void checkCaseHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight,int offsetRaute, InsertDecision insertDecision) throws EditException {
         Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
@@ -82,7 +83,7 @@ public class DraggingLogic implements Serializable {
     }
 
     // GlassPane and add Step to sequence
-    private void checkSchleifenHeading(SchleifenSchrittView schleife, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) {
+    private void checkSchleifenHeading(SchleifenSchrittView schleife, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) throws EditException {
         Point p = SwingUtilities.convertPoint(schleife.getTextShef().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, schleife.getTextShef());
         if (r.contains(pos)) {
@@ -97,7 +98,7 @@ public class DraggingLogic implements Serializable {
     }
 
     // GlassPane and add Step to sequence
-    private void checkSubsequenzHeading(SubsequenzSchrittView schritt, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) {
+    private void checkSubsequenzHeading(SubsequenzSchrittView schritt, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) throws EditException {
         Point p = SwingUtilities.convertPoint(schritt.getTextShef().getInsetPanel(), 0, 0, specman);
         Rectangle r = createRectangle(p, schritt.getTextShef());
         if (r.contains(pos)) {
@@ -112,7 +113,7 @@ public class DraggingLogic implements Serializable {
     }
 
     // GlassPane and add Step to sequence
-    private boolean checkGlassPaneforComponent(AbstractSchrittView step, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) {
+    private boolean checkGlassPaneforComponent(AbstractSchrittView step, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) throws EditException {
         Component c = null;
         Component cl = null;
         Component cu = null;
@@ -171,7 +172,7 @@ public class DraggingLogic implements Serializable {
         }
     }//Recursive method to check and add Steps
 
-    public void dragGlassPanePos(Point pos, List<AbstractSchrittView> schrittListe, InsertDecision insertDecision, MouseEvent e) {
+    public void dragGlassPanePos(Point pos, List<AbstractSchrittView> schrittListe, InsertDecision insertDecision, MouseEvent e) throws EditException {
         int glassPaneHeight = 5;
         GlassPane glassPane = (GlassPane) specman.getGlassPane();
         Point p;
@@ -390,7 +391,7 @@ public class DraggingLogic implements Serializable {
         specman.getGlassPane().setVisible(b);
     }
 
-    private boolean checkFirstStep(AbstractSchrittView schritt, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent e) {
+    private boolean checkFirstStep(AbstractSchrittView schritt, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent e) throws EditException {
         Point p = SwingUtilities.convertPoint(schritt.getPanel(), 0, 0, specman);
         Rectangle r = schritt.getPanel().getBounds();
         String id = "1";
@@ -427,7 +428,7 @@ public class DraggingLogic implements Serializable {
     }
 
     //Neuen Schritt zwischenschieben abhängig vom Button
-    private void addNeuerSchritt(RelativeStepPosition insertionPosition, AbstractSchrittView schritt, MouseEvent e) {
+    private void addNeuerSchritt(RelativeStepPosition insertionPosition, AbstractSchrittView schritt, MouseEvent e) throws EditException {
         SchrittSequenzView sequenz = schritt.getParent();
         //List<Aenderungsmarkierung_V001> markierungen = null;
 

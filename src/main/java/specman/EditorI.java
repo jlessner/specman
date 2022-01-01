@@ -25,4 +25,5 @@ public interface EditorI extends FocusListener {
 	void addEdit(UndoableEdit edit);
   void pauseUndoRecording();
 	void resumeUndoRecording();
+  void showError(EditException ex);
 }

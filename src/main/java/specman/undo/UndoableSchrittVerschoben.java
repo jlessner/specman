@@ -1,5 +1,7 @@
 package specman.undo;
 
+import specman.EditException;
+import specman.Specman;
 import specman.view.AbstractSchrittView;
 import specman.view.SchrittSequenzView;
 
@@ -18,14 +20,26 @@ public class UndoableSchrittVerschoben extends AbstractUndoableInteraktion {
   }
 
   @Override public void undo() throws CannotUndoException {
-    togglePosition();
+    try {
+      togglePosition();
+    }
+    catch(EditException ex) {
+      Specman.instance().showError(ex);
+      throw new CannotUndoException();
+    }
   }
 
   @Override public void redo() throws CannotRedoException {
-    togglePosition();
+    try {
+      togglePosition();
+    }
+    catch(EditException ex) {
+      Specman.instance().showError(ex);
+      throw new CannotRedoException();
+    }
   }
 
-  protected void togglePosition() {
+  protected void togglePosition() throws EditException {
     SchrittSequenzView toggledOriginalParent = step.getParent();
     int toggledOriginalIndex = toggledOriginalParent.schrittEntfernen(step);
     step.setParent(originalParent);

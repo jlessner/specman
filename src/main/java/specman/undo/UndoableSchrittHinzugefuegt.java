@@ -1,5 +1,7 @@
 package specman.undo;
 
+import specman.EditException;
+import specman.Specman;
 import specman.view.SchrittSequenzView;
 import specman.view.AbstractSchrittView;
 
@@ -19,7 +21,23 @@ public class UndoableSchrittHinzugefuegt extends AbstractUndoableInteraktion {
 	
 	@Override
 	public void undo() throws CannotUndoException {
-		schrittIndex = sequenz.schrittEntfernen(schritt);
+		try {
+			schrittIndex = sequenz.schrittEntfernen(schritt);
+		}
+		catch(EditException ex) {
+			Specman.instance().showError(ex);
+			throw new CannotUndoException();
+		}
+	}
+
+	@Override public boolean canUndo() {
+		try {
+			sequenz.checkSchrittEntfernen(schritt);
+			return true;
+		}
+		catch(EditException ex) {
+			return false;
+		}
 	}
 
 	@Override
