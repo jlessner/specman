@@ -27,8 +27,7 @@ Bugs fixen
 - Undo für Löschen von Zweigen mit Änderungenmarkierung
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Komplettest Rewrite von DraggingLogic
-- resyncSchrittnummerStil sollte nur beim Aufbau aus Modell verwendet werden. Ansonsten sollte
-  beim (Neu-)Setzen der ID der Stil immer erhalten bleiben, abhängig von Geloescht und Quellschritt
+- resyncSchrittnummerStil sollte nur beim Aufbau aus Modell verwendet werden. Ansonsten sollte beim (Neu-)Setzen der ID der Stil immer erhalten bleiben, abhängig von Geloescht und Quellschritt
 - Exception beim Undo, wenn kein Textfeld mehr fokussiert ist
 - Fokus setzen beim Entfernen des vorletzten Schritts
 - Löschen des vorletzten Zweigs erlauben
