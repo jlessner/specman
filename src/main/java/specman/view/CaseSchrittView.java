@@ -524,9 +524,6 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 				zweigEntfernen(editor, caseSequenz);
 			}
 			else {
-				if(caseSequenz.getAenderungsart() == Aenderungsart.Geloescht) {
-					caseSequenz.aenderungsmarkierungenEntfernen();
-				}
 				caseSequenz.aenderungenVerwerfen(editor);
 			}
 		}

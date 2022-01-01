@@ -542,7 +542,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) throws EditException {
 		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
 		darfSchrittGeloeschtWerden(schritt);
+		pauseUndoRecording();
 		AbstractUndoableInteraktion undo = schritt.alsGeloeschtMarkieren(this);
+		resumeUndoRecording();
 		if (undo != null) {
 			undoManager.addEdit(undo);
 		}
@@ -1036,7 +1038,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				geloeschtzaehler++;
 			}
 		}
-		if(schritt.getParent().schritte.size() > geloeschtzaehler) {
+		if(schritt.getParent().schritte.size() <= geloeschtzaehler) {
 			throw new EditException("Letzten Schritt entfernen ist nicht");
 		}
 	}
@@ -1046,6 +1048,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public void showError(EditException ex) {
-		System.err.println(ex.getMessage());
+		fehler(ex.getMessage());
 	}
 }

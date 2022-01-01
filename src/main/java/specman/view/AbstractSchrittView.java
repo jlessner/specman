@@ -182,13 +182,6 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		setAenderungsart(null);
 	}
 
-	public void setNichtGeloeschtMarkiertStil() {
-		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-		getText().setEditable(true);
-		getshef().setNichtGeloeschtMarkiertStil(id);
-		setAenderungsart(null);
-	}
-
 	public void setGeloeschtMarkiertStil() {
 		setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		getText().setEditable(false);
@@ -202,7 +195,6 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
-		getshef().aenderungsmarkierungenVerwerfen();
 		getText().setEditable(false);
 		setGeloeschtMarkiertStil();
 		return new UndoableSchrittEntferntMarkiert(this, editor);

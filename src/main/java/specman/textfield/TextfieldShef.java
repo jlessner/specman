@@ -108,6 +108,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	private final JEditorPane editorPane;
 	public final JLabel schrittNummer;
 	boolean schrittNummerSichtbar = true;
+	TextMitAenderungsmarkierungen_V001 loeschUndoBackup;
 
 	public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
 		editorPane = new JEditorPane();
@@ -152,11 +153,19 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	}
 
 	public void setStandardStil(SchrittID id) {
-		setStyle(getPlainText(), standardStil);
-		schrittNummer.setText(String.valueOf(id));
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittenummer));
-		schrittNummer.setBackground(Hintergrundfarbe_Schrittenummer);
-		schrittNummer.setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
+		if (loeschUndoBackup != null) {
+			setText(loeschUndoBackup);
+			loeschUndoBackup = null;
+		}
+		else {
+			setStyle(getPlainText(), standardStil);
+		}
+		if (schrittNummer != null) {
+			schrittNummer.setText(String.valueOf(id));
+			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittenummer));
+			schrittNummer.setBackground(Hintergrundfarbe_Schrittenummer);
+			schrittNummer.setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
+		}
 	}
 
 	public void setNichtGeloeschtMarkiertStil(SchrittID id) {
@@ -186,12 +195,18 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	}
 
 	public void setGeloeschtMarkiertStil(SchrittID id) {
+		loeschUndoBackup = getTextMitAenderungsmarkierungen(true);
+		aenderungsmarkierungenVerwerfen();
 		setStyle(getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
-		schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
-		schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
-		schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
-				+ id +"</span></body></html>");
+		setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		getTextComponent().setEditable(false);
+		if (schrittNummer != null) {
+			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
+			schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
+			schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
+			schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
+					+ id +"</span></body></html>");
+		}
 	}
 
 	public boolean ganzerSchrittGeloeschtStilGesetzt() {

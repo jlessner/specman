@@ -18,9 +18,7 @@ import javax.swing.text.JTextComponent;
  * Überschriftentext, den im Kopfteil des VerzweigungsSchritts angezeigt wird.
  */
 public class ZweigSchrittSequenzView extends SchrittSequenzView {
-
 	TextfieldShef ueberschrift;
-	
 
 	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, ZweigSchrittSequenzModel_V001 model) {
 		super(editor, parent, model);
@@ -81,16 +79,12 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	public void alsGeloeschtMarkieren(EditorI editor) {
 		super.alsGeloeschtMarkieren(editor);
-		ueberschrift.aenderungsmarkierungenVerwerfen();
-		ueberschrift.setStyle(ueberschrift.getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-		ueberschrift.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		ueberschrift.getTextComponent().setEditable(false);
+		ueberschrift.setGeloeschtMarkiertStil(null);
 	}
 
 	public void aenderungsmarkierungenEntfernen() {
 		setAenderungsart(null);
-		ueberschrift.setStyle(ueberschrift.getPlainText(), TextfieldShef.standardStil);
-		ueberschrift.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		ueberschrift.setStandardStil(null);
 		ueberschrift.getTextComponent().setEditable(true);
 	}
 
