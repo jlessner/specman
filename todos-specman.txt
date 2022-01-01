@@ -36,6 +36,7 @@ Bugs fixen
 
 
 Auf längere Sicht - nicht notwendig für ersten Go-Live:
+- Schritt-Morphing: If/Else -> Case usw.
 - Zooming aus Undo-Liste entfernen
 - Kommentare
 - Code auf Englisch übersetzen
@@ -43,6 +44,5 @@ Auf längere Sicht - nicht notwendig für ersten Go-Live:
 - Sonst-Zweig in Cases Entfernen / Hinzufügen
 - Button-Enabling
 - Spellchecker
-- Schritte verschieben
 - Mehrere Changesets
 - Annehmen *einzelner* Änderungen
