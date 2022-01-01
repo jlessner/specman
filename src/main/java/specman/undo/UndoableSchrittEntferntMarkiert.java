@@ -17,12 +17,16 @@ public class UndoableSchrittEntferntMarkiert extends AbstractUndoableInteraktion
 
     @Override
     public void undo() throws CannotUndoException {
+        editor.pauseUndoRecording();
         schritt.aenderungenVerwerfen(editor);
+        editor.resumeUndoRecording();
     }
 
     @Override
     public void redo() throws CannotRedoException {
+        editor.pauseUndoRecording();
         schritt.alsGeloeschtMarkieren(editor);
+        editor.resumeUndoRecording();
     }
 
 }

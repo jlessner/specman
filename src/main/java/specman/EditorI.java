@@ -16,18 +16,13 @@ import java.io.File;
  */
 public interface EditorI extends FocusListener {
 	void schrittFuerNachinitialisierungRegistrieren(AbstractSchrittView schritt);
-
 	void vertikalLinieSetzen(int x, SpaltenResizer spaltenResizer);
-
 	void diagrammLaden(File diagramFile);
-
 	int getZoomFactor();
-
 	void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation);
-
-	void addEdit(UndoableEdit edit);
-
 	void diagrammAktualisieren(AbstractSchrittView schrittImFokus);
-
 	JTextComponent getZuletztFokussierterText();
+	void addEdit(UndoableEdit edit);
+  void pauseUndoRecording();
+	void resumeUndoRecording();
 }

@@ -829,7 +829,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	HTMLEditorPane shefEditorPane;
-	UndoManager undoManager;
+	SpecmanUndoManager undoManager;
 
 	@Override
 	public void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation) {
@@ -853,6 +853,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void addEdit(UndoableEdit edit) {
     	undoManager.addEdit(edit);
 	}
+
+	@Override public void pauseUndoRecording() { undoManager.pauseEdit(); }
+
+	@Override public void resumeUndoRecording() { undoManager.resumeEdit(); }
 
 	private JMenu baueDateiMenu() {
 		JMenu dateiMenu = new JMenu("Datei");

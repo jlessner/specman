@@ -8,7 +8,6 @@ import specman.view.SchrittSequenzView;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoableEdit;
 
 import static specman.view.RelativeStepPosition.Before;
 
@@ -29,10 +28,12 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
   @Override public void undo() throws CannotUndoException {
     togglePosition();
     if (quellschrittIstNeu) {
+      editor.pauseUndoRecording();
       quellschritt.getParent().schrittEntfernen(quellschritt);
       step.setQuellschritt(null);
       step.setStandardStil();
       step.setAenderungsart(null);
+      editor.resumeUndoRecording();
     }
     else {
       // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht
@@ -44,18 +45,20 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
 
   @Override public void redo() throws CannotRedoException {
     if (quellschrittIstNeu) {
+      editor.pauseUndoRecording();
       quellschritt = new QuellSchrittView(editor, originalParent, step.getId());
       originalParent.schrittZwischenschieben(quellschritt, Before, step, editor);
       step.setQuellschritt(quellschritt);
+      quellschritt.setZielschritt(step);
       step.setZielschrittStil();
       step.setAenderungsart(Aenderungsart.Zielschritt);
+      editor.resumeUndoRecording();
     }
     togglePosition();
-    if (!quellschrittIstNeu) {
-      // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht
-      // kaputt gehen, wenn der Schritt (im Rahmen von togglePosition) seine ID
-      // neu gesetzt bekommt.
-      step.resyncSchrittnummerStil();
-    }
+    // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht
+    // kaputt gehen, wenn der Schritt (im Rahmen von togglePosition) seine ID
+    // neu gesetzt bekommt.
+    step.resyncSchrittnummerStil();
+    quellschritt.resyncSchrittnummerStil();
   }
 }

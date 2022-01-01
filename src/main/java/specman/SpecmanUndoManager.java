@@ -11,7 +11,7 @@ public class SpecmanUndoManager extends UndoManager {
     private static final String UNSAVED_CHANGES_INDICATOR = " *";
 
     private final Specman specman;
-    private boolean addEditStop = false;
+    private boolean editPaused = false;
 
     public SpecmanUndoManager(Specman specman) {
         this.specman = specman;
@@ -19,7 +19,7 @@ public class SpecmanUndoManager extends UndoManager {
 
     @Override
     public synchronized boolean addEdit(UndoableEdit anEdit) {
-        if(addEditStop == false){
+        if(!editPaused) {
             boolean success = super.addEdit(anEdit);
             if (success) {
                 updateUnsavedChangesIndicatorInTitleBar();
@@ -70,8 +70,11 @@ public class SpecmanUndoManager extends UndoManager {
         }
     }
 
-    public void setAddEditStop (boolean addEditStop){
-        this.addEditStop=addEditStop;
+    public void pauseEdit() {
+        editPaused =true;
     }
-    public boolean getAddEditStop (){ return addEditStop;}
+
+    public void resumeEdit() {
+        editPaused =false;
+    }
 }

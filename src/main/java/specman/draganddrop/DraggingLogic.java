@@ -4,7 +4,6 @@ import specman.Aenderungsart;
 import specman.Specman;
 import specman.textfield.InsetPanel;
 import specman.textfield.TextfieldShef;
-import specman.undo.UndoableSchrittEntfernt;
 import specman.undo.UndoableSchrittVerschoben;
 import specman.undo.UndoableSchrittVerschobenMarkiert;
 import specman.undo.UndoableZweigHinzugefuegt;
@@ -443,8 +442,10 @@ public class DraggingLogic implements Serializable {
                 QuellSchrittView quellschritt;
                 sequenz = step.getParent();
                 if(step.getQuellschritt() == null) {
-                  quellschritt = new QuellSchrittView(specman, sequenz, step.getId());
-                  sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
+                    specman.pauseUndoRecording();
+                    quellschritt = new QuellSchrittView(specman, sequenz, step.getId());
+                    sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
+                    specman.resumeUndoRecording();
                 }
                 else {
                   quellschritt = step.getQuellschritt();
@@ -455,9 +456,11 @@ public class DraggingLogic implements Serializable {
                     step.setId(schritt.newStepIDInSameSequence(insertionPosition));
                     step.setParent(schritt.getParent());
                     sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
-                    specman.getUndoManager().addEdit(new UndoableSchrittVerschobenMarkiert(step, originalParent, originalIndex, quellschritt, specman));
+                    specman.addEdit(new UndoableSchrittVerschobenMarkiert(step, originalParent, originalIndex, quellschritt, specman));
                     step.setQuellschritt(quellschritt);
+                    specman.pauseUndoRecording();
                     step.setZielschrittStil();
+                    specman.resumeUndoRecording();
                 }
                 quellschritt.setZielschritt(step);
                 specman.hauptSequenz.resyncSchrittnummerStil();
@@ -470,7 +473,7 @@ public class DraggingLogic implements Serializable {
                     step.setId(schritt.newStepIDInSameSequence(insertionPosition));
                     step.setParent(schritt.getParent());
                     sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
-                    specman.getUndoManager().addEdit(new UndoableSchrittVerschoben(step, originalParent, originalIndex));
+                    specman.addEdit(new UndoableSchrittVerschoben(step, originalParent, originalIndex));
                 }
             }
         }

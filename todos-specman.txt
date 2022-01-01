@@ -24,6 +24,8 @@ Abschluss für Go-Live
 
 
 Bugs fixen
+- Undo: Schritte hinzufügen, alle entfernen -> Letzten Schritt entfernen is nich!, Redo -> Array index out of Bounds. Dadurch, dass das letzte Undo nicht geht, passen danach die Schrittindizes in den Redos nicht mehr.
+ Letzten Schritt entfernen mit Undo sollten wir möglich machen.
 - Undo für Verschiebung von Schritten funktioniert nicht sauber
   x ohne Änderungsverfolgung
   - mit Änderungsverfolgung
