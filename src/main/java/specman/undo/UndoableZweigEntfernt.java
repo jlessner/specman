@@ -12,7 +12,7 @@ public class UndoableZweigEntfernt extends AbstractUndoableInteraktion {
 	final CaseSchrittView caseSchritt;
 	final int zweigIndex;
 	final EditorI editor;
-	
+
 	public UndoableZweigEntfernt(EditorI editor, ZweigSchrittSequenzView zweig, CaseSchrittView caseSchritt, int zweigIndex) {
 		this.zweig = zweig;
 		this.caseSchritt = caseSchritt;
@@ -21,12 +21,12 @@ public class UndoableZweigEntfernt extends AbstractUndoableInteraktion {
 	}
 
 	@Override
-	public void undo() throws CannotUndoException {
+	public void undoEdit() throws CannotUndoException {
 		caseSchritt.zweigHinzufuegen(editor, zweig, zweigIndex);
 	}
 
 	@Override
-	public void redo() throws CannotRedoException {
+	public void redoEdit() throws CannotRedoException {
 		caseSchritt.zweigEntfernen(editor, zweig);
 	}
 

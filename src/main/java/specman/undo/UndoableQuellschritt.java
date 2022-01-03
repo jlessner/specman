@@ -17,7 +17,7 @@ public class UndoableQuellschritt extends AbstractUndoableInteraktion{
     }
 
     @Override
-    public void undo() throws CannotUndoException {
+    public void undoEdit() throws CannotUndoException {
         schritt.getshef().setBackground(TextfieldShef.Hintergrundfarbe_Standard);
         schritt.getshef().setStyle(schritt.getshef().getPlainText(),TextfieldShef.standardStil);
         schritt.getshef().schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
@@ -29,7 +29,7 @@ public class UndoableQuellschritt extends AbstractUndoableInteraktion{
     }
 
     @Override
-    public void redo() throws CannotRedoException {
+    public void redoEdit() throws CannotRedoException {
         schritt.getshef().setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
         schritt.getshef().setStyle(schritt.getshef().getPlainText(), TextfieldShef.quellschrittStil);
         schritt.getshef().schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);

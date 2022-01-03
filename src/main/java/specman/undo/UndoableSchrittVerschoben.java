@@ -19,24 +19,12 @@ public class UndoableSchrittVerschoben extends AbstractUndoableInteraktion {
     this.originalIndex = originalIndex;
   }
 
-  @Override public void undo() throws CannotUndoException {
-    try {
-      togglePosition();
-    }
-    catch(EditException ex) {
-      Specman.instance().showError(ex);
-      throw new CannotUndoException();
-    }
+  @Override public void undoEdit() throws EditException {
+    togglePosition();
   }
 
-  @Override public void redo() throws CannotRedoException {
-    try {
-      togglePosition();
-    }
-    catch(EditException ex) {
-      Specman.instance().showError(ex);
-      throw new CannotRedoException();
-    }
+  @Override public void redoEdit() throws EditException {
+    togglePosition();
   }
 
   protected void togglePosition() throws EditException {

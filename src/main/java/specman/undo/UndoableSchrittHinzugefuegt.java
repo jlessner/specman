@@ -20,14 +20,8 @@ public class UndoableSchrittHinzugefuegt extends AbstractUndoableInteraktion {
 	}
 	
 	@Override
-	public void undo() throws CannotUndoException {
-		try {
-			schrittIndex = sequenz.schrittEntfernen(schritt);
-		}
-		catch(EditException ex) {
-			Specman.instance().showError(ex);
-			throw new CannotUndoException();
-		}
+	public void undoEdit() throws EditException {
+		schrittIndex = sequenz.schrittEntfernen(schritt);
 	}
 
 	@Override public boolean canUndo() {
@@ -41,7 +35,7 @@ public class UndoableSchrittHinzugefuegt extends AbstractUndoableInteraktion {
 	}
 
 	@Override
-	public void redo() throws CannotRedoException {
+	public void redoEdit() throws CannotRedoException {
 		sequenz.schrittHinzufuegen(schritt, schrittIndex);
 	}
 

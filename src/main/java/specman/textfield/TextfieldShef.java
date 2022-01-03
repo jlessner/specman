@@ -160,6 +160,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		else {
 			setStyle(getPlainText(), standardStil);
 		}
+		setBackground(Hintergrundfarbe_Standard);
 		if (schrittNummer != null) {
 			schrittNummer.setText(String.valueOf(id));
 			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittenummer));

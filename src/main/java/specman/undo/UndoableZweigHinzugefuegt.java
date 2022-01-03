@@ -21,12 +21,12 @@ public class UndoableZweigHinzugefuegt extends AbstractUndoableInteraktion {
 	}
 
 	@Override
-	public void undo() throws CannotUndoException {
+	public void undoEdit() throws CannotUndoException {
 		zweigIndex = caseSchritt.zweigEntfernen(editor, zweig);
 	}
 
 	@Override
-	public void redo() throws CannotRedoException {
+	public void redoEdit() throws CannotRedoException {
 		caseSchritt.zweigHinzufuegen(editor, zweig, zweigIndex);
 	}
 

@@ -1,5 +1,10 @@
 package specman.undo;
 
+import specman.EditException;
+import specman.Specman;
+
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 
 abstract public class AbstractUndoableInteraktion implements UndoableEdit {
@@ -47,5 +52,27 @@ abstract public class AbstractUndoableInteraktion implements UndoableEdit {
 		return null;
 	}
 
-	
+	@Override public final void undo() throws CannotUndoException {
+		try {
+			undoEdit();
+		}
+		catch(EditException ex) {
+			Specman.instance().showError(ex);
+			throw new CannotUndoException();
+		}
+	}
+
+	@Override public final void redo() throws CannotRedoException {
+		try {
+			redoEdit();
+		}
+		catch(EditException ex) {
+			Specman.instance().showError(ex);
+			throw new CannotRedoException();
+		}
+	}
+
+	protected abstract void undoEdit() throws EditException;
+
+	protected abstract void redoEdit() throws EditException;
 }

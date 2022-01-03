@@ -17,12 +17,12 @@ public class UndoableSpaltenbreiteAngepasst extends AbstractUndoableInteraktion 
 	}
 
 	@Override
-	public void undo() throws CannotUndoException {
+	public void undoEdit() throws CannotUndoException {
 		container.spaltenbreitenAnpassenNachMausDragging(-veraenderung, spalte);
 	}
 
 	@Override
-	public void redo() throws CannotRedoException {
+	public void redoEdit() throws CannotRedoException {
 		container.spaltenbreitenAnpassenNachMausDragging(veraenderung, spalte);
 	}
 	

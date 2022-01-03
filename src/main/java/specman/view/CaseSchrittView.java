@@ -19,6 +19,7 @@ import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 import specman.undo.AbstractUndoableInteraktion;
 import specman.undo.UndoableZweigEntfernt;
+import specman.undo.UndoableZweigEntferntMarkiert;
 
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
@@ -400,16 +401,20 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			//Markieren von Sonstsequenz und fall 1, 2 nicht ermöglichen
 			else if (zweig == sonstSequenz) {
 				System.err.println("Sonst-Sequenz kann nicht entfernt werden");
-			} else if (zweig == caseSequenzen.get(0) && caseSequenzen.size() <= 2) {
+			}
+			else if (zweig == caseSequenzen.get(0) && caseSequenzen.size() <= 2) {
 				System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
-			} else if (zweig == caseSequenzen.get(1) && caseSequenzen.size() <= 2) {
+			}
+			else if (zweig == caseSequenzen.get(1) && caseSequenzen.size() <= 2) {
 				System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
-			} else {
+			}
+			else {
 				zweig.alsGeloeschtMarkieren(editor);
 				if (zweig == caseSequenzen.get(0)) {
 					panelFall1.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 					panel.repaint();
 				}
+				return new UndoableZweigEntferntMarkiert(editor, zweig, this);
 			}
 			return null;
 		}

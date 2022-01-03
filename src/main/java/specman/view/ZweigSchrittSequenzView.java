@@ -1,6 +1,7 @@
 package specman.view;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -80,6 +81,11 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	public void alsGeloeschtMarkieren(EditorI editor) {
 		super.alsGeloeschtMarkieren(editor);
 		ueberschrift.setGeloeschtMarkiertStil(null);
+	}
+
+	public void aenderungenVerwerfen(EditorI editor) throws EditException {
+		super.aenderungenVerwerfen(editor);
+		aenderungsmarkierungenEntfernen();
 	}
 
 	public void aenderungsmarkierungenEntfernen() {

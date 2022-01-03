@@ -24,15 +24,12 @@ public class UndoableDiagrammSkaliert extends AbstractUndoableInteraktion {
 	}
 
 	@Override
-	public void undo() throws CannotUndoException {
+	public void undoEdit() throws CannotUndoException {
 		prozent = editor.skalieren(prozent);
 	}
 
 	@Override
-	public void redo() throws CannotRedoException {
+	public void redoEdit() throws CannotRedoException {
 		prozent = editor.skalieren(prozent);
 	}
-	
-	
-
 }
