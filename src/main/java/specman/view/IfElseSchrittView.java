@@ -45,14 +45,14 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelBedingung.setBackground(Specman.schrittHintergrund());
 		panelBedingung.setLayout(createSpalteLinks());
 		panelBedingung.add(text.asJComponent(), "2,1");
-		panel.add(panelBedingung, CC.xywh(3, 1, 1, 1));
-		panel.add(leeresFeld, CC.xywh(1, 1, 1, 1));
-		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 5));
+		panel.add(panelBedingung, CC.xy(3, 1));
+		panel.add(leeresFeld, CC.xy(1, 1));
 		text.addFocusListener(new FocusAdapter() {
 			@Override public void focusLost(FocusEvent e) {
 				berechneHoeheFuerVollstaendigUnberuehrtenText();
 			}
 		});
+		panel.add(new SpaltenResizer(this, editor), CC.xywh(2, 1, 1, 5));
 		if(withDefaultContent) {
 			initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, initialtext("Ja")));
 			initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, TextfieldShef.right("Nein")));
@@ -61,6 +61,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 
 	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, IfElseSchrittModel_V001 model) {
 		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, false);
+		panel.add(new SpaltenResizer(this, editor), CC.xywh(2, 1, 1, 5));
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.elseSequenz));
 		setBackground(new Color(model.farbe));
@@ -97,7 +98,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelElse.setBackground(Specman.schrittHintergrund());
 		panelElse.setLayout(createSpalteLinks());
 		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 1, 1, 1));
-		panel.add(panelElse, CC.xywh(3, 3, 1, 1));
+		panel.add(panelElse, CC.xy(3, 3));
 	}
 	
 	protected void ifBedingungAnlegen(ZweigSchrittSequenzView ifSequenz) {
@@ -145,13 +146,9 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 
 	protected Point berechneRautenmittelpunkt() { //umbenannt
-		return berechneRautenmittelpunkt(mittelpunktRaute);
-	}
-
-	protected Point berechneRautenmittelpunkt(boolean bisUnten) { //umbenannt
 		return new Point(
-				ifSequenz.getContainer().getWidth(),
-				ifSequenz.ueberschrift.getY() + (bisUnten ? ifSequenz.ueberschrift.getHeight() : 0));
+			ifSequenz.getContainer().getWidth() + (LINIENBREITE / 2),
+			ifSequenz.ueberschrift.getY() + ifSequenz.ueberschrift.getHeight());
 	}
 
 	@Override
@@ -163,9 +160,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelElse.setBackground(bg);
 		leeresFeld.setBackground(bg);
 		panelBedingung.setBackground(bg);
-
-		//Raute
-		panel.repaint(); // Damit die Linien nachgezeichnet werden
+		panel.repaint(); // Damit die Raute nachgezeichnet wird
 	}
 
 	@Override
@@ -207,7 +202,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		super.skalieren(prozentNeu, prozentAktuell);
 		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
 		panelBedingung.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
-		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */ 
+		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
 		panelIf.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD */
 		panelBedingung.add(text.asJComponent(), CC.xy(2, 1)); //siehe Konstruktor
 		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xy(2, 1)); //siehe Methode elseBedingungAnlegen
@@ -327,11 +322,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
         return ifSequenz;
     }
 
-    public ZweigSchrittSequenzView getElseSequenz() {
+  public ZweigSchrittSequenzView getElseSequenz() {
         return elseSequenz;
     }
-	public int getRautenHeight() {
-		// TODO Auto-generated method stub
-		return berechneRautenmittelpunkt().y;
-	}
 }

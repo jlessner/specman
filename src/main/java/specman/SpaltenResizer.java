@@ -24,18 +24,17 @@ public class SpaltenResizer extends JPanel {
 		this.container = container;
 		this.spalte = spalte;
 		setOpaque(false);
-		//setCursor(new Cursor(com.sun.glass.ui.Cursor.CURSOR_RESIZE_LEFTRIGHT));
+		//setBackground(Color.RED);
 		setCursor(leftRightCursor);
 		addMouseListener(new MouseAdapter() {
 			@Override public void mouseReleased(MouseEvent e) {
-			if (dragX != null) {
-				int ermoeglichteVeraenderung = container.spaltenbreitenAnpassenNachMausDragging(e.getX(), spalte);
-				editor.addEdit(new UndoableSpaltenbreiteAngepasst(container, ermoeglichteVeraenderung, spalte));
-				dragX = null;
-				editor.vertikalLinieSetzen(0, null);
+				if (dragX != null) {
+					int ermoeglichteVeraenderung = container.spaltenbreitenAnpassenNachMausDragging(e.getX(), spalte);
+					editor.addEdit(new UndoableSpaltenbreiteAngepasst(container, ermoeglichteVeraenderung, spalte));
+					dragX = null;
+					editor.vertikalLinieSetzen(0, null);
+				}
 			}
-			}
-
 		});
 		
 		addMouseMotionListener(new MouseMotionAdapter() {

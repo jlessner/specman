@@ -114,39 +114,44 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	
 	/** @author PVN */
 	public static double breiteLayoutspalteBerechnen() {
-		double breiteSpaltenLayout = 20*Specman.instance().getZoomFactor()/100; 
+		double breiteSpaltenLayout = 20*Specman.instance().getZoomFactor()/100;
 		return breiteSpaltenLayout;
 	}
 
 	protected Point rauteZeichnen(Graphics2D g) { //umbenannt
-		Point mittelpunktRaute = berechneRautenmittelpunkt(); //umbenannt
-		/** @author PVN */ 
-		int[] polygonXinnen = {(mittelpunktRaute.x-(int)breiteLayoutspalteBerechnen()), mittelpunktRaute.x+1, (mittelpunktRaute.x+2+(int)breiteLayoutspalteBerechnen()), mittelpunktRaute.x+1};
-		int[] polygonYinnen = {text.getHeight()+1, (text.getHeight()-1-(int)breiteLayoutspalteBerechnen()), text.getHeight()+1, (text.getHeight()+1+(int)breiteLayoutspalteBerechnen())}; /** @author PVN, SD */
 		g.setRenderingHint(
-			RenderingHints.KEY_ANTIALIASING, 
+			RenderingHints.KEY_ANTIALIASING,
 			RenderingHints.VALUE_ANTIALIAS_ON);
+		Point mittelpunktRaute = berechneRautenmittelpunkt(); //umbenannt
+		int layoutSpaltenbreite = (int)breiteLayoutspalteBerechnen();
+
+		int[] polygonXinnen = {
+			mittelpunktRaute.x - layoutSpaltenbreite,
+			mittelpunktRaute.x,
+			mittelpunktRaute.x + layoutSpaltenbreite,
+			mittelpunktRaute.x};
+		int[] polygonYinnen = {
+			text.getHeight(),
+			text.getHeight() - layoutSpaltenbreite,
+			text.getHeight(),
+			text.getHeight() + layoutSpaltenbreite }; /** @author PVN, SD */
 		g.setColor(Color.WHITE);
 		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
 		
-		int[] polygonXaussen = {(mittelpunktRaute.x-(int)breiteLayoutspalteBerechnen()), mittelpunktRaute.x+1, (mittelpunktRaute.x+2+(int)breiteLayoutspalteBerechnen()), mittelpunktRaute.x+1};
-		int[] polygonYausssen = {text.getHeight()+1, (text.getHeight()-1-(int)breiteLayoutspalteBerechnen()), text.getHeight()+1, (text.getHeight()+1+(int)breiteLayoutspalteBerechnen()+1)}; /** @author PVN, SD */ 
+		int[] polygonXaussen = {
+			mittelpunktRaute.x - layoutSpaltenbreite,
+			mittelpunktRaute.x,
+			mittelpunktRaute.x + layoutSpaltenbreite,
+			mittelpunktRaute.x};
+		int[] polygonYausssen = {
+			text.getHeight() + 1,
+			text.getHeight() - 1 - layoutSpaltenbreite,
+			text.getHeight() + 1,
+			text.getHeight() + 1 + layoutSpaltenbreite + 1 }; /** @author PVN, SD */
 		g.setStroke(new BasicStroke(LINIENBREITE));
-		g.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING, 
-                RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setColor(Color.BLACK);
 		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
-		
-		
-		// Dis folgenden beiden Zeilen stellen sicher, dass *nach* dem Zeichnen des Dreiecks
-		// die evt. �ber den Linien liegenden Grafikkomponenten noch einmal gezeichnet werden.
-		// Dann werden sie auf jeden Fall nicht von den Linien �berdeckt. Das passiert n�mlich
-		// sonst manchmal, wobei ich noch nicht verstanden habe, unter welchen Bedingungen
-		// das passiert. Es geht also vmtl. auch eleganter
-		klappen.repaint();
-		text.repaintSchrittId();
-		
+
 		return mittelpunktRaute;
 	}
 	
