@@ -3,7 +3,6 @@ package specman.textfield;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.draganddrop.DragMouseAdapter;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
@@ -42,16 +41,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 		if (schrittId != null) {
 			schrittNummer = new SchrittNummerLabel(schrittId);
-			schrittNummer.setFont(labelFont);
-			schrittNummer.setBackground(Hintergrundfarbe_Schrittnummer);
-			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittnummer));
-			schrittNummer.setForeground(Color.WHITE);
-			schrittNummer.setOpaque(true);
-
-			DragMouseAdapter ada = new DragMouseAdapter(Specman.instance());
-			schrittNummer.addMouseListener(ada);
-			schrittNummer.addMouseMotionListener(ada);
-
 			editorPane.add(schrittNummer);
 			editorPane.addComponentListener(this);
 			insetPanel.setEnabled(false);
@@ -83,35 +72,18 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		}
 		setBackground(Hintergrundfarbe_Standard);
 		if (schrittNummer != null) {
-			schrittNummer.setText(String.valueOf(id));
-			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittenummer));
-			schrittNummer.setBackground(Hintergrundfarbe_Schrittenummer);
-			schrittNummer.setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
+			schrittNummer.setStandardStil(id);
 		}
 	}
 
-	public void setNichtGeloeschtMarkiertStil(SchrittID id) {
-		setStyle(getPlainText(), standardStil);
-		schrittNummer.setBackground(Hintergrundfarbe_Schrittenummer);
-		schrittNummer.setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittenummer));
-		schrittNummer.setWrappedText(SPAN_GELOESCHT_MARKIERT, id, "</span>");
-	}
-
 	public void setZielschrittStil(SchrittID quellschrittId) {
-		schrittNummer.wrapAsZiel(quellschrittId);
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE));
-		schrittNummer.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schrittNummer.setForeground(Hintergrundfarbe_Geloescht);
+		schrittNummer.setZielschrittStil(quellschrittId);
 	}
 
 	public void setQuellStil(SchrittID zielschrittID) {
 		setStyle(getPlainText(), quellschrittStil);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schrittNummer.wrapAsQuelle(zielschrittID);
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Geloescht));
-		schrittNummer.setBackground(Hintergrundfarbe_Geloescht);
-		schrittNummer.setForeground(Schriftfarbe_Geloescht);
+		schrittNummer.setQuellschrittStil(zielschrittID);
 	}
 
 	public void setGeloeschtMarkiertStil(SchrittID id) {
@@ -121,10 +93,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		getTextComponent().setEditable(false);
 		if (schrittNummer != null) {
-			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Geloescht));
-			schrittNummer.setBackground(Hintergrundfarbe_Geloescht);
-			schrittNummer.setForeground(Schriftfarbe_Geloescht);
-			schrittNummer.setWrappedText(SPAN_GELOESCHT_MARKIERT, id, "</span>");
+			schrittNummer.setGeloeschtStil(id);
 		}
 	}
 
@@ -240,13 +209,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			componentResized(null); // Sorgt dafÃ¯Â¿Â½r, dass der Label auch optisch sofort verschwindet
 		}
 	}
-
-	public void repaintSchrittId() {
-		if (schrittNummer != null)
-			schrittNummer.repaint();
-	}
-
-
 
 	//TODO Zielschrittmarkierungen
 	public java.util.List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen(boolean nurErste) {
