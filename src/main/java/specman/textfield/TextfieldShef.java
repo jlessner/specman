@@ -9,7 +9,6 @@ import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import javax.swing.text.*;
 import javax.swing.text.html.CSS;
 
