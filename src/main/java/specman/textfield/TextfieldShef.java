@@ -106,7 +106,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 	private final InsetPanel insetPanel;
 	private final JEditorPane editorPane;
-	public final JLabel schrittNummer;
+	private final JLabel schrittNummer;
 	boolean schrittNummerSichtbar = true;
 	TextMitAenderungsmarkierungen_V001 loeschUndoBackup;
 
@@ -127,9 +127,9 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			schrittNummer.setForeground(Color.WHITE);
 			schrittNummer.setOpaque(true);
 
-            DragMouseAdapter ada = new DragMouseAdapter(Specman.instance());
-            schrittNummer.addMouseListener(ada);
-            schrittNummer.addMouseMotionListener(ada);
+			DragMouseAdapter ada = new DragMouseAdapter(Specman.instance());
+			schrittNummer.addMouseListener(ada);
+			schrittNummer.addMouseMotionListener(ada);
 
 			editorPane.add(schrittNummer);
 			editorPane.addComponentListener(this);
@@ -694,4 +694,9 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public JEditorPane getEditorPane() {
 		return editorPane;
 	}
+
+	public void wrapSchrittnummer(String intro, String outro) {
+		schrittNummer.setText("<html><body>" + intro + schrittNummer.getText() + outro + "</body></html>");
+	}
+
 }

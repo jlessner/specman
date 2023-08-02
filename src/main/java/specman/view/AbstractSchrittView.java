@@ -376,13 +376,17 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	public void resyncSchrittnummerStil() {
 		if (getAenderungsart() == Aenderungsart.Geloescht) {
-			getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + getshef().schrittNummer.getText() + "</span></body></html>");
+			getshef().wrapSchrittnummer("<span style='text-decoration: line-through;'>", "</span>");
 		}
 		if (getAenderungsart() == Aenderungsart.Quellschritt) {
-			getshef().schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + getshef().schrittNummer.getText() + "</span><span>&rArr</span><span>" + ((QuellSchrittView)this).getZielschrittID() + "</span></body></html>");
+			getshef().wrapSchrittnummer(
+				"<span style='text-decoration: line-through;'>",
+				"</span><span>&rArr</span><span>" + ((QuellSchrittView)this).getZielschrittID() + "</span>");
 		}
 		if (getAenderungsart() == Aenderungsart.Zielschritt) {
-			getshef().schrittNummer.setText("<html><body><span>" + getshef().schrittNummer.getText()+"</span><span>&lArr</span><span style='text-decoration: line-through;'>" + getQuellschritt().getId() + "</span></body></html>");
+			getshef().wrapSchrittnummer(
+				"<span>",
+				"</span><span>&lArr</span><span style='text-decoration: line-through;'>" + getQuellschritt().getId() + "</span>");
 		}
 	}
 

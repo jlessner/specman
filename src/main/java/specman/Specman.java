@@ -43,7 +43,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private static final String PROJEKTDATEI_EXTENSION = ".nsd";
 	private static final BasicStroke GESTRICHELTE_LINIE =
 			new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 1.0f, new float[] {10.0f, 10.0f }, 0f);
-	private final DraggingLogic draggingLogic = new DraggingLogic(this);
 
 	JTextComponent zuletztFokussierterText;
 	public SchrittSequenzView hauptSequenz;

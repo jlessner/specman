@@ -125,6 +125,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		Point mittelpunktRaute = berechneRautenmittelpunkt(); //umbenannt
 		int layoutSpaltenbreite = (int)breiteLayoutspalteBerechnen();
 
+		//innere weisse Raute, ausgefuellt
 		int[] polygonXinnen = {
 			mittelpunktRaute.x - layoutSpaltenbreite,
 			mittelpunktRaute.x,
@@ -134,23 +135,24 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 			text.getHeight(),
 			text.getHeight() - layoutSpaltenbreite,
 			text.getHeight(),
-			text.getHeight() + layoutSpaltenbreite }; /** @author PVN, SD */
+			text.getHeight() + layoutSpaltenbreite };
 		g.setColor(Color.WHITE);
-		g.fillPolygon(polygonXinnen, polygonYinnen, 4); //innere weisse Raute, ausgefuellt
-		
+		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
+
+		//aeussere schwarze Raute, nicht ausgefuellt
 		int[] polygonXaussen = {
 			mittelpunktRaute.x - layoutSpaltenbreite,
 			mittelpunktRaute.x,
 			mittelpunktRaute.x + layoutSpaltenbreite,
 			mittelpunktRaute.x};
 		int[] polygonYausssen = {
-			text.getHeight() + 1,
-			text.getHeight() - 1 - layoutSpaltenbreite,
-			text.getHeight() + 1,
-			text.getHeight() + 1 + layoutSpaltenbreite + 1 }; /** @author PVN, SD */
+			text.getHeight(),
+			text.getHeight() - layoutSpaltenbreite,
+			text.getHeight(),
+			text.getHeight() + layoutSpaltenbreite };
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setColor(Color.BLACK);
-		g.drawPolygon(polygonXaussen, polygonYausssen, 4); //aeussere schwarze Raute, nicht ausgefuellt
+		g.drawPolygon(polygonXaussen, polygonYausssen, 4);
 
 		return mittelpunktRaute;
 	}
