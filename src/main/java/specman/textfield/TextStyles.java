@@ -21,6 +21,7 @@ public class TextStyles {
 
   public static final Color Hintergrundfarbe_Schrittenummer = Color.LIGHT_GRAY;
   public static final Color Schriftfarbe_Geloescht = Color.LIGHT_GRAY;
+  public static final Color Hintergrundfarbe_Schrittnummer = Color.LIGHT_GRAY;
   public static final Color Hintergrundfarbe_Geloescht = Color.BLACK;
   public static final Color Schriftfarbe_Standard = Color.BLACK;
   public static final Color Hintergrundfarbe_Standard = Color.WHITE;
@@ -30,6 +31,8 @@ public class TextStyles {
   public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
   public static final String INDIKATOR_GELB = toHTMLColor(AENDERUNGSMARKIERUNG_FARBE);
   public static final String INDIKATOR_GELOESCHT_MARKIERT = "line-through";
+
+  public static final String SPAN_GELOESCHT_MARKIERT = "<span style='text-decoration: " + INDIKATOR_GELOESCHT_MARKIERT + ";'>";
 
   public static final String INDIKATOR_GRAU = toHTMLColor(Hintergrundfarbe_Schrittenummer);
   public static final String INDIKATOR_SCHWARZ = toHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE2);

@@ -13,7 +13,6 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.text.*;
 import javax.swing.text.html.CSS;
-import javax.swing.text.html.HTML;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -44,8 +43,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		if (schrittId != null) {
 			schrittNummer = new JLabel(schrittId);
 			schrittNummer.setFont(labelFont);
-			schrittNummer.setBackground(Schriftfarbe_Geloescht);
-			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Schriftfarbe_Geloescht));
+			schrittNummer.setBackground(Hintergrundfarbe_Schrittnummer);
+			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittnummer));
 			schrittNummer.setForeground(Color.WHITE);
 			schrittNummer.setOpaque(true);
 
@@ -96,12 +95,12 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		schrittNummer.setBackground(Hintergrundfarbe_Schrittenummer);
 		schrittNummer.setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
 		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittenummer));
-		schrittNummer.setText("<html><body><span style='text-decoration:none;'>" + id + "</span></body></html>");
+		setWrappedSchrittnummer(SPAN_GELOESCHT_MARKIERT, id, "</span>");
 	}
 
 	public void setZielschrittStil(SchrittID quellschrittId) {
-		schrittNummer.setText("<html><body><span>" + schrittNummer.getText() + "</span><span>&lArr</span>"+
-				"<span style='text-decoration: line-through;'>" + quellschrittId + "</span></body></html>");
+		wrapSchrittnummer("<span>",
+			"</span><span>&lArr</span>" + SPAN_GELOESCHT_MARKIERT + quellschrittId + "</span>");
 		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE));
 		schrittNummer.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schrittNummer.setForeground(Hintergrundfarbe_Geloescht);
@@ -110,8 +109,8 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setQuellStil(SchrittID zielschrittID) {
 		setStyle(getPlainText(), quellschrittStil);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>" + schrittNummer.getText() +
-				"</span><span>&rArr</span><span>" + zielschrittID +"</span></body></html>");
+		wrapSchrittnummer(SPAN_GELOESCHT_MARKIERT,
+			"</span><span>&rArr</span><span>" + zielschrittID +"</span>");
 		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Geloescht));
 		schrittNummer.setBackground(Hintergrundfarbe_Geloescht);
 		schrittNummer.setForeground(Schriftfarbe_Geloescht);
@@ -127,8 +126,7 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Geloescht));
 			schrittNummer.setBackground(Hintergrundfarbe_Geloescht);
 			schrittNummer.setForeground(Schriftfarbe_Geloescht);
-			schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
-					+ id +"</span></body></html>");
+			setWrappedSchrittnummer(SPAN_GELOESCHT_MARKIERT, id, "</span>");
 		}
 	}
 
@@ -604,7 +602,15 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	}
 
 	public void wrapSchrittnummer(String intro, String outro) {
-		schrittNummer.setText("<html><body>" + intro + schrittNummer.getText() + outro + "</body></html>");
+		setWrappedSchrittnummer(intro, schrittNummer.getText(), outro);
+	}
+
+	public void setWrappedSchrittnummer(String intro, SchrittID schrittID, String outro) {
+		setWrappedSchrittnummer(intro, schrittID.toString(), outro);
+	}
+
+	public void setWrappedSchrittnummer(String intro, String schrittNummerText, String outro) {
+		schrittNummer.setText("<html><body>" + intro + schrittNummerText + outro + "</body></html>");
 	}
 
 }

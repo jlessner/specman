@@ -22,6 +22,7 @@ import java.util.List;
 
 import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
+import static specman.textfield.TextStyles.SPAN_GELOESCHT_MARKIERT;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
@@ -378,17 +379,17 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	public void resyncSchrittnummerStil() {
 		if (getAenderungsart() == Aenderungsart.Geloescht) {
-			getshef().wrapSchrittnummer("<span style='text-decoration: line-through;'>", "</span>");
+			getshef().wrapSchrittnummer(SPAN_GELOESCHT_MARKIERT, "</span>");
 		}
 		if (getAenderungsart() == Aenderungsart.Quellschritt) {
 			getshef().wrapSchrittnummer(
-				"<span style='text-decoration: line-through;'>",
+				SPAN_GELOESCHT_MARKIERT,
 				"</span><span>&rArr</span><span>" + ((QuellSchrittView)this).getZielschrittID() + "</span>");
 		}
 		if (getAenderungsart() == Aenderungsart.Zielschritt) {
 			getshef().wrapSchrittnummer(
 				"<span>",
-				"</span><span>&lArr</span><span style='text-decoration: line-through;'>" + getQuellschritt().getId() + "</span>");
+				"</span><span>&lArr</span>" + SPAN_GELOESCHT_MARKIERT + getQuellschritt().getId() + "</span>");
 		}
 	}
 
