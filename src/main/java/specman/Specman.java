@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.textfield.TextStyles.INDIKATOR_GELB;
 import static specman.view.RelativeStepPosition.After;
 
 /**
@@ -958,13 +960,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	
 	public static String initialtext(String text) {
 		return (instance() != null && instance().aenderungenVerfolgen()) ?
-				"<span style=\"background-color:" + TextfieldShef.INDIKATOR_GELB + "\">" + text + "</span>" :
+				"<span style=\"background-color:" + INDIKATOR_GELB + "\">" + text + "</span>" :
 				text;
 	}
 	
 	public static Color schrittHintergrund() {
 		return (instance() != null && instance().aenderungenVerfolgen()) ?
-			TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Color.white;
+			AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Color.white;
 	}
 
 	//Methode um die Aenderugnsart von neuen Schritten auf hinzugefügt zu ändern, wenn die Änderungsverfolgung aktiviert ist

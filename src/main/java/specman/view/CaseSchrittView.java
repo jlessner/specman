@@ -34,6 +34,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import static specman.Specman.initialtext;
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 
 
 public class CaseSchrittView extends VerzweigungSchrittView implements ComponentListener, FocusListener {
@@ -411,7 +413,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			else {
 				zweig.alsGeloeschtMarkieren(editor);
 				if (zweig == caseSequenzen.get(0)) {
-					panelFall1.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+					panelFall1.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 					panel.repaint();
 				}
 				return new UndoableZweigEntferntMarkiert(editor, zweig, this);
@@ -428,7 +430,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	@Override public void aenderungsmarkierungenEntfernen() {
 		super.aenderungsmarkierungenEntfernen();
-		panelFall1.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		panelFall1.setBackground(Hintergrundfarbe_Standard);
 		sonstSequenz.aenderungsmarkierungenEntfernen();
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			caseSequenz.aenderungsmarkierungenEntfernen();
@@ -497,8 +499,8 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	@Override public void aenderungenUebernehmen(EditorI editor) throws EditException {
-		panelFall1.setBackground(TextfieldShef.Hintergrundfarbe_Standard);
-		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		panelFall1.setBackground(Hintergrundfarbe_Standard);
+		setBackground(Hintergrundfarbe_Standard);
 		sonstSequenz.aenderungenUebernehmen(editor);
 		List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(this.caseSequenzen);
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {

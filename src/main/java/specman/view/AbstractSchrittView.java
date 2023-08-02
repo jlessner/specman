@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
@@ -176,14 +178,14 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public void setStandardStil() {
-		setBackground(TextfieldShef.Hintergrundfarbe_Standard);
+		setBackground(Hintergrundfarbe_Standard);
 		getText().setEditable(true);
 		getshef().setStandardStil(id);
 		setAenderungsart(null);
 	}
 
 	public void setGeloeschtMarkiertStil() {
-		setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		getText().setEditable(false);
 		getshef().setGeloeschtMarkiertStil(id);
 		setAenderungsart(Aenderungsart.Geloescht);

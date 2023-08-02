@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+
 public class QuellSchrittView extends AbstractSchrittView{
 
     protected AbstractSchrittView zielschritt;
@@ -19,7 +21,7 @@ public class QuellSchrittView extends AbstractSchrittView{
         //Die Höhe des Schrittnummer-Labels sollte die Höhe bestimmen.
         super(editor, parent, ".", id, Aenderungsart.Quellschritt);
         setQuellStil();
-        setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+        setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
         alsGeloeschtMarkieren(editor);
     }
 

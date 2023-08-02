@@ -23,87 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static specman.Specman.schrittHintergrund;
+import static specman.textfield.TextStyles.*;
 
 public class TextfieldShef implements ComponentListener, KeyListener {
-	public static final Color Hintergrundfarbe_Schrittenummer = Color.LIGHT_GRAY;
-	public static final Color Schriftfarbe_Geloescht = Color.LIGHT_GRAY;
-	public static final Color Hintergrundfarbe_Geloescht = Color.BLACK;
-	public static final Color Schriftfarbe_Standard = Color.BLACK;
-	public static final Color Hintergrundfarbe_Standard = Color.WHITE;
-	public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
-	public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
-	public static final Color SCHRITTNUMMER_VORDERGRUNDFARBE = Hintergrundfarbe_Standard;
-	public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
-	public static final String INDIKATOR_GELB = toHTMLColor(AENDERUNGSMARKIERUNG_FARBE);
-	public static final String INDIKATOR_GELOESCHT_MARKIERT = "line-through";
-	public static final int FONTSIZE = 15;
-	public static final int SCHRITTNR_FONTSIZE = 10;
-
-	public static MutableAttributeSet geaendertStil = new SimpleAttributeSet();
-	public static MutableAttributeSet geloeschtStil = new SimpleAttributeSet();
-	public static MutableAttributeSet ganzerSchrittGeloeschtStil = new SimpleAttributeSet();
-	public static MutableAttributeSet standardStil = new SimpleAttributeSet();
-	public static MutableAttributeSet quellschrittStil = new SimpleAttributeSet();
-
-	public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
-	public static Font labelFont = new Font(Font.SANS_SERIF, Font.BOLD, SCHRITTNR_FONTSIZE);
-
-	public static final String INDIKATOR_GRAU = toHTMLColor(Hintergrundfarbe_Schrittenummer);
-	public static final String INDIKATOR_SCHWARZ = toHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE2);
-
-	static {
-		// Das hier ist ein bisschen tricky:
-		// Die Zeile mit StyleConstants.setBackground sorgt dafÃƒÂ¼r, dass man die
-		// Hintergrundfarbe unmittelbar
-		// beim Editieren in der Oberflche sieht. Allerdings taucht sie dann nicht im
-		// abgespeicherten HTML
-		// auf und geht auch verloren, sobald man einen Zeilenumbruch im Text
-		// eingefügt. Also braucht man noch
-		// ein weiteres, persistentes Styling über ein Span-Tag, wie ich es hier
-		// gefunden habe:
-		// https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
-		String htmlStyle = "background-color:" + toHTMLColor(Color.yellow);
-		String htmlStyleSchwarz = "background-color:" + toHTMLColor(Color.black);
-		String htmlStyleStandard = "background-color:" + toHTMLColor(Color.white);
-
-		SimpleAttributeSet htmlHintergrundStyle = new SimpleAttributeSet();
-		SimpleAttributeSet htmlHintergrundStyleSchwarz = new SimpleAttributeSet();
-		SimpleAttributeSet htmlHintergrundStyleStandard = new SimpleAttributeSet();
-
-		htmlHintergrundStyle.addAttribute(HTML.Attribute.STYLE, htmlStyle);
-		geaendertStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
-		StyleConstants.setBackground(geaendertStil, AENDERUNGSMARKIERUNG_FARBE);
-
-		geloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
-		StyleConstants.setBackground(geloeschtStil, AENDERUNGSMARKIERUNG_FARBE);
-		StyleConstants.setStrikeThrough(geloeschtStil, true);
-
-		htmlHintergrundStyleSchwarz.addAttribute(HTML.Attribute.STYLE, htmlStyleSchwarz);
-		ganzerSchrittGeloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleSchwarz);
-		StyleConstants.setBackground(ganzerSchrittGeloeschtStil, Hintergrundfarbe_Geloescht);
-		StyleConstants.setStrikeThrough(ganzerSchrittGeloeschtStil, true);
-		StyleConstants.setForeground(ganzerSchrittGeloeschtStil, Schriftfarbe_Geloescht);
-
-		htmlHintergrundStyleStandard.addAttribute(HTML.Attribute.STYLE, htmlStyleStandard);
-		standardStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleStandard);
-		StyleConstants.setBackground(standardStil, Hintergrundfarbe_Standard);
-		StyleConstants.setStrikeThrough(standardStil, false);
-		StyleConstants.setForeground(standardStil, Schriftfarbe_Standard);
-
-		quellschrittStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
-		StyleConstants.setBackground(quellschrittStil, AENDERUNGSMARKIERUNG_FARBE);
-		StyleConstants.setStrikeThrough(quellschrittStil, true);
-		StyleConstants.setForeground(quellschrittStil, Schriftfarbe_Geloescht);
-		StyleConstants.setFontSize(quellschrittStil, 7);
-	}
-
-	public static String toHTMLColor(Color color) {
-		if (color == null) {
-			return "#000000";
-		}
-		return "#" + Integer.toHexString(color.getRGB()).substring(2).toLowerCase();
-	}
-
 	private final InsetPanel insetPanel;
 	private final JEditorPane editorPane;
 	private final JLabel schrittNummer;
@@ -171,18 +93,18 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 
 	public void setNichtGeloeschtMarkiertStil(SchrittID id) {
 		setStyle(getPlainText(), standardStil);
-		schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Schrittenummer);
-		schrittNummer.setForeground(TextfieldShef.SCHRITTNUMMER_VORDERGRUNDFARBE);
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Schrittenummer));
+		schrittNummer.setBackground(Hintergrundfarbe_Schrittenummer);
+		schrittNummer.setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
+		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittenummer));
 		schrittNummer.setText("<html><body><span style='text-decoration:none;'>" + id + "</span></body></html>");
 	}
 
 	public void setZielschrittStil(SchrittID quellschrittId) {
 		schrittNummer.setText("<html><body><span>" + schrittNummer.getText() + "</span><span>&lArr</span>"+
 				"<span style='text-decoration: line-through;'>" + quellschrittId + "</span></body></html>");
-		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE));
-		schrittNummer.setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schrittNummer.setForeground(TextfieldShef.Hintergrundfarbe_Geloescht);
+		schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE));
+		schrittNummer.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		schrittNummer.setForeground(Hintergrundfarbe_Geloescht);
 	}
 
 	public void setQuellStil(SchrittID zielschrittID) {
@@ -198,13 +120,13 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	public void setGeloeschtMarkiertStil(SchrittID id) {
 		loeschUndoBackup = getTextMitAenderungsmarkierungen(true);
 		aenderungsmarkierungenVerwerfen();
-		setStyle(getPlainText(), TextfieldShef.ganzerSchrittGeloeschtStil);
-		setBackground(TextfieldShef.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		setStyle(getPlainText(), ganzerSchrittGeloeschtStil);
+		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		getTextComponent().setEditable(false);
 		if (schrittNummer != null) {
-			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, TextfieldShef.Hintergrundfarbe_Geloescht));
-			schrittNummer.setBackground(TextfieldShef.Hintergrundfarbe_Geloescht);
-			schrittNummer.setForeground(TextfieldShef.Schriftfarbe_Geloescht);
+			schrittNummer.setBorder(new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Geloescht));
+			schrittNummer.setBackground(Hintergrundfarbe_Geloescht);
+			schrittNummer.setForeground(Schriftfarbe_Geloescht);
 			schrittNummer.setText("<html><body><span style='text-decoration: line-through;'>"
 					+ id +"</span></body></html>");
 		}
@@ -274,13 +196,9 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		String text;
 		java.util.List<Aenderungsmarkierung_V001> aenderungen = null;
 		if (formatierterText) {
-			// Wenn wir die ZeilenumbrÃƒÂ¼che nicht rausnehmen, dann entstehen spÃƒÂ¤ter
-			// beim Laden u.U.
-			// Leerzeichen an Zeilenenden, die im ursprÃƒÂ¼nglichen Text nicht drin waren.
-			// Das ist doof,
-			// weil dann die separat abgespeicherten Textintervalle der
-			// Aenderungsmarkierungen
-			// nicht mehr passen.
+			// Wenn wir die Zeilenumbrüche nicht rausnehmen, dann entstehen später beim Laden u.U.
+			// Leerzeichen an Zeilenenden, die im ursprünglichen Text nicht drin waren. Das ist doof,
+			// weil dann die separat abgespeicherten Textintervalle der Aenderungsmarkierungen nicht mehr passen.
 			text = editorPane.getText().replace("\n", "");
 			aenderungen = findeAenderungsmarkierungen(false);
 		} else {
@@ -461,13 +379,11 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	}
 
 	public void setAenderungsmarkierungen(java.util.List<Aenderungsmarkierung_V001> aenderungen) {
-		// TODO JL: Brauchen wir aktuell nicht mehr. Das war nÃƒÂ¶tig, weil die
-		// Hintergrundfarbe nicht
+		// TODO JL: Brauchen wir aktuell nicht mehr. Das war nötig, weil die Hintergrundfarbe nicht
 		// im abgespeicherten HTML erhalten blieb. Das ist jetzt dank des Tricks aus
 		// https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
-		// der Fall. Die Funktion kann also evt. weg, sofern wir aus den
-		// HTML-Formatierungen allein
-		// alle die Ãƒâ€žnderungsinformationen vollstÃƒÂ¤ndig wieder auslesen kÃƒÂ¶nnen.
+		// der Fall. Die Funktion kann also evt. weg, sofern wir aus den HTML-Formatierungen allein
+		// alle die Ãnderungsinformationen vollständig wieder auslesen können.
 		// StyledDocument doc = (StyledDocument)getDocument();
 		// MutableAttributeSet attr = new SimpleAttributeSet();
 		// StyleConstants.setBackground(attr, AENDERUNGSMARKIERUNG_FARBE);
@@ -677,10 +593,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		insetPanel.setOpaque(isOpaque);
 	}
 
-	public Rectangle getBounds() {
-		return insetPanel.getBounds();
-	}
-
 	public void updateDecorationIndentions(Indentions indentForDecoration) {
 		insetPanel.updateDecorationIndentions(indentForDecoration);
 	}
@@ -689,10 +601,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	//TODO
 	public InsetPanel getInsetPanel() {
 		return insetPanel;
-	}
-
-	public JEditorPane getEditorPane() {
-		return editorPane;
 	}
 
 	public void wrapSchrittnummer(String intro, String outro) {
