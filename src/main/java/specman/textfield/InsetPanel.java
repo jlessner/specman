@@ -12,7 +12,7 @@ import java.awt.*;
 import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
 
 /** Diese Klasse löst ein ärgerliches Grafikproblem in Swing:
- * Wenn sich ein Textfeld im Randbereich eines Schritts mit abgerundeten Ecke befinden, dann
+ * Wenn sich ein Textfeld im Randbereich eines Schritts mit abgerundeten Ecken befinden, dann
  * muss es ein wenig eingerückt werden, damit der editierbare Bereich nicht unter der Abrundung
  * liegt. Das würde man normalerweise mit einer Border oder einem Margin für das Textfeld lösen.
  * Leider entsteht dann aber eine Unschönheit: sobald man das Textfeld anklickt und darin editiert,
@@ -22,10 +22,10 @@ import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
  * Abstand zum Rand gehalten wird. Auf diese Weise tritt der Effekt nicht auf.
  * <p>
  * Mit dem gleichen Kniff löst die Klasse das Problem, wenn sich das Textfeld am oberen oder unteren
- * Rand einer abgerundeten Umrahmung befindet. Die Rahmenlinie wird nämlich mit Antializing gezeichnet
+ * Rand einer abgerundeten Umrahmung befindet. Die Rahmenlinie wird nämlich mit Antialiazing gezeichnet
  * (siehe Klasse {@link specman.view.RoundedBorderDecorator}, was zu einem leichten "Verschwimmen" der
  * Horizontallinien führt. In dem Fall muss das außerste Pixel des oberen bzw. unteren Randabstands
- * des Textfeldes von dem Abstandspanel hier kommen und nicht von einer Border, wei sonst die Rahmenlinien
+ * des Textfeldes von dem Abstandspanel hier kommen und nicht von einer Border, weil sonst die Rahmenlinien
  * während des Editierens leicht angeknabbert aussehen.
  * <p>
  * Kann man dann nicht <i>alles</i> über die Klasse hier machen, statt dem Textfeld überhaupt noch
