@@ -14,8 +14,6 @@ import javax.swing.text.html.CSS;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Line2D;
-import java.awt.geom.Line2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 
