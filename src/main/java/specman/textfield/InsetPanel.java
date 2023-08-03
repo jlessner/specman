@@ -44,7 +44,7 @@ public class InsetPanel extends JPanel {
 
     InsetPanel(JEditorPane editorPane, TextfieldShef t) {
         this.editorPane = editorPane;
-        this.layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,10px,0px");
+        this.layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
         setLayout(layout);
         add(editorPane, CC.xy(2, 2));
         updateDecorationIndentions(new Indentions());
@@ -78,7 +78,7 @@ public class InsetPanel extends JPanel {
         this.indentions = indentions;
 
         layout.setRowSpec(1, indentions.topInset());
-        layout.setRowSpec(4, indentions.bottomInset());
+        layout.setRowSpec(3, indentions.bottomInset());
         layout.setColumnSpec(1, indentions.leftInset());
         layout.setColumnSpec(3, indentions.rightInset());
 
