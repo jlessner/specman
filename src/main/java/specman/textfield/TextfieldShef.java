@@ -453,42 +453,6 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		insetPanel.skalieren(prozentNeu);
 	}
 
-	public java.util.List<Line2D.Double> getRechteZeilenraender() {
-		java.util.List<Line2D.Double> raender = new ArrayList<Line2D.Double>();
-		try {
-			int anzahlZeichen = getPlainText().length();
-			int offset = 1;
-			while (offset < anzahlZeichen) {
-				System.out.println(offset);
-				offset = Utilities.getRowEnd(editorPane, offset) + 1;
-				Rectangle r = editorPane.modelToView(offset - 1);
-				Line2D.Double randLinie = new Line2D.Double(r.getX(), r.getY(), r.getX(), r.getMaxY());
-				raender.add(randLinie);
-			}
-		} catch (BadLocationException blx) {
-			blx.printStackTrace();
-		}
-		return raender;
-	}
-
-	public java.util.List<Line2D.Double> getLinkeZeilenraender() {
-		List<Line2D.Double> raender = new ArrayList<Double>();
-		try {
-			int anzahlZeichen = getPlainText().length();
-			int offset = anzahlZeichen;
-			while (offset > 0) {
-				System.out.println(offset);
-				offset = Utilities.getRowStart(editorPane, offset) - 1;
-				Rectangle r = editorPane.modelToView(offset + 1);
-				Line2D.Double randLinie = new Line2D.Double(r.getX(), r.getY(), r.getX(), r.getMaxY());
-				raender.add(randLinie);
-			}
-		} catch (BadLocationException blx) {
-			blx.printStackTrace();
-		}
-		return raender;
-	}
-
 	public static String right(String text) {
 		return "<div align='right'>" + Specman.initialtext(text) + "</div>";
 	}
