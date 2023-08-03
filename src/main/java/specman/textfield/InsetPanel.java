@@ -24,7 +24,7 @@ import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
  * Mit dem gleichen Kniff löst die Klasse das Problem, wenn sich das Textfeld am oberen oder unteren
  * Rand einer abgerundeten Umrahmung befindet. Die Rahmenlinie wird nämlich mit Antialiazing gezeichnet
  * (siehe Klasse {@link specman.view.RoundedBorderDecorator}, was zu einem leichten "Verschwimmen" der
- * Horizontallinien führt. In dem Fall muss das außerste Pixel des oberen bzw. unteren Randabstands
+ * Horizontallinien führt. In dem Fall muss das äußerste Pixel des oberen bzw. unteren Randabstands
  * des Textfeldes von dem Abstandspanel hier kommen und nicht von einer Border, weil sonst die Rahmenlinien
  * während des Editierens leicht angeknabbert aussehen.
  * <p>
@@ -44,7 +44,7 @@ public class InsetPanel extends JPanel {
 
     InsetPanel(JEditorPane editorPane, TextfieldShef t) {
         this.editorPane = editorPane;
-        this.layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
+        this.layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,10px,0px");
         setLayout(layout);
         add(editorPane, CC.xy(2, 2));
         updateDecorationIndentions(new Indentions());
@@ -78,7 +78,7 @@ public class InsetPanel extends JPanel {
         this.indentions = indentions;
 
         layout.setRowSpec(1, indentions.topInset());
-        layout.setRowSpec(3, indentions.bottomInset());
+        layout.setRowSpec(4, indentions.bottomInset());
         layout.setColumnSpec(1, indentions.leftInset());
         layout.setColumnSpec(3, indentions.rightInset());
 
