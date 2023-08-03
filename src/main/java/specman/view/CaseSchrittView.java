@@ -5,23 +5,21 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
-import specman.textfield.TextfieldShef;
 import specman.undo.AbstractUndoableInteraktion;
 import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigEntferntMarkiert;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentListener;
@@ -43,7 +41,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	// über die Methode layoutCojnstraintsSetzen korrekt plaziert. Damit verhindern
 	// wir, dass die relativ komplizierte Positionsvergabe redundant im Code auftaucht
 	private static final CellConstraints INITIAL_DUMMY = CC.xy(1, 1);
-	
+
 	ZweigSchrittSequenzView sonstSequenz;
 	List<ZweigSchrittSequenzView> caseSequenzen;
 	JPanel lueckenFueller; //neu
@@ -91,13 +89,13 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 1")),
 						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 2")))));
 	}
-	
+
 	private List<ZweigSchrittSequenzView> caseSequenzenAufbauen(EditorI editor, List<ZweigSchrittSequenzModel_V001> model) {
 		return model.stream()
 				.map(sequenzModel -> new ZweigSchrittSequenzView(editor, this, sequenzModel))
 				.collect(Collectors.toList());
 	}
-	
+
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, CaseSchrittModel_V001 model) {
 		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, model.caseSequenzen.size());
 		initCases(
@@ -114,7 +112,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			panel.add(new SpaltenResizer(this, i, editor), CC.xywh(2 + 2*i, 4, 1, 2)); /**@author PVN */
 		}
 	}
-	
+
 	private void spaltenResizerEntfernen() {
 		for (MouseListener ml: panel.getMouseListeners()) {
 			if (ml instanceof SpaltenResizer)
@@ -150,7 +148,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
 		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
 		panelSonst.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD*/
-		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD*/ 
+		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD*/
 		panelCase.add(text.asJComponent(), CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
 		panelSonst.add(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 1)); //siehe Methode layoutConstraintsSetzen
 		panelFall1.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
@@ -217,7 +215,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		Specman.instance().diagrammAktualisieren(null);
 		return vergroesserung;
 	}
-	
+
 	private void spaltenbreitenAnteileSetzen(List<Float> breitenAnteile) {
 		for (int i = 0; i < breitenAnteile.size(); i++) {
 			panelLayout.setColumnSpec(1 + 2*i, ColumnSpec.decode("0px:grow(" + breitenAnteile.get(i) + ")"));
@@ -301,7 +299,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
 			return -1;
 		}
-		/**@author PVN */ 
+		/**@author PVN */
 		if (zweig == caseSequenzen.get(0)) {
 			panelFall1.remove(caseSequenzen.get(0).ueberschrift.asJComponent());
 		}
@@ -325,7 +323,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		caseSequenzen.add(zweigIndex-1, zweig); // 0 ist Indikator f�r Sonst-Zweig, ab 1 beginnen die Cases
 		panel.add(zweig.getContainer(), INITIAL_DUMMY);
 		panel.add(zweig.ueberschrift.asJComponent(), INITIAL_DUMMY);
-	
+
 		zweigAnzahlAenderungAbschliessen(editor, spaltenBreiten);
 	}
 
@@ -336,13 +334,13 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		layoutConstraintsSetzen();
 		spaltenbreitenAnteileSetzen(spaltenbreitenAnteileBerechnen(spaltenBreiten));
 		spaltenResizerAnlegen(editor);
-		
+
 		setId(id);
 		parent.folgeschritteRenummerieren(this);
-		
+
 		editor.diagrammAktualisieren(null);
 	}
-	
+
 	public ZweigSchrittSequenzView neuenZweigHinzufuegen(EditorI editor, ZweigSchrittSequenzView linkerNachbar) {
 		int linkerNachbarIndex = caseSequenzen.indexOf(linkerNachbar);
 		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, initialtext("Fall " + (linkerNachbarIndex+2)));

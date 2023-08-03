@@ -1,7 +1,6 @@
 package specman.view;
 
 import com.jgoodies.forms.layout.FormLayout;
-
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
@@ -12,11 +11,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 
 /** Basisklasse für If, If/Else und Case */
-abstract public class VerzweigungSchrittView extends AbstractSchrittView implements ComponentListener, SpaltenContainerI {
+abstract public class VerzweigungSchrittView extends AbstractSchrittView implements SpaltenContainerI {
 	JPanel panel;
 	KlappButton klappen;
 	FormLayout panelLayout;
@@ -52,7 +50,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 				panel.repaint();
 			}
 		});
-		
+
 	}
 
 	/** If the step is placed into a {@link RoundedBorderDecorator}, painting the step
@@ -71,7 +69,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		int aktuellerZoomfaktor = Specman.instance().zoomFaktor();
 		return "fill:[" + (1 * aktuellerZoomfaktor / 100) + "dlu,pref]"; /**@author PVN */
 	}
-	
+
 	@Override
 	public JComponent getComponent() { return decorated(panel); }
 
@@ -83,35 +81,33 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	protected void initialeSchritteAnhaengen(EditorI editor) {
 		unterSequenzen().forEach(sequenz -> sequenz.einfachenSchrittAnhaengen(editor));
 	}
-	
+
 	@Override
 	public void componentResized(ComponentEvent e) {
+		super.componentResized(e);
 		double textEinrueckung = texteinrueckungNeuberechnen();
 		text.setLeftInset((int)textEinrueckung);
 		text.setRightInset((int)textEinrueckung);
 		panel.repaint(); // Sorgt dafür, dass das umplazierte Textfeld und alles andere auf dem Panel sofort neu gezeichnet wird
+		klappen.updateLocation(text.getStepNumberBounds());
 	}
-
-	@Override public void componentMoved(ComponentEvent e) {}
-	@Override public void componentShown(ComponentEvent e) {}
-	@Override public void componentHidden(ComponentEvent e) {}
 
 	@Override
 	public void focusLost(FocusEvent e) {
 		super.focusLost(e);
 		panel.repaint(); // Zeichnet Dreieck und Case-Trenner nach, wenn man mit Editieren der Texte fertig ist
 	}
-	
-	/** @author PVN */ 
+
+	/** @author PVN */
 	public static FormLayout createSpalteLinks() {
 		return new FormLayout(breiteLayoutspalteBerechnen() + ", 10px:grow", "fill:pref:grow");
 	}
-	
+
 	/** @author PVN */
 	public static FormLayout createSpalteRechts() {
 		return new FormLayout("10px:grow, " + breiteLayoutspalteBerechnen(), "fill:pref:grow");
 	}
-	
+
 	/** @author PVN */
 	public static double breiteLayoutspalteBerechnen() {
 		double breiteSpaltenLayout = 20*Specman.instance().getZoomFactor()/100;
@@ -139,9 +135,9 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		g.setColor(Color.WHITE);
 		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
 
-		//aeussere schwarze Raute, nicht ausgefuellt
-		int[] polygonXaussen = {
-			mittelpunktRaute.x - layoutSpaltenbreite,
+		//aeussere schwarze Raute, nichtausgefuellt
+
+		int[] polygonXaussen = {mittelpunktRaute.x - layoutSpaltenbreite,
 			mittelpunktRaute.x,
 			mittelpunktRaute.x + layoutSpaltenbreite,
 			mittelpunktRaute.x};
@@ -153,16 +149,20 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setColor(Color.BLACK);
 		g.drawPolygon(polygonXaussen, polygonYausssen, 4);
-
 		return mittelpunktRaute;
 	}
-	
+
 	abstract protected Point berechneRautenmittelpunkt(); //umbenannt
 
 	abstract protected int texteinrueckungNeuberechnen();
-	
+
 	//TODO get Panel
 	public JPanel getPanel() {
 		return panel;
+	}
+
+	public void skalieren(int prozentNeu, int prozentAktuell) {
+		super.skalieren(prozentNeu, prozentAktuell);
+		klappen.scale(prozentNeu);
 	}
 }

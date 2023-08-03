@@ -7,15 +7,21 @@ import specman.draganddrop.DragMouseAdapter;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
-
 import java.awt.*;
 
-import static specman.textfield.TextStyles.*;
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.textfield.TextStyles.Hintergrundfarbe_Geloescht;
+import static specman.textfield.TextStyles.Hintergrundfarbe_Schrittenummer;
+import static specman.textfield.TextStyles.Hintergrundfarbe_Schrittnummer;
+import static specman.textfield.TextStyles.SCHRITTNUMMER_VORDERGRUNDFARBE;
+import static specman.textfield.TextStyles.SPAN_GELOESCHT_MARKIERT;
+import static specman.textfield.TextStyles.Schriftfarbe_Geloescht;
+import static specman.textfield.TextStyles.labelFont;
 
 public class SchrittNummerLabel extends JLabel {
-  private static final Border STANDARD_BORDER = new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Schrittnummer);
-  private static final Border CHANGED_BORDER = new MatteBorder(0, 2, 1, 1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-  private static final Border DELETED_BORDER = new MatteBorder(0, 2, 1, 1, Hintergrundfarbe_Geloescht);
+  private static final Border STANDARD_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Schrittnummer);
+  private static final Border CHANGED_BORDER = new MatteBorder(0, 2, 0, 1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+  private static final Border DELETED_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Geloescht);
 
   public SchrittNummerLabel(String schrittId) {
     super(schrittId);

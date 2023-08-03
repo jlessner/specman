@@ -5,7 +5,19 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.model.v001.*;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.BreakSchrittModel_V001;
+import specman.model.v001.CaseSchrittModel_V001;
+import specman.model.v001.CatchSchrittModel_V001;
+import specman.model.v001.EinfacherSchrittModel_V001;
+import specman.model.v001.IfElseSchrittModel_V001;
+import specman.model.v001.IfSchrittModel_V001;
+import specman.model.v001.QuellSchrittModel_V001;
+import specman.model.v001.SubsequenzSchrittModel_V001;
+import specman.model.v001.TextMitAenderungsmarkierungen_V001;
+import specman.model.v001.WhileSchrittModel_V001;
+import specman.model.v001.WhileWhileSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.TextfieldShef;
 import specman.undo.AbstractUndoableInteraktion;
@@ -14,6 +26,8 @@ import specman.undo.UndoableSchrittEntferntMarkiert;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
@@ -22,13 +36,12 @@ import java.util.List;
 
 import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
-import static specman.textfield.TextStyles.SPAN_GELOESCHT_MARKIERT;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
 import static specman.view.RoundedBorderDecorationStyle.None;
 
-abstract public class AbstractSchrittView implements FocusListener, KlappbarerBereichI {
+abstract public class AbstractSchrittView implements FocusListener, KlappbarerBereichI, ComponentListener {
 	public static final int LINIENBREITE = 2;
 	public static final String FORMLAYOUT_GAP = LINIENBREITE + "px";
 	public static final String ZEILENLAYOUT_INHALT_SICHTBAR = "fill:pref:grow";
@@ -51,6 +64,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		this.parent = parent;
 		text.addFocusListener(editor);
 		text.addFocusListener(this);
+		text.getEditorPane().addComponentListener(this);
 	}
 
 	public Aenderungsart getAenderungsart() {
@@ -93,7 +107,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen() {
 		return text.findeAenderungsmarkierungen(false);
 	}
-	
+
 	protected TextMitAenderungsmarkierungen_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
 		return text.getTextMitAenderungsmarkierungen(formatierterText);
 	}
@@ -101,7 +115,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public void setBackground(Color bg) {
 		text.setBackground(bg);
 	}
-	
+
 	public Color getBackground() {
 		return text.getBackground();
 	}
@@ -117,7 +131,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public boolean isStrukturiert() { return false; }
-	
+
 	@Override public void focusGained(FocusEvent e) {}
 
 	@Override
@@ -130,7 +144,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	abstract public AbstractSchrittModel_V001 generiereModel(boolean formatierterText);
-	
+
 	public static AbstractSchrittView baueSchrittView(EditorI editor, SchrittSequenzView parent, AbstractSchrittModel_V001 model) {
 		if (model instanceof WhileWhileSchrittModel_V001) {
 			return new WhileWhileSchrittView(editor, parent, (WhileWhileSchrittModel_V001) model);
@@ -167,7 +181,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public void geklappt(boolean auf) {}
 
 	public void zusammenklappenFuerReview() {}
-	
+
 	public String ersteZeileExtraieren() {
 		String[] zeilen = text.getPlainText().split("\n");
 		for (String zeile: zeilen) {
@@ -244,11 +258,11 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	 * spart man sich das rekursive Absteigen in allen Ableitungen für jede dieser
 	 * Funktionen zu dublizieren
 	 */
-	
+
 	protected List<SchrittSequenzView> unterSequenzen() {
 		return KEINE_SEQUENZEN;
 	}
-	
+
 	/** Bisschen Convenience, um die Funktion unterSequenz als Einzeler schreiben zu k�nnen */
 	protected static List<SchrittSequenzView> sequenzenAuflisten(List<? extends SchrittSequenzView> sequenzSammlung, SchrittSequenzView... einzelSequenzen) {
 		List<SchrittSequenzView> ergebnis = new ArrayList<SchrittSequenzView>();
@@ -280,16 +294,16 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public boolean enthaelt(JTextComponent zuletztFokussierterText) {
 		return text.getTextComponent() == zuletztFokussierterText;
 	}
-	
+
 	static int groesseUmrechnen(int groesse, int prozentNeu, int prozentAktuell) {
 		float groesse100Prozent = (float)groesse / prozentAktuell * 100;
 		return (int)(groesse100Prozent * prozentNeu / 100);
 	}
-	
+
 	static String umgehungLayout() {
 		return umgehungLayout(SPALTENLAYOUT_UMGEHUNG_GROESSE * Specman.instance().zoomFaktor() / 100);
 	}
-	
+
 	static String umgehungLayout(int groesse) {
 		return "fill:" + groesse + "px";
 	}
@@ -362,7 +376,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	public SchrittID getId() {
 		return id;
 	}
-	
+
 	public abstract JComponent getPanel();
 
 	public void setQuellschritt(QuellSchrittView quellschritt){
@@ -475,5 +489,19 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	protected void textAenderungenVerwerfen() {
 		getshef().aenderungsmarkierungenVerwerfen();
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		text.updateBounds();
+	}
+
+	@Override public void componentMoved(ComponentEvent e) {
+	}
+
+	@Override public void componentShown(ComponentEvent e) {
+	}
+
+	@Override public void componentHidden(ComponentEvent e) {
 	}
 }

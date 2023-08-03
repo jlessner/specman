@@ -9,14 +9,16 @@ import specman.Specman;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 
-class CatchBereich extends JPanel implements KlappbarerBereichI {
+class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListener {
 	public static final String ZEILENLAYOUT_TRENNKOPF_SICHTBAR = "fill:10px";
 	public static final String ZEILENLAYOUT_TRENNKOPF_VERBORGEN = AbstractSchrittView.ZEILENLAYOUT_INHALT_VERBORGEN;
-	
+
 	JPanel trennkopf;
 	JPanel umgehung;
 	JPanel catchBloeckeContainer;
@@ -34,23 +36,24 @@ class CatchBereich extends JPanel implements KlappbarerBereichI {
 				"10dlu:grow, " + AbstractSchrittView.umgehungLayout(umgehungBreite),
 				"0px, " + ZEILENLAYOUT_TRENNKOPF_VERBORGEN + ", fill:pref");
 		setLayout(bereichLayout);
-		
+
 		trennkopf = new JPanel();
 		trennkopf.setBackground(Specman.schrittHintergrund());
 		trennkopf.setLayout(null);
+		trennkopf.addComponentListener(this);
 		add(trennkopf, CC.xywh(1, 2, 2, 1));
-		
+
 		umgehung = new JPanel();
 		umgehung.setBackground(Specman.schrittHintergrund());
 		umgehung.setLayout(null);
 		umgehung.setVisible(false);
 		add(umgehung, CC.xy(2, 3));
-		
+
 		catchBloeckeContainer = new JPanel();
 		catchBloeckeContainer.setBackground(Color.black);
 		add(catchBloeckeContainer, CC.xy(1, 3));
 		layoutInitialisieren();
-		
+
 		klappen = new KlappButton(this, trennkopf, bereichLayout, 3);
 	}
 
@@ -63,7 +66,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI {
 		layout.appendRow(RowSpec.decode(AbstractSchrittView.FORMLAYOUT_GAP));
 		layout.appendRow(RowSpec.decode("pref:grow"));
 		catchBloeckeContainer.add(schritt.getComponent(), CC.xy(1, (catchBloecke.size()+1) * 2));
-		
+
 		if (catchBloecke.size() > 0) {
 			alleGrundlinienAnschluesseEntfernen();
 			layout.appendColumn(ColumnSpec.decode(AbstractSchrittView.umgehungLayout()));
@@ -115,8 +118,8 @@ class CatchBereich extends JPanel implements KlappbarerBereichI {
 			bereichLayout.setRowSpec(2, RowSpec.decode(ZEILENLAYOUT_TRENNKOPF_VERBORGEN));
 			umgehung.setVisible(false);
 		}
-		
-		
+
+
 //		String zeilenlayoutTrennkopf = (catchBloecke.size() > 0) ? ZEILENLAYOUT_TRENNKOPF_SICHTBAR : ZEILENLAYOUT_TRENNKOPF_VERBORGEN;
 //		String zeilenlayoutOberlinie = (catchBloecke.size() > 0) ? SchrittView.FORMLAYOUT_GAP : ZEILENLAYOUT_TRENNKOPF_VERBORGEN;
 //		bereichLayout.setRowSpec(1, RowSpec.decode(zeilenlayoutOberlinie));
@@ -141,7 +144,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI {
 		int zeilenposition = (index+1) * 2;
 		//layout.setConstraints(catchSchrittView.getComponent(), CC.xywh(1, 2, 3, 1));
 		layout.setConstraints(catchSchrittView.getComponent(), CC.xywh(1, zeilenposition, spaltenbreite, 1));
-		
+
 		int spaltenpositionGrundlinienAnschluss = spaltenbreite;
 		int zeilenpositionGrundlinienAnschluss = zeilenposition+1;
 		int zeilenhoeheGrundlinienAnschluss = anzahlNachfolger * 2;
@@ -194,7 +197,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void geklappt(boolean auf) {
 		catchBloeckeContainer.setVisible(auf);
@@ -217,6 +220,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI {
 		trennkopfSichtbarkeitAktualisieren();
 		int neueUmgehungBreite = AbstractSchrittView.groesseUmrechnen(umgehungBreite, prozentNeu, prozentAktuell);
 		umgehungBreiteSetzen(neueUmgehungBreite);
+		klappen.scale(prozentNeu);
 	}
 
 	public void umgehungBreiteSetzen(int angepassteUmgehungBreite) {
@@ -224,5 +228,17 @@ class CatchBereich extends JPanel implements KlappbarerBereichI {
 		bereichLayout.setColumnSpec(2, ColumnSpec.decode(AbstractSchrittView.umgehungLayout(umgehungBreite)));
 	}
 
-	
+	@Override
+	public void componentResized(ComponentEvent e) {
+		klappen.updateLocation(getWidth());
+	}
+
+	@Override public void componentMoved(ComponentEvent e) {
+	}
+
+	@Override public void componentShown(ComponentEvent e) {
+	}
+
+	@Override public void componentHidden(ComponentEvent e) {
+	}
 }

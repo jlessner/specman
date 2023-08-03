@@ -2,26 +2,23 @@ package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
-import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.textfield.Indentions;
-import specman.textfield.TextfieldShef;
 import specman.undo.AbstractUndoableInteraktion;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SubsequenzSchrittView extends AbstractSchrittView {
 	public static final int TEXTEINRUECKUNG = 18;
-	
+
 	final JPanel panel;
 	final KlappButton klappen;
 	final FormLayout layout;
@@ -101,11 +98,12 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		}
 		subsequenz.zusammenklappenFuerReview();
 	}
-	
+
 	@Override
 	public void skalieren(int prozent, int prozentAktuell) {
 		super.skalieren(prozent, prozentAktuell);
 		subsequenz.skalieren(prozent, prozentAktuell);
+		klappen.scale(prozent);
 	}
 
 	@Override
@@ -170,5 +168,9 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return subsequenz;
 	}
 
-	
+	@Override
+	public void componentResized(ComponentEvent e) {
+		super.componentResized(e);
+		klappen.updateLocation(text.getStepNumberBounds());
+	}
 }

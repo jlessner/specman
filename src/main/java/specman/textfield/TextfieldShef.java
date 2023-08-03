@@ -9,18 +9,41 @@ import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.CSS;
-
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import static specman.Specman.schrittHintergrund;
-import static specman.textfield.TextStyles.*;
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.textfield.TextStyles.FONTSIZE;
+import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
+import static specman.textfield.TextStyles.INDIKATOR_GELB;
+import static specman.textfield.TextStyles.INDIKATOR_GELOESCHT_MARKIERT;
+import static specman.textfield.TextStyles.INDIKATOR_GRAU;
+import static specman.textfield.TextStyles.INDIKATOR_SCHWARZ;
+import static specman.textfield.TextStyles.SCHRITTNR_FONTSIZE;
+import static specman.textfield.TextStyles.font;
+import static specman.textfield.TextStyles.ganzerSchrittGeloeschtStil;
+import static specman.textfield.TextStyles.geaendertStil;
+import static specman.textfield.TextStyles.geloeschtStil;
+import static specman.textfield.TextStyles.labelFont;
+import static specman.textfield.TextStyles.quellschrittStil;
+import static specman.textfield.TextStyles.standardStil;
 
-public class TextfieldShef implements ComponentListener, KeyListener {
+public class TextfieldShef implements KeyListener {
 	private final InsetPanel insetPanel;
 	private final JEditorPane editorPane;
 	private final SchrittNummerLabel schrittNummer;
@@ -39,16 +62,13 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		if (schrittId != null) {
 			schrittNummer = new SchrittNummerLabel(schrittId);
 			editorPane.add(schrittNummer);
-			editorPane.addComponentListener(this);
 			insetPanel.setEnabled(false);
 		} else {
 			schrittNummer = null;
 		}
 
-		if (editor != null) {
-			skalieren(editor.getZoomFactor(), 0);
-		}
-	}
+    skalieren(editor.getZoomFactor(), 0);
+  }
 
 	public TextfieldShef(EditorI editor) {
 		this(editor, null, null);
@@ -178,32 +198,20 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 		}
 	}
 
-	@Override
-	public void componentMoved(ComponentEvent e) {
-	}
-
-	@Override
-	public void componentHidden(ComponentEvent e) {
-	}
-
-	@Override
-	public void componentShown(ComponentEvent e) {
-	}
-
-	@Override
-	public void componentResized(ComponentEvent e) {
+	public void updateBounds() {
 		Dimension schrittnummerGroesse = schrittNummer.getPreferredSize();
-		if (schrittNummerSichtbar)
-			schrittNummer.setBounds(editorPane.getWidth() - schrittnummerGroesse.width, 0, schrittnummerGroesse.width,
-					schrittnummerGroesse.height - 2);
-		else
-			schrittNummer.setBounds(0, 0, 0, 0);
+		if (schrittNummerSichtbar) {
+      schrittNummer.setBounds(editorPane.getWidth() - schrittnummerGroesse.width, 0, schrittnummerGroesse.width,
+          schrittnummerGroesse.height - 2);
+    } else {
+      schrittNummer.setBounds(0, 0, 0, 0);
+    }
 	}
 
 	public void schrittnummerAnzeigen(boolean sichtbar) {
 		if (schrittNummer != null) {
 			schrittNummerSichtbar = sichtbar;
-			componentResized(null); // Sorgt dafÃ¯Â¿Â½r, dass der Label auch optisch sofort verschwindet
+			updateBounds(); // Sorgt dafür, dass der Label auch optisch sofort verschwindet
 		}
 	}
 
@@ -520,6 +528,14 @@ public class TextfieldShef implements ComponentListener, KeyListener {
 	//TODO
 	public InsetPanel getInsetPanel() {
 		return insetPanel;
+	}
+
+	public JEditorPane getEditorPane() {
+		return editorPane;
+	}
+
+	public Rectangle getStepNumberBounds() {
+		return schrittNummer.getBounds();
 	}
 
 	public void wrapSchrittnummerAsDeleted() { schrittNummer.wrapAsDeleted(); }
