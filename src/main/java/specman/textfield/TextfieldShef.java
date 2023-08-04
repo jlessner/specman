@@ -47,7 +47,7 @@ public class TextfieldShef extends JPanel {
 	private final TextEditArea editorPane;
 	private final SchrittNummerLabel schrittNummer;
 	private final FormLayout layout;
-	private EmptyBorder border;
+	private EmptyBorder editorPaneBorder;
 	private Indentions indentions;
 	boolean schrittNummerSichtbar = true;
 	TextMitAenderungsmarkierungen_V001 loeschUndoBackup;
@@ -172,10 +172,8 @@ public class TextfieldShef extends JPanel {
 		if (schrittNummer != null) {
 			schrittNummer.setFont(labelFont.deriveFont((float) SCHRITTNR_FONTSIZE * prozentNeu / 100));
 		}
-		// prozentAktuell = 0 ist ein Indikator für initiales Laden. Da brauchen wir
-		// nur den Font
-		// anpassen. Die Bilder stehen bereits entsprechend des im Modell
-		// abgespeicherten Zoomfaktors
+		// prozentAktuell = 0 ist ein Indikator für initiales Laden. Da brauchen wir nur den Font
+		// anpassen. Die Bilder stehen bereits entsprechend des im Modell abgespeicherten Zoomfaktors
 		// skaliert im HTML.
 		if (prozentAktuell != 0 && prozentNeu != prozentAktuell) {
 			ImageScaler imageScaler = new ImageScaler(prozentNeu, prozentAktuell);
@@ -198,17 +196,17 @@ public class TextfieldShef extends JPanel {
 	public void requestFocus() { editorPane.requestFocus(); }
 
 	public void setLeftInset(int px) {
-		Insets insets = border.getBorderInsets();
+		Insets insets = editorPaneBorder.getBorderInsets();
 		insets.left = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
-		border = new EmptyBorder(insets);
-		editorPane.setBorder(border);
+		editorPaneBorder = new EmptyBorder(insets);
+		editorPane.setBorder(editorPaneBorder);
 	}
 
 	public void setRightInset(int px) {
-		Insets insets = border.getBorderInsets();
+		Insets insets = editorPaneBorder.getBorderInsets();
 		insets.right = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
-		border = new EmptyBorder(insets);
-		editorPane.setBorder(border);
+		editorPaneBorder = new EmptyBorder(insets);
+		editorPane.setBorder(editorPaneBorder);
 	}
 
 	@Override
@@ -254,8 +252,8 @@ public class TextfieldShef extends JPanel {
 	}
 
 	private void setEditorBorder(int top, int left, int bottom, int right) {
-		this.border = new EmptyBorder(top, left, bottom, right);
-		editorPane.setBorder(border);
+		this.editorPaneBorder = new EmptyBorder(top, left, bottom, right);
+		editorPane.setBorder(editorPaneBorder);
 	}
 
 	//TODO
