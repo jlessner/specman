@@ -20,7 +20,9 @@ import static specman.Specman.schrittHintergrund;
 import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
 import static specman.textfield.TextStyles.*;
 
-/** Diese Klasse löst außerdem ein ärgerliches Grafikproblem in Swing:
+/** Zentrales grafisches Containerpanel für einen zusammenhängenden Text mit einem Nummernlabel
+ * für Schrittbeschreibungen. Der Container kümmert sich auch um die abgesetzte Darstellung von
+ * Schritten und um ein damit zusammenhängendes ärgerliches Grafikproblem in Swing:
  * Wenn sich ein Textfeld im Randbereich eines Schritts mit abgerundeten Ecken befinden, dann
  * muss es ein wenig eingerückt werden, damit der editierbare Bereich nicht unter der Abrundung
  * liegt. Das würde man normalerweise mit einer Border oder einem Margin für das Textfeld lösen.
