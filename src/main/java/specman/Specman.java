@@ -7,7 +7,6 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import specman.draganddrop.DragMouseAdapter;
-import specman.draganddrop.DraggingLogic;
 import specman.draganddrop.GlassPane;
 import specman.model.*;
 import specman.model.v001.*;

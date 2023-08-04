@@ -94,9 +94,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		ueberschrift.getTextComponent().setEditable(true);
 	}
 
-	public void ueberschriftAenderungenUebernehmen() {
-		ueberschrift.aenderungsmarkierungenUebernehmen();
-	}
+	public void ueberschriftAenderungenUebernehmen() { ueberschrift.aenderungsmarkierungenUebernehmen(); }
 
 	public void ueberschriftAenderungenVerwerfen() {
 		ueberschrift.aenderungsmarkierungenVerwerfen();
