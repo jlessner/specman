@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.Specman;
-import specman.textfield.InsetPanel;
+import specman.textfield.InteractiveStepFragment;
 import specman.view.AbstractSchrittView;
 
 import static specman.draganddrop.InsertDecision.Insert;
@@ -112,9 +112,9 @@ public class DragMouseAdapter extends MouseAdapter {
 
 	//Letzter Schritt darf nicht verschoben werden
 	private boolean checkEinzigerSchritt(MouseEvent e) {
-		if(e.getSource() instanceof JLabel){
+		if(e.getSource() instanceof InteractiveStepFragment){
 			int counter = 0;
-			AbstractSchrittView step = labelToStep( (JLabel) e.getSource());
+			AbstractSchrittView step = labelToStep( (InteractiveStepFragment) e.getSource());
 			for(AbstractSchrittView Schritt: step.getParent().schritte) {
 				if(!(Schritt.getAenderungsart() == Aenderungsart.Geloescht || Schritt.getAenderungsart() == Aenderungsart.Quellschritt)) {
 					counter++;
@@ -127,25 +127,24 @@ public class DragMouseAdapter extends MouseAdapter {
 
 	//gelöschter Schritt darf nicht verschoben werden
 	private boolean checkGeloeschterSchritt(MouseEvent e){
-		if(e.getSource() instanceof JLabel){
-			AbstractSchrittView step = labelToStep( (JLabel) e.getSource());
+		if(e.getSource() instanceof InteractiveStepFragment){
+			AbstractSchrittView step = labelToStep( (InteractiveStepFragment) e.getSource());
 			return step.getAenderungsart()== Aenderungsart.Geloescht;
 		}
 		return false;
 	}
 
 	private boolean checkQuellSchritt(MouseEvent e){
-		if(e.getSource() instanceof JLabel){
-			AbstractSchrittView step = labelToStep( (JLabel) e.getSource());
+		if(e.getSource() instanceof InteractiveStepFragment){
+			AbstractSchrittView step = labelToStep( (InteractiveStepFragment) e.getSource());
 			return step.getAenderungsart() == Aenderungsart.Quellschritt;
 		}
 		return false;
 	}
 
 
-	private AbstractSchrittView labelToStep(JLabel label) {
-		InsetPanel ip = (InsetPanel) label.getParent().getParent();
-		return specman.hauptSequenz.findeSchritt(ip.getTextfeld().getTextComponent());
+	private AbstractSchrittView labelToStep(InteractiveStepFragment label) {
+		return specman.hauptSequenz.findeSchritt(label);
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
@@ -154,8 +153,8 @@ public class DragMouseAdapter extends MouseAdapter {
 
 	//sets Dummy depending on new Step oder dragged Step
 	private void setDummy(MouseEvent e) {
-		if(e.getSource() instanceof JLabel){
-			AbstractSchrittView step = labelToStep((JLabel)e.getSource());
+		if(e.getSource() instanceof InteractiveStepFragment){
+			AbstractSchrittView step = labelToStep((InteractiveStepFragment)e.getSource());
 			dummy = new JTextField("Schritt "+step.getId().toString() );
 		}else {
 			dummy = new JTextField("Neuer Schritt");

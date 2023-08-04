@@ -26,7 +26,7 @@ public class QuellSchrittView extends AbstractSchrittView{
     }
 
     @Override
-    public JComponent getComponent() { return decorated(text.asJComponent()); }
+    public JComponent getComponent() { return decorated(text); }
 
     public QuellSchrittView(EditorI editor, SchrittSequenzView parent, QuellSchrittModel_V001 model) {
         super(editor, parent, model.inhalt.text, model.id, model.aenderungsart);
@@ -47,9 +47,7 @@ public class QuellSchrittView extends AbstractSchrittView{
     }
 
     @Override
-    public JComponent getPanel() {
-        return text.asJComponent();
-    }
+    public JComponent getPanel() { return text; }
 
     public SchrittID getZielschrittID(){
         return zielschritt!=null?zielschritt.getId():null;

@@ -6,4 +6,5 @@ package specman.textfield;
  * die {@link SchrittNummerLabel}. Letztere sind relevant, weil der User über diese
  * per Drag&Drop einen Schritt verschieben kann. */
 public interface InteractiveStepFragment {
+  String getText();
 }

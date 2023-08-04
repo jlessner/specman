@@ -41,7 +41,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
 
-		panel.add(text.asJComponent(), CC.xywh(2, 1, 2, 1));
+		panel.add(text, CC.xywh(2, 1, 2, 1));
 
 		linkerBalken = new JPanel();
 		linkerBalken.setLayout(null);

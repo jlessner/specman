@@ -13,6 +13,7 @@ import specman.Specman;
 import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
+import specman.textfield.InteractiveStepFragment;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -43,7 +44,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 				(LINIENBREITE * 2) + "px, " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", pref:grow, 0px");
 		schrittPanel.setLayout(layout);
 		
-		schrittPanel.add(text.asJComponent(), CC.xy(2, 2));
+		schrittPanel.add(text, CC.xy(2, 2));
 		
 		
 		JPanel doppellinie = new JPanel();
@@ -127,8 +128,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 	public JComponent getComponent() { return decorated(schrittPanel); }
 
 	@Override
-	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
-		return handlingSequenz.findeSchritt(zuletztFokussierterText);
+	public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
+		return handlingSequenz.findeSchritt(fragment);
 	}
 
 	@Override

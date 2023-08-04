@@ -7,6 +7,7 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
+import specman.textfield.InteractiveStepFragment;
 import specman.textfield.TextfieldShef;
 
 import java.awt.Color;
@@ -54,8 +55,8 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		return model;
 	}
 
-	public boolean hatUeberschrift(JTextComponent textComponent) {
-		return ueberschrift.getTextComponent() == textComponent;
+	public boolean hatUeberschrift(InteractiveStepFragment fragment) {
+		return ueberschrift.enthaelt(fragment);
 	}
 	
 	public SchrittID naechsteNachbarSequenzID() {

@@ -19,6 +19,7 @@ import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
 import specman.textfield.Indentions;
+import specman.textfield.InteractiveStepFragment;
 import specman.textfield.TextfieldShef;
 import specman.undo.AbstractUndoableInteraktion;
 import specman.undo.UndoableSchrittEntferntMarkiert;
@@ -41,7 +42,7 @@ import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
 import static specman.view.RoundedBorderDecorationStyle.None;
 
-abstract public class AbstractSchrittView implements FocusListener, KlappbarerBereichI, ComponentListener {
+abstract public class AbstractSchrittView implements KlappbarerBereichI, ComponentListener, FocusListener {
 	public static final int LINIENBREITE = 2;
 	public static final String FORMLAYOUT_GAP = LINIENBREITE + "px";
 	public static final String ZEILENLAYOUT_INHALT_SICHTBAR = "fill:pref:grow";
@@ -131,13 +132,6 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	public boolean isStrukturiert() { return false; }
-
-	@Override public void focusGained(FocusEvent e) {}
-
-	@Override
-	public void focusLost(FocusEvent e) {
-		//System.out.println(text.getText());
-	}
 
 	void schrittnummerSichtbarkeitSetzen(boolean sichtbar) {
 		text.schrittnummerAnzeigen(sichtbar);
@@ -231,9 +225,9 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		return false;
 	}
 
-	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
+	public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
 		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
-			AbstractSchrittView schritt = unterSequenz.findeSchritt(zuletztFokussierterText);
+			AbstractSchrittView schritt = unterSequenz.findeSchritt(fragment);
 			if (schritt != null)
 				return schritt;
 		}
@@ -254,7 +248,7 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 	}
 
 	/** Liefert alle in einem Schritt enthalten Untersequenzen, um damit die verschiedenen
-	 * Traversierungsfunktionen wie {@link #findeSchritt(JTextComponent)} zu füttern. Damit
+	 * Traversierungsfunktionen wie {@link #findeSchritt(InteractiveStepFragment)} zu füttern. Damit
 	 * spart man sich das rekursive Absteigen in allen Ableitungen für jede dieser
 	 * Funktionen zu dublizieren
 	 */
@@ -291,8 +285,8 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 		unterSequenzen().forEach(sequenz -> sequenz.skalieren(prozentNeu, prozentAktuell));
 	}
 
-	public boolean enthaelt(JTextComponent zuletztFokussierterText) {
-		return text.getTextComponent() == zuletztFokussierterText;
+	public boolean enthaelt(InteractiveStepFragment fragment) {
+		return text.enthaelt(fragment);
 	}
 
 	static int groesseUmrechnen(int groesse, int prozentNeu, int prozentAktuell) {
@@ -504,4 +498,10 @@ abstract public class AbstractSchrittView implements FocusListener, KlappbarerBe
 
 	@Override public void componentHidden(ComponentEvent e) {
 	}
+
+	@Override public void focusGained(FocusEvent e) {}
+
+	@Override
+	public void focusLost(FocusEvent e) {}
+
 }

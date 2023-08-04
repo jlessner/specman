@@ -15,6 +15,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
+import specman.textfield.InteractiveStepFragment;
 import specman.undo.AbstractUndoableInteraktion;
 import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigEntferntMarkiert;
@@ -51,7 +52,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, int numCases) {
 		super(editor, parent, initialerText, id, aenderungsart, createPanelLayout(numCases));
-		panel.add(text.asJComponent(), INITIAL_DUMMY);
+		panel.add(text, INITIAL_DUMMY);
 		/** @author PVN */
 		lueckenFueller = new JPanel();
 		lueckenFueller.setBackground(Specman.schrittHintergrund());
@@ -149,9 +150,9 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
 		panelSonst.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD*/
 		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD*/
-		panelCase.add(text.asJComponent(), CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
-		panelSonst.add(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 1)); //siehe Methode layoutConstraintsSetzen
-		panelFall1.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
+		panelCase.add(text, CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
+		panelSonst.add(sonstSequenz.ueberschrift, CC.xy(1, 1)); //siehe Methode layoutConstraintsSetzen
+		panelFall1.add(caseSequenzen.get(0).ueberschrift, CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
 	}
 
 	@Override
@@ -176,7 +177,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	protected void sonstFallAnlegen(ZweigSchrittSequenzView sonstSequenz) {
 		this.sonstSequenz = sonstSequenz;
 		sonstSequenz.ueberschrift.addFocusListener(this);
-		panel.add(sonstSequenz.ueberschrift.asJComponent(), INITIAL_DUMMY);
+		panel.add(sonstSequenz.ueberschrift, INITIAL_DUMMY);
 		panel.add(sonstSequenz.getContainer(), INITIAL_DUMMY);
 	}
 
@@ -184,7 +185,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		this.caseSequenzen = caseSequenzen;
 		for (int i = 0; i < caseSequenzen.size(); i++) {
 			caseSequenzen.get(i).ueberschrift.addFocusListener(this);
-			panel.add(caseSequenzen.get(i).ueberschrift.asJComponent(), INITIAL_DUMMY);
+			panel.add(caseSequenzen.get(i).ueberschrift, INITIAL_DUMMY);
 			panel.add(caseSequenzen.get(i).getContainer(), INITIAL_DUMMY);
 		}
 	}
@@ -269,16 +270,16 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	@Override
-	public boolean enthaelt(JTextComponent textComponent) {
-		return super.enthaelt(textComponent) ||
-			istZweigUeberschrift(textComponent) != null;
+	public boolean enthaelt(InteractiveStepFragment fragment) {
+		return super.enthaelt(fragment) ||
+			istZweigUeberschrift(fragment) != null;
 	}
 
-	public ZweigSchrittSequenzView istZweigUeberschrift(JTextComponent textComponent) {
-		if (sonstSequenz.hatUeberschrift(textComponent))
+	public ZweigSchrittSequenzView istZweigUeberschrift(InteractiveStepFragment fragment) {
+		if (sonstSequenz.hatUeberschrift(fragment))
 			return sonstSequenz;
 		for (ZweigSchrittSequenzView caseSequenz: caseSequenzen) {
-			if (caseSequenz.hatUeberschrift(textComponent))
+			if (caseSequenz.hatUeberschrift(fragment))
 				return caseSequenz;
 		}
 		return null;
@@ -301,7 +302,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		}
 		/**@author PVN */
 		if (zweig == caseSequenzen.get(0)) {
-			panelFall1.remove(caseSequenzen.get(0).ueberschrift.asJComponent());
+			panelFall1.remove(caseSequenzen.get(0).ueberschrift);
 		}
 		int caseIndex = caseSequenzen.indexOf(zweig);
 		zweigAusListeUndPanelEntfernen(zweig);
@@ -317,12 +318,12 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		/**@author PVN */
 		if (zweigIndex == 1) {
 //			System.out.println("index=1");
-			panel.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(5, 3));
+			panel.add(caseSequenzen.get(0).ueberschrift, CC.xy(5, 3));
 		}
 		ArrayList<Integer> spaltenBreiten = zweigbreiteInSpaltenbreitenEinpassen(zweig, zweigIndex);
 		caseSequenzen.add(zweigIndex-1, zweig); // 0 ist Indikator f�r Sonst-Zweig, ab 1 beginnen die Cases
 		panel.add(zweig.getContainer(), INITIAL_DUMMY);
-		panel.add(zweig.ueberschrift.asJComponent(), INITIAL_DUMMY);
+		panel.add(zweig.ueberschrift, INITIAL_DUMMY);
 
 		zweigAnzahlAenderungAbschliessen(editor, spaltenBreiten);
 	}
@@ -370,7 +371,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	private void zweigAusListeUndPanelEntfernen(ZweigSchrittSequenzView zweig) {
 		caseSequenzen.remove(zweig);
 		panel.remove(zweig.getContainer());
-		panel.remove(zweig.ueberschrift.asJComponent());
+		panel.remove(zweig.ueberschrift);
 	}
 
 	@Override public void resyncSchrittnummerStil() {
@@ -391,7 +392,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
-		ZweigSchrittSequenzView zweig = istZweigUeberschrift(editor.getZuletztFokussierterText());
+		ZweigSchrittSequenzView zweig = istZweigUeberschrift(editor.getLastFocusedStepFragment());
 		if (zweig != null) {
 			if (zweig.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 				int zweigIndex = zweigEntfernen(editor, zweig);
@@ -445,14 +446,14 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		/** @author PVN */
 		panelLayout.setConstraints(lueckenFueller, CC.xy(1, 1));
 		panelLayout.setConstraints(panelCase, CC.xywh(3, 1, (1 + caseSequenzen.size()*2)-2, 1));
-		panelCase.add(text.asJComponent(), CC.xy(2, 1));
+		panelCase.add(text, CC.xy(2, 1));
 		panelLayout.setConstraints(panelSonst, CC.xy(1, 3));
-		panelSonst.add(sonstSequenz.ueberschrift.asJComponent(), CC.xy(1, 1));
+		panelSonst.add(sonstSequenz.ueberschrift, CC.xy(1, 1));
 		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5));
 		panelLayout.setConstraints(panelFall1, CC.xy(3, 3));
-		panelFall1.add(caseSequenzen.get(0).ueberschrift.asJComponent(), CC.xy(2, 1));
+		panelFall1.add(caseSequenzen.get(0).ueberschrift, CC.xy(2, 1));
 		for (int i = 1; i < caseSequenzen.size(); i++) {
-			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift.asJComponent(), CC.xy(5 + (i*2)-2, 3));
+			panelLayout.setConstraints(caseSequenzen.get(i).ueberschrift, CC.xy(5 + (i*2)-2, 3));
 		}
 		for (int j = 0; j < caseSequenzen.size(); j++) {
 			panelLayout.setConstraints(caseSequenzen.get(j).getContainer(), CC.xy(3 + j*2, 5));

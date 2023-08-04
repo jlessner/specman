@@ -35,7 +35,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
 
-		panel.add(text.asJComponent(), CC.xy(1, 1));
+		panel.add(text, CC.xy(1, 1));
 
 		klappen = new KlappButton(this, text.getTextComponent(), layout, 3);
 

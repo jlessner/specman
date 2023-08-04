@@ -13,6 +13,7 @@ import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.textfield.Indentions;
+import specman.textfield.InteractiveStepFragment;
 import specman.textfield.TextfieldShef;
 
 import javax.swing.*;
@@ -391,16 +392,16 @@ public class SchrittSequenzView {
 		Specman.instance().diagrammAktualisieren(schritt);
 	}
 
-	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
+	public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
 		for (AbstractSchrittView schritt: schritte) {
-			if (schritt.enthaelt(zuletztFokussierterText))
+			if (schritt.enthaelt(fragment))
 				return schritt;
-			AbstractSchrittView subStep = schritt.findeSchritt(zuletztFokussierterText);
+			AbstractSchrittView subStep = schritt.findeSchritt(fragment);
 			if (subStep != null) {
 				return subStep;
 			}
 		}
-		return catchBereich.findeSchritt(zuletztFokussierterText);
+		return catchBereich.findeSchritt(fragment);
 	}
 
 

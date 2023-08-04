@@ -1,5 +1,7 @@
 package specman.textfield;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -7,6 +9,7 @@ import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
@@ -14,24 +17,53 @@ import java.awt.event.FocusListener;
 import java.util.List;
 
 import static specman.Specman.schrittHintergrund;
+import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
 import static specman.textfield.TextStyles.*;
 
-public class TextfieldShef {
-	private final InsetPanel insetPanel;
+/** Diese Klasse löst außerdem ein ärgerliches Grafikproblem in Swing:
+ * Wenn sich ein Textfeld im Randbereich eines Schritts mit abgerundeten Ecken befinden, dann
+ * muss es ein wenig eingerückt werden, damit der editierbare Bereich nicht unter der Abrundung
+ * liegt. Das würde man normalerweise mit einer Border oder einem Margin für das Textfeld lösen.
+ * Leider entsteht dann aber eine Unschönheit: sobald man das Textfeld anklickt und darin editiert,
+ * legt Swing das Feld samt seiner Umrandung zeitweise in den Vordergrund. Die Abrundung wird also
+ * für die Dauer des Editierens mit der Hintergrundfarbe der Border überdeckt. Die Klasse hier
+ * löst dieses Problem. Sie ist selbst ein Panel, in dem das Textfeld über ein FormLayout auf
+ * Abstand zum Rand gehalten wird. Auf diese Weise tritt der Effekt nicht auf.
+ * <p>
+ * Mit dem gleichen Kniff löst die Klasse das Problem, wenn sich das Textfeld am oberen oder unteren
+ * Rand einer abgerundeten Umrahmung befindet. Die Rahmenlinie wird nämlich mit Antialiazing gezeichnet
+ * (siehe Klasse {@link specman.view.RoundedBorderDecorator}, was zu einem leichten "Verschwimmen" der
+ * Horizontallinien führt. In dem Fall muss das äußerste Pixel des oberen bzw. unteren Randabstands
+ * des Textfeldes von dem Abstandspanel hier kommen und nicht von einer Border, weil sonst die Rahmenlinien
+ * während des Editierens leicht angeknabbert aussehen.
+ * <p>
+ * Kann man dann nicht <i>alles</i> über die Klasse hier machen, statt dem Textfeld überhaupt noch
+ * eine Border zu geben? Leider Nein, denn das Textfeld besitzt ja auch noch sein Schrittnummer-Label,
+ * und dieses muss am Rand seiner eigenen Border platziert werden, um bündig mit den umgebenden
+ * Rahmenlinien des Schrittes platziert zu werden, zu dem das Textfeld gehört. Wir müssen also
+ * situationsbedingt beide Techniken mischen.
+ */
+public class TextfieldShef extends JPanel {
 	private final TextEditArea editorPane;
 	private final SchrittNummerLabel schrittNummer;
+	private final FormLayout layout;
+	private EmptyBorder border;
+	private Indentions indentions;
 	boolean schrittNummerSichtbar = true;
 	TextMitAenderungsmarkierungen_V001 loeschUndoBackup;
 
 	public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
+		layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
+		setLayout(layout);
 		editorPane = new TextEditArea(editor, initialerText);
-		insetPanel = new InsetPanel(editorPane, this);
+		add(editorPane, CC.xy(2, 2));
+		updateDecorationIndentions(new Indentions());
 		setBackground(schrittHintergrund());
 
 		if (schrittId != null) {
 			schrittNummer = new SchrittNummerLabel(schrittId);
 			editorPane.add(schrittNummer);
-			insetPanel.setEnabled(false);
+			setEnabled(false);
 		} else {
 			schrittNummer = null;
 		}
@@ -75,15 +107,6 @@ public class TextfieldShef {
 		editorPane.setEditable(false);
 		if (schrittNummer != null) {
 			schrittNummer.setGeloeschtStil(id);
-		}
-	}
-
-	public void setBackground(Color bg) {
-		insetPanel.setBackground(bg);
-		// Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
-		// im Konstruktor einen Aufruf von setBackground vornimmt.
-		if (editorPane != null) {
-			editorPane.setBackground(bg);
 		}
 	}
 
@@ -158,7 +181,7 @@ public class TextfieldShef {
 			ImageScaler imageScaler = new ImageScaler(prozentNeu, prozentAktuell);
 			editorPane.setText(imageScaler.scaleImages(editorPane.getText()));
 		}
-		insetPanel.skalieren(prozentNeu);
+		updateDecorationIndentions(indentions);
 	}
 
 	public static String right(String text) {
@@ -171,29 +194,71 @@ public class TextfieldShef {
 
 	public String getText() { return editorPane.getText(); }
 	public JTextComponent getTextComponent() { return editorPane; }
-	public void setLeftInset(int px) { insetPanel.setLeftInset(px); }
-	public void setRightInset(int px) { insetPanel.setRightInset(px); }
-	public Color getBackground() { return editorPane.getBackground(); }
-	public JComponent asJComponent() { return insetPanel; }
-	public int getX() { return insetPanel.getX(); }
-	public int getY() { return insetPanel.getY(); }
-	public int getHeight() { return insetPanel.getHeight(); }
-	public int getWidth() { return insetPanel.getWidth(); }
 	public void addFocusListener(FocusListener focusListener) { editorPane.addFocusListener(focusListener); }
 	public void requestFocus() { editorPane.requestFocus(); }
 
+	public void setLeftInset(int px) {
+		Insets insets = border.getBorderInsets();
+		insets.left = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
+		border = new EmptyBorder(insets);
+		editorPane.setBorder(border);
+	}
+
+	public void setRightInset(int px) {
+		Insets insets = border.getBorderInsets();
+		insets.right = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
+		border = new EmptyBorder(insets);
+		editorPane.setBorder(border);
+	}
+
+	@Override
 	public void setOpaque(boolean isOpaque) {
-		editorPane.setOpaque(isOpaque);
-		insetPanel.setOpaque(isOpaque);
+		super.setOpaque(isOpaque);
+		// Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
+		// im Konstruktor einen Aufruf von setOpaque vornimmt.
+		if (editorPane != null) {
+			editorPane.setOpaque(isOpaque);
+		}
 	}
 
-	public void updateDecorationIndentions(Indentions indentForDecoration) {
-		insetPanel.updateDecorationIndentions(indentForDecoration);
+	@Override
+	public void setBackground(Color bg) {
+		super.setBackground(bg);
+		// Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
+		// im Konstruktor einen Aufruf von setBackground vornimmt.
+		if (editorPane != null) {
+			editorPane.setBackground(bg);
+		}
 	}
 
+	@Override
+	public Color getBackground() {
+		// Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
+		// im Konstruktor einen Aufruf von getBackground vornimmt.
+		return (editorPane != null) ? editorPane.getBackground() : super.getBackground();
+	}
+
+	public void updateDecorationIndentions(Indentions indentions) {
+		this.indentions = indentions;
+
+		layout.setRowSpec(1, indentions.topInset());
+		layout.setRowSpec(3, indentions.bottomInset());
+		layout.setColumnSpec(1, indentions.leftInset());
+		layout.setColumnSpec(3, indentions.rightInset());
+
+		setEditorBorder(
+			indentions.topBorder(),
+			indentions.leftBorder(),
+			indentions.bottomBorder(),
+			indentions.rightBorder());
+	}
+
+	private void setEditorBorder(int top, int left, int bottom, int right) {
+		this.border = new EmptyBorder(top, left, bottom, right);
+		editorPane.setBorder(border);
+	}
 
 	//TODO
-	public InsetPanel getInsetPanel() { return insetPanel; }
 	public JEditorPane getEditorPane() { return editorPane; }
 
 	public Rectangle getStepNumberBounds() { return schrittNummer.getBounds(); }
@@ -207,4 +272,10 @@ public class TextfieldShef {
 	public List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen(boolean nurErste) {
 		return editorPane.findeAenderungsmarkierungen(nurErste);
 	}
+
+	public boolean enthaelt(InteractiveStepFragment fragment) {
+		return editorPane == fragment || schrittNummer == fragment;
+	}
+
+	public InteractiveStepFragment asInteractiveFragment() { return editorPane; }
 }

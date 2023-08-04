@@ -14,6 +14,7 @@ import specman.Specman;
 import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.textfield.Indentions;
+import specman.textfield.InteractiveStepFragment;
 import specman.textfield.TextfieldShef;
 import specman.undo.AbstractUndoableInteraktion;
 
@@ -44,7 +45,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelBedingung = new JPanel();
 		panelBedingung.setBackground(Specman.schrittHintergrund());
 		panelBedingung.setLayout(createSpalteLinks());
-		panelBedingung.add(text.asJComponent(), "2,1");
+		panelBedingung.add(text, "2,1");
 		panel.add(panelBedingung, CC.xy(3, 1));
 		panel.add(leeresFeld, CC.xy(1, 1));
 		text.addFocusListener(new FocusAdapter() {
@@ -97,7 +98,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelElse = new JPanel();
 		panelElse.setBackground(Specman.schrittHintergrund());
 		panelElse.setLayout(createSpalteLinks());
-		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xywh(2, 1, 1, 1));
+		panelElse.add(elseSequenz.ueberschrift, CC.xywh(2, 1, 1, 1));
 		panel.add(panelElse, CC.xy(3, 3));
 	}
 	
@@ -107,7 +108,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelIf = new JPanel();
 		panelIf.setBackground(Specman.schrittHintergrund());
 		panelIf.setLayout(createSpalteRechts());
-		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1));
+		panelIf.add(ifSequenz.ueberschrift, CC.xy(1,1));
 		panel.add(panelIf, CC.xy(1, 3));
 	}
 
@@ -204,9 +205,9 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelBedingung.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
 		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
 		panelIf.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD */
-		panelBedingung.add(text.asJComponent(), CC.xy(2, 1)); //siehe Konstruktor
-		panelElse.add(elseSequenz.ueberschrift.asJComponent(), CC.xy(2, 1)); //siehe Methode elseBedingungAnlegen
-		panelIf.add(ifSequenz.ueberschrift.asJComponent(), CC.xy(1,1)); //siehe Methode ifBedingungAnlegen
+		panelBedingung.add(text, CC.xy(2, 1)); //siehe Konstruktor
+		panelElse.add(elseSequenz.ueberschrift, CC.xy(2, 1)); //siehe Methode elseBedingungAnlegen
+		panelIf.add(ifSequenz.ueberschrift, CC.xy(1,1)); //siehe Methode ifBedingungAnlegen
 	}
 
 	protected int texteinrueckungNeuberechnen() {
@@ -251,10 +252,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 
 	@Override
-	public boolean enthaelt(JTextComponent textComponent) {
-		return super.enthaelt(textComponent) ||
-			ifSequenz.hatUeberschrift(textComponent) ||
-			elseSequenz.hatUeberschrift(textComponent);
+	public boolean enthaelt(InteractiveStepFragment fragment) {
+		return super.enthaelt(fragment) ||
+			ifSequenz.hatUeberschrift(fragment) ||
+			elseSequenz.hatUeberschrift(fragment);
 	}
 
 	@Override public void resyncSchrittnummerStil() {

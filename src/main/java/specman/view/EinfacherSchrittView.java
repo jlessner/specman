@@ -20,7 +20,7 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() { return decorated(text.asJComponent()); }
+	public JComponent getComponent() { return decorated(text); }
 
 	@Override
 	public EinfacherSchrittModel_V001 generiereModel(boolean formatierterText) {
@@ -36,9 +36,6 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getPanel() {
-		// TODO Auto-generated method stub
-		return text.asJComponent();
-	}
+	public JComponent getPanel() { return text; }
 
 }

@@ -36,7 +36,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 				ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
 		
-		panel.add(text.asJComponent(), CC.xy(2, 1));
+		panel.add(text, CC.xy(2, 1));
 
 	}
 
@@ -92,7 +92,6 @@ public class BreakSchrittView extends AbstractSchrittView {
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		super.focusLost(e);
 		if (zielSchritt != null) {
 			zielSchritt.catchTextAktualisieren(ersteZeileExtraieren());
 		}

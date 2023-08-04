@@ -1,5 +1,6 @@
 package specman;
 
+import specman.textfield.InteractiveStepFragment;
 import specman.view.AbstractSchrittView;
 import specman.view.SchrittSequenzView;
 
@@ -21,7 +22,7 @@ public interface EditorI extends FocusListener {
 	int getZoomFactor();
 	void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation);
 	void diagrammAktualisieren(AbstractSchrittView schrittImFokus);
-	JTextComponent getZuletztFokussierterText();
+	InteractiveStepFragment getLastFocusedStepFragment();
 	void addEdit(UndoableEdit edit);
   void pauseUndoRecording();
 	void resumeUndoRecording();

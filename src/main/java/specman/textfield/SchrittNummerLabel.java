@@ -18,7 +18,7 @@ import static specman.textfield.TextStyles.SPAN_GELOESCHT_MARKIERT;
 import static specman.textfield.TextStyles.Schriftfarbe_Geloescht;
 import static specman.textfield.TextStyles.labelFont;
 
-public class SchrittNummerLabel extends JLabel {
+public class SchrittNummerLabel extends JLabel implements InteractiveStepFragment {
   private static final Border STANDARD_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Schrittnummer);
   private static final Border CHANGED_BORDER = new MatteBorder(0, 2, 0, 1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
   private static final Border DELETED_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Geloescht);

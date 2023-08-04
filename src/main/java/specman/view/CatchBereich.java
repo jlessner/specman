@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import specman.Specman;
+import specman.textfield.InteractiveStepFragment;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -155,13 +156,15 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 		grundlinienAnschluesse.add(anschlussAnGrundlinie);
 	}
 
-	public AbstractSchrittView findeSchritt(JTextComponent zuletztFokussierterText) {
+	public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
 		for (CatchSchrittView catchSchritt: catchBloecke) {
-			if (catchSchritt.getText() == zuletztFokussierterText)
+			if (catchSchritt.enthaelt(fragment)) {
 				return catchSchritt;
-			AbstractSchrittView schritt = catchSchritt.findeSchritt(zuletztFokussierterText);
-			if (schritt != null)
+			}
+			AbstractSchrittView schritt = catchSchritt.findeSchritt(fragment);
+			if (schritt != null) {
 				return schritt;
+			}
 		}
 		return null;
 	}

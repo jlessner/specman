@@ -33,7 +33,7 @@ import static specman.textfield.TextStyles.geaendertStil;
 import static specman.textfield.TextStyles.geloeschtStil;
 import static specman.textfield.TextStyles.standardStil;
 
-public class TextEditArea extends JEditorPane implements KeyListener {
+public class TextEditArea extends JEditorPane implements KeyListener, InteractiveStepFragment {
   public TextEditArea(EditorI editor, String initialerText) {
     editor.instrumentWysEditor(this, initialerText, 0);
     putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);

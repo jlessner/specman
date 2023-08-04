@@ -3,7 +3,7 @@ package specman.draganddrop;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.Specman;
-import specman.textfield.InsetPanel;
+import specman.textfield.SchrittNummerLabel;
 import specman.textfield.TextfieldShef;
 import specman.undo.UndoableSchrittVerschoben;
 import specman.undo.UndoableSchrittVerschobenMarkiert;
@@ -29,7 +29,7 @@ public class DraggingLogic implements Serializable {
 
     // GlassPane and add Step to sequence
     private void checkZweigHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) throws EditException {
-        Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
+        Point p = SwingUtilities.convertPoint(zweig.getUeberschrift(), 0, 0, specman);
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
             createGlassPane(r.width, r.x,r.y + r.height - glassPaneHeight, glassPaneHeight,true);
@@ -43,7 +43,7 @@ public class DraggingLogic implements Serializable {
 
     // GlassPane and add Step to sequence
     private void checkZweigHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight, int offsetRaute, InsertDecision insertDecision, MouseEvent mE) throws EditException {
-        Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
+        Point p = SwingUtilities.convertPoint(zweig.getUeberschrift(), 0, 0, specman);
         if(offsetRaute<0) {
         	p.x= p.x+offsetRaute;
         }
@@ -61,7 +61,7 @@ public class DraggingLogic implements Serializable {
     
     // GlassPane over Cases
     private void checkCaseHeading(ZweigSchrittSequenzView zweig, Point pos, int glassPaneHeight,int offsetRaute, InsertDecision insertDecision) throws EditException {
-        Point p = SwingUtilities.convertPoint(zweig.getUeberschrift().getInsetPanel(), 0, 0, specman);
+        Point p = SwingUtilities.convertPoint(zweig.getUeberschrift(), 0, 0, specman);
         Rectangle r = createRectangle(p, zweig.getUeberschrift());
         if (r.contains(pos)) {
             int casehight = zweig.getContainer().getHeight() + zweig.getUeberschrift().getHeight() + 2;
@@ -72,10 +72,11 @@ public class DraggingLogic implements Serializable {
     }
 
     //add Case withing Drag and Drop
-    private void addCase(ZweigSchrittSequenzView zweig) {
-        AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(zweig.getUeberschrift().getTextComponent());
+    private void addCase(ZweigSchrittSequenzView zweigSchrittSequenz) {
+        TextfieldShef ueberschrift = zweigSchrittSequenz.getUeberschrift();
+        AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ueberschrift.asInteractiveFragment());
         CaseSchrittView caseSchritt = (CaseSchrittView) step;
-        ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.istZweigUeberschrift(zweig.getUeberschrift().getTextComponent());
+        ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.istZweigUeberschrift(ueberschrift.asInteractiveFragment());
         ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(specman, ausgewaehlterZweig);
         specman.addEdit(new UndoableZweigHinzugefuegt(specman, neuerZweig, caseSchritt));
         step.skalieren(specman.getZoomFactor() , 100);
@@ -84,7 +85,7 @@ public class DraggingLogic implements Serializable {
 
     // GlassPane and add Step to sequence
     private void checkSchleifenHeading(SchleifenSchrittView schleife, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) throws EditException {
-        Point p = SwingUtilities.convertPoint(schleife.getTextShef().getInsetPanel(), 0, 0, specman);
+        Point p = SwingUtilities.convertPoint(schleife.getTextShef(), 0, 0, specman);
         Rectangle r = createRectangle(p, schleife.getTextShef());
         if (r.contains(pos)) {
             createGlassPane(r.width, r.x, r.y + r.height - glassPaneHeight, glassPaneHeight, true);
@@ -99,7 +100,7 @@ public class DraggingLogic implements Serializable {
 
     // GlassPane and add Step to sequence
     private void checkSubsequenzHeading(SubsequenzSchrittView schritt, Point pos, int glassPaneHeight, InsertDecision insertDecision, MouseEvent mE) throws EditException {
-        Point p = SwingUtilities.convertPoint(schritt.getTextShef().getInsetPanel(), 0, 0, specman);
+        Point p = SwingUtilities.convertPoint(schritt.getTextShef(), 0, 0, specman);
         Rectangle r = createRectangle(p, schritt.getTextShef());
         if (r.contains(pos)) {
             createGlassPane(r.width, r.x, r.y + r.height - glassPaneHeight, glassPaneHeight, true);
@@ -129,7 +130,7 @@ public class DraggingLogic implements Serializable {
             cl = ((SchleifenSchrittView) step).getLinkerBalken();
             cu = ((SchleifenSchrittView) step).getUntererBalken();
         } else if (step instanceof SubsequenzSchrittView) {
-            c = step.getTextShef().getInsetPanel();
+            c = step.getTextShef();
         } else if (step instanceof BreakSchrittView) {
             c = ((BreakSchrittView) step).getPanel();
             //Abfrage für MousePosition auf dem Panel des Breakschritts
@@ -165,7 +166,7 @@ public class DraggingLogic implements Serializable {
 
     //GlassPane
     private void checkfalseGlassPaneforComponent(TextfieldShef c, Point pos, int glassPaneHeight) {
-        Point p = SwingUtilities.convertPoint(c.getInsetPanel(), 0, 0, specman);
+        Point p = SwingUtilities.convertPoint(c, 0, 0, specman);
         Rectangle r = createRectangle(p, c);
         if (r.contains(pos)) {
             createGlassPane(r.width, r.x, r.y + r.height - glassPaneHeight, glassPaneHeight, false);
@@ -178,10 +179,9 @@ public class DraggingLogic implements Serializable {
         Point p;
         //Abfrage,damit ein Schritt nicht auf oder in sich selbst verschoben werden kann
         //TODO Cursoranpassung funktioniert noch nicht
-        if (e.getSource() instanceof JLabel) {
-            JLabel label = (JLabel) e.getSource();
-            InsetPanel ip = (InsetPanel) label.getParent().getParent();
-            AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
+        if (e.getSource() instanceof SchrittNummerLabel) {
+            SchrittNummerLabel label = (SchrittNummerLabel) e.getSource();
+            AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(label);
             Point checkPoint = SwingUtilities.convertPoint(step.getPanel(), 0, 0, specman);
             Rectangle rec = step.getPanel().getVisibleRect();
             rec.setLocation(checkPoint);
@@ -372,7 +372,7 @@ public class DraggingLogic implements Serializable {
 
     //Creates Rectangle that refelcts a Step with Location and size
     private Rectangle createRectangle(Point p, TextfieldShef textShef) {
-        Rectangle r = textShef.getInsetPanel().getVisibleRect();
+        Rectangle r = textShef.getVisibleRect();
         r.setLocation(p);
         return r;
     }
@@ -433,10 +433,9 @@ public class DraggingLogic implements Serializable {
         //List<Aenderungsmarkierung_V001> markierungen = null;
 
         //ToDo Löschen und hinzufügen beim verschieben
-        if (e.getSource() instanceof JLabel) {
-            JLabel label = (JLabel) e.getSource();
-            InsetPanel ip = (InsetPanel) label.getParent().getParent();
-            AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ip.getTextfeld().getTextComponent());
+        if (e.getSource() instanceof SchrittNummerLabel) {
+            SchrittNummerLabel label = (SchrittNummerLabel) e.getSource();
+            AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(label);
             if(specman.aenderungenVerfolgen() && step.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
                 //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
                 //if(schritt.getAenderungsart()== Aenderungsart.Geloescht || schritt.getAenderungsart() == Aenderungsart.Quellschritt)
