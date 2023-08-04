@@ -14,15 +14,7 @@ import java.awt.event.FocusListener;
 import java.util.List;
 
 import static specman.Specman.schrittHintergrund;
-import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.textfield.TextStyles.FONTSIZE;
-import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
-import static specman.textfield.TextStyles.SCHRITTNR_FONTSIZE;
-import static specman.textfield.TextStyles.font;
-import static specman.textfield.TextStyles.ganzerSchrittGeloeschtStil;
-import static specman.textfield.TextStyles.labelFont;
-import static specman.textfield.TextStyles.quellschrittStil;
-import static specman.textfield.TextStyles.standardStil;
+import static specman.textfield.TextStyles.*;
 
 public class TextfieldShef {
 	private final InsetPanel insetPanel;
@@ -80,7 +72,7 @@ public class TextfieldShef {
 		editorPane.aenderungsmarkierungenVerwerfen();
 		editorPane.setStyle(ganzerSchrittGeloeschtStil);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		getTextComponent().setEditable(false);
+		editorPane.setEditable(false);
 		if (schrittNummer != null) {
 			schrittNummer.setGeloeschtStil(id);
 		}
@@ -177,53 +169,18 @@ public class TextfieldShef {
 		return "<div align='center'>" + Specman.initialtext(text) + "</div>";
 	}
 
-	public String getText() {
-		return editorPane.getText();
-	}
-
-	public JTextComponent getTextComponent() {
-		return editorPane;
-	}
-
-	public void setLeftInset(int px) {
-		insetPanel.setLeftInset(px);
-	}
-
-	public void setRightInset(int px) {
-		insetPanel.setRightInset(px);
-	}
-
-	public Color getBackground() {
-		return editorPane.getBackground();
-	}
-
-	public JComponent asJComponent() {
-		return insetPanel;
-	}
-
-	public int getX() {
-		return insetPanel.getX();
-	}
-
-	public int getY() {
-		return insetPanel.getY();
-	}
-
-	public int getHeight() {
-		return insetPanel.getHeight();
-	}
-
-	public int getWidth() {
-		return insetPanel.getWidth();
-	}
-
-	public void addFocusListener(FocusListener focusListener) {
-		editorPane.addFocusListener(focusListener);
-	}
-
-	public void requestFocus() {
-		editorPane.requestFocus();
-	}
+	public String getText() { return editorPane.getText(); }
+	public JTextComponent getTextComponent() { return editorPane; }
+	public void setLeftInset(int px) { insetPanel.setLeftInset(px); }
+	public void setRightInset(int px) { insetPanel.setRightInset(px); }
+	public Color getBackground() { return editorPane.getBackground(); }
+	public JComponent asJComponent() { return insetPanel; }
+	public int getX() { return insetPanel.getX(); }
+	public int getY() { return insetPanel.getY(); }
+	public int getHeight() { return insetPanel.getHeight(); }
+	public int getWidth() { return insetPanel.getWidth(); }
+	public void addFocusListener(FocusListener focusListener) { editorPane.addFocusListener(focusListener); }
+	public void requestFocus() { editorPane.requestFocus(); }
 
 	public void setOpaque(boolean isOpaque) {
 		editorPane.setOpaque(isOpaque);
@@ -236,17 +193,10 @@ public class TextfieldShef {
 
 
 	//TODO
-	public InsetPanel getInsetPanel() {
-		return insetPanel;
-	}
+	public InsetPanel getInsetPanel() { return insetPanel; }
+	public JEditorPane getEditorPane() { return editorPane; }
 
-	public JEditorPane getEditorPane() {
-		return editorPane;
-	}
-
-	public Rectangle getStepNumberBounds() {
-		return schrittNummer.getBounds();
-	}
+	public Rectangle getStepNumberBounds() { return schrittNummer.getBounds(); }
 
 	public void wrapSchrittnummerAsDeleted() { schrittNummer.wrapAsDeleted(); }
 	public void wrapSchrittnummerAsZiel(SchrittID quellschrittId) { schrittNummer.wrapAsZiel(quellschrittId); }
