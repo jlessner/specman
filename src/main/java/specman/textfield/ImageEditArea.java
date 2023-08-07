@@ -4,6 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.Specman;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -16,7 +17,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
@@ -29,7 +32,7 @@ public class ImageEditArea extends JPanel implements FocusListener {
     new LineBorder(FOCUS_COLOR, BORDER_THICKNESS));
   private static final Border UNSELECTED_BORDER =
     new EmptyBorder(new Insets(BORDER_THICKNESS*2, BORDER_THICKNESS*2, BORDER_THICKNESS*2, BORDER_THICKNESS*2));
-  private ImageIcon fullSizeIcon;
+  private BufferedImage fullSizeImage;
   private ImageIcon scaledIcon;
   private JLabel image;
   java.util.List<ImageGrabber> grabbers = new ArrayList<>();
@@ -39,7 +42,12 @@ public class ImageEditArea extends JPanel implements FocusListener {
     setLayout(new FormLayout("fill:8px,pref:grow,fill:8px", "fill:8px,fill:pref:grow,fill:8px"));
     setBackground(Hintergrundfarbe_Standard);
     setBorder(UNSELECTED_BORDER);
-    fullSizeIcon = new ImageIcon(imageFile.getName());
+    try {
+      fullSizeImage = ImageIO.read(imageFile);
+    }
+    catch(IOException iox) {
+      throw new RuntimeException(iox);
+    }
     image = new JLabel();
     add(image, CC.xywh(1, 1, 3, 3));
     addMouseListener(new MouseAdapter() {
@@ -83,13 +91,13 @@ public class ImageEditArea extends JPanel implements FocusListener {
 
   public void rescale(int availableWidth) {
     if (availableWidth > 0) {
-      int maximumZoomedWidth = fullSizeIcon.getIconWidth() * Specman.instance().getZoomFactor() / 100;
+      int maximumZoomedWidth = fullSizeImage.getWidth() * Specman.instance().getZoomFactor() / 100;
       int scaledWidth = Math.min(availableWidth, maximumZoomedWidth);
       if (scaledIcon == null || scaledWidth != scaledIcon.getIconWidth()) {
-        float scalePercent = (float)scaledWidth / (float)fullSizeIcon.getIconWidth();
-        scaledIcon = new ImageIcon(fullSizeIcon.getImage()
-          .getScaledInstance((int)(fullSizeIcon.getIconWidth() * scalePercent),
-            (int)(fullSizeIcon.getIconHeight() * scalePercent), Image.SCALE_SMOOTH));
+        float scalePercent = (float)scaledWidth / (float)fullSizeImage.getWidth();
+        scaledIcon = new ImageIcon(fullSizeImage
+          .getScaledInstance((int)(fullSizeImage.getWidth() * scalePercent),
+            (int)(fullSizeImage.getHeight() * scalePercent), Image.SCALE_SMOOTH));
         image.setIcon(scaledIcon);
       }
     }

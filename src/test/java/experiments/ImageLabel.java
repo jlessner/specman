@@ -3,19 +3,21 @@ package experiments;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class ImageLabel extends JFrame {
 
-  ImageLabel() {
+  ImageLabel() throws Exception {
     setSize(400, 300);
     setVisible(true);
-    ImageIcon icon = new ImageIcon("Download.png");
-    //JLabel image = new JLabel("image");
-    System.out.println(icon.getIconHeight());
-    ImageIcon scaledIcon = new ImageIcon(icon.getImage()
-      .getScaledInstance(icon.getIconWidth() / 2, icon.getIconHeight() / 2, Image.SCALE_SMOOTH));
+    BufferedImage bufferedImage = ImageIO.read(new File("Download.png"));
+    System.out.println(bufferedImage.getWidth());
+    ImageIcon scaledIcon = new ImageIcon(bufferedImage
+      .getScaledInstance(bufferedImage.getWidth() / 2, bufferedImage.getHeight() / 2, Image.SCALE_SMOOTH));
 
     JLabel image = new JLabel(scaledIcon);
     image.setBackground(Color.yellow);
@@ -26,7 +28,7 @@ public class ImageLabel extends JFrame {
     this.setDefaultCloseOperation(EXIT_ON_CLOSE);
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     new ImageLabel();
   }
 
