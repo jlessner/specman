@@ -21,7 +21,6 @@ public class WhileSchrittView extends SchleifenSchrittView {
 
 	public WhileSchrittView(EditorI editor, SchrittSequenzView parent, WhileSchrittModel_V001 model) {
 		super(editor, parent, model, false);
-		initWiederholsequenzFromModel(editor, model);
 	}
 
 	public WhileSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText) {
