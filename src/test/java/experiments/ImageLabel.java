@@ -6,9 +6,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import javax.swing.*;
 import java.awt.*;
 
-public class ImageFrame extends JFrame {
+public class ImageLabel extends JFrame {
 
-  ImageFrame() {
+  ImageLabel() {
     setSize(400, 300);
     setVisible(true);
     ImageIcon icon = new ImageIcon("Download.png");
@@ -27,7 +27,7 @@ public class ImageFrame extends JFrame {
   }
 
   public static void main(String[] args) {
-    new ImageFrame();
+    new ImageLabel();
   }
 
 }

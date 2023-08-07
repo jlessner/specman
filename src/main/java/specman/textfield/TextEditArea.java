@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 import static specman.textfield.TextStyles.INDIKATOR_GELB;
 import static specman.textfield.TextStyles.INDIKATOR_GELOESCHT_MARKIERT;
 import static specman.textfield.TextStyles.INDIKATOR_GRAU;
@@ -192,7 +193,7 @@ public class TextEditArea extends JEditorPane implements KeyListener, Interactiv
         AttributeSet attribute = e.getAttributes();
         MutableAttributeSet entfaerbt = new SimpleAttributeSet();
         entfaerbt.addAttributes(attribute);
-        StyleConstants.setBackground(entfaerbt, Color.white);
+        StyleConstants.setBackground(entfaerbt, Hintergrundfarbe_Standard);
         doc.setCharacterAttributes(e.getStartOffset(),e.getEndOffset()-e.getStartOffset(),entfaerbt,true);
       }
       ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset(), e.getEndOffset()));
@@ -217,7 +218,7 @@ public class TextEditArea extends JEditorPane implements KeyListener, Interactiv
         AttributeSet attribute = e.getAttributes();
         MutableAttributeSet entfaerbt = new SimpleAttributeSet();
         entfaerbt.addAttributes(attribute);
-        StyleConstants.setBackground(entfaerbt, Color.white);
+        StyleConstants.setBackground(entfaerbt, Hintergrundfarbe_Standard);
         StyleConstants.setStrikeThrough(entfaerbt, false);
         doc.setCharacterAttributes(e.getStartOffset(),e.getEndOffset()-e.getStartOffset(),entfaerbt,true);
       }
@@ -322,7 +323,5 @@ public class TextEditArea extends JEditorPane implements KeyListener, Interactiv
   @Override
   public TextfieldShef getParent() { return (TextfieldShef) super.getParent(); }
 
-  public void addImage(File imageFile) {
-    getParent().addImage(imageFile);
-  }
+  public void addImage(File imageFile) { getParent().addImage(imageFile); }
 }
