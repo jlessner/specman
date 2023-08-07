@@ -101,10 +101,6 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return text;
 	}
 
-	protected void setAenderungsmarkierungen(List<Aenderungsmarkierung_V001> aenderungen) {
-		text.setAenderungsmarkierungen(aenderungen);
-	}
-
 	public List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen() {
 		return text.findeAenderungsmarkierungen(false);
 	}

@@ -2,6 +2,7 @@ package specman.textfield;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -14,6 +15,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.FocusListener;
+import java.io.File;
 import java.util.List;
 
 import static specman.Specman.schrittHintergrund;
@@ -21,8 +23,19 @@ import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
 import static specman.textfield.TextStyles.*;
 
 /** Zentrales grafisches Containerpanel für einen zusammenhängenden Text mit einem Nummernlabel
- * für Schrittbeschreibungen. Der Container kümmert sich auch um die abgesetzte Darstellung von
- * Schritten und um ein damit zusammenhängendes ärgerliches Grafikproblem in Swing:
+ * für Schrittbeschreibungen. Normalerweise besteht diese Beschreibung aus einem einzelnen HTML
+ * Text-Editorbereich (siehe Klasse {@link TextEditArea}). Sollen aber in einer Beschreibung auch
+ * Bilder auftauchen, dann werden diese als separate grafische Elemente in den Container aufgenommen.
+ * Im Prinzip können Bilder auch in dem HTML enthalten sein (siehe Klasse {@link HTMLEditorPane}),
+ * aber das hat zwei entscheidende Limitierungen. Zum einen werden die Bilder darin ziemlich pixelig
+ * skaliert, und zum anderen kann man sie dabei ausschließlich im Sinne von Referenzen auf separate
+ * Dateien integrieren. Die selbstgebaute Komponente {@link ImageEditArea} sorgt für eine schönere
+ * Skalierung und kann die Grafiken auch ins Diagramm <i>eingebettet</i> verwalten, wie man das
+ * von Microsoft Word kennt. Das ist meistens sinnvoller, weil sich ja sonst Inhalte der Beschreibung
+ * verändern können, ohne dass der User an dem Dokument gearbeitet hat.
+ * <p>
+ * Der Container kümmert sich auch um die abgesetzte Darstellung von Schritten und um ein damit
+ * zusammenhängendes ärgerliches Grafikproblem in Swing:
  * Wenn sich ein Textfeld im Randbereich eines Schritts mit abgerundeten Ecken befinden, dann
  * muss es ein wenig eingerückt werden, damit der editierbare Bereich nicht unter der Abrundung
  * liegt. Das würde man normalerweise mit einer Border oder einem Margin für das Textfeld lösen.
@@ -46,7 +59,9 @@ import static specman.textfield.TextStyles.*;
  * situationsbedingt beide Techniken mischen.
  */
 public class TextfieldShef extends JPanel {
+	// ACHTUNG: Das ist hier noch auf halbem Wege. Später wird es eine Liste von EditAreas geben
 	private final TextEditArea editorPane;
+	private ImageEditArea imagePane;
 	private final SchrittNummerLabel schrittNummer;
 	private final FormLayout layout;
 	private EmptyBorder editorPaneBorder;
@@ -55,7 +70,7 @@ public class TextfieldShef extends JPanel {
 	TextMitAenderungsmarkierungen_V001 loeschUndoBackup;
 
 	public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
-		layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
+		layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,fill:pref:grow,0px");
 		setLayout(layout);
 		editorPane = new TextEditArea(editor, initialerText);
 		add(editorPane, CC.xy(2, 2));
@@ -126,7 +141,6 @@ public class TextfieldShef extends JPanel {
 
 	public void setText(TextMitAenderungsmarkierungen_V001 inhalt) {
 		setPlainText(inhalt.text);
-		setAenderungsmarkierungen(inhalt.aenderungen);
 	}
 
 	public TextMitAenderungsmarkierungen_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
@@ -138,13 +152,18 @@ public class TextfieldShef extends JPanel {
 	}
 
 	public void updateBounds() {
-		Dimension schrittnummerGroesse = schrittNummer.getPreferredSize();
-		if (schrittNummerSichtbar) {
-      schrittNummer.setBounds(editorPane.getWidth() - schrittnummerGroesse.width, 0, schrittnummerGroesse.width,
-          schrittnummerGroesse.height - 2);
-    } else {
-      schrittNummer.setBounds(0, 0, 0, 0);
-    }
+		if (schrittNummer != null) {
+			if (schrittNummerSichtbar) {
+				Dimension schrittnummerGroesse = schrittNummer.getPreferredSize();
+				schrittNummer.setBounds(editorPane.getWidth() - schrittnummerGroesse.width, 0, schrittnummerGroesse.width,
+					schrittnummerGroesse.height - 2);
+			} else {
+				schrittNummer.setBounds(0, 0, 0, 0);
+			}
+		}
+		if (imagePane != null) {
+			imagePane.rescale(editorPane.getWidth());
+		}
 	}
 
 	public void schrittnummerAnzeigen(boolean sichtbar) {
@@ -152,21 +171,6 @@ public class TextfieldShef extends JPanel {
 			schrittNummerSichtbar = sichtbar;
 			updateBounds(); // Sorgt dafür, dass der Label auch optisch sofort verschwindet
 		}
-	}
-
-	public void setAenderungsmarkierungen(java.util.List<Aenderungsmarkierung_V001> aenderungen) {
-		// TODO JL: Brauchen wir aktuell nicht mehr. Das war nötig, weil die Hintergrundfarbe nicht
-		// im abgespeicherten HTML erhalten blieb. Das ist jetzt dank des Tricks aus
-		// https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
-		// der Fall. Die Funktion kann also evt. weg, sofern wir aus den HTML-Formatierungen allein
-		// alle die Ãnderungsinformationen vollständig wieder auslesen können.
-		// StyledDocument doc = (StyledDocument)getDocument();
-		// MutableAttributeSet attr = new SimpleAttributeSet();
-		// StyleConstants.setBackground(attr, AENDERUNGSMARKIERUNG_FARBE);
-		// for (Aenderungsmarkierung aenderung: aenderungen) {
-		// doc.setCharacterAttributes(aenderung.getVon(), aenderung.laenge(), attr,
-		// false);
-		// }
 	}
 
 	public void skalieren(int prozentNeu, int prozentAktuell) {
@@ -242,7 +246,7 @@ public class TextfieldShef extends JPanel {
 		this.indentions = indentions;
 
 		layout.setRowSpec(1, indentions.topInset());
-		layout.setRowSpec(3, indentions.bottomInset());
+		layout.setRowSpec(4, indentions.bottomInset());
 		layout.setColumnSpec(1, indentions.leftInset());
 		layout.setColumnSpec(3, indentions.rightInset());
 
@@ -278,4 +282,10 @@ public class TextfieldShef extends JPanel {
 	}
 
 	public InteractiveStepFragment asInteractiveFragment() { return editorPane; }
+
+	public void addImage(File imageFile) {
+		imagePane = new ImageEditArea(imageFile);
+		add(imagePane, CC.xy(2, 3));
+		updateBounds();
+	}
 }

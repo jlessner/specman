@@ -21,6 +21,7 @@ import javax.swing.text.html.CSS;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -318,4 +319,10 @@ public class TextEditArea extends JEditorPane implements KeyListener, Interactiv
   public void keyReleased(KeyEvent e) {
   }
 
+  @Override
+  public TextfieldShef getParent() { return (TextfieldShef) super.getParent(); }
+
+  public void addImage(File imageFile) {
+    getParent().addImage(imageFile);
+  }
 }

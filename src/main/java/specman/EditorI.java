@@ -22,7 +22,7 @@ public interface EditorI extends FocusListener {
 	int getZoomFactor();
 	void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation);
 	void diagrammAktualisieren(AbstractSchrittView schrittImFokus);
-	InteractiveStepFragment getLastFocusedStepFragment();
+	InteractiveStepFragment getLastFocusedTextArea();
 	void addEdit(UndoableEdit edit);
   void pauseUndoRecording();
 	void resumeUndoRecording();

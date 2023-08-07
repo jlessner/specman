@@ -10,7 +10,7 @@ import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
 import specman.model.*;
 import specman.model.v001.*;
-import specman.textfield.InteractiveStepFragment;
+import specman.textfield.TextEditArea;
 import specman.textfield.TextfieldShef;
 import specman.undo.*;
 import specman.view.*;
@@ -19,7 +19,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
@@ -46,7 +45,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private static final BasicStroke GESTRICHELTE_LINIE =
 			new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 1.0f, new float[] {10.0f, 10.0f }, 0f);
 
-	InteractiveStepFragment lastFocusedStepFragment;
+	TextEditArea lastFocusedTextArea;
 	public SchrittSequenzView hauptSequenz;
 	JPanel arbeitsbereich;
 	JPanel hauptSequenzContainer;
@@ -106,11 +105,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		intro = new TextfieldShef(this);
 		intro.setOpaque(false);
 		arbeitsbereich.add(intro, CC.xy(2, 2));
+		intro.addFocusListener(this);
 		
 		outro = new TextfieldShef(this);
 		outro.setOpaque(false);
 		arbeitsbereich.add(outro, CC.xy(2, 4));
-		
+		outro.addFocusListener(this);
+
 		scrollPane.setViewportView(arbeitsbereich);
 		actionListenerHinzufuegen();
 		setInitialWindowSizeAndScreenCenteredLocation();
@@ -194,8 +195,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 	
 	@Override public void focusLost(FocusEvent e) {
-		if (e.getSource() instanceof InteractiveStepFragment)
-			lastFocusedStepFragment = (InteractiveStepFragment)e.getSource();
+		if (e.getSource() instanceof TextEditArea) {
+			lastFocusedTextArea = (TextEditArea) e.getSource();
+		}
 	}
 	
 	private void setDiagrammDatei(File diagrammDatei) {
@@ -212,7 +214,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
 						? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
@@ -225,7 +227,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
 						? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileSchrittAnhaengen(Specman.this);
@@ -238,7 +240,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
 						? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
@@ -251,7 +253,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
 						? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
@@ -264,7 +266,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
 						? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifSchrittAnhaengen(Specman.this);
@@ -277,7 +279,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
@@ -290,7 +292,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
 						? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
@@ -303,7 +305,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
 						? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.breakSchrittAnhaengen(Specman.this);
@@ -316,7 +318,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
@@ -329,13 +331,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
-				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				if (!(schritt instanceof CaseSchrittView)) {
 					fehler("Kein Case-Schritt ausgewählt");
 					return;
 				}
 				CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
-				ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.istZweigUeberschrift(lastFocusedStepFragment);
+				ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.istZweigUeberschrift(lastFocusedTextArea);
 				if (ausgewaehlterZweig == null) {
 					fehler("Kein Zweig ausgewählt");
 					return;
@@ -348,18 +350,31 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 
-		imageAnhaengen.addActionListener(new ActionListener() {
+		imageEinfuegen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView currentStep = hauptSequenz.findeSchritt(lastFocusedStepFragment);
-
+				if (lastFocusedTextArea != null) {
+					JFileChooser fileChooser = new JFileChooser();
+					fileChooser.setCurrentDirectory(new File("."));
+					fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+					fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "gif", "bmp"));
+					fileChooser.setAcceptAllFileFilterUsed(true);
+					int result = fileChooser.showOpenDialog(arbeitsbereich);
+					if (result == JFileChooser.APPROVE_OPTION) {
+						File selectedFile = fileChooser.getSelectedFile();
+						if (selectedFile != null && selectedFile.exists()) {
+							lastFocusedTextArea.addImage(selectedFile);
+							diagrammAktualisieren(null);
+						}
+					}
+				}
 			}
 		});
 
 		einfaerben.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				Color aktuelleHintergrundfarbe = schritt.getBackground();
 				int farbwert = aktuelleHintergrundfarbe.getRed() == 240 ? 255 : 240;
 				Color neueHintergrundfarbe = new Color(farbwert, farbwert, farbwert);
@@ -372,10 +387,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+					AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
 					if (schritt == null) {
 						// Sollte nur der Fall sein, wenn man den Fokus im Intro oder Outro stehen hat
-						fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + lastFocusedStepFragment.getText());
+						fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + lastFocusedTextArea.getText());
 						return;
 					}
 
@@ -394,7 +409,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					else {
 						if (schritt instanceof CaseSchrittView) {
 							CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-							ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(lastFocusedStepFragment);
+							ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(lastFocusedTextArea);
 							if (zweig != null) {
 								int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
 								undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
@@ -418,7 +433,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toggleBorderType.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedStepFragment);
+				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				if (schritt != null) {
 					SchrittSequenzView sequenz = schritt.getParent();
 					sequenz.toggleBorderType(schritt);
@@ -689,21 +704,26 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 	
 	public void diagrammAktualisieren(AbstractSchrittView schrittImFokus) {
-		hauptSequenzContainer.setVisible(false);
-		// Folgende Zeile forciert ein Relayouting, falls z.B. nur eine manuelle Breiten�nderung
-		// einer If-Else-Spaltenteilung stattgefunden hat.
-		diagrammbreiteSetzen(diagrammbreite-1);
-		final Point viewPosition = scrollPane.getViewport().getViewPosition(); 
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				diagrammbreiteSetzen(diagrammbreite);
-				hauptSequenzContainer.setVisible(true);
-				if (schrittImFokus != null)
-					schrittImFokus.requestFocus();
-				scrollPane.getViewport().setViewPosition(viewPosition);
-			}
-		});
+		// Null-Abfrage ist für den Fall, dass der User etwas im Intro oder Outro macht,
+		// bevor er überhaupt das Diagramm angefangen hat. Sollte man später noch mal
+		// bereinigen, dass das gar nicht geht, solange die Welcome Message noch angezeigt wird.
+		if (hauptSequenzContainer != null) {
+			hauptSequenzContainer.setVisible(false);
+			// Folgende Zeile forciert ein Relayouting, falls z.B. nur eine manuelle Breitenänderung
+			// einer If-Else-Spaltenteilung stattgefunden hat.
+			diagrammbreiteSetzen(diagrammbreite-1);
+			final Point viewPosition = scrollPane.getViewport().getViewPosition();
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					diagrammbreiteSetzen(diagrammbreite);
+					hauptSequenzContainer.setVisible(true);
+					if (schrittImFokus != null)
+						schrittImFokus.requestFocus();
+					scrollPane.getViewport().setViewPosition(viewPosition);
+				}
+			});
+		}
 	}
 
 	public void newStepPostInit(AbstractSchrittView newStep) {
@@ -729,7 +749,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		breakSchrittAnhaengen = new JButton();
 		catchSchrittAnhaengen = new JButton();
 		caseAnhaengen = new JButton();
-		imageAnhaengen = new JButton();
+		imageEinfuegen = new JButton();
 		einfaerben = new JButton();
 		loeschen = new JButton();
 		toggleBorderType = new JButton();
@@ -764,7 +784,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolbarButtonHinzufuegen(catchSchrittAnhaengen, "catch-schritt", "Catchblock anh\u00E4ngen", buttonBar);
 		toolbarButtonHinzufuegen(caseAnhaengen, "zweig", "Case anh\u00E4ngen", buttonBar);
 		buttonBar.addSeparator();
-		toolbarButtonHinzufuegen(imageAnhaengen, "image", "Image hinzufügen", buttonBar);
+		toolbarButtonHinzufuegen(imageEinfuegen, "image", "Image hinzufügen", buttonBar);
 		//toolBar.addSeparator();   //ToDo
 		toolbarButtonHinzufuegen(einfaerben, "helligkeit", "Hintergrund schattieren", toolBar);
 		toolbarButtonHinzufuegen(loeschen, "loeschen", "Schritt l\u00F6schen", toolBar);
@@ -882,7 +902,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JButton breakSchrittAnhaengen;
 	private JButton catchSchrittAnhaengen;
 	private JButton caseAnhaengen;
-	private JButton imageAnhaengen;
+	private JButton imageEinfuegen;
 	private JButton einfaerben;
 	private JButton loeschen;
 	private JButton toggleBorderType;
@@ -1019,8 +1039,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return caseAnhaengen;
 	}
 
-	public JButton getImageAnhaengen() {
-		return imageAnhaengen;
+	public JButton getImageEinfuegen() {
+		return imageEinfuegen;
 	}
 
 	public void darfSchrittGeloeschtWerden(AbstractSchrittView schritt) throws EditException {
@@ -1035,8 +1055,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	@Override public InteractiveStepFragment getLastFocusedStepFragment() {
-		return lastFocusedStepFragment;
+	@Override public TextEditArea getLastFocusedTextArea() {
+		return lastFocusedTextArea;
 	}
 
 	public void showError(EditException ex) {

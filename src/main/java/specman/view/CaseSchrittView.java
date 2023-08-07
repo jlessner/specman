@@ -21,7 +21,6 @@ import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigEntferntMarkiert;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
@@ -392,7 +391,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
-		ZweigSchrittSequenzView zweig = istZweigUeberschrift(editor.getLastFocusedStepFragment());
+		ZweigSchrittSequenzView zweig = istZweigUeberschrift(editor.getLastFocusedTextArea());
 		if (zweig != null) {
 			if (zweig.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 				int zweigIndex = zweigEntfernen(editor, zweig);
