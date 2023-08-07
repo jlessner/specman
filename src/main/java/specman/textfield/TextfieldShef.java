@@ -15,7 +15,6 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
 import java.io.File;
 import java.util.List;
 
@@ -294,5 +293,6 @@ public class TextfieldShef extends JPanel {
 		remove(imagePane);
 		imagePane = null;
 		updateBounds();
+		requestFocus();
 	}
 }
