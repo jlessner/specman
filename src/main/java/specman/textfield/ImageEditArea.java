@@ -33,6 +33,7 @@ public class ImageEditArea extends JPanel implements FocusListener {
   private ImageIcon scaledIcon;
   private JLabel image;
   java.util.List<ImageGrabber> grabbers = new ArrayList<>();
+  private JPanel focusGlass;
 
   ImageEditArea(File imageFile) {
     setLayout(new FormLayout("fill:8px,pref:grow,fill:8px", "fill:8px,fill:pref:grow,fill:8px"));
@@ -65,6 +66,9 @@ public class ImageEditArea extends JPanel implements FocusListener {
     new ImageGrabber(this, 1, 3);
     new ImageGrabber(this, 3, 1);
     new ImageGrabber(this, 3, 3);
+    focusGlass = new JPanel();
+    focusGlass.setBackground(new Color(100, 100, 100, 10));
+    add(focusGlass, CC.xywh(1, 1, 3, 3));
     revalidate(); // Force the grabbers to appear
   }
 
@@ -73,6 +77,8 @@ public class ImageEditArea extends JPanel implements FocusListener {
     setBorder(UNSELECTED_BORDER);
     grabbers.forEach(g -> remove(g));
     grabbers.clear();
+    remove(focusGlass);
+    focusGlass = null;
   }
 
   public void rescale(int availableWidth) {
