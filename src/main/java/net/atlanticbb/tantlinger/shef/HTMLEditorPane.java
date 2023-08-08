@@ -1,27 +1,35 @@
 package net.atlanticbb.tantlinger.shef;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import net.atlanticbb.tantlinger.i18n.I18n;
+import net.atlanticbb.tantlinger.ui.DefaultAction;
+import net.atlanticbb.tantlinger.ui.UIUtils;
+import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
+import net.atlanticbb.tantlinger.ui.text.Entities;
+import net.atlanticbb.tantlinger.ui.text.HTMLUtils;
+import net.atlanticbb.tantlinger.ui.text.IndentationFilter;
+import net.atlanticbb.tantlinger.ui.text.SourceCodeEditor;
+import net.atlanticbb.tantlinger.ui.text.WysiwygHTMLEditorKit;
+import net.atlanticbb.tantlinger.ui.text.actions.ClearStylesAction;
+import net.atlanticbb.tantlinger.ui.text.actions.FindReplaceAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLEditorActionFactory;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLElementPropertiesAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontColorAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLHorizontalRuleAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLImageAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLInlineAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLLineBreakAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLLinkAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLTableAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLTextEditAction;
+import net.atlanticbb.tantlinger.ui.text.actions.SpecialCharAction;
+import novaworx.syntax.SyntaxFactory;
+import novaworx.textpane.SyntaxDocument;
+import novaworx.textpane.SyntaxGutter;
+import novaworx.textpane.SyntaxGutterBase;
+import org.bushe.swing.action.ActionList;
+import org.bushe.swing.action.ActionManager;
+import org.bushe.swing.action.ActionUIFactory;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -48,40 +56,29 @@ import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.undo.UndoManager;
-
-import net.atlanticbb.tantlinger.i18n.I18n;
-import net.atlanticbb.tantlinger.ui.DefaultAction;
-import net.atlanticbb.tantlinger.ui.UIUtils;
-import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
-import net.atlanticbb.tantlinger.ui.text.Entities;
-import net.atlanticbb.tantlinger.ui.text.HTMLUtils;
-import net.atlanticbb.tantlinger.ui.text.IndentationFilter;
-import net.atlanticbb.tantlinger.ui.text.SourceCodeEditor;
-import net.atlanticbb.tantlinger.ui.text.WysiwygHTMLEditorKit;
-import net.atlanticbb.tantlinger.ui.text.actions.ClearStylesAction;
-import net.atlanticbb.tantlinger.ui.text.actions.FindReplaceAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLEditorActionFactory;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLElementPropertiesAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontColorAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLHorizontalRuleAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLImageAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLInlineAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLLineBreakAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLLinkAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLTableAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLTextEditAction;
-import net.atlanticbb.tantlinger.ui.text.actions.SpecialCharAction;
-
-
-import novaworx.syntax.SyntaxFactory;
-import novaworx.textpane.SyntaxDocument;
-import novaworx.textpane.SyntaxGutter;
-import novaworx.textpane.SyntaxGutterBase;
-
-import org.bushe.swing.action.ActionList;
-import org.bushe.swing.action.ActionManager;
-import org.bushe.swing.action.ActionUIFactory;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.Serial;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -92,7 +89,7 @@ public class HTMLEditorPane extends JPanel
   /**
    *
    */
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   private static final I18n i18n = I18n.getInstance("net.atlanticbb.tantlinger.shef");
 
@@ -802,7 +799,7 @@ public class HTMLEditorPane extends JPanel
     /**
      *
      */
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
     int tab;
     public ChangeTabAction(int tab)
     {
@@ -841,7 +838,7 @@ public class HTMLEditorPane extends JPanel
     /**
      *
      */
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
     public Component getListCellRendererComponent(JList list, Object value, int index,
         boolean isSelected, boolean cellHasFocus)

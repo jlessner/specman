@@ -3,7 +3,8 @@ package net.atlanticbb.tantlinger.ui.text;
 import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.UIUtils;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.KeyStroke;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.Document;
@@ -16,6 +17,7 @@ import javax.swing.undo.UndoableEdit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.Serial;
 import java.util.Vector;
 
 public class CompoundUndoManager implements UndoableEditListener {
@@ -129,7 +131,7 @@ public class CompoundUndoManager implements UndoableEditListener {
   }
 
   static class RedoAction extends TextAction {
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
     public RedoAction() {
       super(CompoundUndoManager.i18n.str("redo"));
@@ -163,7 +165,7 @@ public class CompoundUndoManager implements UndoableEditListener {
   }
 
   static class UndoAction extends TextAction {
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
     public UndoAction() {
       super(CompoundUndoManager.i18n.str("undo"));
