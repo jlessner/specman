@@ -2,8 +2,13 @@ package specman;
 
 import specman.undo.UndoableSpaltenbreiteAngepasst;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -36,7 +41,7 @@ public class SpaltenResizer extends JPanel {
 				}
 			}
 		});
-		
+
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override public void mouseDragged(MouseEvent e) {
 				dragX = e.getX();
@@ -60,7 +65,6 @@ public class SpaltenResizer extends JPanel {
 				if (icon.getIconWidth() > bestCursorSize.width) {
 					icon = Specman.readImageIcon("left-right-cursor-32");
 				}
-				System.out.println(bestCursorSize);
 				final BufferedImage bufferedImage = new BufferedImage( bestCursorSize.width, bestCursorSize.height, BufferedImage.TYPE_INT_ARGB );
 				final Graphics graphic = bufferedImage.getGraphics();
 				graphic.drawImage(icon.getImage(), 0, 0, null);
