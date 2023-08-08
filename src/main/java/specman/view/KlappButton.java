@@ -24,14 +24,13 @@ import java.awt.image.BufferedImage;
  * @author less02
  */
 class KlappButton extends JButton implements ActionListener, MouseMotionListener, MouseListener {
-  final FormLayout layout;
-  final int klappzeile;
-  final KlappbarerBereichI klappbarerBereich;
-  final JComponent parent;
-  static final Icon initialIcon = Specman.readImageIcon("minus");
-  static final Icon initialSelectedIcon = Specman.readImageIcon("plus");
-  static final int MINIMUM_ICON_LENGTH = initialIcon.getIconHeight() + 2; // The minimum border is 1px top + bottom each
-  int currentZoomPercentage = 100;
+  private final FormLayout layout;
+  private final int klappzeile;
+  private final KlappbarerBereichI klappbarerBereich;
+  private final JComponent parent;
+  private static final Icon initialIcon = Specman.readImageIcon("minus");
+  private static final Icon initialSelectedIcon = Specman.readImageIcon("plus");
+  private static final int MINIMUM_ICON_LENGTH = initialIcon.getIconHeight() + 2; // The minimum border is 1px top + bottom each
 
   public KlappButton(KlappbarerBereichI klappbarerBereich, JComponent parent, FormLayout layout, int klappzeile) {
     super(initialIcon);
@@ -123,13 +122,12 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
   @Override public void mouseEntered(MouseEvent e) {
   }
 
-  public void scale(int newPercentage) {
-    if (newPercentage != currentZoomPercentage) {
-      currentZoomPercentage = newPercentage;
+  public void scale(int newPercentage, int currentPercentage) {
+    if (newPercentage != currentPercentage) {
 
-      // Get width & height by scaling the initial Icon
-      int targetWidth = getScaledLength(initialIcon.getIconWidth());
-      int targetHeight = getScaledLength(initialIcon.getIconHeight());
+      // Get width & height by scaling the initial Icon length
+      int targetWidth = (int) Specman.instance().getScaledLength(initialIcon.getIconWidth());
+      int targetHeight = (int) Specman.instance().getScaledLength(initialIcon.getIconHeight());
 
       // Use the initial icon to prevent bad image quality through upscaling (e.g. 50% -> 100%)
       // Also no need for scaling when returning to the initial Icon
@@ -141,10 +139,6 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
         setSelectedIcon(resizeImage(initialSelectedIcon, targetWidth, targetHeight));
       }
     }
-  }
-
-  private int getScaledLength(int length) {
-    return (int) Math.round(length * currentZoomPercentage * 0.01);
   }
 
   /**
@@ -170,7 +164,7 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
 
   public void updateLocation(int remainingWidth) {
     if (remainingWidth > 0) {
-      int desiredSize = getScaledLength(MINIMUM_ICON_LENGTH);
+      int desiredSize = (int) Specman.instance().getScaledLength(MINIMUM_ICON_LENGTH);
       setBounds(remainingWidth - desiredSize, 0, desiredSize, desiredSize);
 
       int borderSize = (int) Math.round(desiredSize * 0.1);

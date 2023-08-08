@@ -8,12 +8,27 @@ import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
-import specman.model.*;
-import specman.model.v001.*;
+import specman.model.ModelEnvelope;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.SchrittSequenzModel_V001;
+import specman.model.v001.StruktogrammModel_V001;
 import specman.textfield.TextEditArea;
 import specman.textfield.TextfieldShef;
-import specman.undo.*;
-import specman.view.*;
+import specman.undo.AbstractUndoableInteraktion;
+import specman.undo.UndoableDiagrammSkaliert;
+import specman.undo.UndoableSchrittEingefaerbt;
+import specman.undo.UndoableSchrittEntfernt;
+import specman.undo.UndoableSchrittHinzugefuegt;
+import specman.undo.UndoableToggleStepBorder;
+import specman.undo.UndoableZweigEntfernt;
+import specman.undo.UndoableZweigHinzugefuegt;
+import specman.view.AbstractSchrittView;
+import specman.view.BreakSchrittView;
+import specman.view.CaseSchrittView;
+import specman.view.CatchSchrittView;
+import specman.view.QuellSchrittView;
+import specman.view.SchrittSequenzView;
+import specman.view.ZweigSchrittSequenzView;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,7 +37,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -71,7 +90,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		undoManager = new SpecmanUndoManager(this);
 
 		initComponents();
-		
+
 		initShefController();
 		//initJWebengineController();
 
@@ -94,7 +113,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 			}
 		};
-		
+
 		hauptlayout = new FormLayout(
 				"10px, " + INITIAL_DIAGRAMM_WIDTH + "px, " + AbstractSchrittView.FORMLAYOUT_GAP,
 				"10px, fill:pref, fill:default, fill:pref");
@@ -106,7 +125,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		intro.setOpaque(false);
 		arbeitsbereich.add(intro, CC.xy(2, 2));
 		intro.addFocusListener(this);
-		
+
 		outro = new TextfieldShef(this);
 		outro.setOpaque(false);
 		arbeitsbereich.add(outro, CC.xy(2, 4));
@@ -193,13 +212,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	@Override public void focusGained(FocusEvent e) {
 	}
-	
+
 	@Override public void focusLost(FocusEvent e) {
 		if (e.getSource() instanceof TextEditArea) {
 			lastFocusedTextArea = (TextEditArea) e.getSource();
 		}
 	}
-	
+
 	private void setDiagrammDatei(File diagrammDatei) {
 		this.diagrammDatei = diagrammDatei;
 		setTitle(diagrammDatei.getName());
@@ -222,7 +241,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
 		whileSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -235,7 +254,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
 		whileWhileSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -248,7 +267,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
 		ifElseSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -261,7 +280,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
 		ifSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -274,7 +293,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
 		caseSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -287,7 +306,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
 		subsequenzSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -300,7 +319,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
 		breakSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -313,7 +332,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
 		catchSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -326,7 +345,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				hauptSequenz.resyncSchrittnummerStil();
 			}
 		});
-		
+
 		caseAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -382,7 +401,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				addEdit(new UndoableSchrittEingefaerbt(schritt, aktuelleHintergrundfarbe, neueHintergrundfarbe));
 			}
 		});
-		
+
 		loeschen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -448,31 +467,31 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				diagrammSpeichern(false);
 			}
 		});
-		
+
 		speichernUnter.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				diagrammSpeichern(true);
 			}
 		});
-		
+
 		laden.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				diagrammLaden();
 			}
 		});
-		
+
 		export.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				diagrammExportieren();
 			}
 		});
-		
+
 		review.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				hauptSequenz.zusammenklappenFuerReview();
 			}
 		});
-		
+
 		zoom.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				int prozentNeu = ((ZoomFaktor)zoom.getSelectedItem()).getProzent();
@@ -481,7 +500,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 
 		});
-		
+
 		birdsview.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				final int breite = hauptSequenzContainer.getBounds().width;
@@ -563,13 +582,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		zoomFaktorAnzeigeAktualisieren(prozent);
 		float diagrammbreite100Prozent = (float)diagrammbreite / bisherigerFaktor * 100;
 		int neueDiagrammbreite = (int)(diagrammbreite100Prozent * prozent / 100);
-		spaltenbreitenAnpassenNachMausDragging(neueDiagrammbreite - diagrammbreite, 0);	
+		spaltenbreitenAnpassenNachMausDragging(neueDiagrammbreite - diagrammbreite, 0);
 		hauptSequenz.skalieren(prozent, bisherigerFaktor);
 		intro.skalieren(prozent, bisherigerFaktor);
 		outro.skalieren(prozent, bisherigerFaktor);
 		return bisherigerFaktor;
 	}
-	
+
 	/** Nicht so schön, aber nötig: hier wird der Zoomfaktor in der Combobox auf einen neuen Wert aktualisiert,
 	 * ohne dass dabei der AktionListener aufgerufen wird, der dann wiederum einen Eintrag im UndoManager
 	 * produzieren würde. Wir brauchen die Umstellung des Werts aber grade für Undo und Redo, wo natürlich
@@ -692,7 +711,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void schrittFuerNachinitialisierungRegistrieren(AbstractSchrittView schritt) {
 		postInitSchritte.add(schritt);
 	}
-	
+
 	private void neueSchritteNachinitialisieren() {
 		for (AbstractSchrittView schritt: postInitSchritte) {
 			schritt.nachinitialisieren();
@@ -702,7 +721,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private void diagrammbreiteSetzen(int breite) {
 		hauptlayout.setColumnSpec(2, ColumnSpec.decode(breite + "px"));
 	}
-	
+
 	public void diagrammAktualisieren(AbstractSchrittView schrittImFokus) {
 		// Null-Abfrage ist für den Fall, dass der User etwas im Intro oder Outro macht,
 		// bevor er überhaupt das Diagramm angefangen hat. Sollte man später noch mal
@@ -883,8 +902,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		JMenu dateiMenu = new JMenu("Datei");
 		dateiMenu.add(laden);
 		dateiMenu.add(recentFiles.menu());
-		dateiMenu.add(speichern);		
-		dateiMenu.add(speichernUnter);		
+		dateiMenu.add(speichern);
+		dateiMenu.add(speichernUnter);
 		dateiMenu.add(export);
 		return dateiMenu;
 	}
@@ -917,17 +936,17 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JMenuItem laden;
 	private JMenuItem export;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
-	
+
 	private static Specman instance;
 
 	@Deprecated
 	/** Use the {@link EditorI} interface instead. */
 	public static Specman instance() { return instance; }
-	
+
 	public boolean aenderungenVerfolgen() {
 		return aenderungenVerfolgen.isSelected();
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		instance = new Specman();
 	}
@@ -942,7 +961,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			outro.getText());
 		return model;
 	}
-	
+
 	public void diagrammExportieren() {
 		SchrittSequenzModel_V001 model = hauptSequenz.generiereSchittSequenzModel(false);
 		try {
@@ -968,13 +987,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public static boolean istHauptSequenz(SchrittSequenzView schrittSequenzView) {
 		return Specman.instance.hauptSequenz == schrittSequenzView;
 	}
-	
+
 	public static String initialtext(String text) {
 		return (instance() != null && instance().aenderungenVerfolgen()) ?
 				"<span style=\"background-color:" + INDIKATOR_GELB + "\">" + text + "</span>" :
 				text;
 	}
-	
+
 	public static Color schrittHintergrund() {
 		return (instance() != null && instance().aenderungenVerfolgen()) ?
 			AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Color.white;
@@ -1061,5 +1080,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	public void showError(EditException ex) {
 		fehler(ex.getMessage());
+	}
+
+	public double getScaledLength(double length) {
+		return length * getZoomFactor() * 0.01;
 	}
 }

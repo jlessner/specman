@@ -223,7 +223,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 		trennkopfSichtbarkeitAktualisieren();
 		int neueUmgehungBreite = AbstractSchrittView.groesseUmrechnen(umgehungBreite, prozentNeu, prozentAktuell);
 		umgehungBreiteSetzen(neueUmgehungBreite);
-		klappen.scale(prozentNeu);
+		klappen.scale(prozentNeu, prozentAktuell);
 	}
 
 	public void umgehungBreiteSetzen(int angepassteUmgehungBreite) {

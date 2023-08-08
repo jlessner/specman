@@ -162,7 +162,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			String unterBalkenLayout = untererBalken.isVisible() ? umgehungLayout() : ZEILENLAYOUT_INHALT_VERBORGEN;
 			layout.setRowSpec(5, RowSpec.decode(unterBalkenLayout));
 		}
-		klappen.scale(prozentNeu);
+		klappen.scale(prozentNeu, prozentAktuell);
 	}
 
 	@Override

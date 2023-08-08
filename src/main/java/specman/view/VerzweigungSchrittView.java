@@ -163,6 +163,6 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 
 	public void skalieren(int prozentNeu, int prozentAktuell) {
 		super.skalieren(prozentNeu, prozentAktuell);
-		klappen.scale(prozentNeu);
+		klappen.scale(prozentNeu, prozentAktuell);
 	}
 }
