@@ -42,6 +42,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -783,10 +784,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		zoom.setSelectedItem(ZoomFaktor.Faktor_100);
 		zoom.setMaximumSize(new Dimension(65, 20));
 		speichern = new JMenuItem("Speichern");
+		speichern.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
 		speichernUnter = new JMenuItem("Speichern unter...");
+		speichernUnter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK + KeyEvent.SHIFT_DOWN_MASK));
 		laden = new JMenuItem("Laden...");
-
+		laden.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
 		export = new JMenuItem("Exportieren");
+		export.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
 		//======== this ========
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout("pref, default:grow", "default, default, fill:10px:grow")); //ToDo Sidebar added "pref"

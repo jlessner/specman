@@ -1,9 +1,9 @@
 package net.atlanticbb.tantlinger.ui.text;
 
-import java.awt.event.ActionEvent;
-import java.util.Vector;
-import javax.swing.Action;
-import javax.swing.KeyStroke;
+import net.atlanticbb.tantlinger.i18n.I18n;
+import net.atlanticbb.tantlinger.ui.UIUtils;
+
+import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.Document;
@@ -13,8 +13,10 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
-import net.atlanticbb.tantlinger.i18n.I18n;
-import net.atlanticbb.tantlinger.ui.UIUtils;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.Vector;
 
 public class CompoundUndoManager implements UndoableEditListener {
   private static final I18n i18n = I18n.getInstance("net.atlanticbb.tantlinger.ui.text");
@@ -133,9 +135,9 @@ public class CompoundUndoManager implements UndoableEditListener {
       super(CompoundUndoManager.i18n.str("redo"));
       this.putValue("SmallIcon", UIUtils.getIcon("resources/images/x16/", "redo.png"));
       this.putValue("LARGE_ICON", UIUtils.getIcon("resources/images/x24/", "redo.png"));
-      this.putValue("MnemonicKey", new Integer(CompoundUndoManager.i18n.mnem("redo")));
+      this.putValue("MnemonicKey", (int) CompoundUndoManager.i18n.mnem("redo"));
       this.setEnabled(false);
-      this.putValue("AcceleratorKey", KeyStroke.getKeyStroke(89, 2));
+      this.putValue("AcceleratorKey", KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK));
       this.putValue("ShortDescription", this.getValue("Name"));
     }
 
@@ -167,9 +169,9 @@ public class CompoundUndoManager implements UndoableEditListener {
       super(CompoundUndoManager.i18n.str("undo"));
       this.putValue("SmallIcon", UIUtils.getIcon("resources/images/x16/", "undo.png"));
       this.putValue("LARGE_ICON", UIUtils.getIcon("resources/images/x24/", "undo.png"));
-      this.putValue("MnemonicKey", new Integer(CompoundUndoManager.i18n.mnem("undo")));
+      this.putValue("MnemonicKey", (int) CompoundUndoManager.i18n.mnem("undo"));
       this.setEnabled(false);
-      this.putValue("AcceleratorKey", KeyStroke.getKeyStroke(90, 2));
+      this.putValue("AcceleratorKey", KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
       this.putValue("ShortDescription", this.getValue("Name"));
     }
 
