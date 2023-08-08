@@ -5,24 +5,28 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import specman.Specman;
+import specman.textfield.TextStyles;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 public class RoundedBorderDecorator extends JPanel {
   private static final int INSET = 15;
   private static final int INNER_BORDERLINE_WIDTH = 2;
   private static final int ARC_SIZE = 25;
+  private static final double STEPNUMBER_BACKGROUND_WIDTH = 25; // Long enough so the background fills the corner
 
   private final JComponent decoratedComponent;
   private final FormLayout layout;
   private RoundedBorderDecorationStyle style;
   private int inset;
   private int arc;
+  private double stepnumberTextheight;
 
-  public RoundedBorderDecorator(JComponent componentToDecorate) {
+  public RoundedBorderDecorator(JComponent componentToDecorate, double stepnumberTextheight) {
     inset = INSET;
     arc = ARC_SIZE;
     setBackground(Color.white);
@@ -32,7 +36,7 @@ public class RoundedBorderDecorator extends JPanel {
     add(componentToDecorate, CC.xy(2, 2));
     decoratedComponent = componentToDecorate;
     style = RoundedBorderDecorationStyle.Co;
-    skalieren(Specman.instance().getZoomFactor());
+    skalieren(Specman.instance().getZoomFactor(), stepnumberTextheight);
   }
 
   public RoundedBorderDecorationStyle getStyle() { return style; }
@@ -58,14 +62,11 @@ public class RoundedBorderDecorator extends JPanel {
       Graphics2D g2d = (Graphics2D) g;
       Color originalColor = g2d.getColor();
 
-      int borderX = inset + (INNER_BORDERLINE_WIDTH / 2);
-      int borderY = style.withTopInset() ? borderX : INNER_BORDERLINE_WIDTH / 2;
-      int borderWidthMinus = borderX * 2;
-      int borderHeightMinus = borderX + borderY;
-
       antialiasingOn(g2d);
-      drawOuterBorderArea(g2d, borderX, borderY, borderWidthMinus, borderHeightMinus);
-      drawInnerBorderLine(g2d, borderX, borderY, borderWidthMinus, borderHeightMinus);
+      Shape innerShape = createInnerShape();
+      drawNumberStepBackground(g2d, innerShape);
+      drawOuterBorderArea(g2d, innerShape);
+      drawInnerBorderLine(g2d, innerShape);
 
       g2d.setColor(originalColor);
     }
@@ -78,37 +79,52 @@ public class RoundedBorderDecorator extends JPanel {
     g2d.setRenderingHints(rh);
   }
 
-  private void drawInnerBorderLine(Graphics2D g2d,
-      int borderX, int borderY, int borderWidthMinus, int borderHeightMinus) {
-    g2d.setColor(Color.black);
-    g2d.setStroke(new BasicStroke(2));
-    g2d.draw(new RoundRectangle2D.Float(
-        borderX,
-        borderY,
-        (float)(getWidth() - borderWidthMinus),
-        (float)(getHeight() - borderHeightMinus),
-        arc, arc));
-  }
+  private RoundRectangle2D.Float createInnerShape() {
+    int borderX = inset + (INNER_BORDERLINE_WIDTH / 2);
+    int borderY = style.withTopInset() ? borderX : INNER_BORDERLINE_WIDTH / 2;
+    int borderWidthMinus = borderX * 2;
+    int borderHeightMinus = borderX + borderY;
 
-  private void drawOuterBorderArea(Graphics2D g2d,
-      int borderX, int borderY, int borderWidthMinus, int borderHeightMinus) {
-    g2d.setColor(Color.white);
-    Shape outer = new java.awt.geom.Rectangle2D.Float(0, 0, getWidth(), getHeight());
-    Shape inner = new RoundRectangle2D.Float(
+    return new RoundRectangle2D.Float(
         borderX,
         borderY,
         (float)(getWidth() - borderWidthMinus),
         (float)(getHeight() - borderHeightMinus),
         arc, arc);
+  }
+
+  /**
+   * Draws a rectangle to fill the space between the stepNumber and innerBorder
+   * TODO Rework magic numbers in x and y
+   */
+  private void drawNumberStepBackground(Graphics2D g2d, Shape innerShape) {
+    g2d.setColor(TextStyles.Hintergrundfarbe_Schrittnummer);
+
+    double x = (innerShape.getBounds().getWidth() + Specman.instance().getScaledLength(INNER_BORDERLINE_WIDTH * 2));
+    double y = (innerShape.getBounds().getY() + Specman.instance().getScaledLength(1.5));
+    Rectangle2D.Double background = new Rectangle2D.Double(x, y, STEPNUMBER_BACKGROUND_WIDTH, stepnumberTextheight);
+    g2d.fill(background);
+  }
+
+  private void drawInnerBorderLine(Graphics2D g2d, Shape innerShape) {
+    g2d.setColor(Color.black);
+    g2d.setStroke(new BasicStroke(2));
+    g2d.draw(innerShape);
+  }
+
+  private void drawOuterBorderArea(Graphics2D g2d, Shape innerShape) {
+    g2d.setColor(Color.white);
+    Shape outer = new Rectangle2D.Float(0, 0, getWidth(), getHeight());
     Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
     path.append(outer, false);
-    path.append(inner, false);
+    path.append(innerShape, false);
     g2d.fill(path);
   }
 
   public JComponent getDecoratedComponent() { return decoratedComponent; }
 
-  public void skalieren(int percent) {
+  public void skalieren(int percent, double stepnumberTextheight) {
+    this.stepnumberTextheight = stepnumberTextheight;
     inset = (INSET * percent) / 100;
     arc = (ARC_SIZE * percent) / 100;
     updateTopInset();

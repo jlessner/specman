@@ -274,10 +274,11 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	public void nachinitialisieren() {}
 
 	public void skalieren(int prozentNeu, int prozentAktuell) {
-		if (roundedBorderDecorator != null) {
-			roundedBorderDecorator.skalieren(prozentNeu);
-		}
 		text.skalieren(prozentNeu, prozentAktuell);
+		text.updateBounds();
+		if (roundedBorderDecorator != null) {
+			roundedBorderDecorator.skalieren(prozentNeu, text.getStepNumberBounds().getHeight());
+		}
 		unterSequenzen().forEach(sequenz -> sequenz.skalieren(prozentNeu, prozentAktuell));
 	}
 
@@ -304,7 +305,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		JComponent toggleResult;
 		if (roundedBorderDecorator == null) {
 			JComponent coreComponent = getComponent();
-			roundedBorderDecorator = new RoundedBorderDecorator(coreComponent);
+			roundedBorderDecorator = new RoundedBorderDecorator(coreComponent, text.getStepNumberBounds().getHeight());
 			RoundedBorderDecorationStyle requiredDecorationStyle =
 					parent.deriveDecorationStyleFromPosition(this);
 			roundedBorderDecorator.setStyle(requiredDecorationStyle);
