@@ -1,6 +1,7 @@
 package specman;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,11 +14,9 @@ public class SchrittID {
 	public SchrittID() {} // For Jackson only
 
 	public SchrittID(Integer... nummern) {
-		for (int nummer: nummern) {
-			this.nummern.add(nummer);
-		}
+		this.nummern.addAll(Arrays.asList(nummern));
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuffer b = new StringBuffer();
