@@ -12,15 +12,13 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.EditorContent_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.textfield.InteractiveStepFragment;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	KlappButton klappen;
 	boolean breakAngekoppelt;
 
-	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, SchrittSequenzModel_V001 handlingModel) {
+	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, SchrittSequenzModel_V001 handlingModel) {
 		super(editor, parent, initialerText, id, aenderungsart);
 		schrittPanel = new JPanel();
 		schrittPanel.setBackground(Color.black);
@@ -85,7 +83,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, CatchSchrittModel_V001 model) {
-		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, model.handlingSequenz);
+		this(editor, parent, model.inhalt, model.id, model.aenderungsart, model.handlingSequenz);
 		setBackground(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
 		breakAngekoppelt = model.breakAngekoppelt;
@@ -93,7 +91,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 		editor.schrittFuerNachinitialisierungRegistrieren(this);
 	}
 
-	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText) {
+	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText) {
 		this(editor, parent, initialerText, null, null, null);
 	}
 	

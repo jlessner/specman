@@ -1,8 +1,9 @@
 package specman.model.v001;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class TextMitAenderungsmarkierungen_V001 {
+public class TextMitAenderungsmarkierungen_V001 extends EditArea_V001 {
 	public final String text;
 	public final List<Aenderungsmarkierung_V001> aenderungen;
 
@@ -11,7 +12,11 @@ public class TextMitAenderungsmarkierungen_V001 {
 		aenderungen = null;
 	}
 
-	public TextMitAenderungsmarkierungen_V001(String text, List<Aenderungsmarkierung_V001> aenderungen) {
+	public TextMitAenderungsmarkierungen_V001(String text) {
+		this(text, new ArrayList<>());
+	}
+
+  public TextMitAenderungsmarkierungen_V001(String text, List<Aenderungsmarkierung_V001> aenderungen) {
 		this.text = text;
 		this.aenderungen = aenderungen;
 	}

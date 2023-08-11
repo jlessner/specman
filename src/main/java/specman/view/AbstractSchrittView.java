@@ -10,12 +10,12 @@ import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.CatchSchrittModel_V001;
+import specman.model.v001.EditorContent_V001;
 import specman.model.v001.EinfacherSchrittModel_V001;
 import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.IfSchrittModel_V001;
 import specman.model.v001.QuellSchrittModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
-import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
 import specman.textfield.Indentions;
@@ -58,10 +58,10 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	protected QuellSchrittView quellschritt;
 
-	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
+	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialText, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
 		this.aenderungsart = aenderungsart;
-		this.text = new TextfieldShef(editor, initialerText, id != null ? id.toString() : null);
+		this.text = new TextfieldShef(editor, initialText, id != null ? id.toString() : null);
 		this.parent = parent;
 		text.addFocusListener(editor);
 		text.addFocusListener(this);
@@ -105,7 +105,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return text.findeAenderungsmarkierungen(false);
 	}
 
-	protected TextMitAenderungsmarkierungen_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
+	protected EditorContent_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
 		return text.getTextMitAenderungsmarkierungen(formatierterText);
 	}
 

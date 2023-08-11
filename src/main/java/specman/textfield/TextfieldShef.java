@@ -7,6 +7,7 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.EditorContent_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
 import javax.swing.*;
@@ -67,12 +68,16 @@ public class TextfieldShef extends JPanel {
 	private EmptyBorder editorPaneBorder;
 	private Indentions indentions;
 	boolean schrittNummerSichtbar = true;
-	TextMitAenderungsmarkierungen_V001 loeschUndoBackup;
+	EditorContent_V001 loeschUndoBackup;
 
-	public TextfieldShef(EditorI editor, String initialerText, String schrittId) {
+	public TextfieldShef(EditorI editor, String initialContent, String schrittId) {
+		this(editor, new EditorContent_V001(initialContent), schrittId);
+	}
+
+	public TextfieldShef(EditorI editor, EditorContent_V001 initialContent, String schrittId) {
 		layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,fill:pref:grow,0px");
 		setLayout(layout);
-		editorPane = new TextEditArea(editor, initialerText);
+		editorPane = new TextEditArea(editor, initialContent.getFirstAreaAsText().text);
 		add(editorPane, CC.xy(2, 2));
 		updateDecorationIndentions(new Indentions());
 		setBackground(schrittHintergrund());
@@ -89,12 +94,12 @@ public class TextfieldShef extends JPanel {
   }
 
 	public TextfieldShef(EditorI editor) {
-		this(editor, null, null);
+		this(editor, new EditorContent_V001(""), null);
 	}
 
 	public void setStandardStil(SchrittID id) {
 		if (loeschUndoBackup != null) {
-			setText(loeschUndoBackup);
+			setText(loeschUndoBackup.getFirstAreaAsText());
 			loeschUndoBackup = null;
 		}
 		else {
@@ -143,8 +148,10 @@ public class TextfieldShef extends JPanel {
 		setPlainText(inhalt.text);
 	}
 
-	public TextMitAenderungsmarkierungen_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
-		return editorPane.getTextMitAenderungsmarkierungen(formatierterText);
+	public EditorContent_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
+		EditorContent_V001 editContainer = new EditorContent_V001();
+		editContainer.addArea(editorPane.getTextMitAenderungsmarkierungen(formatierterText));
+		return editContainer;
 	}
 
 	public String getPlainText() {
@@ -188,12 +195,12 @@ public class TextfieldShef extends JPanel {
 		updateDecorationIndentions(indentions);
 	}
 
-	public static String right(String text) {
-		return "<div align='right'>" + Specman.initialtext(text) + "</div>";
+	public static EditorContent_V001 right(String text) {
+		return Specman.initialtext("<div align='right'>" + text + "</div>");
 	}
 
-	public static String center(String text) {
-		return "<div align='center'>" + Specman.initialtext(text) + "</div>";
+	public static EditorContent_V001 center(String text) {
+		return Specman.initialtext("<div align='center'>" + text + "</div>");
 	}
 
 	public String getText() { return editorPane.getText(); }

@@ -98,8 +98,8 @@ public class GraphvizExporter {
 						schrittExportName + "[label=\"" + textFuerBedingungAufbereiten(schritt) + "\"\n" +
 						"shape = diamond; style=filled; fillcolor=gray94; fixedsize=shape; height=0.3; width=0.3 ]");
 				verbinden(obereAnschluesse, schrittExportName);
-				Haken ifHaken = new Haken(schrittExportName, ifSchritt.ifSequenz.ueberschrift.text, ifSchritt.ifBreitenanteil > 0.6 ? 5 : 1);
-				Haken elseHaken = new Haken(schrittExportName, ifSchritt.elseSequenz.ueberschrift.text, ifSchritt.ifBreitenanteil < 0.4 ? 5 : 1);
+				Haken ifHaken = new Haken(schrittExportName, ifSchritt.ifSequenz.ueberschrift.getFirstAreaAsText().text, ifSchritt.ifBreitenanteil > 0.6 ? 5 : 1);
+				Haken elseHaken = new Haken(schrittExportName, ifSchritt.elseSequenz.ueberschrift.getFirstAreaAsText().text, ifSchritt.ifBreitenanteil < 0.4 ? 5 : 1);
 				List<Haken> letzteUnterschritteIfSequenz = sequenzExportieren(ifSchritt.ifSequenz, ifHaken);
 				gewichtUebernehmen(ifHaken, letzteUnterschritteIfSequenz);
 				List<Haken> letzteUnterschritteElseSequenz = sequenzExportieren(ifSchritt.elseSequenz, elseHaken);
@@ -112,7 +112,7 @@ public class GraphvizExporter {
 						schrittExportName + "[label=\"" + textFuerBedingungAufbereiten(schritt) + "\"\n" +
 						"shape = diamond; style=filled; fillcolor=gray94; fixedsize=shape; height=0.3; width=0.3 ]");
 				verbinden(obereAnschluesse, schrittExportName);
-				Haken ifHaken = new Haken(schrittExportName, ifSchritt.ifSequenz.ueberschrift.text, 5);
+				Haken ifHaken = new Haken(schrittExportName, ifSchritt.ifSequenz.ueberschrift.getFirstAreaAsText().text, 5);
 				Haken umgehungHaken = new Haken(schrittExportName, "", 1);
 				List<Haken> umgehungHakenAlsListe = new ArrayList<Haken>();
 				umgehungHakenAlsListe.add(umgehungHaken);
@@ -150,11 +150,11 @@ public class GraphvizExporter {
 	}
 
 	private String textFuerAktivitaetsboxAufbereiten(AbstractSchrittModel_V001 schritt ) {
-		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.text, "");
+		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.getFirstAreaAsText().text, "");
 	}
 
 	private String textFuerBedingungAufbereiten(AbstractSchrittModel_V001 schritt) {
-		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.text, "\t\t\t\t\t\t");
+		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.getFirstAreaAsText().text, "\t\t\t\t\t\t");
 	}
 
 	private static String textFuerAktivitaetsboxAufbereiten(String rohtext, String zeilenTrailer) {

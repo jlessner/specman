@@ -12,6 +12,7 @@ import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.EditorContent_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.undo.AbstractUndoableInteraktion;
@@ -31,7 +32,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	SchrittSequenzView wiederholSequenz;
 	int balkenbreite;
 
-	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, boolean mitUnteremBalken) {
+	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean mitUnteremBalken) {
 		super(editor, parent, initialerText, id, aenderungsart);
 		panel = new JPanel();
 		panel.setBackground(Color.black);
@@ -73,7 +74,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	}
 
 	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, WhileSchrittModel_V001 model, boolean mitUnteremBalken) {
-		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, mitUnteremBalken);
+		this(editor, parent, model.inhalt, model.id, model.aenderungsart, mitUnteremBalken);
 		initWiederholsequenzFromModel(editor, model);
 	}
 

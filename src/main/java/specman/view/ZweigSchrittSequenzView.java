@@ -5,14 +5,13 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
+import specman.model.v001.EditorContent_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
 import specman.textfield.TextfieldShef;
 
 import java.awt.Color;
-
-import javax.swing.text.JTextComponent;
 
 /**
  * SchrittSequenzView, die einen Zweig in einer Verweigung durch If, If/Else oder Case
@@ -24,16 +23,16 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, ZweigSchrittSequenzModel_V001 model) {
 		super(editor, parent, model);
-		ueberschriftInitialisieren(editor, model.ueberschrift != null ? model.ueberschrift.text : null);
+		ueberschriftInitialisieren(editor, model.ueberschrift != null ? model.ueberschrift : null);
 	}
 
-	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart, String initialerText) {
+	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart, EditorContent_V001 initialerText) {
 		super(parent, sequenzBasisId, aenderungsart);
 		ueberschriftInitialisieren(editor, initialerText);
 		this.aenderungsart = Specman.instance().initialArt();
 	}
 
-	private void ueberschriftInitialisieren(EditorI editor, String initialerText) {
+	private void ueberschriftInitialisieren(EditorI editor, EditorContent_V001 initialerText) {
 		ueberschrift = new TextfieldShef(editor, initialerText, null);
 		ueberschrift.addFocusListener(editor);
 	}

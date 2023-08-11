@@ -13,6 +13,7 @@ import specman.SpaltenResizer;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
+import specman.model.v001.EditorContent_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
@@ -49,7 +50,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	JPanel panelSonst; //neu
 	JPanel panelFall1; //neu
 
-	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart, int numCases) {
+	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, int numCases) {
 		super(editor, parent, initialerText, id, aenderungsart, createPanelLayout(numCases));
 		panel.add(text, INITIAL_DUMMY);
 		/** @author PVN */
@@ -80,7 +81,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		spaltenResizerAnlegen(editor);
 	}
 
-	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, String initialerText, SchrittID id, Aenderungsart aenderungsart) {
+	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this(editor, parent, initialerText, id, aenderungsart, 2);
 		initCases(
 				editor,
@@ -97,7 +98,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, CaseSchrittModel_V001 model) {
-		this(editor, parent, model.inhalt.text, model.id, model.aenderungsart, model.caseSequenzen.size());
+		this(editor, parent, model.inhalt, model.id, model.aenderungsart, model.caseSequenzen.size());
 		initCases(
 				editor,
 				new ZweigSchrittSequenzView(editor, this, model.sonstSequenz),

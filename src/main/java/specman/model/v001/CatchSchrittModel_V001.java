@@ -15,7 +15,7 @@ public class CatchSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 
 	public CatchSchrittModel_V001(
 		SchrittID id,
-		TextMitAenderungsmarkierungen_V001 inhalt,
+		EditorContent_V001 inhalt,
 		int farbe,
 		boolean zugeklappt,
 		Aenderungsart aenderungsart,

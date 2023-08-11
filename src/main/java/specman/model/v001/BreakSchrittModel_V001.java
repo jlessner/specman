@@ -10,7 +10,7 @@ public class BreakSchrittModel_V001 extends AbstractSchrittModel_V001 {
 
     public BreakSchrittModel_V001(
         SchrittID id,
-        TextMitAenderungsmarkierungen_V001 inhalt,
+        EditorContent_V001 inhalt,
         int farbe,
         Aenderungsart aenderungsart,
         SchrittID quellschrittID,
