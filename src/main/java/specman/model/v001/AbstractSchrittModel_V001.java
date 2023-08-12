@@ -10,7 +10,7 @@ import static specman.view.RoundedBorderDecorationStyle.None;
 
 public abstract class AbstractSchrittModel_V001 {
 	public final SchrittID id;
-	public final EditorContent_V001 inhalt;
+	public final EditorContentModel_V001 inhalt;
 	public final int farbe;
 	public final Aenderungsart aenderungsart;
 	public final SchrittID quellschrittID;
@@ -22,7 +22,7 @@ public abstract class AbstractSchrittModel_V001 {
 
 	AbstractSchrittModel_V001(
 			SchrittID id,
-			EditorContent_V001 inhalt,
+			EditorContentModel_V001 inhalt,
 			int farbe,
 			Aenderungsart aenderungsart,
 			SchrittID quellschrittID,

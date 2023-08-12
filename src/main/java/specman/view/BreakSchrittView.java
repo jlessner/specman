@@ -10,7 +10,7 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.EditorContent_V001;
+import specman.model.v001.EditorContentModel_V001;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	final FormLayout layout;
 	CatchSchrittView zielSchritt;
 
-	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 content, SchrittID id, Aenderungsart aenderungsart) {
+	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 content, SchrittID id, Aenderungsart aenderungsart) {
 		super(editor, parent, content, id, aenderungsart);
 		panel = new JPanel() {
 			@Override

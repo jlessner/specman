@@ -10,7 +10,7 @@ import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
 import specman.model.ModelEnvelope;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.EditorContent_V001;
+import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.textfield.TextEditArea;
@@ -993,11 +993,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return Specman.instance.hauptSequenz == schrittSequenzView;
 	}
 
-	public static EditorContent_V001 initialtext(String text) {
+	public static EditorContentModel_V001 initialtext(String text) {
 		String styledText = (instance() != null && instance().aenderungenVerfolgen()) ?
 				"<span style=\"background-color:" + INDIKATOR_GELB + "\">" + text + "</span>" :
 				text;
-		return new EditorContent_V001(styledText);
+		return new EditorContentModel_V001(styledText);
 	}
 
 	public static Color schrittHintergrund() {

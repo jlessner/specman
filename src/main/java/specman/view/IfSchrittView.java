@@ -7,7 +7,7 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.model.v001.EditorContent_V001;
+import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.IfSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.textfield.TextfieldShef;
@@ -29,16 +29,16 @@ import static specman.Specman.schrittHintergrund;
 public class IfSchrittView extends IfElseSchrittView {
 	int ifBreite;
 	
-	public IfSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerString, SchrittID id, Aenderungsart aenderungsart) {
+	public IfSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerString, SchrittID id, Aenderungsart aenderungsart) {
 		super(editor, parent, initialerString, id, aenderungsart, false);
-		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, new EditorContent_V001("")));
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, new EditorContentModel_V001("")));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, TextfieldShef.right("Ja")));
 		ifBreite = SPALTENLAYOUT_UMGEHUNG_GROESSE + 2; /**@author PVN, Dueck */ 
 	}
 
 	public IfSchrittView(EditorI editor, SchrittSequenzView parent, IfSchrittModel_V001 model) {
 		super(editor, parent, model.inhalt, model.id, model.aenderungsart, false);
-		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), aenderungsart, new EditorContent_V001("")));
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), aenderungsart, new EditorContentModel_V001("")));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		setBackground(new Color(model.farbe));
 		ifBreiteSetzen(model.leerBreite);

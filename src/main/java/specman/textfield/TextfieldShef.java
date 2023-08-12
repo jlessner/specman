@@ -2,13 +2,15 @@ package specman.textfield;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.model.v001.EditArea_V001;
-import specman.model.v001.EditorContent_V001;
-import specman.model.v001.TextMitAenderungsmarkierungen_V001;
+import specman.model.v001.AbstractEditAreaModel_V001;
+import specman.model.v001.EditorContentModel_V001;
+import specman.model.v001.ImageEditAreaModel_V001;
+import specman.model.v001.TextEditAreaModel_V001;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -62,6 +64,8 @@ import static specman.textfield.TextStyles.*;
  * situationsbedingt beide Techniken mischen.
  */
 public class TextfieldShef extends JPanel {
+	private final static String EDITAREA_LAYOUT_ROWSPEC = "fill:pref:grow";
+
 	// ACHTUNG: Das ist hier noch auf halbem Wege. Später wird es eine Liste von EditAreas geben
 	private final List<EditArea> editAreas = new ArrayList<>();
 	private final List<FocusListener> editAreasFocusListeners = new ArrayList<>();
@@ -72,13 +76,13 @@ public class TextfieldShef extends JPanel {
 	private EmptyBorder editorPaneBorder;
 	private Indentions indentions;
 	private boolean schrittNummerSichtbar = true;
-	private EditorContent_V001 loeschUndoBackup;
+	private EditorContentModel_V001 loeschUndoBackup;
 
 	public TextfieldShef(EditorI editor, String initialContent, String schrittId) {
-		this(editor, new EditorContent_V001(initialContent), schrittId);
+		this(editor, new EditorContentModel_V001(initialContent), schrittId);
 	}
 
-	public TextfieldShef(EditorI editor, EditorContent_V001 initialContent, String schrittId) {
+	public TextfieldShef(EditorI editor, EditorContentModel_V001 initialContent, String schrittId) {
 		initLayoutAndEditAreas(editor, initialContent);
 		updateDecorationIndentions(new Indentions());
 		setBackground(schrittHintergrund());
@@ -94,25 +98,30 @@ public class TextfieldShef extends JPanel {
     skalieren(editor.getZoomFactor(), 0);
   }
 
-	private void initLayout(EditorContent_V001 content) {
+	private void initLayout(EditorContentModel_V001 content) {
 		String rowSpecs = "0px";
 		for (int i = 0; i < content.areas.size(); i++) {
-			rowSpecs += ",fill:pref:grow";
+			rowSpecs += "," + EDITAREA_LAYOUT_ROWSPEC;
 		}
 		rowSpecs += ",0px";
 		layout = new FormLayout("0px,10px:grow,0px", rowSpecs);
+		setLayout(layout);
 	}
 
-	private void initLayoutAndEditAreas(EditorI editor, EditorContent_V001 content) {
+	private void initLayoutAndEditAreas(EditorI editor, EditorContentModel_V001 content) {
 		editAreas.stream().forEach(ea -> remove(ea.asComponent()));
 		editAreas.clear();
 		initLayout(content);
 		int row = 2;
-		for (EditArea_V001 editAreaModel: content.areas) {
+		for (AbstractEditAreaModel_V001 editAreaModel: content.areas) {
 			EditArea editArea;
-			if (editAreaModel instanceof TextMitAenderungsmarkierungen_V001) {
-				TextMitAenderungsmarkierungen_V001 textEditAreaModel = (TextMitAenderungsmarkierungen_V001)editAreaModel;
+			if (editAreaModel instanceof TextEditAreaModel_V001) {
+				TextEditAreaModel_V001 textEditAreaModel = (TextEditAreaModel_V001)editAreaModel;
 				editArea = new TextEditArea(editor, textEditAreaModel.text);
+			}
+			else if (editAreaModel instanceof ImageEditAreaModel_V001) {
+				ImageEditAreaModel_V001 imageEditAreaModel = (ImageEditAreaModel_V001)editAreaModel;
+				editArea = new ImageEditArea(imageEditAreaModel);
 			}
 			else {
 				throw new RuntimeException("Noch nicht fertig: " + editAreaModel);
@@ -124,7 +133,7 @@ public class TextfieldShef extends JPanel {
 	}
 
 	public TextfieldShef(EditorI editor) {
-		this(editor, new EditorContent_V001(""), null);
+		this(editor, new EditorContentModel_V001(""), null);
 	}
 
 	public void setStandardStil(SchrittID id) {
@@ -169,17 +178,17 @@ public class TextfieldShef extends JPanel {
 	}
 
 	public void setPlainText(String plainText, int orientation) {
-		EditorContent_V001 content = switch (orientation) {
+		EditorContentModel_V001 content = switch (orientation) {
 			case StyleConstants.ALIGN_CENTER -> center(plainText);
 			case StyleConstants.ALIGN_RIGHT -> right(plainText);
-			default -> new EditorContent_V001(plainText);
+			default -> new EditorContentModel_V001(plainText);
 		};
 		initLayoutAndEditAreas(Specman.instance(), content);
 	}
 
-	public EditorContent_V001 editorContent2Model(boolean formatierterText) {
-		List<EditArea_V001> areaModels = editAreas.stream().map(ea -> ea.toModel(formatierterText)).collect(Collectors.toList());
-		return new EditorContent_V001(areaModels);
+	public EditorContentModel_V001 editorContent2Model(boolean formatierterText) {
+		List<AbstractEditAreaModel_V001> areaModels = editAreas.stream().map(ea -> ea.toModel(formatierterText)).collect(Collectors.toList());
+		return new EditorContentModel_V001(areaModels);
 	}
 
 	public String getPlainText() {
@@ -227,11 +236,11 @@ public class TextfieldShef extends JPanel {
 		updateDecorationIndentions(indentions);
 	}
 
-	public static EditorContent_V001 right(String text) {
+	public static EditorContentModel_V001 right(String text) {
 		return Specman.initialtext("<div align='right'>" + text + "</div>");
 	}
 
-	public static EditorContent_V001 center(String text) {
+	public static EditorContentModel_V001 center(String text) {
 		return Specman.initialtext("<div align='center'>" + text + "</div>");
 	}
 
@@ -332,8 +341,12 @@ public class TextfieldShef extends JPanel {
 	public InteractiveStepFragment asInteractiveFragment() { return editAreas.get(0); }
 
 	public void addImage(File imageFile) {
-		imagePane = new ImageEditArea(imageFile);
-		add(imagePane, CC.xy(2, 3));
+		ImageEditArea imageEditArea = new ImageEditArea(imageFile);
+		// TODO JL: Listener aus editAreasFocusListeners und editAreasComponentsListeners übertragen?
+		editAreas.add(imageEditArea);
+		layout.setRowSpec(editAreas.size()+1, RowSpec.decode(EDITAREA_LAYOUT_ROWSPEC));
+		layout.appendRow(RowSpec.decode("0px"));
+		add(imageEditArea, CC.xy(2, editAreas.size()+1));
 		updateBounds();
 	}
 
@@ -344,7 +357,7 @@ public class TextfieldShef extends JPanel {
 		requestFocus();
 	}
 
-	public void setEditorContent(EditorI editor, EditorContent_V001 intro) {
+	public void setEditorContent(EditorI editor, EditorContentModel_V001 intro) {
 		initLayoutAndEditAreas(editor, intro);
 	}
 

@@ -11,7 +11,7 @@ import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.model.v001.EditorContent_V001;
+import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.textfield.Indentions;
@@ -37,7 +37,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	JPanel panelElse;
 	JPanel panelIf;
 
-	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart anderungsart, boolean withDefaultContent) {
+	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart anderungsart, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, anderungsart, createPanelLayout());
 		/** @author PVN */
 		leeresFeld = new JPanel();
@@ -70,7 +70,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		klappen.init(model.zugeklappt);
 	}
 
-	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
+	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this(editor, parent, initialerText, id, aenderungsart, true);
 	}
 

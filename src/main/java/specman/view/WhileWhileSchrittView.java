@@ -4,7 +4,7 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.EditorContent_V001;
+import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
 
 /**
@@ -16,14 +16,14 @@ import specman.model.v001.WhileWhileSchrittModel_V001;
  */
 public class WhileWhileSchrittView extends SchleifenSchrittView {
 	
-	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
+	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, aenderungsart, true);
 		if (withDefaultContent) {
 			initWiederholsequenz(einschrittigeInitialsequenz(editor, id, aenderungsart));
 		}
 	}
 
-	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialwrText, SchrittID id, Aenderungsart aenderungsart) {
+	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialwrText, SchrittID id, Aenderungsart aenderungsart) {
 		this(editor, parent, initialwrText, id, aenderungsart, true);
 	}
 

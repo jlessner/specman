@@ -10,7 +10,7 @@ public class EinfacherSchrittModel_V001 extends AbstractSchrittModel_V001 {
 
     public EinfacherSchrittModel_V001(
         SchrittID id,
-        EditorContent_V001 inhalt,
+        EditorContentModel_V001 inhalt,
         int farbe,
         Aenderungsart aenderungsart,
         SchrittID quellschrittID,

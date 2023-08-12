@@ -8,7 +8,7 @@ public class StruktogrammModel_V001 {
 	public final int breite;
 	public final int zoomFaktor;
 	public final SchrittSequenzModel_V001 hauptSequenz;
-	public final EditorContent_V001 intro, outro;
+	public final EditorContentModel_V001 intro, outro;
 
 	@Deprecated public StruktogrammModel_V001() { // For Jackson only
 		this.name = null;
@@ -19,7 +19,7 @@ public class StruktogrammModel_V001 {
 		this.outro = null;
 	}
 
-	public StruktogrammModel_V001(String name, int breite, int zoomFaktor, SchrittSequenzModel_V001 hauptSequenz, EditorContent_V001 intro, EditorContent_V001 outro) {
+	public StruktogrammModel_V001(String name, int breite, int zoomFaktor, SchrittSequenzModel_V001 hauptSequenz, EditorContentModel_V001 intro, EditorContentModel_V001 outro) {
 		this.name = name;
 		this.breite = breite;
 		this.zoomFaktor = zoomFaktor;

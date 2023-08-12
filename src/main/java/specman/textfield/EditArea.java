@@ -1,10 +1,9 @@
 package specman.textfield;
 
 import specman.model.v001.Aenderungsmarkierung_V001;
-import specman.model.v001.EditArea_V001;
+import specman.model.v001.AbstractEditAreaModel_V001;
 
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.text.MutableAttributeSet;
 import java.awt.*;
 import java.awt.event.FocusListener;
@@ -22,7 +21,7 @@ public interface EditArea extends InteractiveStepFragment {
 
   Component asComponent();
 
-  EditArea_V001 toModel(boolean formatierterText);
+  AbstractEditAreaModel_V001 toModel(boolean formatierterText);
 
   String getPlainText();
 
