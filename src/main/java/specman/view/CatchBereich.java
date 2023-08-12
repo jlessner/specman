@@ -63,7 +63,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 		catchBloeckeContainer.setLayout(layout);
 	}
 
-	public void catchAnhaengen(CatchSchrittView schritt, FocusListener focusListener) {
+	public void catchAnhaengen(CatchSchrittView schritt) {
 		layout.appendRow(RowSpec.decode(AbstractSchrittView.FORMLAYOUT_GAP));
 		layout.appendRow(RowSpec.decode("pref:grow"));
 		catchBloeckeContainer.add(schritt.getComponent(), CC.xy(1, (catchBloecke.size()+1) * 2));
@@ -85,14 +85,13 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 	}
 
 	/**
-	 * Einen Schritt rausnehmen ist ganz sch�n kompliziert, zumal es im schlimmsten Fall auch
-	 * auf die Nachbarschritte abstrahlt. Deswegen machen wir es brute-force: Wir schmei�en
+	 * Einen Schritt rausnehmen ist ganz schön kompliziert, zumal es im schlimmsten Fall auch
+	 * auf die Nachbarschritte abstrahlt. Deswegen machen wir es brute-force: Wir schmeißen
 	 * die Anordnung weg und bauen sie - reduziert um den zu entfernenden Schritt - wieder
 	 * ganz von vorn auf.
 	 * @Return Den Index des entferntes Schritts in der Sequenz. Dient der Wiedereingliederung beim Redo
 	 */
 	public int catchEntfernen(CatchSchrittView zuEntfernenderSchritt) {
-		FocusListener focusListener = zuEntfernenderSchritt.getText().getFocusListeners()[0];
 		alleSchritteEntfernen();
 		alleGrundlinienAnschluesseEntfernen();
 		layoutInitialisieren();
@@ -101,7 +100,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 		List<CatchSchrittView> restlicheSchritte = new ArrayList<CatchSchrittView>(catchBloecke);
 		catchBloecke.clear();
 		for (CatchSchrittView schritt: restlicheSchritte) {
-			catchAnhaengen(schritt, focusListener);
+			catchAnhaengen(schritt);
 		}
 		trennkopfSichtbarkeitAktualisieren();
 		return schrittIndex;
@@ -165,14 +164,6 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 			if (schritt != null) {
 				return schritt;
 			}
-		}
-		return null;
-	}
-
-	public AbstractSchrittView findeEigenenSchritt(JTextComponent zuletztFokussierterText) {
-		for (CatchSchrittView catchSchritt: catchBloecke) {
-			if (catchSchritt.getText() == zuletztFokussierterText)
-				return catchSchritt;
 		}
 		return null;
 	}

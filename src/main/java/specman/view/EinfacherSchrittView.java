@@ -21,13 +21,13 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() { return decorated(text); }
+	public JComponent getComponent() { return decorated(editContainer); }
 
 	@Override
 	public EinfacherSchrittModel_V001 generiereModel(boolean formatierterText) {
 		EinfacherSchrittModel_V001 model = new EinfacherSchrittModel_V001(
 			id,
-			getTextMitAenderungsmarkierungen(formatierterText),
+			getEditorContent(formatierterText),
 			getBackground().getRGB(),
 			aenderungsart,
 			getQuellschrittID(),
@@ -37,6 +37,6 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getPanel() { return text; }
+	public JComponent getPanel() { return editContainer; }
 
 }

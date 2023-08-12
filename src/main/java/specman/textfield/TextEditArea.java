@@ -3,11 +3,14 @@ package specman.textfield;
 import specman.EditorI;
 import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.EditArea_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
@@ -18,23 +21,26 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.CSS;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static specman.textfield.TextStyles.FONTSIZE;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 import static specman.textfield.TextStyles.INDIKATOR_GELB;
 import static specman.textfield.TextStyles.INDIKATOR_GELOESCHT_MARKIERT;
 import static specman.textfield.TextStyles.INDIKATOR_GRAU;
 import static specman.textfield.TextStyles.INDIKATOR_SCHWARZ;
 import static specman.textfield.TextStyles.font;
+import static specman.textfield.TextStyles.ganzerSchrittGeloeschtStil;
 import static specman.textfield.TextStyles.geaendertStil;
 import static specman.textfield.TextStyles.geloeschtStil;
 import static specman.textfield.TextStyles.standardStil;
 
-public class TextEditArea extends JEditorPane implements KeyListener, InteractiveStepFragment {
+public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
   public TextEditArea(EditorI editor, String initialerText) {
     editor.instrumentWysEditor(this, initialerText, 0);
     putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
@@ -42,10 +48,29 @@ public class TextEditArea extends JEditorPane implements KeyListener, Interactiv
     addKeyListener(this);
   }
 
+  @Override
+  public void addSchrittnummer(SchrittNummerLabel schrittNummer) {
+    add(schrittNummer);
+  }
+
+  @Override
+  public void pack(int availableWidth) {
+  }
+
   public void setStyle(MutableAttributeSet attr) {
     StyledDocument doc = (StyledDocument) getDocument();
     doc.setCharacterAttributes(0, getPlainText().length(), attr, false);
   }
+
+  @Override
+  public void markAsDeleted() {
+    aenderungsmarkierungenVerwerfen();
+    setStyle(ganzerSchrittGeloeschtStil);
+    setEditable(false);
+  }
+
+  @Override
+  public Component asComponent() { return this; }
 
   public String getPlainText() {
     try {
@@ -77,19 +102,6 @@ public class TextEditArea extends JEditorPane implements KeyListener, Interactiv
       StyledEditorKit k = (StyledEditorKit) getEditorKit();
       MutableAttributeSet inputAttributes = k.getInputAttributes();
       inputAttributes.addAttributes(standardStil);
-    }
-  }
-
-  public void setPlainText(String plainText, int orientation) {
-    switch (orientation) {
-      case StyleConstants.ALIGN_CENTER:
-        setText("<div align='center'>" + plainText + "</div>");
-        break;
-      case StyleConstants.ALIGN_RIGHT:
-        setText("<div align='right'>" + plainText + "</div>");
-        break;
-      default:
-        setText(plainText);
     }
   }
 
@@ -260,7 +272,7 @@ public class TextEditArea extends JEditorPane implements KeyListener, Interactiv
 
   @Override
   public void keyPressed(KeyEvent e) {
-    if (Specman.instance().aenderungenVerfolgen() && Specman.instance().hauptSequenz.findeSchritt(this).getText().isEditable()) {
+    if (Specman.instance().aenderungenVerfolgen() && isEditable()) {
       //Specman.instance().hauptSequenz.findeSchritt(editorPane).setAenderungsart(Aenderungsart.Bearbeitet);
       StyledDocument doc = (StyledDocument) getDocument();
       int p0 = getSelectionStart();
@@ -297,7 +309,7 @@ public class TextEditArea extends JEditorPane implements KeyListener, Interactiv
       return;
     }
     AbstractSchrittView textOwner = Specman.instance().hauptSequenz.findeSchritt(this);
-    if (textOwner != null && textOwner.getText().isEditable()) {
+    if (textOwner != null && isEditable()) {
       StyledDocument doc = (StyledDocument) getDocument();
       int p0 = getSelectionStart();
       int p1 = getSelectionEnd();
@@ -323,4 +335,20 @@ public class TextEditArea extends JEditorPane implements KeyListener, Interactiv
   public TextfieldShef getParent() { return (TextfieldShef) super.getParent(); }
 
   public void addImage(File imageFile) { getParent().addImage(imageFile); }
+
+  @Override
+  public EditArea_V001 toModel(boolean formatierterText) { return getTextMitAenderungsmarkierungen(formatierterText); }
+
+  @Override
+  public void skalieren(int prozentNeu, int prozentAktuell) {
+    setFont(font.deriveFont((float) FONTSIZE * prozentNeu / 100));
+    // prozentAktuell = 0 ist ein Indikator für initiales Laden. Da brauchen wir nur den Font
+    // anpassen. Die Bilder stehen bereits entsprechend des im Modell abgespeicherten Zoomfaktors
+    // skaliert im HTML.
+    if (prozentAktuell != 0 && prozentNeu != prozentAktuell) {
+      ImageScaler imageScaler = new ImageScaler(prozentNeu, prozentAktuell);
+      setText(imageScaler.scaleImages(getText()));
+    }
+  }
+
 }

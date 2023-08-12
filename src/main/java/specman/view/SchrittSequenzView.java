@@ -211,7 +211,7 @@ public class SchrittSequenzView {
 	}
 
 	private AbstractSchrittView catchAnhaengen(CatchSchrittView schritt, EditorI editor) {
-		catchBereich.catchAnhaengen(schritt, editor);
+		catchBereich.catchAnhaengen(schritt);
 		return schritt;
 	}
 

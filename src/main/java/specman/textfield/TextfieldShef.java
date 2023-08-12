@@ -6,18 +6,20 @@ import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.EditArea_V001;
 import specman.model.v001.EditorContent_V001;
 import specman.model.v001.TextMitAenderungsmarkierungen_V001;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static specman.Specman.schrittHintergrund;
 import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
@@ -61,30 +63,29 @@ import static specman.textfield.TextStyles.*;
  */
 public class TextfieldShef extends JPanel {
 	// ACHTUNG: Das ist hier noch auf halbem Wege. Später wird es eine Liste von EditAreas geben
-	private final TextEditArea editorPane;
+	private final List<EditArea> editAreas = new ArrayList<>();
+	private final List<FocusListener> editAreasFocusListeners = new ArrayList<>();
+	private final List<ComponentListener> editAreasComponentListeners = new ArrayList<>();
 	private ImageEditArea imagePane;
 	private final SchrittNummerLabel schrittNummer;
-	private final FormLayout layout;
+	private FormLayout layout;
 	private EmptyBorder editorPaneBorder;
 	private Indentions indentions;
-	boolean schrittNummerSichtbar = true;
-	EditorContent_V001 loeschUndoBackup;
+	private boolean schrittNummerSichtbar = true;
+	private EditorContent_V001 loeschUndoBackup;
 
 	public TextfieldShef(EditorI editor, String initialContent, String schrittId) {
 		this(editor, new EditorContent_V001(initialContent), schrittId);
 	}
 
 	public TextfieldShef(EditorI editor, EditorContent_V001 initialContent, String schrittId) {
-		layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,fill:pref:grow,0px");
-		setLayout(layout);
-		editorPane = new TextEditArea(editor, initialContent.getFirstAreaAsText().text);
-		add(editorPane, CC.xy(2, 2));
+		initLayoutAndEditAreas(editor, initialContent);
 		updateDecorationIndentions(new Indentions());
 		setBackground(schrittHintergrund());
 
 		if (schrittId != null) {
 			schrittNummer = new SchrittNummerLabel(schrittId);
-			editorPane.add(schrittNummer);
+			editAreas.get(0).addSchrittnummer(schrittNummer);
 			setEnabled(false);
 		} else {
 			schrittNummer = null;
@@ -93,17 +94,46 @@ public class TextfieldShef extends JPanel {
     skalieren(editor.getZoomFactor(), 0);
   }
 
+	private void initLayout(EditorContent_V001 content) {
+		String rowSpecs = "0px";
+		for (int i = 0; i < content.areas.size(); i++) {
+			rowSpecs += ",fill:pref:grow";
+		}
+		rowSpecs += ",0px";
+		layout = new FormLayout("0px,10px:grow,0px", rowSpecs);
+	}
+
+	private void initLayoutAndEditAreas(EditorI editor, EditorContent_V001 content) {
+		editAreas.stream().forEach(ea -> remove(ea.asComponent()));
+		editAreas.clear();
+		initLayout(content);
+		int row = 2;
+		for (EditArea_V001 editAreaModel: content.areas) {
+			EditArea editArea;
+			if (editAreaModel instanceof TextMitAenderungsmarkierungen_V001) {
+				TextMitAenderungsmarkierungen_V001 textEditAreaModel = (TextMitAenderungsmarkierungen_V001)editAreaModel;
+				editArea = new TextEditArea(editor, textEditAreaModel.text);
+			}
+			else {
+				throw new RuntimeException("Noch nicht fertig: " + editAreaModel);
+			}
+			editAreas.add(editArea);
+			add(editArea.asComponent(), CC.xy(2, row));
+			row++;
+		}
+	}
+
 	public TextfieldShef(EditorI editor) {
 		this(editor, new EditorContent_V001(""), null);
 	}
 
 	public void setStandardStil(SchrittID id) {
 		if (loeschUndoBackup != null) {
-			setText(loeschUndoBackup.getFirstAreaAsText());
+			initLayoutAndEditAreas(Specman.instance(), loeschUndoBackup);
 			loeschUndoBackup = null;
 		}
 		else {
-			editorPane.setStyle(standardStil);
+			editAreas.stream().forEach(ea -> ea.setStyle(standardStil));
 		}
 		setBackground(Hintergrundfarbe_Standard);
 		if (schrittNummer != null) {
@@ -116,17 +146,15 @@ public class TextfieldShef extends JPanel {
 	}
 
 	public void setQuellStil(SchrittID zielschrittID) {
-		editorPane.setStyle(quellschrittStil);
+		editAreas.stream().forEach(ea -> ea.setStyle(quellschrittStil));
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schrittNummer.setQuellschrittStil(zielschrittID);
 	}
 
 	public void setGeloeschtMarkiertStil(SchrittID id) {
-		loeschUndoBackup = getTextMitAenderungsmarkierungen(true);
-		editorPane.aenderungsmarkierungenVerwerfen();
-		editorPane.setStyle(ganzerSchrittGeloeschtStil);
+		loeschUndoBackup = editorContent2Model(true);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		editorPane.setEditable(false);
+		editAreas.stream().forEach(ea -> ea.markAsDeleted());
 		if (schrittNummer != null) {
 			schrittNummer.setGeloeschtStil(id);
 		}
@@ -141,36 +169,47 @@ public class TextfieldShef extends JPanel {
 	}
 
 	public void setPlainText(String plainText, int orientation) {
-		editorPane.setPlainText(plainText, orientation);
+		EditorContent_V001 content = switch (orientation) {
+			case StyleConstants.ALIGN_CENTER -> center(plainText);
+			case StyleConstants.ALIGN_RIGHT -> right(plainText);
+			default -> new EditorContent_V001(plainText);
+		};
+		initLayoutAndEditAreas(Specman.instance(), content);
 	}
 
-	public void setText(TextMitAenderungsmarkierungen_V001 inhalt) {
-		setPlainText(inhalt.text);
-	}
-
-	public EditorContent_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
-		EditorContent_V001 editContainer = new EditorContent_V001();
-		editContainer.addArea(editorPane.getTextMitAenderungsmarkierungen(formatierterText));
-		return editContainer;
+	public EditorContent_V001 editorContent2Model(boolean formatierterText) {
+		List<EditArea_V001> areaModels = editAreas.stream().map(ea -> ea.toModel(formatierterText)).collect(Collectors.toList());
+		return new EditorContent_V001(areaModels);
 	}
 
 	public String getPlainText() {
-		return editorPane.getPlainText();
+		StringBuilder sb = new StringBuilder();
+		editAreas.forEach(ea -> sb.append(ea.getPlainText()));
+		return sb.toString();
 	}
 
 	public void updateBounds() {
+		int maxEditWidth = getMaxEditAreasWidth();
 		if (schrittNummer != null) {
 			if (schrittNummerSichtbar) {
 				Dimension schrittnummerGroesse = schrittNummer.getPreferredSize();
-				schrittNummer.setBounds(editorPane.getWidth() - schrittnummerGroesse.width, 0, schrittnummerGroesse.width,
+				schrittNummer.setBounds(maxEditWidth - schrittnummerGroesse.width,
+					0,
+					schrittnummerGroesse.width,
 					schrittnummerGroesse.height - 2);
 			} else {
 				schrittNummer.setBounds(0, 0, 0, 0);
 			}
 		}
-		if (imagePane != null) {
-			imagePane.rescale(editorPane.getWidth());
+		editAreas.stream().forEach(ea -> ea.pack(maxEditWidth));
+	}
+
+	private int getMaxEditAreasWidth() {
+		int maxWidth = 0;
+		for (EditArea area: editAreas) {
+			maxWidth = Math.max(maxWidth, area.getWidth());
 		}
+		return maxWidth;
 	}
 
 	public void schrittnummerAnzeigen(boolean sichtbar) {
@@ -181,16 +220,9 @@ public class TextfieldShef extends JPanel {
 	}
 
 	public void skalieren(int prozentNeu, int prozentAktuell) {
-		editorPane.setFont(font.deriveFont((float) FONTSIZE * prozentNeu / 100));
+		editAreas.forEach(ea -> ea.skalieren(prozentNeu, prozentAktuell));
 		if (schrittNummer != null) {
 			schrittNummer.setFont(labelFont.deriveFont((float) SCHRITTNR_FONTSIZE * prozentNeu / 100));
-		}
-		// prozentAktuell = 0 ist ein Indikator für initiales Laden. Da brauchen wir nur den Font
-		// anpassen. Die Bilder stehen bereits entsprechend des im Modell abgespeicherten Zoomfaktors
-		// skaliert im HTML.
-		if (prozentAktuell != 0 && prozentNeu != prozentAktuell) {
-			ImageScaler imageScaler = new ImageScaler(prozentNeu, prozentAktuell);
-			editorPane.setText(imageScaler.scaleImages(editorPane.getText()));
 		}
 		updateDecorationIndentions(indentions);
 	}
@@ -203,32 +235,40 @@ public class TextfieldShef extends JPanel {
 		return Specman.initialtext("<div align='center'>" + text + "</div>");
 	}
 
-	public String getText() { return editorPane.getText(); }
-	public JTextComponent getTextComponent() { return editorPane; }
-	public void addFocusListener(FocusListener focusListener) { editorPane.addFocusListener(focusListener); }
-	public void requestFocus() { editorPane.requestFocus(); }
+	public Container getKlappButtonParent() { return schrittNummer.getParent(); }
+
+	public void addFocusListener(FocusListener focusListener) {
+		editAreasFocusListeners.add(focusListener);
+		editAreas.forEach(ea -> ea.addFocusListener(focusListener));
+	}
+
+	public void requestFocus() {
+		editAreas.get(0).requestFocus();
+	}
 
 	public void setLeftInset(int px) {
+		// TODO JL: Das ist hier noch nicht sauber. Die Insets von Text- und Imagebereichen sind nicht gleich, und
+		// der oberste und unterste Editbereich haben unterschiedliche Top- und Bottom-Insets
 		Insets insets = editorPaneBorder.getBorderInsets();
 		insets.left = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
 		editorPaneBorder = new EmptyBorder(insets);
-		editorPane.setBorder(editorPaneBorder);
+		editAreas.forEach(ea -> ea.setBorder(editorPaneBorder));
 	}
 
 	public void setRightInset(int px) {
 		Insets insets = editorPaneBorder.getBorderInsets();
 		insets.right = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
 		editorPaneBorder = new EmptyBorder(insets);
-		editorPane.setBorder(editorPaneBorder);
+		editAreas.forEach(ea -> ea.setBorder(editorPaneBorder));
 	}
 
 	@Override
 	public void setOpaque(boolean isOpaque) {
 		super.setOpaque(isOpaque);
 		// Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
-		// im Konstruktor einen Aufruf von setOpaque vornimmt.
-		if (editorPane != null) {
-			editorPane.setOpaque(isOpaque);
+		// im Konstruktor einen Aufruf von setBackground vornimmt.
+		if (editAreas != null) {
+			editAreas.forEach(ea -> ea.setOpaque(isOpaque));
 		}
 	}
 
@@ -237,23 +277,23 @@ public class TextfieldShef extends JPanel {
 		super.setBackground(bg);
 		// Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
 		// im Konstruktor einen Aufruf von setBackground vornimmt.
-		if (editorPane != null) {
-			editorPane.setBackground(bg);
+		if (editAreas != null) {
+			editAreas.forEach(ea -> ea.setBackground(bg));
 		}
 	}
 
 	@Override
 	public Color getBackground() {
-		// Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
+		// Null- und Size-Check ist notwendig, weil javax.swing.LookAndFeel bereits
 		// im Konstruktor einen Aufruf von getBackground vornimmt.
-		return (editorPane != null) ? editorPane.getBackground() : super.getBackground();
+		return editAreas != null && editAreas.size() > 0 ? editAreas.get(0).getBackground() : super.getBackground();
 	}
 
 	public void updateDecorationIndentions(Indentions indentions) {
 		this.indentions = indentions;
 
 		layout.setRowSpec(1, indentions.topInset());
-		layout.setRowSpec(4, indentions.bottomInset());
+		layout.setRowSpec(editAreas.size()+2, indentions.bottomInset());
 		layout.setColumnSpec(1, indentions.leftInset());
 		layout.setColumnSpec(3, indentions.rightInset());
 
@@ -265,12 +305,11 @@ public class TextfieldShef extends JPanel {
 	}
 
 	private void setEditorBorder(int top, int left, int bottom, int right) {
+		// TODO JL: Das ist hier noch nicht sauber. Die Insets von Text- und Imagebereichen sind nicht gleich, und
+		// der oberste und unterste Editbereich haben unterschiedliche Top- und Bottom-Insets
 		this.editorPaneBorder = new EmptyBorder(top, left, bottom, right);
-		editorPane.setBorder(editorPaneBorder);
+		editAreas.forEach(ea -> ea.setBorder(editorPaneBorder));
 	}
-
-	//TODO
-	public JEditorPane getEditorPane() { return editorPane; }
 
 	public Rectangle getStepNumberBounds() { return schrittNummer.getBounds(); }
 
@@ -278,17 +317,19 @@ public class TextfieldShef extends JPanel {
 	public void wrapSchrittnummerAsZiel(SchrittID quellschrittId) { schrittNummer.wrapAsZiel(quellschrittId); }
 	public void wrapSchrittnummerAsQuelle(SchrittID zielschrittID) { schrittNummer.wrapAsQuelle(zielschrittID); }
 
-	public void aenderungsmarkierungenUebernehmen() { editorPane.aenderungsmarkierungenUebernehmen(); }
-	public void aenderungsmarkierungenVerwerfen() { editorPane.aenderungsmarkierungenVerwerfen(); }
-	public List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen(boolean nurErste) {
-		return editorPane.findeAenderungsmarkierungen(nurErste);
+	public void aenderungsmarkierungenUebernehmen() {
+		editAreas.forEach(ea -> ea.aenderungsmarkierungenUebernehmen());
+	}
+	public void aenderungsmarkierungenVerwerfen() {
+		editAreas.forEach(ea -> ea.aenderungsmarkierungenVerwerfen());
 	}
 
 	public boolean enthaelt(InteractiveStepFragment fragment) {
-		return editorPane == fragment || schrittNummer == fragment;
+		return editAreas.stream().anyMatch(ea -> ea == fragment)
+			|| schrittNummer == fragment;
 	}
 
-	public InteractiveStepFragment asInteractiveFragment() { return editorPane; }
+	public InteractiveStepFragment asInteractiveFragment() { return editAreas.get(0); }
 
 	public void addImage(File imageFile) {
 		imagePane = new ImageEditArea(imageFile);
@@ -301,5 +342,22 @@ public class TextfieldShef extends JPanel {
 		imagePane = null;
 		updateBounds();
 		requestFocus();
+	}
+
+	public void setEditorContent(EditorI editor, EditorContent_V001 intro) {
+		initLayoutAndEditAreas(editor, intro);
+	}
+
+	public void setEditable(boolean editable) {
+		editAreas.forEach(ea -> ea.setEditable(editable));
+	}
+
+	public void addEditComponentListener(ComponentListener componentListener) {
+		editAreasComponentListeners.add(componentListener);
+		editAreas.forEach(ea -> addComponentListener(componentListener));
+	}
+
+	public boolean enthaeltAenderungsmarkierungen() {
+		return editAreas.stream().anyMatch(ea -> enthaeltAenderungsmarkierungen());
 	}
 }

@@ -17,6 +17,10 @@ public class EditorContent_V001 {
     addArea(new TextMitAenderungsmarkierungen_V001(initialContent));
   }
 
+  public EditorContent_V001(List<EditArea_V001> areas) {
+    this.areas = areas;
+  }
+
   @Deprecated
   @JsonIgnore
   public TextMitAenderungsmarkierungen_V001 getFirstAreaAsText() {

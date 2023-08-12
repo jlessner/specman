@@ -52,7 +52,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, int numCases) {
 		super(editor, parent, initialerText, id, aenderungsart, createPanelLayout(numCases));
-		panel.add(text, INITIAL_DUMMY);
+		panel.add(editContainer, INITIAL_DUMMY);
 		/** @author PVN */
 		lueckenFueller = new JPanel();
 		lueckenFueller.setBackground(Specman.schrittHintergrund());
@@ -150,7 +150,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
 		panelSonst.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD*/
 		panelFall1.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD*/
-		panelCase.add(text, CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
+		panelCase.add(editContainer, CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
 		panelSonst.add(sonstSequenz.ueberschrift, CC.xy(1, 1)); //siehe Methode layoutConstraintsSetzen
 		panelFall1.add(caseSequenzen.get(0).ueberschrift, CC.xy(2, 1)); //siehe Methode layoutConstraintsSetzen
 	}
@@ -252,7 +252,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
 		CaseSchrittModel_V001 model = new CaseSchrittModel_V001(
 			id,
-			getTextMitAenderungsmarkierungen(formatierterText),
+			getEditorContent(formatierterText),
 			getBackground().getRGB(),
 			aenderungsart,
 			klappen.isSelected(),
@@ -446,7 +446,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		/** @author PVN */
 		panelLayout.setConstraints(lueckenFueller, CC.xy(1, 1));
 		panelLayout.setConstraints(panelCase, CC.xywh(3, 1, (1 + caseSequenzen.size()*2)-2, 1));
-		panelCase.add(text, CC.xy(2, 1));
+		panelCase.add(editContainer, CC.xy(2, 1));
 		panelLayout.setConstraints(panelSonst, CC.xy(1, 3));
 		panelSonst.add(sonstSequenz.ueberschrift, CC.xy(1, 1));
 		panelLayout.setConstraints(sonstSequenz.getContainer(), CC.xy(1, 5));
@@ -513,8 +513,8 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		super.aenderungenUebernehmen(editor);
 	}
 
-	@Override protected void textAenderungenVerwerfen() {
-		super.textAenderungenVerwerfen();
+	@Override protected void aenderungsmarkierungenVerwerfen() {
+		super.aenderungsmarkierungenVerwerfen();
 		sonstSequenz.ueberschriftAenderungenVerwerfen();
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			caseSequenz.ueberschriftAenderungenVerwerfen();

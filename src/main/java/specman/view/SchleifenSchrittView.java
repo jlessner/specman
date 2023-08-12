@@ -42,7 +42,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
 
-		panel.add(text, CC.xywh(2, 1, 2, 1));
+		panel.add(editContainer, CC.xywh(2, 1, 2, 1));
 
 		linkerBalken = new JPanel();
 		linkerBalken.setLayout(null);
@@ -65,7 +65,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		panel.addComponentListener(this);
 		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 3));
 
-		klappen = new KlappButton(this, text.getTextComponent(), layout, 3);
+		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, 3);
 	}
 
 	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id, Aenderungsart aenderungsart) {
@@ -180,7 +180,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
 		WhileSchrittModel_V001 model = new WhileSchrittModel_V001(
 			id,
-			getTextMitAenderungsmarkierungen(formatierterText),
+			getEditorContent(formatierterText),
 			getBackground().getRGB(),
 			aenderungsart,
 			klappen.isSelected(),
@@ -245,6 +245,6 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	@Override
 	public void componentResized(ComponentEvent e) {
 		super.componentResized(e);
-		klappen.updateLocation(text.getStepNumberBounds());
+		klappen.updateLocation(editContainer.getStepNumberBounds());
 	}
 }

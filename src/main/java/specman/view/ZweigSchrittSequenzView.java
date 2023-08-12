@@ -49,7 +49,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 				aenderungsart,
 				catchBereich.klappen.isSelected(),
 				catchBereich.umgehungBreite,
-				ueberschrift.getTextMitAenderungsmarkierungen(formatierterText));
+				ueberschrift.editorContent2Model(formatierterText));
 		populateModel(model, formatierterText);
 		return model;
 	}
@@ -91,7 +91,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	public void aenderungsmarkierungenEntfernen() {
 		setAenderungsart(null);
 		ueberschrift.setStandardStil(null);
-		ueberschrift.getTextComponent().setEditable(true);
+		ueberschrift.setEditable(true);
 	}
 
 	public void ueberschriftAenderungenUebernehmen() { ueberschrift.aenderungsmarkierungenUebernehmen(); }

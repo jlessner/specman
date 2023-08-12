@@ -41,7 +41,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		// das Hauptpanel sind geeignet, weil diese ein Formlayout haben. Allerdings dürfte sich das
 		// Problem erledigen, wenn die Aktogramm-Darstellung kommt. Dann ist links oben gar kein Text
 		// mehr und somit Platz für den Klapp-Button.
-		klappen = new KlappButton(this, text.getTextComponent(), panelLayout, 4);
+		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, 4);
 		klappen.addComponentListener(new ComponentAdapter() {
 			// Kleine Sch�nheitsgeschichte: Der Klapp-Button liegt �ber der linken Dreieckslinie.
 			// Wenn der Button durch Mausbewegungen verschwindet, m�ssen wir daf�r sorgen, das dort,
@@ -87,10 +87,10 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	public void componentResized(ComponentEvent e) {
 		super.componentResized(e);
 		double textEinrueckung = texteinrueckungNeuberechnen();
-		text.setLeftInset((int)textEinrueckung);
-		text.setRightInset((int)textEinrueckung);
+		editContainer.setLeftInset((int)textEinrueckung);
+		editContainer.setRightInset((int)textEinrueckung);
 		panel.repaint(); // Sorgt dafür, dass das umplazierte Textfeld und alles andere auf dem Panel sofort neu gezeichnet wird
-		klappen.updateLocation(text.getStepNumberBounds());
+		klappen.updateLocation(editContainer.getStepNumberBounds());
 	}
 
 	@Override
@@ -129,10 +129,10 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 			mittelpunktRaute.x + layoutSpaltenbreite,
 			mittelpunktRaute.x};
 		int[] polygonYinnen = {
-			text.getHeight(),
-			text.getHeight() - layoutSpaltenbreite,
-			text.getHeight(),
-			text.getHeight() + layoutSpaltenbreite };
+			editContainer.getHeight(),
+			editContainer.getHeight() - layoutSpaltenbreite,
+			editContainer.getHeight(),
+			editContainer.getHeight() + layoutSpaltenbreite };
 		g.setColor(Color.WHITE);
 		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
 
@@ -143,10 +143,10 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 			mittelpunktRaute.x + layoutSpaltenbreite,
 			mittelpunktRaute.x};
 		int[] polygonYausssen = {
-			text.getHeight(),
-			text.getHeight() - layoutSpaltenbreite,
-			text.getHeight(),
-			text.getHeight() + layoutSpaltenbreite };
+			editContainer.getHeight(),
+			editContainer.getHeight() - layoutSpaltenbreite,
+			editContainer.getHeight(),
+			editContainer.getHeight() + layoutSpaltenbreite };
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setColor(Color.BLACK);
 		g.drawPolygon(polygonXaussen, polygonYausssen, 4);

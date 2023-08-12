@@ -42,7 +42,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 				(LINIENBREITE * 2) + "px, " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", pref:grow, 0px");
 		schrittPanel.setLayout(layout);
 		
-		schrittPanel.add(text, CC.xy(2, 2));
+		schrittPanel.add(editContainer, CC.xy(2, 2));
 		
 		
 		JPanel doppellinie = new JPanel();
@@ -106,7 +106,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	public void setBackground(Color bg) {
 		super.setBackground(bg);
 		schrittPanel.setBackground(bg);
-		text.setBackground(bg);
+		editContainer.setBackground(bg);
 //		dreiecksPanel.setBackground(bg);
 		fussPanel.setBackground(bg);
 	}
@@ -203,7 +203,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
 		CatchSchrittModel_V001 model = new CatchSchrittModel_V001(
 			id,
-			getTextMitAenderungsmarkierungen(formatierterText),
+			getEditorContent(formatierterText),
 			getBackground().getRGB(),
 			klappen.isSelected(),
 			aenderungsart,
@@ -277,9 +277,9 @@ public class CatchSchrittView extends AbstractSchrittView {
 		}
 
 		private String zeilenLayoutSchmalsterSchritt() {
-			int schmalsterSchritt = getText().getHeight() > 0 ? getText().getHeight() : 25;
+			int schmalsterSchritt = editContainer.getHeight() > 0 ? editContainer.getHeight() : 25;
 			for (AbstractSchrittView schritt: schritte) {
-				if (schritt.getComponent().getHeight() > 0) { // Noch nicht gerenderte Schritte bleiben unber�cksichtigt
+				if (schritt.getComponent().getHeight() > 0) { // Noch nicht gerenderte Schritte bleiben unberücksichtigt
 					schmalsterSchritt = Math.min(schmalsterSchritt, schritt.getComponent().getHeight());
 				}
 			}

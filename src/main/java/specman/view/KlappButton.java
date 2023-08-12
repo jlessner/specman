@@ -27,12 +27,12 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
   private final FormLayout layout;
   private final int klappzeile;
   private final KlappbarerBereichI klappbarerBereich;
-  private final JComponent parent;
+  private final Container parent;
   private static final Icon initialIcon = Specman.readImageIcon("minus");
   private static final Icon initialSelectedIcon = Specman.readImageIcon("plus");
   private static final int MINIMUM_ICON_LENGTH = initialIcon.getIconHeight() + 2; // The minimum border is 1px top + bottom each
 
-  public KlappButton(KlappbarerBereichI klappbarerBereich, JComponent parent, FormLayout layout, int klappzeile) {
+  public KlappButton(KlappbarerBereichI klappbarerBereich, Container parent, FormLayout layout, int klappzeile) {
     super(initialIcon);
     this.parent = parent;
     this.layout = layout;
