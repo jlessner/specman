@@ -12,7 +12,7 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.EditorContent_V001;
+import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.textfield.InteractiveStepFragment;
 
@@ -33,7 +33,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	KlappButton klappen;
 	boolean breakAngekoppelt;
 
-	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, SchrittSequenzModel_V001 handlingModel) {
+	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, SchrittSequenzModel_V001 handlingModel) {
 		super(editor, parent, initialerText, id, aenderungsart);
 		schrittPanel = new JPanel();
 		schrittPanel.setBackground(Color.black);
@@ -91,7 +91,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 		editor.schrittFuerNachinitialisierungRegistrieren(this);
 	}
 
-	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText) {
+	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText) {
 		this(editor, parent, initialerText, null, null, null);
 	}
 	

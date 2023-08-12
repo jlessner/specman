@@ -2,9 +2,11 @@ package specman.textfield;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import org.apache.commons.io.FilenameUtils;
 import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
-import specman.model.v001.EditArea_V001;
+import specman.model.v001.AbstractEditAreaModel_V001;
+import specman.model.v001.ImageEditAreaModel_V001;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,12 +23,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
-import static specman.textfield.TextStyles.ganzerSchrittGeloeschtStil;
 
 public class ImageEditArea extends JPanel implements EditArea, FocusListener {
   static final Color FOCUS_COLOR = Color.GRAY;
@@ -37,22 +42,40 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener {
   private static final Border UNSELECTED_BORDER =
     new EmptyBorder(new Insets(BORDER_THICKNESS*2, BORDER_THICKNESS*2, BORDER_THICKNESS*2, BORDER_THICKNESS*2));
   private BufferedImage fullSizeImage;
+  private String imageType;
   private ImageIcon scaledIcon;
   private JLabel image;
   java.util.List<ImageGrabber> grabbers = new ArrayList<>();
   private JPanel focusGlass;
 
   ImageEditArea(File imageFile) {
-    setLayout(new FormLayout("fill:8px,pref:grow,fill:8px", "fill:8px,fill:pref:grow,fill:8px"));
-    setBackground(Hintergrundfarbe_Standard);
-    setBorder(UNSELECTED_BORDER);
     try {
       fullSizeImage = ImageIO.read(imageFile);
+      imageType = FilenameUtils.getExtension(imageFile.getName());
+      postInit();
     }
     catch(IOException iox) {
       throw new RuntimeException(iox);
     }
-    image = new JLabel();
+  }
+
+  public ImageEditArea(ImageEditAreaModel_V001 imageEditAreaModel) {
+    try {
+      InputStream input = new ByteArrayInputStream(imageEditAreaModel.imageData);
+      fullSizeImage = ImageIO.read(input);;
+      imageType = imageEditAreaModel.imageType;
+      postInit();
+    }
+    catch(IOException iox) {
+      throw new RuntimeException(iox);
+    }
+  }
+
+  private void postInit() {
+    setLayout(new FormLayout("fill:8px,pref:grow,fill:8px", "fill:8px,fill:pref:grow,fill:8px"));
+    setBackground(Hintergrundfarbe_Standard);
+    setBorder(UNSELECTED_BORDER);
+    this.image = new JLabel();
     add(image, CC.xywh(1, 1, 3, 3));
     addMouseListener(new MouseAdapter() {
       @Override
@@ -131,9 +154,16 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener {
   public Component asComponent() { return this; }
 
   @Override
-  public EditArea_V001 toModel(boolean formatierterText) {
-    // TODO JL: Bild serialisieren
-    return null;
+  public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
+    try {
+      ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+      ImageIO.write(fullSizeImage, imageType, bytes);
+      // TODO JL: Änderungsmarkierung
+      return new ImageEditAreaModel_V001(bytes.toByteArray(), imageType);
+    }
+    catch (IOException iox) {
+      throw new RuntimeException(iox);
+    }
   }
 
   @Override

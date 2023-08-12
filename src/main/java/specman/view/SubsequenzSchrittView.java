@@ -7,7 +7,7 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.EditorContent_V001;
+import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.undo.AbstractUndoableInteraktion;
@@ -25,7 +25,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	final FormLayout layout;
 	SchrittSequenzView subsequenz;
 
-	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
+	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, aenderungsart);
 
 		editContainer.setLeftInset(TEXTEINRUECKUNG);
@@ -47,7 +47,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		}
 	}
 
-	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
+	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this(editor, parent, initialerText, id, aenderungsart, true);
 	}
 

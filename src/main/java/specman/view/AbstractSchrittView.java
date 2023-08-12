@@ -9,7 +9,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.CatchSchrittModel_V001;
-import specman.model.v001.EditorContent_V001;
+import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.EinfacherSchrittModel_V001;
 import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.IfSchrittModel_V001;
@@ -56,7 +56,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	protected QuellSchrittView quellschritt;
 
-	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialContent, SchrittID id, Aenderungsart aenderungsart) {
+	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialContent, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
 		this.aenderungsart = aenderungsart;
 		this.editContainer = new TextfieldShef(editor, initialContent, id != null ? id.toString() : null);
@@ -91,7 +91,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return editContainer;
 	}
 
-	protected EditorContent_V001 getEditorContent(boolean formatierterText) {
+	protected EditorContentModel_V001 getEditorContent(boolean formatierterText) {
 		return editContainer.editorContent2Model(formatierterText);
 	}
 

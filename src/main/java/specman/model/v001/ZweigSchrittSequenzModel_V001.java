@@ -4,7 +4,7 @@ import specman.Aenderungsart;
 import specman.SchrittID;
 
 public class ZweigSchrittSequenzModel_V001 extends SchrittSequenzModel_V001 {
-	public final EditorContent_V001 ueberschrift;
+	public final EditorContentModel_V001 ueberschrift;
 
 	@Deprecated public ZweigSchrittSequenzModel_V001() { // For Jackson only
 		ueberschrift = null;
@@ -15,7 +15,7 @@ public class ZweigSchrittSequenzModel_V001 extends SchrittSequenzModel_V001 {
 		Aenderungsart aenderungsart,
 		boolean catchBloeckeZugeklappt,
 		int catchBloeckeUmgehungBreite,
-		EditorContent_V001 ueberschrift) {
+		EditorContentModel_V001 ueberschrift) {
 		super(id, aenderungsart, catchBloeckeZugeklappt, catchBloeckeUmgehungBreite);
 		this.ueberschrift = ueberschrift;
 	}

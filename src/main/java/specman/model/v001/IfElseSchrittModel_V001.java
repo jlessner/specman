@@ -19,7 +19,7 @@ public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 
 	public IfElseSchrittModel_V001(
 		SchrittID id,
-		EditorContent_V001 inhalt,
+		EditorContentModel_V001 inhalt,
 		int farbe,
 		RoundedBorderDecorationStyle decorationStyle,
 		boolean zugeklappt,

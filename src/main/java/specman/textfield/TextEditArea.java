@@ -3,14 +3,12 @@ package specman.textfield;
 import specman.EditorI;
 import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
-import specman.model.v001.EditArea_V001;
+import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
-import specman.model.v001.TextMitAenderungsmarkierungen_V001;
+import specman.model.v001.TextEditAreaModel_V001;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
@@ -105,7 +103,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
   }
 
-  public TextMitAenderungsmarkierungen_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
+  public TextEditAreaModel_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
     String text;
     java.util.List<Aenderungsmarkierung_V001> aenderungen = null;
     if (formatierterText) {
@@ -117,7 +115,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     } else {
       text = getPlainText().replace("\n", " ").trim();
     }
-    return new TextMitAenderungsmarkierungen_V001(text, aenderungen);
+    return new TextEditAreaModel_V001(text, aenderungen);
   }
 
   public java.util.List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen(boolean nurErste) {
@@ -337,7 +335,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
   public void addImage(File imageFile) { getParent().addImage(imageFile); }
 
   @Override
-  public EditArea_V001 toModel(boolean formatierterText) { return getTextMitAenderungsmarkierungen(formatierterText); }
+  public AbstractEditAreaModel_V001 toModel(boolean formatierterText) { return getTextMitAenderungsmarkierungen(formatierterText); }
 
   @Override
   public void skalieren(int prozentNeu, int prozentAktuell) {
