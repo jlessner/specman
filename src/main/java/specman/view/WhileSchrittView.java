@@ -32,7 +32,7 @@ public class WhileSchrittView extends SchleifenSchrittView {
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
 		WhileSchrittModel_V001 model = new WhileSchrittModel_V001(
 			id,
-			getTextMitAenderungsmarkierungen(formatierterText),
+			getEditorContent(formatierterText),
 			getBackground().getRGB(),
 			aenderungsart,
 			klappen.isSelected(),

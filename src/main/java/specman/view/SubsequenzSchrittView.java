@@ -28,7 +28,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, aenderungsart);
 
-		text.setLeftInset(TEXTEINRUECKUNG);
+		editContainer.setLeftInset(TEXTEINRUECKUNG);
 
 		panel = new JPanel();
 		panel.setBackground(Color.black);
@@ -36,9 +36,9 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
 
-		panel.add(text, CC.xy(1, 1));
+		panel.add(editContainer, CC.xy(1, 1));
 
-		klappen = new KlappButton(this, text.getTextComponent(), layout, 3);
+		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, 3);
 
 		//roundedBorderDecorator = new RoundedBorderDecorator(panel);
 
@@ -116,7 +116,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
 		SubsequenzSchrittModel_V001 model = new SubsequenzSchrittModel_V001(
 			id,
-			getTextMitAenderungsmarkierungen(formatierterText),
+			getEditorContent(formatierterText),
 			getBackground().getRGB(),
 			aenderungsart,
 			klappen.isSelected(),
@@ -172,6 +172,6 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	@Override
 	public void componentResized(ComponentEvent e) {
 		super.componentResized(e);
-		klappen.updateLocation(text.getStepNumberBounds());
+		klappen.updateLocation(editContainer.getStepNumberBounds());
 	}
 }

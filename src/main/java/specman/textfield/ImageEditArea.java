@@ -3,6 +3,8 @@ package specman.textfield;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.Specman;
+import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.EditArea_V001;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,6 +12,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.text.MutableAttributeSet;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -23,8 +26,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
+import static specman.textfield.TextStyles.ganzerSchrittGeloeschtStil;
 
-public class ImageEditArea extends JPanel implements FocusListener {
+public class ImageEditArea extends JPanel implements EditArea, FocusListener {
   static final Color FOCUS_COLOR = Color.GRAY;
   private static final int BORDER_THICKNESS = 1;
   private static final Border SELECTED_BORDER = new CompoundBorder(
@@ -68,6 +72,11 @@ public class ImageEditArea extends JPanel implements FocusListener {
   }
 
   @Override
+  public void addSchrittnummer(SchrittNummerLabel schrittNummer) {
+    add(schrittNummer);
+  }
+
+  @Override
   public void focusGained(FocusEvent e) {
     setBorder(SELECTED_BORDER);
     new ImageGrabber(this, 1, 1);
@@ -89,7 +98,7 @@ public class ImageEditArea extends JPanel implements FocusListener {
     focusGlass = null;
   }
 
-  public void rescale(int availableWidth) {
+  public void pack(int availableWidth) {
     if (availableWidth > 0) {
       int maximumZoomedWidth = fullSizeImage.getWidth() * Specman.instance().getZoomFactor() / 100;
       int scaledWidth = Math.min(availableWidth, maximumZoomedWidth);
@@ -106,4 +115,52 @@ public class ImageEditArea extends JPanel implements FocusListener {
   @Override
   public TextfieldShef getParent() { return (TextfieldShef) super.getParent(); }
 
+  @Override
+  public void setStyle(MutableAttributeSet style) {
+    // TODO JL: Änderungsmarkierung noch nicht dargestellt
+  }
+
+  @Override
+  public void markAsDeleted() {
+    // TODDO JL: Änderungsmarkierung entfernen
+    // TODO JL: als gelöscht stylen
+    // TODO JL: nicht mehr editierbar
+  }
+
+  @Override
+  public Component asComponent() { return this; }
+
+  @Override
+  public EditArea_V001 toModel(boolean formatierterText) {
+    // TODO JL: Bild serialisieren
+    return null;
+  }
+
+  @Override
+  public String getPlainText() { return ""; }
+
+  @Override
+  public void skalieren(int prozentNeu, int prozentAktuell) {
+    // Nothing to do: image is automacically resized by the pack() methode if necessary
+  }
+
+  @Override
+  public void setEditable(boolean editable) {
+    // TODO JL: Editierbarkeit kann man noch nicht umschalten
+  }
+
+  @Override
+  public java.util.List<Aenderungsmarkierung_V001> aenderungsmarkierungenUebernehmen() {
+    // TODO JL: Änderungsmarkierung noch nicht dargestellt
+    return null;
+  }
+
+  @Override
+  public java.util.List<Aenderungsmarkierung_V001> aenderungsmarkierungenVerwerfen() {
+    // TODO JL: Änderungsmarkierung noch nicht dargestellt
+    return null;
+  }
+
+  @Override
+  public String getText() { return "image"; }
 }

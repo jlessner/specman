@@ -20,7 +20,6 @@ import specman.textfield.TextfieldShef;
 import specman.undo.AbstractUndoableInteraktion;
 
 import javax.swing.JPanel;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusAdapter;
@@ -46,10 +45,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelBedingung = new JPanel();
 		panelBedingung.setBackground(Specman.schrittHintergrund());
 		panelBedingung.setLayout(createSpalteLinks());
-		panelBedingung.add(text, "2,1");
+		panelBedingung.add(editContainer, "2,1");
 		panel.add(panelBedingung, CC.xy(3, 1));
 		panel.add(leeresFeld, CC.xy(1, 1));
-		text.addFocusListener(new FocusAdapter() {
+		editContainer.addFocusListener(new FocusAdapter() {
 			@Override public void focusLost(FocusEvent e) {
 				berechneHoeheFuerVollstaendigUnberuehrtenText();
 			}
@@ -206,7 +205,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelBedingung.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
 		panelElse.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
 		panelIf.setLayout(new FormLayout("10px:grow, " + neueSpaltenbreite, "fill:pref:grow")); /**@author SD */
-		panelBedingung.add(text, CC.xy(2, 1)); //siehe Konstruktor
+		panelBedingung.add(editContainer, CC.xy(2, 1)); //siehe Konstruktor
 		panelElse.add(elseSequenz.ueberschrift, CC.xy(2, 1)); //siehe Methode elseBedingungAnlegen
 		panelIf.add(ifSequenz.ueberschrift, CC.xy(1,1)); //siehe Methode ifBedingungAnlegen
 	}
@@ -219,7 +218,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
 		IfElseSchrittModel_V001 model = new IfElseSchrittModel_V001(
 			id,
-			getTextMitAenderungsmarkierungen(formatierterText),
+			getEditorContent(formatierterText),
 			getBackground().getRGB(),
 			getDecorated(),
 			klappen.isSelected(),
@@ -295,8 +294,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.aenderungenUebernehmen(editor);
 	}
 
-	@Override protected void textAenderungenVerwerfen() {
-		super.textAenderungenVerwerfen();
+	@Override protected void aenderungsmarkierungenVerwerfen() {
+		super.aenderungsmarkierungenVerwerfen();
 		elseSequenz.ueberschriftAenderungenVerwerfen();
 		ifSequenz.ueberschriftAenderungenVerwerfen();
 	}

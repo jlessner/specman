@@ -37,7 +37,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 				ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
 		
-		panel.add(text, CC.xy(2, 1));
+		panel.add(editContainer, CC.xy(2, 1));
 
 	}
 
@@ -49,7 +49,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	private void dreieckZeichnen(Graphics2D g) {
 		int hoehe = panel.getHeight();
 		int dreieckSpitzeY = hoehe / 2;
-		int dreieckBasisX = text.getX() - LINIENBREITE;
+		int dreieckBasisX = editContainer.getX() - LINIENBREITE;
 		g.setStroke(new BasicStroke(1));
 		g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, 
@@ -73,7 +73,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
 		BreakSchrittModel_V001 model = new BreakSchrittModel_V001(
 			id,
-			getTextMitAenderungsmarkierungen(formatierterText),
+			getEditorContent(formatierterText),
 			getBackground().getRGB(),
 			aenderungsart,
 			getQuellschrittID(),

@@ -6,7 +6,6 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.CatchSchrittModel_V001;
@@ -25,7 +24,6 @@ import specman.undo.AbstractUndoableInteraktion;
 import specman.undo.UndoableSchrittEntferntMarkiert;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -51,21 +49,21 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	protected static final List<SchrittSequenzView> KEINE_SEQUENZEN = new ArrayList<SchrittSequenzView>();
 
-	protected final TextfieldShef text;
+	protected final TextfieldShef editContainer;
 	protected SchrittID id;
 	protected Aenderungsart aenderungsart;
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	protected QuellSchrittView quellschritt;
 
-	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialText, SchrittID id, Aenderungsart aenderungsart) {
+	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContent_V001 initialContent, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
 		this.aenderungsart = aenderungsart;
-		this.text = new TextfieldShef(editor, initialText, id != null ? id.toString() : null);
+		this.editContainer = new TextfieldShef(editor, initialContent, id != null ? id.toString() : null);
 		this.parent = parent;
-		text.addFocusListener(editor);
-		text.addFocusListener(this);
-		text.getEditorPane().addComponentListener(this);
+		editContainer.addFocusListener(editor);
+		editContainer.addFocusListener(this);
+		editContainer.addEditComponentListener(this);
 	}
 
 	public Aenderungsart getAenderungsart() {
@@ -78,7 +76,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void setId(SchrittID id) {
 		this.id = id;
-		text.setId(id.toString());
+		editContainer.setId(id.toString());
 	}
 
 	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
@@ -86,35 +84,23 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void setPlainText(String plainText) {
-		text.setPlainText(plainText);
-	}
-
-	public void setPlainText(String plainText, int orientation) {
-		text.setPlainText(plainText, orientation);
-	}
-
-	public String getPlainText() {
-		return text.getText();
+		editContainer.setPlainText(plainText);
 	}
 
 	public TextfieldShef getshef() {
-		return text;
+		return editContainer;
 	}
 
-	public List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen() {
-		return text.findeAenderungsmarkierungen(false);
-	}
-
-	protected EditorContent_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
-		return text.getTextMitAenderungsmarkierungen(formatierterText);
+	protected EditorContent_V001 getEditorContent(boolean formatierterText) {
+		return editContainer.editorContent2Model(formatierterText);
 	}
 
 	public void setBackground(Color bg) {
-		text.setBackground(bg);
+		editContainer.setBackground(bg);
 	}
 
 	public Color getBackground() {
-		return text.getBackground();
+		return editContainer.getBackground();
 	}
 
 	abstract public JComponent getComponent();
@@ -123,14 +109,10 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return roundedBorderDecorator != null ? roundedBorderDecorator : core;
 	}
 
-	public JTextComponent getText() {
-		return text.getTextComponent();
-	}
-
 	public boolean isStrukturiert() { return false; }
 
 	void schrittnummerSichtbarkeitSetzen(boolean sichtbar) {
-		text.schrittnummerAnzeigen(sichtbar);
+		editContainer.schrittnummerAnzeigen(sichtbar);
 	}
 
 	abstract public AbstractSchrittModel_V001 generiereModel(boolean formatierterText);
@@ -173,7 +155,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	public void zusammenklappenFuerReview() {}
 
 	public String ersteZeileExtraieren() {
-		String[] zeilen = text.getPlainText().split("\n");
+		String[] zeilen = editContainer.getPlainText().split("\n");
 		for (String zeile: zeilen) {
 			String getrimmteZeile = zeile.trim();
 			if (getrimmteZeile.length() > 0)
@@ -184,14 +166,14 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void setStandardStil() {
 		setBackground(Hintergrundfarbe_Standard);
-		getText().setEditable(true);
+		editContainer.setEditable(true);
 		getshef().setStandardStil(id);
 		setAenderungsart(null);
 	}
 
 	public void setGeloeschtMarkiertStil() {
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		getText().setEditable(false);
+		editContainer.setEditable(false);
 		getshef().setGeloeschtMarkiertStil(id);
 		setAenderungsart(Aenderungsart.Geloescht);
 	}
@@ -202,7 +184,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
-		getText().setEditable(false);
+		editContainer.setEditable(false);
 		setGeloeschtMarkiertStil();
 		return new UndoableSchrittEntferntMarkiert(this, editor);
 	}
@@ -212,7 +194,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public boolean enthaeltAenderungsmarkierungen() {
-		if (text.findeAenderungsmarkierungen(true).size() > 0)
+		if (editContainer.enthaeltAenderungsmarkierungen())
 			return true;
 		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
 			if (unterSequenz.enthaeltAenderungsmarkierungen())
@@ -274,16 +256,16 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	public void nachinitialisieren() {}
 
 	public void skalieren(int prozentNeu, int prozentAktuell) {
-		text.skalieren(prozentNeu, prozentAktuell);
-		text.updateBounds();
+		editContainer.skalieren(prozentNeu, prozentAktuell);
+		editContainer.updateBounds();
 		if (roundedBorderDecorator != null) {
-			roundedBorderDecorator.skalieren(prozentNeu, text.getStepNumberBounds().getHeight());
+			roundedBorderDecorator.skalieren(prozentNeu, editContainer.getStepNumberBounds().getHeight());
 		}
 		unterSequenzen().forEach(sequenz -> sequenz.skalieren(prozentNeu, prozentAktuell));
 	}
 
 	public boolean enthaelt(InteractiveStepFragment fragment) {
-		return text.enthaelt(fragment);
+		return editContainer.enthaelt(fragment);
 	}
 
 	static int groesseUmrechnen(int groesse, int prozentNeu, int prozentAktuell) {
@@ -299,13 +281,13 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return "fill:" + groesse + "px";
 	}
 
-	public void requestFocus() { text.requestFocus(); }
+	public void requestFocus() { editContainer.requestFocus(); }
 
 	public JComponent toggleBorderType() {
 		JComponent toggleResult;
 		if (roundedBorderDecorator == null) {
 			JComponent coreComponent = getComponent();
-			roundedBorderDecorator = new RoundedBorderDecorator(coreComponent, text.getStepNumberBounds().getHeight());
+			roundedBorderDecorator = new RoundedBorderDecorator(coreComponent, editContainer.getStepNumberBounds().getHeight());
 			RoundedBorderDecorationStyle requiredDecorationStyle =
 					parent.deriveDecorationStyleFromPosition(this);
 			roundedBorderDecorator.setStyle(requiredDecorationStyle);
@@ -326,7 +308,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {
-		text.updateDecorationIndentions(indentions);
+		editContainer.updateDecorationIndentions(indentions);
 	}
 
 	public void updateTextfieldDecorationIndentions() {
@@ -361,7 +343,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public TextfieldShef getTextShef() {
-		return text;
+		return editContainer;
 	}
 
 	public SchrittID getId() {
@@ -399,11 +381,11 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 			switch(aenderungsart) {
 				case Geloescht:
 					setGeloeschtMarkiertStil();
-					getshef().getTextComponent().setEditable(false);
+					editContainer.setEditable(false);
 					break;
 				case Quellschritt:
 					((QuellSchrittView)this).setQuellStil();
-					getshef().getTextComponent().setEditable(false);
+					editContainer.setEditable(false);
 					break;
 				case Zielschritt:
 					setZielschrittStil();
@@ -453,7 +435,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void aenderungenVerwerfen(EditorI editor) throws EditException {
-		textAenderungenVerwerfen();
+		aenderungsmarkierungenVerwerfen();
 		if (aenderungsart != null) {
 			switch (aenderungsart) {
 				case Hinzugefuegt:
@@ -478,13 +460,13 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	}
 
-	protected void textAenderungenVerwerfen() {
+	protected void aenderungsmarkierungenVerwerfen() {
 		getshef().aenderungsmarkierungenVerwerfen();
 	}
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		text.updateBounds();
+		editContainer.updateBounds();
 	}
 
 	@Override public void componentMoved(ComponentEvent e) {

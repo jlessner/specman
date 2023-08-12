@@ -675,9 +675,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			zoomFaktor = model.zoomFaktor;
 			zoomFaktorAnzeigeAktualisieren(zoomFaktor);
 			diagrammbreite = model.breite;
-			intro.setPlainText(model.intro);
+			intro.setEditorContent(this, model.intro);
 			intro.skalieren(zoomFaktor, 0);
-			outro.setPlainText(model.outro);
+			outro.setEditorContent(this, model.outro);
 			outro.skalieren(zoomFaktor, 0);
 			setName(model.name);
 			hauptSequenz = new SchrittSequenzView(this, null, model.hauptSequenz);
@@ -962,8 +962,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			diagrammbreite,
 			zoomFaktor,
 			hauptSequenz.generiereSchittSequenzModel(formatierterText),
-			intro.getText(),
-			outro.getText());
+			intro.editorContent2Model(formatierterText),
+			outro.editorContent2Model(formatierterText));
 		return model;
 	}
 

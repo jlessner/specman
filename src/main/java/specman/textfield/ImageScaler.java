@@ -9,7 +9,10 @@ import java.util.regex.Pattern;
  * The image tags are identified by a regular expression and so are the
  * two relevant attribute values within the tag. If height or width of the
  * image are not specified, there is no scaling applied.
+ * <p>
+ * Deprecated, weil Bilder nicht mehr im HTML dargestellt werden.
  */
+@Deprecated
 public class ImageScaler {
   Pattern IMAGE_LINK_PATTERN = Pattern.compile("<img ([^>]+)>");
   Pattern SIZE_ATTRIBUTE_PATTERN = Pattern.compile("(height|width)=\"([\\d]+)\"");

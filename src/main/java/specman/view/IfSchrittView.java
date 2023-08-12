@@ -102,7 +102,7 @@ public class IfSchrittView extends IfElseSchrittView {
 	public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
 		IfSchrittModel_V001 model = new IfSchrittModel_V001(
 			id,
-			getTextMitAenderungsmarkierungen(formatierterText),
+			getEditorContent(formatierterText),
 			getBackground().getRGB(),
 			getDecorated(),
 			klappen.isSelected(),
