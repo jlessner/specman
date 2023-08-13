@@ -387,7 +387,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					if (result == JFileChooser.APPROVE_OPTION) {
 						File selectedFile = fileChooser.getSelectedFile();
 						if (selectedFile != null && selectedFile.exists()) {
-							lastFocusedTextArea.addImage(selectedFile);
+							lastFocusedTextArea.addImage(selectedFile, initialArt());
 							diagrammAktualisieren(null);
 						}
 					}

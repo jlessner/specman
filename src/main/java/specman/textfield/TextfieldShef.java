@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
@@ -346,12 +347,12 @@ public class TextfieldShef extends JPanel {
 
 	public InteractiveStepFragment asInteractiveFragment() { return editAreas.get(0); }
 
-	public void addImage(File imageFile, TextEditArea initiatingTextArea) {
+	public void addImage(File imageFile, TextEditArea initiatingTextArea, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
 			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
 			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
-			ImageEditArea imageEditArea = new ImageEditArea(imageFile);
+			ImageEditArea imageEditArea = new ImageEditArea(imageFile, aenderungsart);
 			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
 			TextEditArea cutOffTextArea = initiatingTextArea.split(initiatingCaretPosition);
 			if (cutOffTextArea != null) {

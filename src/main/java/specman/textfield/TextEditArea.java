@@ -1,5 +1,6 @@
 package specman.textfield;
 
+import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
@@ -336,7 +337,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
   @Override
   public TextfieldShef getParent() { return (TextfieldShef) super.getParent(); }
 
-  public void addImage(File imageFile) { getParent().addImage(imageFile, this); }
+  public void addImage(File imageFile, Aenderungsart aenderungsart) { getParent().addImage(imageFile, this, aenderungsart); }
 
   @Override
   public AbstractEditAreaModel_V001 toModel(boolean formatierterText) { return getTextMitAenderungsmarkierungen(formatierterText); }

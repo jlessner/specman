@@ -3,6 +3,7 @@ package specman.textfield;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import org.apache.commons.io.FilenameUtils;
+import specman.Aenderungsart;
 import specman.Specman;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.AbstractEditAreaModel_V001;
@@ -29,8 +30,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Base64;
 
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 
 public class ImageEditArea extends JPanel implements EditArea, FocusListener {
@@ -41,17 +43,20 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener {
     new LineBorder(FOCUS_COLOR, BORDER_THICKNESS));
   private static final Border UNSELECTED_BORDER =
     new EmptyBorder(new Insets(BORDER_THICKNESS*2, BORDER_THICKNESS*2, BORDER_THICKNESS*2, BORDER_THICKNESS*2));
+  private static final Border UNSELECTED_ADDED_BORDER = new LineBorder(AENDERUNGSMARKIERUNG_FARBE, BORDER_THICKNESS*2);
   private BufferedImage fullSizeImage;
   private String imageType;
   private ImageIcon scaledIcon;
   private JLabel image;
   java.util.List<ImageGrabber> grabbers = new ArrayList<>();
   private JPanel focusGlass;
+  private Aenderungsart aenderungsart;
 
-  ImageEditArea(File imageFile) {
+  ImageEditArea(File imageFile, Aenderungsart aenderungsart) {
     try {
-      fullSizeImage = ImageIO.read(imageFile);
-      imageType = FilenameUtils.getExtension(imageFile.getName());
+      this.fullSizeImage = ImageIO.read(imageFile);
+      this.imageType = FilenameUtils.getExtension(imageFile.getName());
+      this.aenderungsart = aenderungsart;
       postInit();
     }
     catch(IOException iox) {
@@ -62,8 +67,9 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener {
   public ImageEditArea(ImageEditAreaModel_V001 imageEditAreaModel) {
     try {
       InputStream input = new ByteArrayInputStream(imageEditAreaModel.imageData);
-      fullSizeImage = ImageIO.read(input);;
-      imageType = imageEditAreaModel.imageType;
+      this.fullSizeImage = ImageIO.read(input);;
+      this.imageType = imageEditAreaModel.imageType;
+      this.aenderungsart = imageEditAreaModel.aenderungsart;
       postInit();
     }
     catch(IOException iox) {
@@ -71,10 +77,17 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener {
     }
   }
 
+  @Override
+  /** Override avoids color change by parent. As a difference to {@link TextEditArea}s,
+   * the background depends solely depends on the change type of the image itself. */
+  public void setBackground(Color bg) {
+    super.setBackground(aenderungsart == Aenderungsart.Hinzugefuegt ? AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Hintergrundfarbe_Standard);
+  }
+
   private void postInit() {
     setLayout(new FormLayout("fill:8px,pref:grow,fill:8px", "fill:8px,fill:pref:grow,fill:8px"));
-    setBackground(Hintergrundfarbe_Standard);
-    setBorder(UNSELECTED_BORDER);
+    setBorderByChangetype();
+    setBackground(null);
     this.image = new JLabel();
     add(image, CC.xywh(1, 1, 3, 3));
     addMouseListener(new MouseAdapter() {
@@ -114,11 +127,15 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener {
 
   @Override
   public void focusLost(FocusEvent e) {
-    setBorder(UNSELECTED_BORDER);
+    setBorderByChangetype();
     grabbers.forEach(g -> remove(g));
     grabbers.clear();
     remove(focusGlass);
     focusGlass = null;
+  }
+
+  private void setBorderByChangetype() {
+    setBorder(aenderungsart == Aenderungsart.Hinzugefuegt ? UNSELECTED_ADDED_BORDER : UNSELECTED_BORDER);
   }
 
   public void pack(int availableWidth) {
@@ -159,7 +176,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener {
       ByteArrayOutputStream bytes = new ByteArrayOutputStream();
       ImageIO.write(fullSizeImage, imageType, bytes);
       // TODO JL: Änderungsmarkierung
-      return new ImageEditAreaModel_V001(bytes.toByteArray(), imageType);
+      return new ImageEditAreaModel_V001(bytes.toByteArray(), imageType, aenderungsart);
     }
     catch (IOException iox) {
       throw new RuntimeException(iox);
