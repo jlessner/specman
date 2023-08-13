@@ -14,6 +14,7 @@ import specman.model.v001.TextEditAreaModel_V001;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.ComponentListener;
@@ -340,13 +341,23 @@ public class TextfieldShef extends JPanel {
 
 	public InteractiveStepFragment asInteractiveFragment() { return editAreas.get(0); }
 
-	public void addImage(File imageFile) {
+	public void addImage(File imageFile, TextEditArea initiatingTextArea) {
+		int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
 		ImageEditArea imageEditArea = new ImageEditArea(imageFile);
 		// TODO JL: Listener aus editAreasFocusListeners und editAreasComponentsListeners übertragen?
 		editAreas.add(imageEditArea);
 		layout.setRowSpec(editAreas.size()+1, RowSpec.decode(EDITAREA_LAYOUT_ROWSPEC));
-		layout.appendRow(RowSpec.decode("0px"));
 		add(imageEditArea, CC.xy(2, editAreas.size()+1));
+		layout.appendRow(RowSpec.decode("0px"));
+
+		TextEditArea cutOffTextArea = initiatingTextArea.splitAtCaret();
+		if (cutOffTextArea != null) {
+			editAreas.add(cutOffTextArea);
+			layout.setRowSpec(editAreas.size()+1, RowSpec.decode(EDITAREA_LAYOUT_ROWSPEC));
+			add(cutOffTextArea, CC.xy(2, editAreas.size()+1));
+			layout.appendRow(RowSpec.decode("0px"));
+		}
+
 		updateBounds();
 	}
 

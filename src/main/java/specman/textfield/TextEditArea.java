@@ -332,7 +332,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
   @Override
   public TextfieldShef getParent() { return (TextfieldShef) super.getParent(); }
 
-  public void addImage(File imageFile) { getParent().addImage(imageFile); }
+  public void addImage(File imageFile) { getParent().addImage(imageFile, this); }
 
   @Override
   public AbstractEditAreaModel_V001 toModel(boolean formatierterText) { return getTextMitAenderungsmarkierungen(formatierterText); }
@@ -349,4 +349,20 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
   }
 
+  public TextEditArea splitAtCaret() {
+    try {
+      int caretPosition = getCaretPosition();
+      int textLength = getDocument().getLength();
+      if (textLength > caretPosition) {
+        TextEditArea splittedArea = new TextEditArea(Specman.instance(), getText());
+        getDocument().remove(caretPosition, textLength-caretPosition);
+        splittedArea.getDocument().remove(0, caretPosition);
+        return splittedArea;
+      }
+      return null;
+    }
+    catch(BadLocationException blx) {
+      throw new RuntimeException(blx);
+    }
+  }
 }
