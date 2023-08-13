@@ -3,17 +3,19 @@ package specman.undo;
 import specman.EditException;
 import specman.Specman;
 import specman.textfield.ImageEditArea;
+import specman.textfield.TextEditArea;
 import specman.textfield.TextfieldShef;
 
 public class UndoableImageAdded extends AbstractUndoableInteraction {
   private final TextfieldShef editContainer;
   private final ImageEditArea imageArea;
-  private final int initiatingSplitPosition;
+  private final TextEditArea initiatingTextArea, cutOffTextArea;
 
-  public UndoableImageAdded(TextfieldShef editContainer, ImageEditArea imageArea, int initiatingSplitPosition) {
+  public UndoableImageAdded(TextfieldShef editContainer, TextEditArea initiatingTextArea, ImageEditArea imageArea, TextEditArea cutOffTextArea) {
     this.editContainer = editContainer;
     this.imageArea = imageArea;
-    this.initiatingSplitPosition = initiatingSplitPosition;
+    this.initiatingTextArea = initiatingTextArea;
+    this.cutOffTextArea = cutOffTextArea;
   }
 
   @Override
@@ -24,6 +26,6 @@ public class UndoableImageAdded extends AbstractUndoableInteraction {
 
   @Override
   protected void redoEdit() throws EditException {
-
+    editContainer.addImageByRedo(initiatingTextArea, imageArea, cutOffTextArea);
   }
 }

@@ -743,8 +743,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				public void run() {
 					diagrammbreiteSetzen(diagrammbreite);
 					hauptSequenzContainer.setVisible(true);
-					if (schrittImFokus != null)
+					if (schrittImFokus != null) {
 						schrittImFokus.requestFocus();
+					}
 					scrollPane.getViewport().setViewPosition(viewPosition);
 				}
 			});

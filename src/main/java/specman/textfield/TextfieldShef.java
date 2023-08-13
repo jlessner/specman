@@ -356,7 +356,18 @@ public class TextfieldShef extends JPanel {
 			if (cutOffTextArea != null) {
 				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
 			}
-			editor.addEdit(new UndoableImageAdded(this, imageEditArea, initiatingCaretPosition));
+			editor.addEdit(new UndoableImageAdded(this, initiatingTextArea, imageEditArea, cutOffTextArea));
+		}
+		updateBounds();
+	}
+
+	public void addImageByRedo(TextEditArea initiatingTextArea, ImageEditArea imageEditArea, TextEditArea cutOffTextArea) {
+		try (UndoRecording ur = Specman.instance().pauseUndo()) {
+			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
+			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
+			if (cutOffTextArea != null) {
+				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
+			}
 		}
 		updateBounds();
 	}
@@ -418,4 +429,5 @@ public class TextfieldShef extends JPanel {
 	public boolean enthaeltAenderungsmarkierungen() {
 		return editAreas.stream().anyMatch(ea -> enthaeltAenderungsmarkierungen());
 	}
+
 }
