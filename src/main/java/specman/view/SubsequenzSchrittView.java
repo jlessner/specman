@@ -10,7 +10,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.textfield.Indentions;
-import specman.undo.AbstractUndoableInteraktion;
+import specman.undo.AbstractUndoableInteraction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -150,7 +150,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		subsequenz.aenderungenVerwerfen(editor);
 	}
 
-	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
+	@Override public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
 		subsequenz.alsGeloeschtMarkieren(editor);
 		return super.alsGeloeschtMarkieren(editor);
 	}

@@ -5,7 +5,7 @@ import specman.SpaltenContainerI;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
-public class UndoableSpaltenbreiteAngepasst extends AbstractUndoableInteraktion {
+public class UndoableSpaltenbreiteAngepasst extends AbstractUndoableInteraction {
 	private final SpaltenContainerI container;
 	private final int veraenderung;
 	private final int spalte;

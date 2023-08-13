@@ -26,6 +26,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static specman.textfield.HTMLTags.BODY_INTRO;
+import static specman.textfield.HTMLTags.BODY_OUTRO;
+import static specman.textfield.HTMLTags.HTML_INTRO;
+import static specman.textfield.HTMLTags.HTML_OUTRO;
 import static specman.textfield.TextStyles.FONTSIZE;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 import static specman.textfield.TextStyles.INDIKATOR_GELB;
@@ -349,14 +353,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
   }
 
-  public TextEditArea splitAtCaret() {
+  public TextEditArea split(int textPosition) {
     try {
-      int caretPosition = getCaretPosition();
       int textLength = getDocument().getLength();
-      if (textLength > caretPosition) {
+      if (textLength > textPosition) {
         TextEditArea splittedArea = new TextEditArea(Specman.instance(), getText());
-        getDocument().remove(caretPosition, textLength-caretPosition);
-        splittedArea.getDocument().remove(0, caretPosition);
+        getDocument().remove(textPosition, textLength-textPosition);
+        splittedArea.getDocument().remove(0, textPosition);
         return splittedArea;
       }
       return null;
@@ -364,5 +367,22 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     catch(BadLocationException blx) {
       throw new RuntimeException(blx);
     }
+  }
+
+  @Override
+  public TextEditArea asTextArea() { return this; }
+
+  public void appendText(String trailingText) {
+    int endOfOldText = getDocument().getLength();
+    String oldText = getText();
+    String newText =
+      oldText
+        .replace(HTML_OUTRO, "")
+        .replace(BODY_OUTRO, "")
+      + trailingText
+        .replace(HTML_INTRO, "")
+        .replace(BODY_INTRO, "");
+    setText(newText);
+    setCaretPosition(endOfOldText);
   }
 }

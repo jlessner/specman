@@ -6,7 +6,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import java.awt.*;
 
-public class UndoableSchrittEingefaerbt extends AbstractUndoableInteraktion {
+public class UndoableSchrittEingefaerbt extends AbstractUndoableInteraction {
 	private final AbstractSchrittView schritt;
 	private final Color alteHintergrundfarbe;
 	private final Color neueHintergrundfarbe;

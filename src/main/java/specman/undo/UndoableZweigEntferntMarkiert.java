@@ -2,13 +2,13 @@ package specman.undo;
 
 import specman.EditException;
 import specman.EditorI;
+import specman.undo.manager.UndoRecording;
 import specman.view.CaseSchrittView;
 import specman.view.ZweigSchrittSequenzView;
 
 import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 
-public class UndoableZweigEntferntMarkiert extends AbstractUndoableInteraktion {
+public class UndoableZweigEntferntMarkiert extends AbstractUndoableInteraction {
   final ZweigSchrittSequenzView zweig;
   final CaseSchrittView caseSchritt;
   final EditorI editor;
@@ -21,22 +21,14 @@ public class UndoableZweigEntferntMarkiert extends AbstractUndoableInteraktion {
   }
 
   @Override public void undoEdit() throws EditException {
-    try {
-      editor.pauseUndoRecording();
+    try(UndoRecording ur = editor.pauseUndo()) {
       zweig.aenderungenVerwerfen(editor);
-    }
-    finally {
-      editor.resumeUndoRecording();
     }
   }
 
   @Override public void redoEdit() throws CannotRedoException {
-    try {
-      editor.pauseUndoRecording();
+    try(UndoRecording ur = editor.pauseUndo()) {
       zweig.alsGeloeschtMarkieren(editor);
-    }
-    finally {
-      editor.resumeUndoRecording();
     }
   }
 }

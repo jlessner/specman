@@ -1,6 +1,7 @@
 package specman;
 
 import specman.textfield.InteractiveStepFragment;
+import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 import specman.view.SchrittSequenzView;
 
@@ -24,7 +25,8 @@ public interface EditorI extends FocusListener {
 	void diagrammAktualisieren(AbstractSchrittView schrittImFokus);
 	InteractiveStepFragment getLastFocusedTextArea();
 	void addEdit(UndoableEdit edit);
-  void pauseUndoRecording();
-	void resumeUndoRecording();
+	UndoRecording pauseUndo();
+	UndoRecording composeUndo();
   void showError(EditException ex);
+
 }

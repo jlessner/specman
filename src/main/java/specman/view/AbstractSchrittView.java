@@ -20,7 +20,7 @@ import specman.model.v001.WhileWhileSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
 import specman.textfield.TextfieldShef;
-import specman.undo.AbstractUndoableInteraktion;
+import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableSchrittEntferntMarkiert;
 
 import javax.swing.*;
@@ -61,8 +61,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		this.aenderungsart = aenderungsart;
 		this.editContainer = new TextfieldShef(editor, initialContent, id != null ? id.toString() : null);
 		this.parent = parent;
-		editContainer.addFocusListener(editor);
-		editContainer.addFocusListener(this);
+		editContainer.addEditAreasFocusListener(editor);
+		editContainer.addEditAreasFocusListener(this);
 		editContainer.addEditComponentListener(this);
 	}
 
@@ -183,7 +183,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		setAenderungsart(Aenderungsart.Zielschritt);
 	}
 
-	public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
+	public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
 		editContainer.setEditable(false);
 		setGeloeschtMarkiertStil();
 		return new UndoableSchrittEntferntMarkiert(this, editor);

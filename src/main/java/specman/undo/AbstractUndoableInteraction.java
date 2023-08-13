@@ -7,7 +7,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 
-abstract public class AbstractUndoableInteraktion implements UndoableEdit {
+abstract public class AbstractUndoableInteraction implements UndoableEdit {
 
 	@Override
 	public boolean canUndo() {

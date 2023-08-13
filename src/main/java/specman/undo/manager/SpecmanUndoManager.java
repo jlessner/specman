@@ -1,4 +1,7 @@
-package specman;
+package specman.undo.manager;
+
+import specman.Specman;
+import specman.undo.UndoableImageAdded;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -11,7 +14,8 @@ public class SpecmanUndoManager extends UndoManager {
     private static final String UNSAVED_CHANGES_INDICATOR = " *";
 
     private final Specman specman;
-    private boolean editPaused = false;
+    private UndoRecordingMode recordingMode = UndoRecordingMode.Normal;
+    private UndoableComposition recordingComposition;
 
     public SpecmanUndoManager(Specman specman) {
         this.specman = specman;
@@ -19,17 +23,19 @@ public class SpecmanUndoManager extends UndoManager {
 
     @Override
     public synchronized boolean addEdit(UndoableEdit anEdit) {
-        if(!editPaused) {
-            boolean success = super.addEdit(anEdit);
-            if (success) {
-                updateUnsavedChangesIndicatorInTitleBar();
-                //System.out.println("Wert false");
-            }
-            return success;
-        } else {
-            //System.out.println("Wert true");
-            return true;
+        switch(recordingMode) {
+            case Normal:
+                boolean success = super.addEdit(anEdit);
+                if (success) {
+                    updateUnsavedChangesIndicatorInTitleBar();
+                    //System.out.println("Wert false");
+                }
+                return success;
+            case Composing:
+                recordingComposition.add(anEdit);
+                break;
         }
+        return true;
     }
 
 
@@ -70,11 +76,17 @@ public class SpecmanUndoManager extends UndoManager {
         }
     }
 
-    public void pauseEdit() {
-        editPaused =true;
-    }
-
-    public void resumeEdit() {
-        editPaused =false;
+    public void setRecordingMode(UndoRecordingMode mode) {
+        recordingMode = mode;
+        switch(mode) {
+            case Composing:
+                recordingComposition = new UndoableComposition();
+                break;
+            case Normal:
+                if (recordingComposition != null) {
+                    addEdit(recordingComposition);
+                    recordingComposition = null;
+                }
+        }
     }
 }

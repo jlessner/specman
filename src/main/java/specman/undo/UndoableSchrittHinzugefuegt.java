@@ -1,14 +1,12 @@
 package specman.undo;
 
 import specman.EditException;
-import specman.Specman;
 import specman.view.SchrittSequenzView;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 
-public class UndoableSchrittHinzugefuegt extends AbstractUndoableInteraktion {
+public class UndoableSchrittHinzugefuegt extends AbstractUndoableInteraction {
 
 	private final AbstractSchrittView schritt;
 	private final SchrittSequenzView sequenz;

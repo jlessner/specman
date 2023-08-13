@@ -9,6 +9,12 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
+import static specman.textfield.HTMLTags.BODY_INTRO;
+import static specman.textfield.HTMLTags.BODY_OUTRO;
+import static specman.textfield.HTMLTags.HTML_INTRO;
+import static specman.textfield.HTMLTags.HTML_OUTRO;
+import static specman.textfield.HTMLTags.SPAN_INTRO;
+import static specman.textfield.HTMLTags.SPAN_OUTRO;
 import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Geloescht;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Schrittenummer;
@@ -61,7 +67,7 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
     setBorder(DELETED_BORDER);
     setBackground(Hintergrundfarbe_Geloescht);
     setForeground(Schriftfarbe_Geloescht);
-    setWrappedText(SPAN_GELOESCHT_MARKIERT, id, "</span>");
+    setWrappedText(SPAN_GELOESCHT_MARKIERT, id, SPAN_OUTRO);
   }
 
   public void wrap(String intro, String outro) {
@@ -69,23 +75,23 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
   }
 
   public void wrapAsZiel(SchrittID quellschrittId) {
-    wrap("<span>",
-      "</span><span>&lArr</span>" + SPAN_GELOESCHT_MARKIERT + quellschrittId + "</span>");
+    wrap(SPAN_INTRO,
+      SPAN_OUTRO + SPAN_INTRO + "&lArr" + SPAN_OUTRO + SPAN_GELOESCHT_MARKIERT + quellschrittId + SPAN_OUTRO);
   }
 
   public void wrapAsQuelle(SchrittID zielschrittID) {
     wrap(SPAN_GELOESCHT_MARKIERT,
-      "</span><span>&rArr</span><span>" + zielschrittID + "</span>");
+      SPAN_OUTRO + SPAN_INTRO + "&rArr" + SPAN_OUTRO + SPAN_INTRO + zielschrittID + SPAN_OUTRO);
   }
 
-  public void wrapAsDeleted() { wrap(SPAN_GELOESCHT_MARKIERT, "</span>"); }
+  public void wrapAsDeleted() { wrap(SPAN_GELOESCHT_MARKIERT, SPAN_OUTRO); }
 
   public void setWrappedText(String intro, SchrittID schrittID, String outro) {
     setWrappedText(intro, schrittID.toString(), outro);
   }
 
   public void setWrappedText(String intro, String schrittNummerText, String outro) {
-    setText("<html><body>" + intro + schrittNummerText + outro + "</body></html>");
+    setText(HTML_INTRO + BODY_INTRO + intro + schrittNummerText + outro + BODY_OUTRO + HTML_OUTRO);
   }
 
 }

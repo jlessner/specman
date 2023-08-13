@@ -7,7 +7,7 @@ import specman.view.SchrittSequenzView;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
-public class UndoableToggleStepBorder extends AbstractUndoableInteraktion {
+public class UndoableToggleStepBorder extends AbstractUndoableInteraction {
   private final EditorI editor;
   private final AbstractSchrittView schritt;
   private final SchrittSequenzView sequenz;

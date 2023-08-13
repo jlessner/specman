@@ -44,4 +44,6 @@ public interface EditArea extends InteractiveStepFragment {
   java.util.List<Aenderungsmarkierung_V001>  aenderungsmarkierungenUebernehmen();
 
   java.util.List<Aenderungsmarkierung_V001>  aenderungsmarkierungenVerwerfen();
+
+  TextEditArea asTextArea();
 }

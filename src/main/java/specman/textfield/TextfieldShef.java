@@ -1,6 +1,7 @@
 package specman.textfield;
 
 import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
@@ -11,10 +12,11 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
+import specman.undo.UndoableImageAdded;
+import specman.undo.manager.UndoRecording;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.ComponentListener;
@@ -65,13 +67,12 @@ import static specman.textfield.TextStyles.*;
  * situationsbedingt beide Techniken mischen.
  */
 public class TextfieldShef extends JPanel {
-	private final static String EDITAREA_LAYOUT_ROWSPEC = "fill:pref:grow";
+	private final static RowSpec EDITAREA_LAYOUT_ROWSPEC = RowSpec.decode("fill:pref:grow");
 
 	// ACHTUNG: Das ist hier noch auf halbem Wege. Später wird es eine Liste von EditAreas geben
 	private final List<EditArea> editAreas = new ArrayList<>();
 	private final List<FocusListener> editAreasFocusListeners = new ArrayList<>();
 	private final List<ComponentListener> editAreasComponentListeners = new ArrayList<>();
-	private ImageEditArea imagePane;
 	private final SchrittNummerLabel schrittNummer;
 	private FormLayout layout;
 	private EmptyBorder editorPaneBorder;
@@ -100,12 +101,15 @@ public class TextfieldShef extends JPanel {
   }
 
 	private void initLayout(EditorContentModel_V001 content) {
-		String rowSpecs = "0px";
+		List<RowSpec> rowSpecs = new ArrayList<>();
+		rowSpecs.add(RowSpec.decode("0px"));
 		for (int i = 0; i < content.areas.size(); i++) {
-			rowSpecs += "," + EDITAREA_LAYOUT_ROWSPEC;
+			rowSpecs.add(EDITAREA_LAYOUT_ROWSPEC);
 		}
-		rowSpecs += ",0px";
-		layout = new FormLayout("0px,10px:grow,0px", rowSpecs);
+		rowSpecs.add(RowSpec.decode("0px"));
+		layout = new FormLayout(
+			ColumnSpec.decodeSpecs("0px,10px:grow,0px"),
+			rowSpecs.toArray(RowSpec[]::new));
 		setLayout(layout);
 	}
 
@@ -247,7 +251,7 @@ public class TextfieldShef extends JPanel {
 
 	public Container getKlappButtonParent() { return schrittNummer.getParent(); }
 
-	public void addFocusListener(FocusListener focusListener) {
+	public void addEditAreasFocusListener(FocusListener focusListener) {
 		editAreasFocusListeners.add(focusListener);
 		editAreas.forEach(ea -> ea.addFocusListener(focusListener));
 	}
@@ -342,30 +346,60 @@ public class TextfieldShef extends JPanel {
 	public InteractiveStepFragment asInteractiveFragment() { return editAreas.get(0); }
 
 	public void addImage(File imageFile, TextEditArea initiatingTextArea) {
-		int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
-		ImageEditArea imageEditArea = new ImageEditArea(imageFile);
-		// TODO JL: Listener aus editAreasFocusListeners und editAreasComponentsListeners übertragen?
-		editAreas.add(imageEditArea);
-		layout.setRowSpec(editAreas.size()+1, RowSpec.decode(EDITAREA_LAYOUT_ROWSPEC));
-		add(imageEditArea, CC.xy(2, editAreas.size()+1));
-		layout.appendRow(RowSpec.decode("0px"));
-
-		TextEditArea cutOffTextArea = initiatingTextArea.splitAtCaret();
-		if (cutOffTextArea != null) {
-			editAreas.add(cutOffTextArea);
-			layout.setRowSpec(editAreas.size()+1, RowSpec.decode(EDITAREA_LAYOUT_ROWSPEC));
-			add(cutOffTextArea, CC.xy(2, editAreas.size()+1));
-			layout.appendRow(RowSpec.decode("0px"));
+		EditorI editor = Specman.instance();
+		try (UndoRecording ur = editor.composeUndo()) {
+			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
+			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
+			ImageEditArea imageEditArea = new ImageEditArea(imageFile);
+			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
+			TextEditArea cutOffTextArea = initiatingTextArea.split(initiatingCaretPosition);
+			if (cutOffTextArea != null) {
+				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
+			}
+			editor.addEdit(new UndoableImageAdded(this, imageEditArea, initiatingCaretPosition));
 		}
-
 		updateBounds();
 	}
 
+	private void addEditArea(EditArea editArea, int index) {
+		editAreasFocusListeners.forEach(fl -> editArea.asComponent().addFocusListener(fl));
+		editAreasComponentListeners.forEach(cl -> editArea.asComponent().addComponentListener(cl));
+		editAreas.add(index, editArea);
+		layout.setRowSpec(index+2, EDITAREA_LAYOUT_ROWSPEC);
+		add(editArea.asComponent(), CC.xy(2, index+2));
+		for (int followerIndex = index+1; followerIndex < editAreas.size(); followerIndex++) {
+			EditArea followerArea = editAreas.get(followerIndex);
+			layout.setRowSpec(followerIndex+2, EDITAREA_LAYOUT_ROWSPEC);
+			layout.setConstraints(followerArea.asComponent(), CC.xy(2, followerIndex + 2));
+		}
+		layout.appendRow(RowSpec.decode("0px"));
+	}
+
 	public void removeImage(ImageEditArea image) {
-		remove(imagePane);
-		imagePane = null;
+		int imageIndex = removeEditArea(image);
+		if (imageIndex > 0 && editAreas.size() > imageIndex) {
+			TextEditArea leadingTextArea = editAreas.get(imageIndex-1).asTextArea();
+			TextEditArea trailingTextArea = editAreas.get(imageIndex).asTextArea();
+			if (leadingTextArea != null && trailingTextArea != null) {
+				removeEditArea(trailingTextArea);
+				//leadingTextArea.appendText(trailingTextArea.getText());
+				leadingTextArea.requestFocus();
+			}
+		}
 		updateBounds();
-		requestFocus();
+		//requestFocus();
+	}
+
+	private int removeEditArea(EditArea area) {
+		int index = editAreas.indexOf(area);
+		editAreas.remove(area);
+		remove(area.asComponent());
+		for (int followerIndex = index; followerIndex < editAreas.size(); followerIndex++) {
+			EditArea followerArea = editAreas.get(followerIndex);
+			layout.setConstraints(followerArea.asComponent(), CC.xy(2, followerIndex + 2));
+		}
+		layout.removeRow(editAreas.size()+3);
+		return index;
 	}
 
 	public void setEditorContent(EditorI editor, EditorContentModel_V001 intro) {

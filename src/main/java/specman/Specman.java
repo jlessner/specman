@@ -15,7 +15,8 @@ import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.textfield.TextEditArea;
 import specman.textfield.TextfieldShef;
-import specman.undo.AbstractUndoableInteraktion;
+import specman.undo.AbstractUndoableInteraction;
+import specman.undo.manager.SpecmanUndoManager;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
@@ -23,6 +24,8 @@ import specman.undo.UndoableSchrittHinzugefuegt;
 import specman.undo.UndoableToggleStepBorder;
 import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigHinzugefuegt;
+import specman.undo.manager.UndoRecording;
+import specman.undo.manager.UndoRecordingMode;
 import specman.view.AbstractSchrittView;
 import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
@@ -126,12 +129,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		intro = new TextfieldShef(this);
 		intro.setOpaque(false);
 		arbeitsbereich.add(intro, CC.xy(2, 2));
-		intro.addFocusListener(this);
+		intro.addEditAreasFocusListener(this);
 
 		outro = new TextfieldShef(this);
 		outro.setOpaque(false);
 		arbeitsbereich.add(outro, CC.xy(2, 4));
-		outro.addFocusListener(this);
+		outro.addEditAreasFocusListener(this);
 
 		scrollPane.setViewportView(arbeitsbereich);
 		actionListenerHinzufuegen();
@@ -570,9 +573,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) throws EditException {
 		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
 		darfSchrittGeloeschtWerden(schritt);
-		pauseUndoRecording();
-		AbstractUndoableInteraktion undo = schritt.alsGeloeschtMarkieren(this);
-		resumeUndoRecording();
+		AbstractUndoableInteraction undo = null;
+		try(UndoRecording ur = pauseUndo()) {
+			undo = schritt.alsGeloeschtMarkieren(this);
+		}
 		if (undo != null) {
 			undoManager.addEdit(undo);
 		}
@@ -899,10 +903,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
     	undoManager.addEdit(edit);
 	}
 
-	@Override public void pauseUndoRecording() { undoManager.pauseEdit(); }
-
-	@Override public void resumeUndoRecording() { undoManager.resumeEdit(); }
-
 	private JMenu baueDateiMenu() {
 		JMenu dateiMenu = new JMenu("Datei");
 		dateiMenu.add(laden);
@@ -1020,7 +1020,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return hauptSequenz;
 	}
 
-	public UndoManager getUndoManager() {
+	public SpecmanUndoManager getUndoManager() {
 		return undoManager;
 	}
 
@@ -1091,4 +1091,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public double getScaledLength(double length) {
 		return length * getZoomFactor() * 0.01;
 	}
+
+	public UndoRecording pauseUndo() {
+		return new UndoRecording(this.getUndoManager(), UndoRecordingMode.Paused);
+	}
+
+	public UndoRecording composeUndo() {
+		return new UndoRecording(this.getUndoManager(), UndoRecordingMode.Composing);
+	}
+
+
 }

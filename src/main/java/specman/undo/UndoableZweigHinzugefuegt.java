@@ -7,7 +7,7 @@ import specman.view.ZweigSchrittSequenzView;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
-public class UndoableZweigHinzugefuegt extends AbstractUndoableInteraktion {
+public class UndoableZweigHinzugefuegt extends AbstractUndoableInteraction {
 	final ZweigSchrittSequenzView zweig;
 	final CaseSchrittView caseSchritt;
 	final EditorI editor;

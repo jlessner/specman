@@ -14,7 +14,7 @@ import javax.swing.undo.CannotUndoException;
  * 
  * @author LESS02
  */
-public class UndoableDiagrammSkaliert extends AbstractUndoableInteraktion {
+public class UndoableDiagrammSkaliert extends AbstractUndoableInteraction {
 	private final Specman editor;
 	private int prozent;
 	

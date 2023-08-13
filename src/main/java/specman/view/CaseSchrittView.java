@@ -17,7 +17,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
-import specman.undo.AbstractUndoableInteraktion;
+import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigEntferntMarkiert;
 
@@ -176,7 +176,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	protected void sonstFallAnlegen(ZweigSchrittSequenzView sonstSequenz) {
 		this.sonstSequenz = sonstSequenz;
-		sonstSequenz.ueberschrift.addFocusListener(this);
+		sonstSequenz.ueberschrift.addEditAreasFocusListener(this);
 		panel.add(sonstSequenz.ueberschrift, INITIAL_DUMMY);
 		panel.add(sonstSequenz.getContainer(), INITIAL_DUMMY);
 	}
@@ -184,7 +184,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	private void casesAnlegen(List<ZweigSchrittSequenzView> caseSequenzen) {
 		this.caseSequenzen = caseSequenzen;
 		for (int i = 0; i < caseSequenzen.size(); i++) {
-			caseSequenzen.get(i).ueberschrift.addFocusListener(this);
+			caseSequenzen.get(i).ueberschrift.addEditAreasFocusListener(this);
 			panel.add(caseSequenzen.get(i).ueberschrift, INITIAL_DUMMY);
 			panel.add(caseSequenzen.get(i).getContainer(), INITIAL_DUMMY);
 		}
@@ -391,7 +391,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		}
 	}
 
-	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
+	@Override public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
 		ZweigSchrittSequenzView zweig = istZweigUeberschrift(editor.getLastFocusedTextArea());
 		if (zweig != null) {
 			if (zweig.getAenderungsart() == Aenderungsart.Hinzugefuegt) {

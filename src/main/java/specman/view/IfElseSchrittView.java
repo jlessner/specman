@@ -17,7 +17,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
 import specman.textfield.TextfieldShef;
-import specman.undo.AbstractUndoableInteraktion;
+import specman.undo.AbstractUndoableInteraction;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -48,7 +48,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelBedingung.add(editContainer, "2,1");
 		panel.add(panelBedingung, CC.xy(3, 1));
 		panel.add(leeresFeld, CC.xy(1, 1));
-		editContainer.addFocusListener(new FocusAdapter() {
+		editContainer.addEditAreasFocusListener(new FocusAdapter() {
 			@Override public void focusLost(FocusEvent e) {
 				berechneHoeheFuerVollstaendigUnberuehrtenText();
 			}
@@ -93,7 +93,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 
 	protected void elseBedingungAnlegen(ZweigSchrittSequenzView elseSequenz) {
-		elseSequenz.ueberschrift.addFocusListener(this);
+		elseSequenz.ueberschrift.addEditAreasFocusListener(this);
 		/** @author PVN */
 		panelElse = new JPanel();
 		panelElse.setBackground(Specman.schrittHintergrund());
@@ -103,7 +103,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 	
 	protected void ifBedingungAnlegen(ZweigSchrittSequenzView ifSequenz) {
-		ifSequenz.ueberschrift.addFocusListener(this);
+		ifSequenz.ueberschrift.addEditAreasFocusListener(this);
 		/**@author PVN */
 		panelIf = new JPanel();
 		panelIf.setBackground(Specman.schrittHintergrund());
@@ -270,7 +270,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.viewsNachinitialisieren();
 	}
 
-	@Override public AbstractUndoableInteraktion alsGeloeschtMarkieren(EditorI editor) {
+	@Override public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
 		elseSequenz.alsGeloeschtMarkieren(editor);
 		ifSequenz.alsGeloeschtMarkieren(editor);
 		return super.alsGeloeschtMarkieren(editor);

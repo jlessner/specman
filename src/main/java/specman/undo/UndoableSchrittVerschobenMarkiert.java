@@ -3,6 +3,7 @@ package specman.undo;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
+import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 import specman.view.QuellSchrittView;
 import specman.view.SchrittSequenzView;
@@ -29,12 +30,12 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
   @Override public void undoEdit() throws EditException {
     togglePosition();
     if (quellschrittIstNeu) {
-      editor.pauseUndoRecording();
-      quellschritt.getParent().schrittEntfernen(quellschritt);
-      step.setQuellschritt(null);
-      step.setStandardStil();
-      step.setAenderungsart(null);
-      editor.resumeUndoRecording();
+      try(UndoRecording ur = editor.pauseUndo()) {
+        quellschritt.getParent().schrittEntfernen(quellschritt);
+        step.setQuellschritt(null);
+        step.setStandardStil();
+        step.setAenderungsart(null);
+      }
     }
     else {
       // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht
@@ -46,14 +47,14 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
 
   @Override public void redoEdit() throws EditException {
     if (quellschrittIstNeu) {
-      editor.pauseUndoRecording();
-      quellschritt = new QuellSchrittView(editor, originalParent, step.getId());
-      originalParent.schrittZwischenschieben(quellschritt, Before, step, editor);
-      step.setQuellschritt(quellschritt);
-      quellschritt.setZielschritt(step);
-      step.setZielschrittStil();
-      step.setAenderungsart(Aenderungsart.Zielschritt);
-      editor.resumeUndoRecording();
+      try(UndoRecording ur = editor.pauseUndo()) {
+        quellschritt = new QuellSchrittView(editor, originalParent, step.getId());
+        originalParent.schrittZwischenschieben(quellschritt, Before, step, editor);
+        step.setQuellschritt(quellschritt);
+        quellschritt.setZielschritt(step);
+        step.setZielschrittStil();
+        step.setAenderungsart(Aenderungsart.Zielschritt);
+      }
     }
     togglePosition();
     // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht
