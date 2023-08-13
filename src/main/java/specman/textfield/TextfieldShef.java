@@ -13,6 +13,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.undo.UndoableImageAdded;
+import specman.undo.UndoableImageRemoved;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.*;
@@ -361,7 +362,7 @@ public class TextfieldShef extends JPanel {
 		updateBounds();
 	}
 
-	public void addImageByRedo(TextEditArea initiatingTextArea, ImageEditArea imageEditArea, TextEditArea cutOffTextArea) {
+	public void addImageByUndoRedo(TextEditArea initiatingTextArea, ImageEditArea imageEditArea, TextEditArea cutOffTextArea) {
 		try (UndoRecording ur = Specman.instance().pauseUndo()) {
 			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
 			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
@@ -386,19 +387,34 @@ public class TextfieldShef extends JPanel {
 		layout.appendRow(RowSpec.decode("0px"));
 	}
 
-	public void removeImage(ImageEditArea image) {
-		int imageIndex = removeEditArea(image);
-		if (imageIndex > 0 && editAreas.size() > imageIndex) {
-			TextEditArea leadingTextArea = editAreas.get(imageIndex-1).asTextArea();
-			TextEditArea trailingTextArea = editAreas.get(imageIndex).asTextArea();
-			if (leadingTextArea != null && trailingTextArea != null) {
-				removeEditArea(trailingTextArea);
-				//leadingTextArea.appendText(trailingTextArea.getText());
-				leadingTextArea.requestFocus();
+	public void removeImageByUndoRedo(ImageEditArea imageEditArea, TextEditArea cutOffTextArea) {
+		try (UndoRecording ur = Specman.instance().pauseUndo()) {
+			removeEditArea(imageEditArea);
+			if (cutOffTextArea != null) {
+				removeEditArea(cutOffTextArea);
 			}
 		}
 		updateBounds();
-		//requestFocus();
+	}
+
+	public void removeImage(ImageEditArea image) {
+		EditorI editor = Specman.instance();
+		try (UndoRecording ur = editor.composeUndo()) {
+			TextEditArea leadingTextArea = null;
+			TextEditArea trailingTextArea = null;
+			int imageIndex = removeEditArea(image);
+			if (imageIndex > 0 && editAreas.size() > imageIndex) {
+				leadingTextArea = editAreas.get(imageIndex-1).asTextArea();
+				trailingTextArea = editAreas.get(imageIndex).asTextArea();
+				if (leadingTextArea != null && trailingTextArea != null) {
+					removeEditArea(trailingTextArea);
+					leadingTextArea.appendText(trailingTextArea.getText());
+					leadingTextArea.requestFocus();
+				}
+			}
+			editor.addEdit(new UndoableImageRemoved(this, leadingTextArea, image, trailingTextArea));
+		}
+		updateBounds();
 	}
 
 	private int removeEditArea(EditArea area) {
