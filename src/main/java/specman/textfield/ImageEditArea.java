@@ -211,8 +211,8 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     // TODDO JL: Durchstreichung
   }
 
-  public void unmarkAsDeleted() {
-    updateChangetypeAndDependentStyling(null);
+  public void unmarkAsDeleted(Aenderungsart aenderungsart) {
+    updateChangetypeAndDependentStyling(aenderungsart);
   }
 
   private void updateChangetypeAndDependentStyling(Aenderungsart aenderungsart) {
@@ -283,4 +283,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override
   public TextEditArea asTextArea() { return null; }
 
+  @Override
+  public ImageEditArea asImageArea() { return this; }
 }

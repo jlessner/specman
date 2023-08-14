@@ -46,4 +46,6 @@ public interface EditArea extends InteractiveStepFragment {
   void aenderungsmarkierungenVerwerfen();
 
   TextEditArea asTextArea();
+
+  ImageEditArea asImageArea();
 }

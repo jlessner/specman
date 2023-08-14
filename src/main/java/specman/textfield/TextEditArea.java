@@ -366,6 +366,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
   @Override
   public TextEditArea asTextArea() { return this; }
 
+  @Override
+  public ImageEditArea asImageArea() { return null; }
+
   public void appendText(String trailingText) {
     int endOfOldText = getDocument().getLength();
     String oldText = getText();

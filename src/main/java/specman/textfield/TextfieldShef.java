@@ -1,7 +1,6 @@
 package specman.textfield;
 
 import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
@@ -80,6 +79,9 @@ public class TextfieldShef extends JPanel {
 	private EmptyBorder editorPaneBorder;
 	private Indentions indentions;
 	private boolean schrittNummerSichtbar = true;
+	// TODO JL: Das ist nicht 100%ig sauber. Wenn wir auf dieser Basis die Inhalte der Textfelder
+	// wieder herstellen, funktionieren in diesen vorhergehende Undos nicht mehr sauber. Wir müssen
+	// die Textersetzungen durch Composite-Undos lösen
 	private EditorContentModel_V001 loeschUndoBackup;
 
 	public TextfieldShef(EditorI editor, String initialContent, String schrittId) {
@@ -87,17 +89,16 @@ public class TextfieldShef extends JPanel {
 	}
 
 	public TextfieldShef(EditorI editor, EditorContentModel_V001 initialContent, String schrittId) {
-		initLayoutAndEditAreas(editor, initialContent);
-		updateDecorationIndentions(new Indentions());
-		setBackground(schrittHintergrund());
-
 		if (schrittId != null) {
 			schrittNummer = new SchrittNummerLabel(schrittId);
-			editAreas.get(0).addSchrittnummer(schrittNummer);
 			setEnabled(false);
 		} else {
 			schrittNummer = null;
 		}
+
+		initLayoutAndEditAreas(editor, initialContent);
+		updateDecorationIndentions(new Indentions());
+		setBackground(schrittHintergrund());
 
     skalieren(editor.getZoomFactor(), 0);
   }
@@ -105,13 +106,8 @@ public class TextfieldShef extends JPanel {
 	private void initLayout(EditorContentModel_V001 content) {
 		List<RowSpec> rowSpecs = new ArrayList<>();
 		rowSpecs.add(RowSpec.decode("0px"));
-		for (int i = 0; i < content.areas.size(); i++) {
-			rowSpecs.add(EDITAREA_LAYOUT_ROWSPEC);
-		}
 		rowSpecs.add(RowSpec.decode("0px"));
-		layout = new FormLayout(
-			ColumnSpec.decodeSpecs("0px,10px:grow,0px"),
-			rowSpecs.toArray(RowSpec[]::new));
+		layout = new FormLayout("0px,10px:grow,0px", "0px,0px");
 		setLayout(layout);
 	}
 
@@ -119,7 +115,7 @@ public class TextfieldShef extends JPanel {
 		editAreas.stream().forEach(ea -> remove(ea.asComponent()));
 		editAreas.clear();
 		initLayout(content);
-		int row = 2;
+		int index = 0;
 		for (AbstractEditAreaModel_V001 editAreaModel: content.areas) {
 			EditArea editArea;
 			if (editAreaModel instanceof TextEditAreaModel_V001) {
@@ -133,9 +129,10 @@ public class TextfieldShef extends JPanel {
 			else {
 				throw new RuntimeException("Noch nicht fertig: " + editAreaModel);
 			}
-			editAreas.add(editArea);
-			add(editArea.asComponent(), CC.xy(2, row));
-			row++;
+			addEditArea(editArea, index++);
+		}
+		if (schrittNummer != null) {
+			editAreas.get(0).addSchrittnummer(schrittNummer);
 		}
 	}
 
@@ -145,15 +142,33 @@ public class TextfieldShef extends JPanel {
 
 	public void setStandardStil(SchrittID id) {
 		if (loeschUndoBackup != null) {
-			initLayoutAndEditAreas(Specman.instance(), loeschUndoBackup);
+			restoreUndoBackup();
 			loeschUndoBackup = null;
 		}
-		else {
-			editAreas.stream().forEach(ea -> ea.setStyle(standardStil));
-		}
+		editAreas.stream().forEach(ea -> ea.setStyle(standardStil));
 		setBackground(Hintergrundfarbe_Standard);
 		if (schrittNummer != null) {
 			schrittNummer.setStandardStil(id);
+		}
+	}
+
+	private void restoreUndoBackup() {
+		int index = 0;
+		for (AbstractEditAreaModel_V001 editAreaModel: loeschUndoBackup.areas) {
+			if (editAreaModel instanceof TextEditAreaModel_V001) {
+				TextEditAreaModel_V001 textEditAreaModel = (TextEditAreaModel_V001)editAreaModel;
+				TextEditArea editArea = editAreas.get(index).asTextArea();
+				editArea.setText(textEditAreaModel.text);
+			}
+			else if (editAreaModel instanceof ImageEditAreaModel_V001) {
+				ImageEditAreaModel_V001 imageEditAreaModel = (ImageEditAreaModel_V001)editAreaModel;
+				ImageEditArea editArea = editAreas.get(index).asImageArea();
+				editArea.unmarkAsDeleted(imageEditAreaModel.aenderungsart);
+			}
+			else {
+				throw new RuntimeException("Noch nicht fertig: " + editAreaModel);
+			}
+			index++;
 		}
 	}
 

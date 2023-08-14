@@ -15,7 +15,7 @@ public class UndoableImageRemovedMarkiert extends AbstractUndoableInteraction {
 
     @Override
     public void undoEdit() throws EditException {
-        imageEditArea.unmarkAsDeleted();
+        imageEditArea.unmarkAsDeleted(null);
     }
 
     @Override
