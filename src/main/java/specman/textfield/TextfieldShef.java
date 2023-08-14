@@ -140,7 +140,7 @@ public class TextfieldShef extends JPanel {
 		this(editor, new EditorContentModel_V001(""), null);
 	}
 
-	public void setStandardStil(SchrittID id) {
+	public void aenderungsmarkierungenEntfernen(SchrittID id) {
 		if (loeschUndoBackup != null) {
 			restoreUndoBackup();
 			loeschUndoBackup = null;
@@ -150,6 +150,7 @@ public class TextfieldShef extends JPanel {
 		if (schrittNummer != null) {
 			schrittNummer.setStandardStil(id);
 		}
+		setEditable(true);
 	}
 
 	private void restoreUndoBackup() {
@@ -180,6 +181,7 @@ public class TextfieldShef extends JPanel {
 		editAreas.stream().forEach(ea -> ea.setStyle(quellschrittStil));
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schrittNummer.setQuellschrittStil(zielschrittID);
+		setEditable(false);
 	}
 
 	public void setGeloeschtMarkiertStil(SchrittID id) {
@@ -189,6 +191,7 @@ public class TextfieldShef extends JPanel {
 		if (schrittNummer != null) {
 			schrittNummer.setGeloeschtStil(id);
 		}
+		setEditable(false);
 	}
 
 	public void setId(String id) {

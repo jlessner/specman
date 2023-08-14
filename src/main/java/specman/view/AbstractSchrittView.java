@@ -166,15 +166,13 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void setStandardStil() {
 		setBackground(Hintergrundfarbe_Standard);
-		editContainer.setEditable(true);
-		getshef().setStandardStil(id);
+		editContainer.aenderungsmarkierungenEntfernen(id);
 		setAenderungsart(null);
 	}
 
 	public void setGeloeschtMarkiertStil() {
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		editContainer.setEditable(false);
-		getshef().setGeloeschtMarkiertStil(id);
+		editContainer.setGeloeschtMarkiertStil(id);
 		setAenderungsart(Aenderungsart.Geloescht);
 	}
 
@@ -184,7 +182,6 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
-		editContainer.setEditable(false);
 		setGeloeschtMarkiertStil();
 		return new UndoableSchrittEntferntMarkiert(this, editor);
 	}
@@ -381,11 +378,9 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 			switch(aenderungsart) {
 				case Geloescht:
 					setGeloeschtMarkiertStil();
-					editContainer.setEditable(false);
 					break;
 				case Quellschritt:
 					((QuellSchrittView)this).setQuellStil();
-					editContainer.setEditable(false);
 					break;
 				case Zielschritt:
 					setZielschrittStil();

@@ -53,9 +53,8 @@ public class QuellSchrittView extends AbstractSchrittView{
     }
 
     public void setQuellStil() {
-        getshef().setQuellStil(getZielschrittID());
+        editContainer.setQuellStil(getZielschrittID());
         setAenderungsart(Aenderungsart.Quellschritt);
-        editContainer.setEditable(false);
     }
 
     public void setZielschritt(AbstractSchrittView zielschritt) {

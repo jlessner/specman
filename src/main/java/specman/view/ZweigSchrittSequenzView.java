@@ -90,8 +90,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	public void aenderungsmarkierungenEntfernen() {
 		setAenderungsart(null);
-		ueberschrift.setStandardStil(null);
-		ueberschrift.setEditable(true);
+		ueberschrift.aenderungsmarkierungenEntfernen(null);
 	}
 
 	public void ueberschriftAenderungenUebernehmen() { ueberschrift.aenderungsmarkierungenUebernehmen(); }

@@ -236,7 +236,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     try {
       ByteArrayOutputStream bytes = new ByteArrayOutputStream();
       ImageIO.write(fullSizeImage, imageType, bytes);
-      // TODO JL: Änderungsmarkierung
       return new ImageEditAreaModel_V001(bytes.toByteArray(), imageType, aenderungsart);
     }
     catch (IOException iox) {
