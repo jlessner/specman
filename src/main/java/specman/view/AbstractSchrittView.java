@@ -87,10 +87,6 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		editContainer.setPlainText(plainText);
 	}
 
-	public TextfieldShef getshef() {
-		return editContainer;
-	}
-
 	protected EditorContentModel_V001 getEditorContent(boolean formatierterText) {
 		return editContainer.editorContent2Model(formatierterText);
 	}
@@ -177,7 +173,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void setZielschrittStil() {
-		getshef().setZielschrittStil(getQuellschritt().getId());
+		editContainer.setZielschrittStil(getQuellschritt().getId());
 		setAenderungsart(Aenderungsart.Zielschritt);
 	}
 
@@ -363,13 +359,13 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void resyncSchrittnummerStil() {
 		if (getAenderungsart() == Aenderungsart.Geloescht) {
-			getshef().wrapSchrittnummerAsDeleted();
+			editContainer.wrapSchrittnummerAsDeleted();
 		}
 		if (getAenderungsart() == Aenderungsart.Quellschritt) {
-			getshef().wrapSchrittnummerAsQuelle(((QuellSchrittView)this).getZielschrittID());
+			editContainer.wrapSchrittnummerAsQuelle(((QuellSchrittView)this).getZielschrittID());
 		}
 		if (getAenderungsart() == Aenderungsart.Zielschritt) {
-			getshef().wrapSchrittnummerAsZiel(getQuellschritt().getId());
+			editContainer.wrapSchrittnummerAsZiel(getQuellschritt().getId());
 		}
 	}
 
@@ -426,7 +422,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	protected void textAenderungenUebernehmen() {
-		getshef().aenderungsmarkierungenUebernehmen();
+		editContainer.aenderungsmarkierungenUebernehmen();
 	}
 
 	public void aenderungenVerwerfen(EditorI editor) throws EditException {
@@ -456,7 +452,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	protected void aenderungsmarkierungenVerwerfen() {
-		getshef().aenderungsmarkierungenVerwerfen();
+		editContainer.aenderungsmarkierungenVerwerfen();
 	}
 
 	@Override

@@ -15,8 +15,6 @@ public interface EditArea extends InteractiveStepFragment {
 
   void pack(int availableWidth);
 
-  void setStyle(MutableAttributeSet style);
-
   void markAsDeleted();
 
   Component asComponent();
@@ -26,8 +24,6 @@ public interface EditArea extends InteractiveStepFragment {
   String getPlainText();
 
   void skalieren(int prozentNeu, int prozentAktuell);
-
-  void setEditable(boolean editable);
 
   void addFocusListener(FocusListener focusListener);
 
@@ -48,4 +44,8 @@ public interface EditArea extends InteractiveStepFragment {
   TextEditArea asTextArea();
 
   ImageEditArea asImageArea();
+
+  void setQuellStil();
+
+  void setStandardStil();
 }

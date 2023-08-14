@@ -145,12 +145,11 @@ public class TextfieldShef extends JPanel {
 			restoreUndoBackup();
 			loeschUndoBackup = null;
 		}
-		editAreas.stream().forEach(ea -> ea.setStyle(standardStil));
+		editAreas.stream().forEach(ea -> ea.setStandardStil());
 		setBackground(Hintergrundfarbe_Standard);
 		if (schrittNummer != null) {
 			schrittNummer.setStandardStil(id);
 		}
-		setEditable(true);
 	}
 
 	private void restoreUndoBackup() {
@@ -178,10 +177,9 @@ public class TextfieldShef extends JPanel {
 	}
 
 	public void setQuellStil(SchrittID zielschrittID) {
-		editAreas.stream().forEach(ea -> ea.setStyle(quellschrittStil));
+		editAreas.stream().forEach(ea -> ea.setQuellStil());
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schrittNummer.setQuellschrittStil(zielschrittID);
-		setEditable(false);
 	}
 
 	public void setGeloeschtMarkiertStil(SchrittID id) {
@@ -191,7 +189,6 @@ public class TextfieldShef extends JPanel {
 		if (schrittNummer != null) {
 			schrittNummer.setGeloeschtStil(id);
 		}
-		setEditable(false);
 	}
 
 	public void setId(String id) {
@@ -303,16 +300,6 @@ public class TextfieldShef extends JPanel {
 		// im Konstruktor einen Aufruf von setBackground vornimmt.
 		if (editAreas != null) {
 			editAreas.forEach(ea -> ea.setOpaque(isOpaque));
-		}
-	}
-
-	@Override
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
-		// Null-Check ist notwendig, weil javax.swing.LookAndFeel bereits
-		// im Konstruktor einen Aufruf von setBackground vornimmt.
-		if (editAreas != null) {
-			editAreas.forEach(ea -> ea.setBackground(bg));
 		}
 	}
 
@@ -450,10 +437,6 @@ public class TextfieldShef extends JPanel {
 
 	public void setEditorContent(EditorI editor, EditorContentModel_V001 intro) {
 		initLayoutAndEditAreas(editor, intro);
-	}
-
-	public void setEditable(boolean editable) {
-		editAreas.forEach(ea -> ea.setEditable(editable));
 	}
 
 	public void addEditComponentListener(ComponentListener componentListener) {

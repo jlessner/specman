@@ -31,6 +31,7 @@ import static specman.textfield.HTMLTags.BODY_INTRO;
 import static specman.textfield.HTMLTags.BODY_OUTRO;
 import static specman.textfield.HTMLTags.HTML_INTRO;
 import static specman.textfield.HTMLTags.HTML_OUTRO;
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.textfield.TextStyles.FONTSIZE;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 import static specman.textfield.TextStyles.INDIKATOR_GELB;
@@ -41,6 +42,7 @@ import static specman.textfield.TextStyles.font;
 import static specman.textfield.TextStyles.ganzerSchrittGeloeschtStil;
 import static specman.textfield.TextStyles.geaendertStil;
 import static specman.textfield.TextStyles.geloeschtStil;
+import static specman.textfield.TextStyles.quellschrittStil;
 import static specman.textfield.TextStyles.standardStil;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
@@ -61,16 +63,27 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
   public void pack(int availableWidth) {
   }
 
-  public void setStyle(MutableAttributeSet attr) {
+  private void setStyle(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
     StyledDocument doc = (StyledDocument) getDocument();
     doc.setCharacterAttributes(0, getPlainText().length(), attr, false);
+    setEditable(editable);
+    setBackground(backgroundColor);
+  }
+
+  @Override
+  public void setQuellStil() {
+    setStyle(quellschrittStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
+  }
+
+  @Override
+  public void setStandardStil() {
+    setStyle(standardStil, Hintergrundfarbe_Standard, true);
   }
 
   @Override
   public void markAsDeleted() {
     aenderungsmarkierungenVerwerfen();
-    setStyle(ganzerSchrittGeloeschtStil);
-    setEditable(false);
+    setStyle(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
   }
 
   @Override

@@ -15,7 +15,6 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.text.MutableAttributeSet;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -200,8 +199,13 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public TextfieldShef getParent() { return (TextfieldShef) super.getParent(); }
 
   @Override
-  public void setStyle(MutableAttributeSet style) {
-    // TODO JL: Änderungsmarkierung noch nicht dargestellt
+  public void setQuellStil() {
+    // Not required for images - source steps only contain an empty text area
+  }
+
+  @Override
+  public void setStandardStil() {
+    // Nothing to do for images - job is completely done in aenderungenVerwerfen/Uebernehmen
   }
 
   @Override
@@ -249,11 +253,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override
   public void skalieren(int prozentNeu, int prozentAktuell) {
     // Nothing to do: image is automacically resized by the pack() methode if necessary
-  }
-
-  @Override
-  public void setEditable(boolean editable) {
-    // TODO JL: Editierbarkeit kann man noch nicht umschalten
   }
 
   @Override
