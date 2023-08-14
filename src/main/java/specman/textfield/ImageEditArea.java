@@ -7,6 +7,7 @@ import specman.Aenderungsart;
 import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
+import specman.undo.UndoableImageRemovedMarkiert;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,12 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.text.MutableAttributeSet;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -119,6 +115,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
       if (aenderungsart == null && Specman.instance().aenderungenVerfolgen()) {
         markAsDeleted();
+        Specman.instance().addEdit(new UndoableImageRemovedMarkiert(this));
       }
       else {
         getParent().removeImage(ImageEditArea.this);
@@ -143,7 +140,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
       new ImageGrabber(this, 3, 1);
       new ImageGrabber(this, 3, 3);
       addGlassPanel();
-      revalidate(); // Force the grabbers to appear
     }
   }
 
@@ -176,6 +172,9 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
       // Removing and re-attaching the image causes it to be drawn *below* the focus glass
       remove(image);
       add(image, CC.xywh(1, 1, 3, 3));
+
+      // Force the glasspanel to appear
+      revalidate();
     }
   }
 
@@ -210,6 +209,10 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     updateChangetypeAndDependentStyling(Aenderungsart.Geloescht);
     removeGrabbers();
     // TODDO JL: Durchstreichung
+  }
+
+  public void unmarkAsDeleted() {
+    updateChangetypeAndDependentStyling(null);
   }
 
   private void updateChangetypeAndDependentStyling(Aenderungsart aenderungsart) {
@@ -279,4 +282,5 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public TextEditArea asTextArea() { return null; }
+
 }
