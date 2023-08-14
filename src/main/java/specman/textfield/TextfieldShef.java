@@ -124,7 +124,7 @@ public class TextfieldShef extends JPanel {
 			EditArea editArea;
 			if (editAreaModel instanceof TextEditAreaModel_V001) {
 				TextEditAreaModel_V001 textEditAreaModel = (TextEditAreaModel_V001)editAreaModel;
-				editArea = new TextEditArea(editor, textEditAreaModel.text);
+				editArea = new TextEditArea(editor, textEditAreaModel.text, schrittHintergrund());
 			}
 			else if (editAreaModel instanceof ImageEditAreaModel_V001) {
 				ImageEditAreaModel_V001 imageEditAreaModel = (ImageEditAreaModel_V001)editAreaModel;
@@ -334,10 +334,10 @@ public class TextfieldShef extends JPanel {
 	public void wrapSchrittnummerAsQuelle(SchrittID zielschrittID) { schrittNummer.wrapAsQuelle(zielschrittID); }
 
 	public void aenderungsmarkierungenUebernehmen() {
-		editAreas.forEach(ea -> ea.aenderungsmarkierungenUebernehmen());
+		new ArrayList<>(editAreas).forEach(ea -> ea.aenderungsmarkierungenUebernehmen());
 	}
 	public void aenderungsmarkierungenVerwerfen() {
-		editAreas.forEach(ea -> ea.aenderungsmarkierungenVerwerfen());
+		new ArrayList<>(editAreas).forEach(ea -> ea.aenderungsmarkierungenVerwerfen());
 	}
 
 	public boolean enthaelt(InteractiveStepFragment fragment) {

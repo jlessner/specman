@@ -550,6 +550,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					hauptSequenz.aenderungenUebernehmen(Specman.this);
+					diagrammAktualisieren(null);
 				}
 				catch(EditException ex) {
 					showError(ex);
@@ -561,6 +562,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override public void actionPerformed(ActionEvent e) {
 				try {
 					hauptSequenz.aenderungenVerwerfen(Specman.this);
+					diagrammAktualisieren(null);
 				}
 				catch(EditException ex) {
 					showError(ex);

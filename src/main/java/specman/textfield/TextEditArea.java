@@ -44,11 +44,12 @@ import static specman.textfield.TextStyles.geloeschtStil;
 import static specman.textfield.TextStyles.standardStil;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
-  public TextEditArea(EditorI editor, String initialerText) {
+  public TextEditArea(EditorI editor, String initialerText, Color initialBackground) {
     editor.instrumentWysEditor(this, initialerText, 0);
     putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
     setFont(font);
     addKeyListener(this);
+    setBackground(initialBackground);
   }
 
   @Override
@@ -156,12 +157,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
   }
 
   // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
-  public java.util.List<Aenderungsmarkierung_V001> aenderungsmarkierungenUebernehmen() {
-    java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<>();
+  public void aenderungsmarkierungenUebernehmen() {
     StyledDocument doc = (StyledDocument) getDocument();
     List<GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
     for (Element e : doc.getRootElements()) {
-      aenderungsmarkierungenUebernehmen(e, ergebnis, loeschungen);
+      aenderungsmarkierungenUebernehmen(e, loeschungen);
     }
     for (int i = 0; i < loeschungen.size();i++){
       GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) -1 - i);
@@ -171,16 +171,14 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         e.printStackTrace();
       }
     }
-    return ergebnis;
   }
 
   // TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
-  public java.util.List<Aenderungsmarkierung_V001> aenderungsmarkierungenVerwerfen() {
-    java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<>();
+  public void aenderungsmarkierungenVerwerfen() {
     StyledDocument doc = (StyledDocument) getDocument();
     List <GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
     for (Element e : doc.getRootElements()) {
-      aenderungsmarkierungenVerwerfen(e, ergebnis, loeschungen);
+      aenderungsmarkierungenVerwerfen(e, loeschungen);
     }
     for (int i = 0; i < loeschungen.size();i++){
       GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) -1 - i);
@@ -190,13 +188,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         e.printStackTrace();
       }
     }
-    return ergebnis;
   }
 
   // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
   private void aenderungsmarkierungenUebernehmen(
     Element e,
-    List<Aenderungsmarkierung_V001> ergebnis,
     List <GeloeschtMarkierung_V001> loeschungen) {
     StyledDocument doc = (StyledDocument) e.getDocument();
     if (elementHatAenderungshintergrund(e)) {
@@ -210,18 +206,16 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         StyleConstants.setBackground(entfaerbt, Hintergrundfarbe_Standard);
         doc.setCharacterAttributes(e.getStartOffset(),e.getEndOffset()-e.getStartOffset(),entfaerbt,true);
       }
-      ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset(), e.getEndOffset()));
     }
 
     for (int i = 0; i < e.getElementCount(); i++) {
-      aenderungsmarkierungenUebernehmen(e.getElement(i), ergebnis, loeschungen);
+      aenderungsmarkierungenUebernehmen(e.getElement(i), loeschungen);
     }
   }
 
   // TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
   private void aenderungsmarkierungenVerwerfen(
     Element e,
-    List<Aenderungsmarkierung_V001> ergebnis,
     List <GeloeschtMarkierung_V001> loeschungen) {
     StyledDocument doc = (StyledDocument) e.getDocument();
     if (elementHatAenderungshintergrund(e)) {
@@ -236,10 +230,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         StyleConstants.setStrikeThrough(entfaerbt, false);
         doc.setCharacterAttributes(e.getStartOffset(),e.getEndOffset()-e.getStartOffset(),entfaerbt,true);
       }
-      ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset(), e.getEndOffset()));
     }
     for (int i = 0; i < e.getElementCount(); i++) {
-      aenderungsmarkierungenVerwerfen(e.getElement(i), ergebnis, loeschungen);
+      aenderungsmarkierungenVerwerfen(e.getElement(i), loeschungen);
     }
   }
 
@@ -358,7 +351,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     try {
       int textLength = getDocument().getLength();
       if (textLength > textPosition) {
-        TextEditArea splittedArea = new TextEditArea(Specman.instance(), getText());
+        TextEditArea splittedArea = new TextEditArea(Specman.instance(), getText(), this.getBackground());
         getDocument().remove(textPosition, textLength-textPosition);
         splittedArea.getDocument().remove(0, textPosition);
         return splittedArea;

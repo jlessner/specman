@@ -9,7 +9,7 @@ import javax.swing.*;
  * resizing or rotating the image. This may be an interesting feature someday. */
 public class ImageGrabber extends JLabel {
   public ImageGrabber(ImageEditArea imageEditArea, int col, int row) {
-    setBackground(ImageEditArea.FOCUS_COLOR);
+    setBackground(ImageEditArea.FOCUS_BORDER_COLOR);
     setOpaque(true);
     imageEditArea.add(this, CC.xy(col, row));
     imageEditArea.grabbers.add(this);
