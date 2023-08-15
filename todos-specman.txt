@@ -10,6 +10,7 @@ Abschluss für Go-Live
 - Permanente Aktualisierung der Birdsview oder vielleicht erst mal Birdsview rausnehmen
 - Vielleicht eine kleiner Top-Inset für Schritt-Texte, um die Überschneidung mit den Labels zu verringern?
 - Doku aktualisieren
+- Beschriftungen internationalisieren
 
 
 Bugs fixen
