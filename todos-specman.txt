@@ -13,10 +13,6 @@ Abschluss für Go-Live
 
 
 Bugs fixen
-- Undo-Fehler. Löschen eines Schritts, in dem ein als neu markiertes Bild steckt.
-    Hier müsste das Bild entfernt statt - wie aktuell - als gelöscht markiert werden.
-    Beim Redo müsste es wieder als neu markiert auftauchen.
-    (Vgl. Text: Löschungen und Einfügungen im Text werden beim Löschen des Schritts entfernt)
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Komplettes Rewrite von DraggingLogic
 - resyncSchrittnummerStil sollte nur beim Aufbau aus Modell verwendet werden. Ansonsten sollte beim (Neu-)Setzen der ID der Stil immer erhalten bleiben, abhängig von Geloescht und Quellschritt
