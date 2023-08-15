@@ -31,7 +31,6 @@ import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 
 public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener {
   static final Color FOCUS_BORDER_COLOR = Color.GRAY;
-  static final Color FOCUS_AND_DELETED_GLASS_COLOR = new Color(100, 100, 100, 80);
   private static final int BORDER_THICKNESS = 1;
   private static final Border SELECTED_BORDER = new CompoundBorder(
     new EmptyBorder(new Insets(BORDER_THICKNESS, BORDER_THICKNESS, BORDER_THICKNESS, BORDER_THICKNESS)),
@@ -44,9 +43,8 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   private String imageType;
   private ImageIcon scaledIcon;
   private JLabel image;
-  private JPanel focusGlass;
+  private ImageEditAreaGlassPane focusGlass;
   private Aenderungsart aenderungsart;
-  public final java.util.List<ImageGrabber> grabbers = new ArrayList<>();
 
   ImageEditArea(File imageFile, Aenderungsart aenderungsart) {
     try {
@@ -82,11 +80,11 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   private void postInit() {
-    setLayout(new FormLayout("fill:8px,pref:grow,fill:8px", "fill:8px,fill:pref:grow,fill:8px"));
+    setLayout(new FormLayout("pref:grow", "fill:pref:grow"));
     setBorderByChangetype();
     setBackground(null);
     this.image = new JLabel();
-    add(image, CC.xywh(1, 1, 3, 3));
+    add(image, CC.xy(1, 1));
     updateListeners();
   }
 
@@ -134,10 +132,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public void focusGained(FocusEvent e) {
     if (aenderungsart != Aenderungsart.Geloescht) {
       setBorder(SELECTED_BORDER);
-      new ImageGrabber(this, 1, 1);
-      new ImageGrabber(this, 1, 3);
-      new ImageGrabber(this, 3, 1);
-      new ImageGrabber(this, 3, 3);
       addGlassPanel();
     }
   }
@@ -146,14 +140,8 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public void focusLost(FocusEvent e) {
     if (aenderungsart != Aenderungsart.Geloescht) {
       setBorderByChangetype();
-      removeGrabbers();
       removeGlassPanel();
     }
-  }
-
-  private void removeGrabbers() {
-    grabbers.forEach(g -> remove(g));
-    grabbers.clear();
   }
 
   private void removeGlassPanel() {
@@ -165,12 +153,11 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   private void addGlassPanel() {
     if (focusGlass == null) {
-      focusGlass = new JPanel();
-      focusGlass.setBackground(FOCUS_AND_DELETED_GLASS_COLOR);
-      add(focusGlass, CC.xywh(1, 1, 3, 3));
+      focusGlass = new ImageEditAreaGlassPane(aenderungsart);
+      add(focusGlass, CC.xy(1, 1));
       // Removing and re-attaching the image causes it to be drawn *below* the focus glass
       remove(image);
-      add(image, CC.xywh(1, 1, 3, 3));
+      add(image, CC.xy(1, 1));
 
       // Force the glasspanel to appear
       revalidate();
@@ -211,8 +198,8 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override
   public void markAsDeleted() {
     updateChangetypeAndDependentStyling(Aenderungsart.Geloescht);
-    removeGrabbers();
-    // TODDO JL: Durchstreichung
+    addGlassPanel();
+    focusGlass.toDeleted();
   }
 
   public void unmarkAsDeleted(Aenderungsart aenderungsart) {
