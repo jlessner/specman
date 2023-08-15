@@ -1,5 +1,6 @@
 Abschluss für Go-Live
 - Schrittnummer-Referenzen im Text
+- Undo für Texte beim Löschen von Schritten über Composite-Undo lösen
 - Alten Menüpunkt zum Einfügen von Bildern in Texte durch neuen ersetzen
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
