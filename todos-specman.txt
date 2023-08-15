@@ -1,13 +1,6 @@
 Abschluss für Go-Live
-- Bilder als separate Elemente statt Teil von Texten
-  - Automatische Skalierung auf die Breite des Textbereichs
-  - Wahlweise embedded oder als Link
-  - Erlaubt saubere Skalierung
-  - Menüpunkt zum Einfügen von Bildern in Texte entfernen
-  - Kür: Einfügen per Drag&Drop mit automatischem "Zerschneiden" eines
-    ggf. vorhandenen Textes an der Einfügestelle. Dazu müsste man allerdings
-    herausfinden, wie man aus der Mausposition die Position im Text berechnet.
 - Schrittnummer-Referenzen im Text
+- Alten Menüpunkt zum Einfügen von Bildern in Texte durch neuen ersetzen
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
