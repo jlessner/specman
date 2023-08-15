@@ -395,4 +395,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     setText(newText);
     setCaretPosition(endOfOldText);
   }
+
+  @Override
+  public boolean enthaeltAenderungsmarkierungen() { return !findeAenderungsmarkierungen(true).isEmpty(); }
 }

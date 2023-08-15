@@ -79,10 +79,6 @@ public class EditContainer extends JPanel {
 	private EmptyBorder editorPaneBorder;
 	private Indentions indentions;
 	private boolean schrittNummerSichtbar = true;
-	// TODO JL: Das ist nicht 100%ig sauber. Wenn wir auf dieser Basis die Inhalte der Textfelder
-	// wieder herstellen, funktionieren in diesen vorhergehende Undos nicht mehr sauber. Wir müssen
-	// die Textersetzungen durch Composite-Undos lösen
-	private EditorContentModel_V001 loeschUndoBackup;
 
 	public EditContainer(EditorI editor, String initialContent, String schrittId) {
 		this(editor, new EditorContentModel_V001(initialContent), schrittId);
@@ -141,34 +137,10 @@ public class EditContainer extends JPanel {
 	}
 
 	public void aenderungsmarkierungenEntfernen(SchrittID id) {
-		if (loeschUndoBackup != null) {
-			restoreUndoBackup();
-			loeschUndoBackup = null;
-		}
 		editAreas.stream().forEach(ea -> ea.setStandardStil());
 		setBackground(Hintergrundfarbe_Standard);
 		if (schrittNummer != null) {
 			schrittNummer.setStandardStil(id);
-		}
-	}
-
-	private void restoreUndoBackup() {
-		int index = 0;
-		for (AbstractEditAreaModel_V001 editAreaModel: loeschUndoBackup.areas) {
-			if (editAreaModel instanceof TextEditAreaModel_V001) {
-				TextEditAreaModel_V001 textEditAreaModel = (TextEditAreaModel_V001)editAreaModel;
-				TextEditArea editArea = editAreas.get(index).asTextArea();
-				editArea.setText(textEditAreaModel.text);
-			}
-			else if (editAreaModel instanceof ImageEditAreaModel_V001) {
-				ImageEditAreaModel_V001 imageEditAreaModel = (ImageEditAreaModel_V001)editAreaModel;
-				ImageEditArea editArea = editAreas.get(index).asImageArea();
-				editArea.unmarkAsDeleted(imageEditAreaModel.aenderungsart);
-			}
-			else {
-				throw new RuntimeException("Noch nicht fertig: " + editAreaModel);
-			}
-			index++;
 		}
 	}
 
@@ -183,7 +155,6 @@ public class EditContainer extends JPanel {
 	}
 
 	public void setGeloeschtMarkiertStil(SchrittID id) {
-		loeschUndoBackup = editorContent2Model(true);
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		editAreas.stream().forEach(ea -> ea.markAsDeleted());
 		if (schrittNummer != null) {
@@ -445,7 +416,7 @@ public class EditContainer extends JPanel {
 	}
 
 	public boolean enthaeltAenderungsmarkierungen() {
-		return editAreas.stream().anyMatch(ea -> enthaeltAenderungsmarkierungen());
+		return editAreas.stream().anyMatch(ea -> ea.enthaeltAenderungsmarkierungen());
 	}
 
 }

@@ -44,6 +44,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   private JLabel image;
   private ImageEditAreaGlassPane focusGlass;
   private Aenderungsart aenderungsart;
+  private Aenderungsart deleteUndoBackup;
 
   ImageEditArea(File imageFile, Aenderungsart aenderungsart) {
     try {
@@ -196,13 +197,14 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public void markAsDeleted() {
+    deleteUndoBackup = aenderungsart;
     updateChangetypeAndDependentStyling(Aenderungsart.Geloescht);
     addGlassPanel();
     focusGlass.toDeleted();
   }
 
-  public void unmarkAsDeleted(Aenderungsart aenderungsart) {
-    updateChangetypeAndDependentStyling(aenderungsart);
+  public void unmarkAsDeleted() {
+    updateChangetypeAndDependentStyling(deleteUndoBackup);
   }
 
   private void updateChangetypeAndDependentStyling(Aenderungsart aenderungsart) {
@@ -269,4 +271,8 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public ImageEditArea asImageArea() { return this; }
+
+  @Override
+  public boolean enthaeltAenderungsmarkierungen() { return aenderungsart != null; }
+
 }

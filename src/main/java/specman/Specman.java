@@ -15,7 +15,7 @@ import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.textfield.TextEditArea;
 import specman.textfield.EditContainer;
-import specman.undo.AbstractUndoableInteraction;
+import specman.undo.UndoableSchrittEntferntMarkiert;
 import specman.undo.manager.SpecmanUndoManager;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
@@ -574,12 +574,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) throws EditException {
 		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
 		darfSchrittGeloeschtWerden(schritt);
-		AbstractUndoableInteraction undo = null;
-		try(UndoRecording ur = pauseUndo()) {
-			undo = schritt.alsGeloeschtMarkieren(this);
-		}
-		if (undo != null) {
-			undoManager.addEdit(undo);
+		try (UndoRecording ur = composeUndo()) {
+			addEdit(schritt.alsGeloeschtMarkieren(this));
+			addEdit(new UndoableSchrittEntferntMarkiert(schritt, this));
 		}
 	}
 
