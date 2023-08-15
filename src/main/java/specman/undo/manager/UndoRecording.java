@@ -5,11 +5,11 @@ public class UndoRecording implements AutoCloseable {
 
   public UndoRecording(SpecmanUndoManager undoManager, UndoRecordingMode mode) {
     this.undoManager = undoManager;
-    undoManager.setRecordingMode(mode);
+    undoManager.pushRecordingMode(mode);
   }
 
   @Override
   public void close() {
-    undoManager.setRecordingMode(UndoRecordingMode.Normal);
+    undoManager.popRecordingMode();
   }
 }

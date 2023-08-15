@@ -44,7 +44,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   private JLabel image;
   private ImageEditAreaGlassPane focusGlass;
   private Aenderungsart aenderungsart;
-  private Aenderungsart deleteUndoBackup;
 
   ImageEditArea(File imageFile, Aenderungsart aenderungsart) {
     try {
@@ -196,18 +195,19 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public void markAsDeleted() {
-    // If statement avoids status mess when method is called multiple times within one interaction
-    if (aenderungsart != Aenderungsart.Geloescht) {
-      deleteUndoBackup = aenderungsart;
+    if (aenderungsart == null) {
+      Specman.instance().addEdit(new UndoableImageRemovedMarkiert(this, aenderungsart));
       updateChangetypeAndDependentStyling(Aenderungsart.Geloescht);
       addGlassPanel();
       focusGlass.toDeleted();
-      Specman.instance().addEdit(new UndoableImageRemovedMarkiert(this));
+    }
+    else if (aenderungsart == Aenderungsart.Hinzugefuegt) {
+      getParent().removeImage(this); // Includes recording of required undos
     }
   }
 
-  public void unmarkAsDeleted() {
-    updateChangetypeAndDependentStyling(deleteUndoBackup);
+  public void unmarkAsDeleted(Aenderungsart aenderungsart) {
+    updateChangetypeAndDependentStyling(aenderungsart);
   }
 
   private void updateChangetypeAndDependentStyling(Aenderungsart aenderungsart) {

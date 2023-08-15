@@ -156,7 +156,7 @@ public class EditContainer extends JPanel {
 
 	public void setGeloeschtMarkiertStil(SchrittID id) {
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		editAreas.stream().forEach(ea -> ea.markAsDeleted());
+		new ArrayList<>(editAreas).stream().forEach(ea -> ea.markAsDeleted());
 		if (schrittNummer != null) {
 			schrittNummer.setGeloeschtStil(id);
 		}
@@ -380,13 +380,15 @@ public class EditContainer extends JPanel {
 			TextEditArea leadingTextArea = null;
 			TextEditArea trailingTextArea = null;
 			int imageIndex = removeEditArea(image);
-			if (imageIndex > 0 && editAreas.size() > imageIndex) {
+			if (imageIndex > 0) {
 				leadingTextArea = editAreas.get(imageIndex-1).asTextArea();
-				trailingTextArea = editAreas.get(imageIndex).asTextArea();
-				if (leadingTextArea != null && trailingTextArea != null) {
-					removeEditArea(trailingTextArea);
-					leadingTextArea.appendText(trailingTextArea.getText());
-					leadingTextArea.requestFocus();
+				if (editAreas.size() > imageIndex) {
+					trailingTextArea = editAreas.get(imageIndex).asTextArea();
+					if (leadingTextArea != null && trailingTextArea != null) {
+						removeEditArea(trailingTextArea);
+						leadingTextArea.appendText(trailingTextArea.getText());
+						leadingTextArea.requestFocus();
+					}
 				}
 			}
 			editor.addEdit(new UndoableImageRemoved(this, leadingTextArea, image, trailingTextArea));
