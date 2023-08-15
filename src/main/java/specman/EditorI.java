@@ -28,5 +28,4 @@ public interface EditorI extends FocusListener {
 	UndoRecording pauseUndo();
 	UndoRecording composeUndo();
   void showError(EditException ex);
-
 }
