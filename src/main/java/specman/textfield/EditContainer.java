@@ -149,14 +149,14 @@ public class EditContainer extends JPanel {
 	}
 
 	public void setQuellStil(SchrittID zielschrittID) {
-		editAreas.stream().forEach(ea -> ea.setQuellStil());
+		editAreas.forEach(ea -> ea.setQuellStil());
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schrittNummer.setQuellschrittStil(zielschrittID);
 	}
 
 	public void setGeloeschtMarkiertStil(SchrittID id) {
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		new ArrayList<>(editAreas).stream().forEach(ea -> ea.markAsDeleted());
+		modifyableEditAreas().forEach(ea -> ea.markAsDeleted());
 		if (schrittNummer != null) {
 			schrittNummer.setGeloeschtStil(id);
 		}
@@ -309,11 +309,18 @@ public class EditContainer extends JPanel {
 	public void wrapSchrittnummerAsZiel(SchrittID quellschrittId) { schrittNummer.wrapAsZiel(quellschrittId); }
 	public void wrapSchrittnummerAsQuelle(SchrittID zielschrittID) { schrittNummer.wrapAsQuelle(zielschrittID); }
 
+	/** Required for iterations that may modify the list of edit areas. Working directly on the
+	 * list whould cause concurrent operation exceptions in these cases. The usage of this method
+	 * is sometimes unintuitive. E.g. removing change marks actually may cause an {@link ImageEditArea}
+	 * to be removed from the list. */
+	private List<EditArea> modifyableEditAreas() { return new ArrayList<>(editAreas); }
+
 	public void aenderungsmarkierungenUebernehmen() {
-		new ArrayList<>(editAreas).forEach(ea -> ea.aenderungsmarkierungenUebernehmen());
+		modifyableEditAreas().forEach(ea -> ea.aenderungsmarkierungenUebernehmen());
 	}
+
 	public void aenderungsmarkierungenVerwerfen() {
-		new ArrayList<>(editAreas).forEach(ea -> ea.aenderungsmarkierungenVerwerfen());
+		modifyableEditAreas().forEach(ea -> ea.aenderungsmarkierungenVerwerfen());
 	}
 
 	public boolean enthaelt(InteractiveStepFragment fragment) {
