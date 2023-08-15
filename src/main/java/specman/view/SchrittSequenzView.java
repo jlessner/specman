@@ -15,7 +15,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
-import specman.textfield.TextfieldShef;
+import specman.textfield.EditContainer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -136,14 +136,14 @@ public class SchrittSequenzView {
 	}
 
 	public AbstractSchrittView ifElseSchrittAnhaengen(EditorI editor) {
-		EditorContentModel_V001 initialerText = TextfieldShef.center("If-Else " + (schritte.size()+1));
+		EditorContentModel_V001 initialerText = EditContainer.center("If-Else " + (schritte.size()+1));
 		IfElseSchrittView schritt = new IfElseSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittAnhaengen(schritt, editor);
 	}
 
 	public AbstractSchrittView ifSchrittAnhaengen(EditorI editor) {
-		EditorContentModel_V001 initialerText = TextfieldShef.center("If " + (schritte.size()+1));
+		EditorContentModel_V001 initialerText = EditContainer.center("If " + (schritte.size()+1));
 		IfSchrittView schritt = new IfSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittAnhaengen(schritt, editor);
@@ -238,7 +238,7 @@ public class SchrittSequenzView {
 
 	public AbstractSchrittView ifElseSchrittZwischenschieben(RelativeStepPosition insertionPosition,
 			AbstractSchrittView referenceStep, EditorI editor) {
-		EditorContentModel_V001 initialerText = TextfieldShef.center("Neue Bedingung " + (schritte.size()+1));
+		EditorContentModel_V001 initialerText = EditContainer.center("Neue Bedingung " + (schritte.size()+1));
 		IfElseSchrittView schritt = new IfElseSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittZwischenschieben(schritt, insertionPosition, referenceStep, editor);
@@ -246,7 +246,7 @@ public class SchrittSequenzView {
 
 	public AbstractSchrittView ifSchrittZwischenschieben(RelativeStepPosition insertionPosition,
 			AbstractSchrittView referenceStep, EditorI editor) {
-		EditorContentModel_V001 initialerText = TextfieldShef.center("Neue Bedingung " + (schritte.size()+1));
+		EditorContentModel_V001 initialerText = EditContainer.center("Neue Bedingung " + (schritte.size()+1));
 		IfSchrittView schritt = new IfSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
 		return schrittZwischenschieben(schritt, insertionPosition, referenceStep, editor);
@@ -455,8 +455,9 @@ public class SchrittSequenzView {
 	}
 
 	public void entfernen(AbstractSchrittView container) {
-		for (AbstractSchrittView schritt: schritte)
+		for (AbstractSchrittView schritt: schritte) {
 			schritt.entfernen(this);
+		}
 		catchBereich.entfernen(this);
 	}
 

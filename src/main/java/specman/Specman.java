@@ -14,7 +14,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.textfield.TextEditArea;
-import specman.textfield.TextfieldShef;
+import specman.textfield.EditContainer;
 import specman.undo.AbstractUndoableInteraction;
 import specman.undo.manager.SpecmanUndoManager;
 import specman.undo.UndoableDiagrammSkaliert;
@@ -38,7 +38,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -75,7 +74,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	JPanel hauptSequenzContainer;
 	SpaltenResizer breitenAnpasser;
 	JScrollPane scrollPane;
-	TextfieldShef intro, outro;
+	EditContainer intro, outro;
 	FormLayout hauptlayout;
 	int diagrammbreite = INITIAL_DIAGRAMM_WIDTH;
 	int zoomFaktor = 100;
@@ -126,12 +125,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		arbeitsbereich.setBackground(new Color(247, 247, 253));
 		displayWelcomeMessage();
 
-		intro = new TextfieldShef(this);
+		intro = new EditContainer(this);
 		intro.setOpaque(false);
 		arbeitsbereich.add(intro, CC.xy(2, 2));
 		intro.addEditAreasFocusListener(this);
 
-		outro = new TextfieldShef(this);
+		outro = new EditContainer(this);
 		outro.setOpaque(false);
 		arbeitsbereich.add(outro, CC.xy(2, 4));
 		outro.addEditAreasFocusListener(this);

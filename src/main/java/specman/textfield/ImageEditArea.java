@@ -182,7 +182,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   @Override
-  public TextfieldShef getParent() { return (TextfieldShef) super.getParent(); }
+  public EditContainer getParent() { return (EditContainer) super.getParent(); }
 
   @Override
   public void setQuellStil() {

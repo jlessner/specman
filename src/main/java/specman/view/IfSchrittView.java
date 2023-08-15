@@ -10,7 +10,7 @@ import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.IfSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.textfield.TextfieldShef;
+import specman.textfield.EditContainer;
 
 import java.awt.*;
 
@@ -32,7 +32,7 @@ public class IfSchrittView extends IfElseSchrittView {
 	public IfSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerString, SchrittID id, Aenderungsart aenderungsart) {
 		super(editor, parent, initialerString, id, aenderungsart, false);
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, new EditorContentModel_V001("")));
-		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, TextfieldShef.right("Ja")));
+		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, EditContainer.right("Ja")));
 		ifBreite = SPALTENLAYOUT_UMGEHUNG_GROESSE + 2; /**@author PVN, Dueck */ 
 	}
 

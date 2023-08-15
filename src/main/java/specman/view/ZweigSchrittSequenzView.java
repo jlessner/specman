@@ -9,7 +9,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
-import specman.textfield.TextfieldShef;
+import specman.textfield.EditContainer;
 
 import java.awt.Color;
 
@@ -19,7 +19,7 @@ import java.awt.Color;
  * Überschriftentext, den im Kopfteil des VerzweigungsSchritts angezeigt wird.
  */
 public class ZweigSchrittSequenzView extends SchrittSequenzView {
-	TextfieldShef ueberschrift;
+	EditContainer ueberschrift;
 
 	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, ZweigSchrittSequenzModel_V001 model) {
 		super(editor, parent, model);
@@ -33,7 +33,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	}
 
 	private void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText) {
-		ueberschrift = new TextfieldShef(editor, initialerText, null);
+		ueberschrift = new EditContainer(editor, initialerText, null);
 		ueberschrift.addEditAreasFocusListener(editor);
 	}
 
@@ -68,7 +68,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		ueberschrift.updateDecorationIndentions(indentions);
 	}
 
-	public TextfieldShef getUeberschrift() {
+	public EditContainer getUeberschrift() {
 		return ueberschrift;
 	}
 	

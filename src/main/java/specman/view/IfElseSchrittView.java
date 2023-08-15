@@ -16,7 +16,7 @@ import specman.model.v001.IfElseSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
-import specman.textfield.TextfieldShef;
+import specman.textfield.EditContainer;
 import specman.undo.AbstractUndoableInteraction;
 
 import javax.swing.JPanel;
@@ -56,7 +56,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panel.add(new SpaltenResizer(this, editor), CC.xywh(2, 1, 1, 5));
 		if(withDefaultContent) {
 			initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, initialtext("Ja")));
-			initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, TextfieldShef.right("Nein")));
+			initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, EditContainer.right("Nein")));
 		}
 	}
 

@@ -4,14 +4,14 @@ import specman.EditException;
 import specman.Specman;
 import specman.textfield.ImageEditArea;
 import specman.textfield.TextEditArea;
-import specman.textfield.TextfieldShef;
+import specman.textfield.EditContainer;
 
 public class UndoableImageRemoved extends AbstractUndoableInteraction {
-  private final TextfieldShef editContainer;
+  private final EditContainer editContainer;
   private final ImageEditArea imageArea;
   private final TextEditArea leadingTextArea, trailingTextArea;
 
-  public UndoableImageRemoved(TextfieldShef editContainer, TextEditArea leadingTextArea, ImageEditArea imageArea, TextEditArea trailingTextArea) {
+  public UndoableImageRemoved(EditContainer editContainer, TextEditArea leadingTextArea, ImageEditArea imageArea, TextEditArea trailingTextArea) {
     this.editContainer = editContainer;
     this.imageArea = imageArea;
     this.leadingTextArea = leadingTextArea;

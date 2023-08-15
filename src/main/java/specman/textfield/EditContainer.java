@@ -67,7 +67,7 @@ import static specman.textfield.TextStyles.*;
  * Rahmenlinien des Schrittes platziert zu werden, zu dem das Textfeld gehört. Wir müssen also
  * situationsbedingt beide Techniken mischen.
  */
-public class TextfieldShef extends JPanel {
+public class EditContainer extends JPanel {
 	private final static RowSpec EDITAREA_LAYOUT_ROWSPEC = RowSpec.decode("fill:pref:grow");
 
 	// ACHTUNG: Das ist hier noch auf halbem Wege. Später wird es eine Liste von EditAreas geben
@@ -84,11 +84,11 @@ public class TextfieldShef extends JPanel {
 	// die Textersetzungen durch Composite-Undos lösen
 	private EditorContentModel_V001 loeschUndoBackup;
 
-	public TextfieldShef(EditorI editor, String initialContent, String schrittId) {
+	public EditContainer(EditorI editor, String initialContent, String schrittId) {
 		this(editor, new EditorContentModel_V001(initialContent), schrittId);
 	}
 
-	public TextfieldShef(EditorI editor, EditorContentModel_V001 initialContent, String schrittId) {
+	public EditContainer(EditorI editor, EditorContentModel_V001 initialContent, String schrittId) {
 		if (schrittId != null) {
 			schrittNummer = new SchrittNummerLabel(schrittId);
 			setEnabled(false);
@@ -136,7 +136,7 @@ public class TextfieldShef extends JPanel {
 		}
 	}
 
-	public TextfieldShef(EditorI editor) {
+	public EditContainer(EditorI editor) {
 		this(editor, new EditorContentModel_V001(""), null);
 	}
 

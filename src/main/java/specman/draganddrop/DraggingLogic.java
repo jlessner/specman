@@ -4,7 +4,7 @@ import specman.Aenderungsart;
 import specman.EditException;
 import specman.Specman;
 import specman.textfield.SchrittNummerLabel;
-import specman.textfield.TextfieldShef;
+import specman.textfield.EditContainer;
 import specman.undo.UndoableSchrittVerschoben;
 import specman.undo.UndoableSchrittVerschobenMarkiert;
 import specman.undo.UndoableZweigHinzugefuegt;
@@ -74,7 +74,7 @@ public class DraggingLogic implements Serializable {
 
     //add Case withing Drag and Drop
     private void addCase(ZweigSchrittSequenzView zweigSchrittSequenz) {
-        TextfieldShef ueberschrift = zweigSchrittSequenz.getUeberschrift();
+        EditContainer ueberschrift = zweigSchrittSequenz.getUeberschrift();
         AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ueberschrift.asInteractiveFragment());
         CaseSchrittView caseSchritt = (CaseSchrittView) step;
         ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.istZweigUeberschrift(ueberschrift.asInteractiveFragment());
@@ -166,7 +166,7 @@ public class DraggingLogic implements Serializable {
     }
 
     //GlassPane
-    private void checkfalseGlassPaneforComponent(TextfieldShef c, Point pos, int glassPaneHeight) {
+    private void checkfalseGlassPaneforComponent(EditContainer c, Point pos, int glassPaneHeight) {
         Point p = SwingUtilities.convertPoint(c, 0, 0, specman);
         Rectangle r = createRectangle(p, c);
         if (r.contains(pos)) {
@@ -372,7 +372,7 @@ public class DraggingLogic implements Serializable {
     }
 
     //Creates Rectangle that refelcts a Step with Location and size
-    private Rectangle createRectangle(Point p, TextfieldShef textShef) {
+    private Rectangle createRectangle(Point p, EditContainer textShef) {
         Rectangle r = textShef.getVisibleRect();
         r.setLocation(p);
         return r;

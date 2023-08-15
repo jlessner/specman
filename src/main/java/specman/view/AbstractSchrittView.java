@@ -19,7 +19,7 @@ import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
-import specman.textfield.TextfieldShef;
+import specman.textfield.EditContainer;
 import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableSchrittEntferntMarkiert;
 
@@ -49,7 +49,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	protected static final List<SchrittSequenzView> KEINE_SEQUENZEN = new ArrayList<SchrittSequenzView>();
 
-	protected final TextfieldShef editContainer;
+	protected final EditContainer editContainer;
 	protected SchrittID id;
 	protected Aenderungsart aenderungsart;
 	protected SchrittSequenzView parent;
@@ -59,7 +59,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialContent, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
 		this.aenderungsart = aenderungsart;
-		this.editContainer = new TextfieldShef(editor, initialContent, id != null ? id.toString() : null);
+		this.editContainer = new EditContainer(editor, initialContent, id != null ? id.toString() : null);
 		this.parent = parent;
 		editContainer.addEditAreasFocusListener(editor);
 		editContainer.addEditAreasFocusListener(this);
@@ -335,7 +335,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		this.parent = parent;
 	}
 
-	public TextfieldShef getTextShef() {
+	public EditContainer getTextShef() {
 		return editContainer;
 	}
 

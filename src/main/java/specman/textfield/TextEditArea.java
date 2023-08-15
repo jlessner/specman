@@ -341,7 +341,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
   }
 
   @Override
-  public TextfieldShef getParent() { return (TextfieldShef) super.getParent(); }
+  public EditContainer getParent() { return (EditContainer) super.getParent(); }
 
   public void addImage(File imageFile, Aenderungsart aenderungsart) { getParent().addImage(imageFile, this, aenderungsart); }
 
