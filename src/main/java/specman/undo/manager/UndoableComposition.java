@@ -1,6 +1,7 @@
 package specman.undo.manager;
 
 import specman.EditException;
+import specman.Specman;
 import specman.undo.AbstractUndoableInteraction;
 
 import javax.swing.undo.UndoableEdit;
@@ -16,13 +17,17 @@ public class UndoableComposition extends AbstractUndoableInteraction {
 
   @Override
   protected void undoEdit() throws EditException {
-    for (int i = interactions.size()-1; i >= 0; i-- ) {
-      interactions.get(i).undo();
+    try (UndoRecording ur = Specman.instance().pauseUndo()) {
+      for (int i = interactions.size()-1; i >= 0; i-- ) {
+        interactions.get(i).undo();
+      }
     }
   }
 
   @Override
   protected void redoEdit() throws EditException {
-    interactions.forEach(i -> i.redo());
+    try (UndoRecording ur = Specman.instance().pauseUndo()) {
+      interactions.forEach(i -> i.redo());
+    }
   }
 }

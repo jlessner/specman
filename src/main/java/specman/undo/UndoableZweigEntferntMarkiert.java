@@ -21,14 +21,10 @@ public class UndoableZweigEntferntMarkiert extends AbstractUndoableInteraction {
   }
 
   @Override public void undoEdit() throws EditException {
-    try(UndoRecording ur = editor.pauseUndo()) {
-      zweig.aenderungenVerwerfen(editor);
-    }
+    zweig.aenderungenVerwerfen(editor);
   }
 
   @Override public void redoEdit() throws CannotRedoException {
-    try(UndoRecording ur = editor.pauseUndo()) {
-      zweig.alsGeloeschtMarkieren(editor);
-    }
+    zweig.alsGeloeschtMarkieren(editor);
   }
 }

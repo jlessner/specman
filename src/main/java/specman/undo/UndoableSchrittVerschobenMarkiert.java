@@ -47,14 +47,12 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
 
   @Override public void redoEdit() throws EditException {
     if (quellschrittIstNeu) {
-      try(UndoRecording ur = editor.pauseUndo()) {
-        quellschritt = new QuellSchrittView(editor, originalParent, step.getId());
-        originalParent.schrittZwischenschieben(quellschritt, Before, step, editor);
-        step.setQuellschritt(quellschritt);
-        quellschritt.setZielschritt(step);
-        step.setZielschrittStil();
-        step.setAenderungsart(Aenderungsart.Zielschritt);
-      }
+      quellschritt = new QuellSchrittView(editor, originalParent, step.getId());
+      originalParent.schrittZwischenschieben(quellschritt, Before, step, editor);
+      step.setQuellschritt(quellschritt);
+      quellschritt.setZielschritt(step);
+      step.setZielschrittStil();
+      step.setAenderungsart(Aenderungsart.Zielschritt);
     }
     togglePosition();
     // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht

@@ -19,16 +19,12 @@ public class UndoableSchrittEntferntMarkiert extends AbstractUndoableInteraction
 
     @Override
     public void undoEdit() throws EditException {
-        try (UndoRecording ur = Specman.instance().pauseUndo()) {
-            schritt.aenderungenVerwerfen(editor);
-        }
+        schritt.aenderungenVerwerfen(editor);
     }
 
     @Override
     public void redoEdit() throws CannotRedoException {
-        try (UndoRecording ur = Specman.instance().pauseUndo()) {
-            schritt.alsGeloeschtMarkieren(editor);
-        }
+        schritt.alsGeloeschtMarkieren(editor);
     }
 
 }

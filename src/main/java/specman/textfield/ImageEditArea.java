@@ -112,7 +112,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
       if (aenderungsart == null && Specman.instance().aenderungenVerfolgen()) {
         markAsDeleted();
-        Specman.instance().addEdit(new UndoableImageRemovedMarkiert(this));
       }
       else {
         getParent().removeImage(ImageEditArea.this);
@@ -197,10 +196,14 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public void markAsDeleted() {
-    deleteUndoBackup = aenderungsart;
-    updateChangetypeAndDependentStyling(Aenderungsart.Geloescht);
-    addGlassPanel();
-    focusGlass.toDeleted();
+    // If statement avoids status mess when method is called multiple times within one interaction
+    if (aenderungsart != Aenderungsart.Geloescht) {
+      deleteUndoBackup = aenderungsart;
+      updateChangetypeAndDependentStyling(Aenderungsart.Geloescht);
+      addGlassPanel();
+      focusGlass.toDeleted();
+      Specman.instance().addEdit(new UndoableImageRemovedMarkiert(this));
+    }
   }
 
   public void unmarkAsDeleted() {

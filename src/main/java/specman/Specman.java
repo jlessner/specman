@@ -576,7 +576,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		darfSchrittGeloeschtWerden(schritt);
 		try (UndoRecording ur = composeUndo()) {
 			addEdit(schritt.alsGeloeschtMarkieren(this));
-			addEdit(new UndoableSchrittEntferntMarkiert(schritt, this));
 		}
 	}
 
