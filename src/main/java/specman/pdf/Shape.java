@@ -12,7 +12,7 @@ public class Shape {
     Rectangle r = component.getBounds();
     add(r.x, r.y)
       .add(r.x + r.width, r.y)
-      .add(r.x + r.height, r.y + r.height)
+      .add(r.x + r.width, r.y + r.height)
       .add(r.x, r.y + r.height);
   }
 
@@ -25,4 +25,9 @@ public class Shape {
     return this;
   }
 
+  public Point start() {
+    return path.get(0);
+  }
+
+  public List<Point> allButStart() { return path.subList(1, path.size()); }
 }
