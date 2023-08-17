@@ -19,6 +19,7 @@
     <properties>
         <maven.compiler.source>1.17</maven.compiler.source>
         <maven.compiler.target>1.17</maven.compiler.target>
+        <itext.version>7.0.2</itext.version>
     </properties>
 
     <dependencies>
@@ -68,6 +69,61 @@
             <groupId>net.attlanticbb</groupId>
             <artifactId>jtidy</artifactId>
             <version>8.0</version>
+        </dependency>
+
+        <!-- always needed -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>kernel</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>io</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>layout</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>forms</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>pdfa</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>sign</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>barcodes</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>font-asian</artifactId>
+            <version>${itext.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>hyph</artifactId>
+            <version>${itext.version}</version>
         </dependency>
 
         <dependency>

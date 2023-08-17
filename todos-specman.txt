@@ -4,10 +4,10 @@ Abschluss für Go-Live
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
-- Undo / Redo in Menü aufnehmen
 - Ordentliche Fehlermeldungsanzeige
 - Permanente Aktualisierung der Birdsview oder vielleicht erst mal Birdsview rausnehmen
 - Vielleicht eine kleiner Top-Inset für Schritt-Texte, um die Überschneidung mit den Labels zu verringern?
+- Umschalten auf Quelle aus Menü entfernen
 - Doku aktualisieren
 - Beschriftungen internationalisieren
 
@@ -26,7 +26,7 @@ Auf längere Sicht - nicht notwendig für ersten Go-Live:
 - Zooming aus Undo-Liste entfernen
 - Kommentare
 - Code auf Englisch übersetzen
-- Texte internationalisieren / Sprache wählen
+- Sprache wählen
 - Sonst-Zweig in Cases Entfernen / Hinzufügen
 - Button-Enabling
 - Spellchecker

@@ -343,8 +343,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				dropWelcomeMessage();
 				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
 				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
+						? referenceStep.getParent().catchSchrittZwischenschieben(After, referenceStep, Specman.this)
+						: hauptSequenz.catchSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
 				hauptSequenz.resyncSchrittnummerStil();
 			}
