@@ -101,6 +101,10 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	abstract public JComponent getComponent();
 
+	public specman.pdf.Shape getShape() {
+		return new specman.pdf.Shape(getComponent());
+	}
+
 	protected JComponent decorated(JComponent core) {
 		return roundedBorderDecorator != null ? roundedBorderDecorator : core;
 	}

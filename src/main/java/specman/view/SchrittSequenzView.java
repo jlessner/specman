@@ -13,6 +13,7 @@ import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
+import specman.pdf.Shape;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
 import specman.textfield.EditContainer;
@@ -614,4 +615,7 @@ public class SchrittSequenzView {
 		return Co;
 	}
 
+	public Shape getShape() {
+		return schritte.get(0).getShape();
+	}
 }

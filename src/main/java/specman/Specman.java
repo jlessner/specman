@@ -13,9 +13,9 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
+import specman.pdf.PDFRenderer;
 import specman.textfield.TextEditArea;
 import specman.textfield.EditContainer;
-import specman.undo.UndoableSchrittEntferntMarkiert;
 import specman.undo.manager.SpecmanUndoManager;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
@@ -393,6 +393,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 			}
 		});
+
+		exportPDF.addActionListener((new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new PDFRenderer(hauptSequenz.getShape()).render("sample.pdf");
+			}
+		}));
 
 		einfaerben.addActionListener(new ActionListener() {
 			@Override
@@ -773,6 +780,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		catchSchrittAnhaengen = new JButton();
 		caseAnhaengen = new JButton();
 		imageEinfuegen = new JButton();
+		exportPDF = new JButton();
 		einfaerben = new JButton();
 		loeschen = new JButton();
 		toggleBorderType = new JButton();
@@ -811,6 +819,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolbarButtonHinzufuegen(caseAnhaengen, "zweig", "Case anh\u00E4ngen", buttonBar);
 		buttonBar.addSeparator();
 		toolbarButtonHinzufuegen(imageEinfuegen, "image", "Image hinzufügen", buttonBar);
+		buttonBar.addSeparator();
+		toolbarButtonHinzufuegen(exportPDF, "pdf", "PDF exportieren", buttonBar);
 		//toolBar.addSeparator();   //ToDo
 		toolbarButtonHinzufuegen(einfaerben, "helligkeit", "Hintergrund schattieren", toolBar);
 		toolbarButtonHinzufuegen(loeschen, "loeschen", "Schritt l\u00F6schen", toolBar);
@@ -925,6 +935,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JButton catchSchrittAnhaengen;
 	private JButton caseAnhaengen;
 	private JButton imageEinfuegen;
+	private JButton exportPDF;
 	private JButton einfaerben;
 	private JButton loeschen;
 	private JButton toggleBorderType;
