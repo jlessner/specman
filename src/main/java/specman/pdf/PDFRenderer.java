@@ -10,6 +10,7 @@ import com.itextpdf.layout.Document;
 import java.awt.*;
 
 public class PDFRenderer {
+  public static float SWING2PDF_SCALEFACTOR = 0.65f;
   String pdfFilename;
   PdfWriter writer;
   PdfDocument pdfDoc;
@@ -43,21 +44,24 @@ public class PDFRenderer {
   }
 
   private void drawShape(Shape shape) {
-    moveTo(shape.start());
-    shape.allButStart().forEach(p -> lineTo(p));
-    lineTo(shape.start());
-    pdfCanvas.fill();
-    moveTo(shape.start());
-    shape.allButStart().forEach(p -> lineTo(p));
-    lineTo(shape.start());
-    pdfCanvas.stroke();
+    if (shape.start() != null) {
+      moveTo(shape.start());
+      shape.allButStart().forEach(p -> lineTo(p));
+      lineTo(shape.start());
+      pdfCanvas.fill();
+      moveTo(shape.start());
+      shape.allButStart().forEach(p -> lineTo(p));
+      lineTo(shape.start());
+      pdfCanvas.stroke();
+    }
+    shape.getSubshapes().forEach(subshape -> drawShape(subshape));
   }
 
   private PdfCanvas moveTo(Point p) {
-    return pdfCanvas.moveTo(p.x + 10, 800 - p.y);
+    return pdfCanvas.moveTo((p.x*SWING2PDF_SCALEFACTOR) + 10, 800 - (p.y*SWING2PDF_SCALEFACTOR));
   }
 
   private PdfCanvas lineTo(Point p) {
-    return pdfCanvas.lineTo(p.x + 10, 800 - p.y);
+    return pdfCanvas.lineTo((p.x*SWING2PDF_SCALEFACTOR) + 10, 800 - (p.y*SWING2PDF_SCALEFACTOR));
   }
 }
