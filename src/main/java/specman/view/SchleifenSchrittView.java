@@ -14,6 +14,7 @@ import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
+import specman.pdf.Shape;
 import specman.textfield.Indentions;
 import specman.undo.AbstractUndoableInteraction;
 
@@ -246,5 +247,10 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	public void componentResized(ComponentEvent e) {
 		super.componentResized(e);
 		klappen.updateLocation(editContainer.getStepNumberBounds());
+	}
+
+	@Override
+	public Shape getShape() {
+		return wiederholSequenz.addShapes(super.getShape());
 	}
 }

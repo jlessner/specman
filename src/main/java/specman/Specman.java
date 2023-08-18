@@ -14,6 +14,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.pdf.PDFRenderer;
+import specman.pdf.Shape;
 import specman.textfield.TextEditArea;
 import specman.textfield.EditContainer;
 import specman.undo.manager.SpecmanUndoManager;
@@ -397,7 +398,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		exportPDF.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new PDFRenderer("sample.pdf").render(hauptSequenz.getShape());
+				new PDFRenderer("sample.pdf").render(hauptSequenz.addShapes(new Shape()));
 			}
 		}));
 

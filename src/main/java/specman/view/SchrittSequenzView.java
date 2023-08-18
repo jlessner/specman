@@ -615,11 +615,10 @@ public class SchrittSequenzView {
 		return Co;
 	}
 
-	public Shape getShape() {
-		Shape result = new Shape();
+	public Shape addShapes(Shape baseShape) {
 		for (AbstractSchrittView schritt : schritte) {
-			result.add(schritt.getShape());
+			baseShape.add(schritt.getShape());
 		}
-		return result;
+		return baseShape;
 	}
 }
