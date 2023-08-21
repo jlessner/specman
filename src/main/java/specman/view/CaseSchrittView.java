@@ -15,6 +15,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
+import specman.pdf.Shape;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
 import specman.undo.AbstractUndoableInteraction;
@@ -534,5 +535,16 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 			}
 		}
 		super.aenderungenVerwerfen(editor);
+	}
+
+	@Override
+	public Shape getShape() {
+		Shape shape = super
+			.getShape()
+			.add(sonstSequenz.getShapeSequence());
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
+			shape.add(caseSequenz.getShapeSequence());
+		}
+		return shape;
 	}
 }

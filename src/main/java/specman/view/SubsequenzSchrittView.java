@@ -9,6 +9,7 @@ import specman.SchrittID;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
+import specman.pdf.Shape;
 import specman.textfield.Indentions;
 import specman.undo.AbstractUndoableInteraction;
 
@@ -173,5 +174,10 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	public void componentResized(ComponentEvent e) {
 		super.componentResized(e);
 		klappen.updateLocation(editContainer.getStepNumberBounds());
+	}
+
+	@Override
+	public Shape getShape() {
+		return super.getShape().add(subsequenz.getShapeSequence());
 	}
 }

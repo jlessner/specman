@@ -1,10 +1,6 @@
 package specman.pdf;
 
-import specman.view.AbstractSchrittView;
-
 import java.awt.*;
-
-import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class ShapeSequence extends Shape {
   private Point offset;
@@ -19,7 +15,12 @@ public class ShapeSequence extends Shape {
     return translatedOffset;
   }
 
+  public ShapeSequence add(Shape subshape) {
+    super.add(subshape);
+    return this;
+  }
+
   public void translateOffset(Point parentStart) {
-    offset.translate(parentStart.x + LINIENBREITE, parentStart.y + LINIENBREITE);
+    offset.translate(parentStart.x + PDF_LINIENBREITE, parentStart.y + PDF_LINIENBREITE);
   }
 }

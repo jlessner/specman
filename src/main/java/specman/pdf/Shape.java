@@ -9,6 +9,8 @@ import java.util.List;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class Shape {
+  static final int PDF_LINIENBREITE = LINIENBREITE / 2;
+
   private List<Point> path = new ArrayList<>();
   private List<Shape> subshapes = new ArrayList<>();
   private AbstractSchrittView source;
@@ -16,10 +18,10 @@ public class Shape {
   public Shape(Component component, AbstractSchrittView source) {
     this.source = source;
     Rectangle r = component.getBounds();
-    add(r.x - LINIENBREITE, r.y - LINIENBREITE)
-      .add(r.x + r.width + LINIENBREITE, r.y - LINIENBREITE)
-      .add(r.x + r.width + LINIENBREITE, r.y + r.height + LINIENBREITE)
-      .add(r.x - LINIENBREITE, r.y + r.height + LINIENBREITE);
+    add(r.x - PDF_LINIENBREITE, r.y - PDF_LINIENBREITE)
+      .add(r.x + r.width + PDF_LINIENBREITE, r.y - PDF_LINIENBREITE)
+      .add(r.x + r.width + PDF_LINIENBREITE, r.y + r.height + PDF_LINIENBREITE)
+      .add(r.x - PDF_LINIENBREITE, r.y + r.height + PDF_LINIENBREITE);
   }
 
   public Shape() {

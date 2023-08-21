@@ -1,7 +1,6 @@
 package specman.pdf;
 
 import com.itextpdf.kernel.color.Color;
-import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -24,7 +23,7 @@ public class PDFRenderer {
       pdfDoc = new PdfDocument(writer);
       pdfCanvas = new PdfCanvas(pdfDoc.addNewPage());
       pdfCanvas.setFillColor(Color.WHITE);
-      pdfCanvas.setLineWidth(1);
+      pdfCanvas.setLineWidth(Shape.PDF_LINIENBREITE);
       document = new Document(pdfDoc);
     }
     catch(Exception x) {
