@@ -20,10 +20,6 @@ public class Shape {
       .add(r.x + r.width + LINIENBREITE, r.y - LINIENBREITE)
       .add(r.x + r.width + LINIENBREITE, r.y + r.height + LINIENBREITE)
       .add(r.x - LINIENBREITE, r.y + r.height + LINIENBREITE);
-//    add(r.x, r.y)
-//      .add(r.x + r.width, r.y)
-//      .add(r.x + r.width, r.y + r.height)
-//      .add(r.x, r.y + r.height);
   }
 
   public Shape() {
