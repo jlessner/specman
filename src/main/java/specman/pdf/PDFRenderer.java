@@ -33,8 +33,13 @@ public class PDFRenderer {
   }
 
   public void render(Shape shape) {
+    Point topLeftPDFCorner = new Point(10, 1300);
+    render(shape, topLeftPDFCorner);
+  }
+
+  private void render(Shape shape, Point renderOffset) {
     try {
-      drawShape(shape);
+      drawShape(shape, renderOffset);
       document.close();
       Desktop.getDesktop().open(new java.io.File(pdfFilename));
     }
@@ -43,25 +48,34 @@ public class PDFRenderer {
     }
   }
 
-  private void drawShape(Shape shape) {
+  private void drawShape(Shape shape, Point renderOffset) {
+    renderOffset = shape.translate(renderOffset);
     if (shape.start() != null) {
-      moveTo(shape.start());
-      shape.allButStart().forEach(p -> lineTo(p));
-      lineTo(shape.start());
+      runPath(shape, renderOffset);
       pdfCanvas.fill();
-      moveTo(shape.start());
-      shape.allButStart().forEach(p -> lineTo(p));
-      lineTo(shape.start());
+      runPath(shape, renderOffset);
       pdfCanvas.stroke();
     }
-    shape.getSubshapes().forEach(subshape -> drawShape(subshape));
+    for (Shape subshape: shape.getSubshapes()) {
+      drawShape(subshape, renderOffset);
+    }
   }
 
-  private PdfCanvas moveTo(Point p) {
-    return pdfCanvas.moveTo((p.x*SWING2PDF_SCALEFACTOR) + 10, 800 - (p.y*SWING2PDF_SCALEFACTOR));
+  private void runPath(Shape shape, Point renderOffset) {
+    moveTo(shape.start(), renderOffset);
+    shape.allButStart().forEach(p -> lineTo(p, renderOffset));
+    lineTo(shape.start(), renderOffset);
   }
 
-  private PdfCanvas lineTo(Point p) {
-    return pdfCanvas.lineTo((p.x*SWING2PDF_SCALEFACTOR) + 10, 800 - (p.y*SWING2PDF_SCALEFACTOR));
+  private PdfCanvas moveTo(Point p, Point renderOffset) {
+    float x = (p.x + renderOffset.x)*SWING2PDF_SCALEFACTOR;
+    float y = (renderOffset.y - p.y)*SWING2PDF_SCALEFACTOR;
+    return pdfCanvas.moveTo(x, y);
+  }
+
+  private PdfCanvas lineTo(Point p, Point renderOffset) {
+    float x = (p.x + renderOffset.x)*SWING2PDF_SCALEFACTOR;
+    float y = (renderOffset.y - p.y)*SWING2PDF_SCALEFACTOR;
+    return pdfCanvas.lineTo(x, y);
   }
 }

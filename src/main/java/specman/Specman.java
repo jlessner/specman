@@ -398,7 +398,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		exportPDF.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new PDFRenderer("sample.pdf").render(hauptSequenz.addShapes(new Shape()));
+				Shape all = new Shape();
+				//all.add(new Shape(intro, null));
+				all.add(hauptSequenz.getShapeSequence());
+				//all.add(new Shape(outro, null));
+				new PDFRenderer("sample.pdf").render(all);
 			}
 		}));
 
