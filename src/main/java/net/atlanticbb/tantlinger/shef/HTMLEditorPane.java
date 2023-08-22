@@ -23,6 +23,7 @@ import net.atlanticbb.tantlinger.ui.text.actions.HTMLLinkAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLTableAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLTextEditAction;
 import net.atlanticbb.tantlinger.ui.text.actions.SpecialCharAction;
+import net.atlanticbb.tantlinger.ui.text.actions.StepnumberLinkAction;
 import novaworx.syntax.SyntaxFactory;
 import novaworx.textpane.SyntaxDocument;
 import novaworx.textpane.SyntaxGutter;
@@ -299,6 +300,10 @@ public class HTMLEditorPane extends JPanel
     actionList.add(act);
     insertMenu.add(act);
 
+    act = new StepnumberLinkAction();
+    actionList.add(act);
+    insertMenu.add(act);
+
 
     createFormatToolBar(paraActions, fontSizeActions);
   }
@@ -421,6 +426,10 @@ public class HTMLEditorPane extends JPanel
     addToToolBar(formatToolBar, act);
 
     act = new HTMLTableAction();
+    actionList.add(act);
+    addToToolBar(formatToolBar, act);
+
+    act = new StepnumberLinkAction();
     actionList.add(act);
     addToToolBar(formatToolBar, act);
 
