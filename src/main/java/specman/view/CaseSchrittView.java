@@ -552,6 +552,6 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			shape.add(caseSequenz.getShapeSequence());
 		}
-		return shape;
+		return shape.add(createDiamond());
 	}
 }

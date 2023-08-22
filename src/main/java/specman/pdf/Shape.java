@@ -64,4 +64,13 @@ public class Shape {
   }
 
   public boolean isLine() { return path.size() == 2; }
+
+  public int[] xPositionsAsArray() {
+    return path.stream().mapToInt(point -> point.x).toArray();
+  }
+
+  public int[] yPositionsAsArray() {
+    return path.stream().mapToInt(point -> point.y).toArray();
+  }
+
 }

@@ -7,6 +7,7 @@ import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
+import specman.pdf.Shape;
 
 import javax.swing.*;
 import java.awt.*;
@@ -115,42 +116,34 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		return breiteSpaltenLayout;
 	}
 
-	protected Point rauteZeichnen(Graphics2D g) { //umbenannt
+	protected void rauteZeichnen(Graphics2D g) { //umbenannt
+		Shape diamond = createDiamond();
+
 		g.setRenderingHint(
 			RenderingHints.KEY_ANTIALIASING,
 			RenderingHints.VALUE_ANTIALIAS_ON);
-		Point mittelpunktRaute = berechneRautenmittelpunkt(); //umbenannt
-		int layoutSpaltenbreite = (int)breiteLayoutspalteBerechnen();
 
-		//innere weisse Raute, ausgefuellt
-		int[] polygonXinnen = {
-			mittelpunktRaute.x - layoutSpaltenbreite,
-			mittelpunktRaute.x,
-			mittelpunktRaute.x + layoutSpaltenbreite,
-			mittelpunktRaute.x};
-		int[] polygonYinnen = {
-			editContainer.getHeight(),
-			editContainer.getHeight() - layoutSpaltenbreite,
-			editContainer.getHeight(),
-			editContainer.getHeight() + layoutSpaltenbreite };
+		//inner white diamond, filled
+		int[] polygonX = diamond.xPositionsAsArray();
+		int[] polygonY = diamond.yPositionsAsArray();
 		g.setColor(Color.WHITE);
-		g.fillPolygon(polygonXinnen, polygonYinnen, 4);
+		g.fillPolygon(polygonX, polygonY, polygonX.length);
 
-		//aeussere schwarze Raute, nichtausgefuellt
-
-		int[] polygonXaussen = {mittelpunktRaute.x - layoutSpaltenbreite,
-			mittelpunktRaute.x,
-			mittelpunktRaute.x + layoutSpaltenbreite,
-			mittelpunktRaute.x};
-		int[] polygonYausssen = {
-			editContainer.getHeight(),
-			editContainer.getHeight() - layoutSpaltenbreite,
-			editContainer.getHeight(),
-			editContainer.getHeight() + layoutSpaltenbreite };
+		//outer black diamond, not filled
 		g.setStroke(new BasicStroke(LINIENBREITE));
 		g.setColor(Color.BLACK);
-		g.drawPolygon(polygonXaussen, polygonYausssen, 4);
-		return mittelpunktRaute;
+		g.drawPolygon(polygonX, polygonY, polygonX.length);
+	}
+
+	protected specman.pdf.Shape createDiamond() {
+		Point mittelpunktRaute = berechneRautenmittelpunkt(); //umbenannt
+		int layoutSpaltenbreite = (int)breiteLayoutspalteBerechnen();
+		int editContainerHeight = editContainer.getHeight();
+		return new Shape()
+			.add(mittelpunktRaute.x - layoutSpaltenbreite, editContainerHeight)
+			.add(mittelpunktRaute.x, editContainerHeight - layoutSpaltenbreite)
+			.add(mittelpunktRaute.x + layoutSpaltenbreite, editContainerHeight)
+			.add(mittelpunktRaute.x, editContainerHeight + layoutSpaltenbreite);
 	}
 
 	abstract protected Point berechneRautenmittelpunkt(); //umbenannt
@@ -166,4 +159,5 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		super.skalieren(prozentNeu, prozentAktuell);
 		klappen.scale(prozentNeu, prozentAktuell);
 	}
+
 }

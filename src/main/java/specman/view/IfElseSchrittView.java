@@ -336,6 +336,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 			.add(new Shape(panelElse))
 			.add(new Shape(panelIf))
 			.add(ifSequenz.getShapeSequence())
-			.add(elseSequenz.getShapeSequence());
+			.add(elseSequenz.getShapeSequence())
+			.add(createDiamond());
 	}
 }
