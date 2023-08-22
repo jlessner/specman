@@ -252,6 +252,8 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 
 	@Override
 	public Shape getShape() {
-		return super.getShape().add(wiederholSequenz.getShapeSequence());
+		return super
+			.getShape()
+			.add(wiederholSequenz.getShapeSequence());
 	}
 }

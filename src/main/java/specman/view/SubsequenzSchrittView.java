@@ -179,6 +179,8 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 
 	@Override
 	public Shape getShape() {
-		return super.getShape().add(subsequenz.getShapeSequence());
+		return super
+			.getShape()
+			.add(subsequenz.getShapeSequence());
 	}
 }

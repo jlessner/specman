@@ -10,6 +10,7 @@ import java.util.List;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class Shape {
+  public static final com.itextpdf.kernel.color.Color DEFAULT_FILL_COLOR = com.itextpdf.kernel.color.Color.WHITE;
   static final int PDF_LINIENBREITE = LINIENBREITE / 2;
 
   protected List<Point> path = new ArrayList<>();
@@ -31,8 +32,11 @@ public class Shape {
     color = component.getBackground();
   }
 
-  public Shape() {
+  public Shape() {}
 
+  public Shape withColor(Color color) {
+    this.color = color;
+    return this;
   }
 
   public Shape add(int x, int y) {
@@ -78,7 +82,7 @@ public class Shape {
 
   public com.itextpdf.kernel.color.Color getPDFColor() {
     if (color == null) {
-      return com.itextpdf.kernel.color.Color.WHITE;
+      return DEFAULT_FILL_COLOR;
     }
     return new DeviceRgb(color.getRed(), color.getGreen(), color.getBlue());
   }

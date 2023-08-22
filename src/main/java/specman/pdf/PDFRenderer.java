@@ -24,6 +24,7 @@ public class PDFRenderer {
       pdfDoc = new PdfDocument(writer);
       pdfCanvas = new PdfCanvas(pdfDoc.addNewPage());
       pdfCanvas.setLineWidth(PDF_LINIENBREITE);
+      pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
       document = new Document(pdfDoc);
     }
     catch(Exception x) {
