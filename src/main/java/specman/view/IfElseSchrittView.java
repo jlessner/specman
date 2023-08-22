@@ -333,8 +333,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		return super
 			.getShape()
 			.add(new Shape(panelBedingung))
-//			.add(new Shape(panelElse))
-//			.add(new Shape(panelIf))
+			.add(new Shape(panelElse))
+			.add(new Shape(panelIf))
 			.add(ifSequenz.getShapeSequence())
 			.add(elseSequenz.getShapeSequence());
 	}

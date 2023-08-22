@@ -542,7 +542,13 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	public Shape getShape() {
 		Shape shape = super
 			.getShape()
+			.add(new Shape(panelCase))
+			.add(new Shape(panelSonst))
+			.add(new Shape(panelFall1))
 			.add(sonstSequenz.getShapeSequence());
+		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen.subList(1, caseSequenzen.size())) {
+			shape.add(new Shape(caseSequenz.ueberschrift));
+		}
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			shape.add(caseSequenz.getShapeSequence());
 		}
