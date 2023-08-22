@@ -568,13 +568,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     @Override
     public void skalieren(int prozentNeu, int prozentAktuell) {
         setFont(font.deriveFont((float) FONTSIZE * prozentNeu / 100));
-        // prozentAktuell = 0 ist ein Indikator für initiales Laden. Da brauchen wir nur den Font
-        // anpassen. Die Bilder stehen bereits entsprechend des im Modell abgespeicherten Zoomfaktors
-        // skaliert im HTML.
-        if (prozentAktuell != 0 && prozentNeu != prozentAktuell) {
-            ImageScaler imageScaler = new ImageScaler(prozentNeu, prozentAktuell);
-            setText(imageScaler.scaleImages(getText()));
-        }
     }
 
     public TextEditArea split(int textPosition) {
