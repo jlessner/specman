@@ -25,7 +25,6 @@ public class PDFRenderer {
       writer = new PdfWriter(pdfFilename);
       pdfDoc = new PdfDocument(writer);
       pdfCanvas = new PdfCanvas(pdfDoc.addNewPage());
-      pdfCanvas.setFillColor(WHITE);
       pdfCanvas.setLineWidth(PDF_LINIENBREITE);
       document = new Document(pdfDoc);
     }
@@ -54,6 +53,7 @@ public class PDFRenderer {
     renderOffset = shape.translate(renderOffset);
     if (shape.start() != null) {
       if (!shape.isLine()) {
+        pdfCanvas.setFillColor(shape.getPDFColor());
         runPath(shape, renderOffset);
         pdfCanvas.fill();
       }
