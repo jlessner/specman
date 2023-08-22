@@ -17,14 +17,14 @@ import specman.model.v001.QuellSchrittModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
+import specman.textfield.EditContainer;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
-import specman.textfield.EditContainer;
 import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableSchrittEntferntMarkiert;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import java.awt.Color;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
@@ -228,7 +228,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	 * Funktionen zu dublizieren
 	 */
 
-	protected List<SchrittSequenzView> unterSequenzen() {
+	public List<SchrittSequenzView> unterSequenzen() {
 		return KEINE_SEQUENZEN;
 	}
 
@@ -477,5 +477,10 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	@Override
 	public void focusLost(FocusEvent e) {}
+
+	@Override
+	public String toString() {
+		return id + " - " + getTextShef().getPlainText();
+	}
 
 }

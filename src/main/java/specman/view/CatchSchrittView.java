@@ -4,27 +4,27 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.textfield.InteractiveStepFragment;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.util.List;
 
 public class CatchSchrittView extends AbstractSchrittView {
 	public static final int TEXTEINRUECKUNG = SubsequenzSchrittView.TEXTEINRUECKUNG;
-	
+
 	final JPanel schrittPanel;
 	final JPanel fussPanel;
 	final FormLayout layout;
@@ -41,19 +41,19 @@ public class CatchSchrittView extends AbstractSchrittView {
 				umgehungLayout() + ", 10dlu:grow",
 				(LINIENBREITE * 2) + "px, " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", pref:grow, 0px");
 		schrittPanel.setLayout(layout);
-		
+
 		schrittPanel.add(editContainer, CC.xy(2, 2));
-		
-		
+
+
 		JPanel doppellinie = new JPanel();
 		doppellinie.setBackground(Specman.schrittHintergrund());
 		doppellinie.setBorder(new MatteBorder(0, 0, LINIENBREITE, 0, Color.black));
 		schrittPanel.add(doppellinie, CC.xyw(1, 1, 2));
-		
+
 		fussPanel = new JPanel();
 		fussPanel.setBackground(Specman.schrittHintergrund());
 		schrittPanel.add(fussPanel, CC.xyw(1, 6, 2));
-		
+
 
 		if (handlingModel != null) {
 			handlingSequenz = new HandlingSchrittSequenz(editor, this, handlingModel);
@@ -94,7 +94,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText) {
 		this(editor, parent, initialerText, null, null, null);
 	}
-	
+
 	@Override
 	public void nachinitialisieren() {
 		if (breakAngekoppelt) {
@@ -115,7 +115,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 		this.hatNachfolger = hatNachfolger;
 		handlingSequenz.rahmenanzeigeAnpassen();
 	}
-	
+
 	@Override
 	void schrittnummerSichtbarkeitSetzen(boolean sichtbar) {
 		super.schrittnummerSichtbarkeitSetzen(sichtbar);
@@ -193,9 +193,9 @@ public class CatchSchrittView extends AbstractSchrittView {
 		handlingSequenz.skalieren(prozent, prozentAktuell);
 	}
 
-	
+
 	@Override
-	protected List<SchrittSequenzView> unterSequenzen() {
+	public List<SchrittSequenzView> unterSequenzen() {
 		return sequenzenAuflisten(handlingSequenz);
 	}
 
@@ -220,7 +220,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	 * und Zusatzplatz im Fu�bereich. Sonst halt nicht.
 	 */
 	private class HandlingSchrittSequenz extends SchrittSequenzView {
-		
+
 		public HandlingSchrittSequenz(EditorI editor, AbstractSchrittView parent, SchrittSequenzModel_V001 model) {
 			super(editor, parent, model);
 		}
@@ -261,7 +261,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 			}
 			return false;
 		}
-		
+
 		void rahmenanzeigeAnpassen() {
 			rahmenAnzeigen(!istMinimalHandling());
 		}

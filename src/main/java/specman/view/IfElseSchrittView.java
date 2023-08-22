@@ -3,7 +3,6 @@ package specman.view;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
-
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
@@ -11,17 +10,18 @@ import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
+import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.IfElseSchrittModel_V001;
-import specman.model.v001.AbstractSchrittModel_V001;
 import specman.pdf.Shape;
+import specman.textfield.EditContainer;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
-import specman.textfield.EditContainer;
 import specman.undo.AbstractUndoableInteraction;
 
 import javax.swing.JPanel;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -102,7 +102,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panelElse.add(elseSequenz.ueberschrift, CC.xywh(2, 1, 1, 1));
 		panel.add(panelElse, CC.xy(3, 3));
 	}
-	
+
 	protected void ifBedingungAnlegen(ZweigSchrittSequenzView ifSequenz) {
 		ifSequenz.ueberschrift.addEditAreasFocusListener(this);
 		/**@author PVN */
@@ -122,7 +122,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		Specman.instance().diagrammAktualisieren(null);
 		return vergroesserung;
 	}
-	
+
 	private float ifBreitenanteil(float ifBreite, float elseBreite) {
 		return ifBreite / (ifBreite + elseBreite);
 	}
@@ -172,9 +172,9 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		elseSequenz.schrittnummerSichtbarkeitSetzen(sichtbar);
 	}
 
-	
+
 	@Override
-	protected List<SchrittSequenzView> unterSequenzen() {
+    public List<SchrittSequenzView> unterSequenzen() {
 		return sequenzenAuflisten(ifSequenz, elseSequenz);
 	}
 
@@ -192,7 +192,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.zusammenklappenFuerReview();
 		elseSequenz.zusammenklappenFuerReview();
 	}
-	
+
 	/** @author PVN */
 	public static int spalteUmrechnen(int prozentNeu) {
 		int breiteSpaltenLayout = 20*prozentNeu/100;
@@ -229,7 +229,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 			ifBreitenanteil(ifSequenz.ueberschrift.getWidth(), elseSequenz.ueberschrift.getWidth()), getQuellschrittID());
 		return model;
 	}
-	
+
 	/**
 	 * Wenn der Text etwas gr��er ist, neigen die Dreieckslinien dazu, die Textbox zu schneiden. Also
 	 * rechnen wir aus, wie hoch der Kopfbereich sein muss, damit das nicht passiert. Und das geht so:
@@ -249,7 +249,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	 * </ol>
 	 */
 	private void berechneHoeheFuerVollstaendigUnberuehrtenText() {
-		
+
 	}
 
 	@Override

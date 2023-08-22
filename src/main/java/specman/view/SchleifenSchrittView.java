@@ -18,8 +18,9 @@ import specman.pdf.Shape;
 import specman.textfield.Indentions;
 import specman.undo.AbstractUndoableInteraction;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import java.awt.Color;
 import java.awt.event.ComponentEvent;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 
 
 	@Override
-	protected List<SchrittSequenzView> unterSequenzen() {
+	public List<SchrittSequenzView> unterSequenzen() {
 		return sequenzenAuflisten(wiederholSequenz);
 	}
 

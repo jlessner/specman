@@ -15,9 +15,8 @@ import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
-import specman.textfield.TextEditArea;
 import specman.textfield.EditContainer;
-import specman.undo.manager.SpecmanUndoManager;
+import specman.textfield.TextEditArea;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
@@ -25,6 +24,7 @@ import specman.undo.UndoableSchrittHinzugefuegt;
 import specman.undo.UndoableToggleStepBorder;
 import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigHinzugefuegt;
+import specman.undo.manager.SpecmanUndoManager;
 import specman.undo.manager.UndoRecording;
 import specman.undo.manager.UndoRecordingMode;
 import specman.view.AbstractSchrittView;
@@ -36,11 +36,41 @@ import specman.view.SchrittSequenzView;
 import specman.view.ZweigSchrittSequenzView;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.JWindow;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.undo.UndoableEdit;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -1114,5 +1144,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return new UndoRecording(this.getUndoManager(), UndoRecordingMode.Composing);
 	}
 
+	public List<AbstractSchrittView> getAllSteps() {
+		return getSteps(getHauptSequenz().getSchritte());
+	}
 
+	private static List<AbstractSchrittView> getSteps(final List<AbstractSchrittView> steps) {
+		List<AbstractSchrittView> allSteps = new ArrayList<>();
+
+		for (AbstractSchrittView step : steps) {
+			allSteps.add(step);
+			for (SchrittSequenzView unterSequenz : step.unterSequenzen()) {
+				List<AbstractSchrittView> schritte = unterSequenz.getSchritte();
+				if (!schritte.isEmpty()) {
+					allSteps.addAll(getSteps(schritte));
+				}
+			}
+		}
+
+		return allSteps;
+	}
 }

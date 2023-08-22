@@ -22,8 +22,9 @@ import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigEntferntMarkiert;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
@@ -266,7 +267,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	}
 
 	@Override
-	protected List<SchrittSequenzView> unterSequenzen() {
+	public List<SchrittSequenzView> unterSequenzen() {
 		return sequenzenAuflisten(caseSequenzen, sonstSequenz);
 	}
 
