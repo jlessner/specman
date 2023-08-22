@@ -1,6 +1,5 @@
 package specman.pdf;
 
-import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -8,7 +7,6 @@ import com.itextpdf.layout.Document;
 
 import java.awt.*;
 
-import static com.itextpdf.kernel.color.Color.WHITE;
 import static specman.pdf.Shape.PDF_LINIENBREITE;
 
 public class PDFRenderer {
