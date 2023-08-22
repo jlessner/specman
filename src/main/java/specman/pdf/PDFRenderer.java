@@ -8,6 +8,9 @@ import com.itextpdf.layout.Document;
 
 import java.awt.*;
 
+import static com.itextpdf.kernel.color.Color.WHITE;
+import static specman.pdf.Shape.PDF_LINIENBREITE;
+
 public class PDFRenderer {
   public static float SWING2PDF_SCALEFACTOR = 0.65f;
   String pdfFilename;
@@ -22,8 +25,8 @@ public class PDFRenderer {
       writer = new PdfWriter(pdfFilename);
       pdfDoc = new PdfDocument(writer);
       pdfCanvas = new PdfCanvas(pdfDoc.addNewPage());
-      pdfCanvas.setFillColor(Color.WHITE);
-      pdfCanvas.setLineWidth(Shape.PDF_LINIENBREITE);
+      pdfCanvas.setFillColor(WHITE);
+      pdfCanvas.setLineWidth(PDF_LINIENBREITE);
       document = new Document(pdfDoc);
     }
     catch(Exception x) {
@@ -54,6 +57,8 @@ public class PDFRenderer {
       pdfCanvas.fill();
       runPath(shape, renderOffset);
       pdfCanvas.stroke();
+      renderOffset = new Point(renderOffset);
+      renderOffset.translate(shape.start().x + PDF_LINIENBREITE, -shape.start().y - PDF_LINIENBREITE);
     }
     for (Shape subshape: shape.getSubshapes()) {
       drawShape(subshape, renderOffset);

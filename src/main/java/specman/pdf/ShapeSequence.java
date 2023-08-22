@@ -19,8 +19,4 @@ public class ShapeSequence extends Shape {
     super.add(subshape);
     return this;
   }
-
-  public void translateOffset(Point parentStart) {
-    offset.translate(parentStart.x + PDF_LINIENBREITE, parentStart.y + PDF_LINIENBREITE);
-  }
 }

@@ -15,6 +15,10 @@ public class Shape {
   private List<Shape> subshapes = new ArrayList<>();
   private AbstractSchrittView source;
 
+  public Shape(Component component) {
+    this(component, null);
+  }
+
   public Shape(Component component, AbstractSchrittView source) {
     this.source = source;
     Rectangle r = component.getBounds();
@@ -45,14 +49,6 @@ public class Shape {
 
   public Shape add(Shape subshape) {
     subshapes.add(subshape);
-    return this;
-  }
-
-  public Shape add(ShapeSequence subsequence) {
-    if (start() != null) {
-      subsequence.translateOffset(start());
-    }
-    subshapes.add(subsequence);
     return this;
   }
 
