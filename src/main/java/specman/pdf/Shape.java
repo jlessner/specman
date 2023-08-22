@@ -11,7 +11,7 @@ import static specman.view.AbstractSchrittView.LINIENBREITE;
 public class Shape {
   static final int PDF_LINIENBREITE = LINIENBREITE / 2;
 
-  private List<Point> path = new ArrayList<>();
+  protected List<Point> path = new ArrayList<>();
   private List<Shape> subshapes = new ArrayList<>();
   private AbstractSchrittView source;
 
@@ -52,9 +52,16 @@ public class Shape {
     return this;
   }
 
+  public Shape add(List<? extends Shape> subshapes) {
+    this.subshapes.addAll(subshapes);
+    return this;
+  }
+
   public List<Shape> getSubshapes() { return subshapes; }
 
   public Point translate(Point renderOffset) {
     return renderOffset;
   }
+
+  public boolean isLine() { return path.size() == 2; }
 }

@@ -11,10 +11,13 @@ import specman.Specman;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
+import specman.pdf.LineShape;
+import specman.pdf.Shape;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
+import java.util.Arrays;
 
 public class BreakSchrittView extends AbstractSchrittView {
 	
@@ -47,17 +50,24 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	private void dreieckZeichnen(Graphics2D g) {
-		int hoehe = panel.getHeight();
-		int dreieckSpitzeY = hoehe / 2;
-		int dreieckBasisX = editContainer.getX() - LINIENBREITE;
 		g.setStroke(new BasicStroke(1));
 		g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, 
                 RenderingHints.VALUE_ANTIALIAS_ON);
-		g.drawLine(dreieckBasisX,  0,  0,  dreieckSpitzeY);
-		g.drawLine(0,  dreieckSpitzeY, dreieckBasisX, hoehe);
+		for (LineShape line: buildTriangle()) {
+			g.drawLine(line.start().x, line.start().y, line.end().x, line.end().y);
+		}
 	}
-	
+
+	private java.util.List<LineShape> buildTriangle() {
+		int hoehe = panel.getHeight();
+		int dreieckSpitzeY = hoehe / 2;
+		int dreieckBasisX = editContainer.getX() - LINIENBREITE;
+		return Arrays.asList(
+			new LineShape(dreieckBasisX,  0,  0,  dreieckSpitzeY),
+			new LineShape(0,  dreieckSpitzeY, dreieckBasisX, hoehe));
+	}
+
 	@Override
 	public void setBackground(Color bg) {
 		super.setBackground(bg);
@@ -123,5 +133,8 @@ public class BreakSchrittView extends AbstractSchrittView {
 		return panel;
 	}
 
-
+	@Override
+	public Shape getShape() {
+		return super.getShape().add(buildTriangle());
+	}
 }

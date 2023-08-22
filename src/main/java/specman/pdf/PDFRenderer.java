@@ -53,8 +53,10 @@ public class PDFRenderer {
   private void drawShape(Shape shape, Point renderOffset) {
     renderOffset = shape.translate(renderOffset);
     if (shape.start() != null) {
-      runPath(shape, renderOffset);
-      pdfCanvas.fill();
+      if (!shape.isLine()) {
+        runPath(shape, renderOffset);
+        pdfCanvas.fill();
+      }
       runPath(shape, renderOffset);
       pdfCanvas.stroke();
       renderOffset = new Point(renderOffset);
