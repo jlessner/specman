@@ -246,9 +246,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	@Override public void focusGained(FocusEvent e) {
+		setLastFocusedTextArea(e);
 	}
 
 	@Override public void focusLost(FocusEvent e) {
+		setLastFocusedTextArea(e);
+	}
+
+	private void setLastFocusedTextArea(FocusEvent e) {
 		if (e.getSource() instanceof TextEditArea) {
 			lastFocusedTextArea = (TextEditArea) e.getSource();
 		}
