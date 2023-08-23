@@ -531,44 +531,46 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		});
 
-		birdsview.addActionListener(new ActionListener() {
-			@Override public void actionPerformed(ActionEvent e) {
-				final int breite = hauptSequenzContainer.getBounds().width;
-				final int hoehe = hauptSequenzContainer.getBounds().height;
-				final Image i = createImage(breite, hoehe);
-				Graphics g = i.getGraphics();
-				hauptSequenzContainer.paint(g);
-				final JPanel p = new JPanel();
-				p.setLayout(new BorderLayout());
-				final Image scaledImage = i.getScaledInstance(breite / 5, hoehe / 5,  java.awt.Image.SCALE_SMOOTH);
-				ImageIcon icon = new ImageIcon(scaledImage);
-				final JLabel l = new JLabel(icon);
-				p.add(l, BorderLayout.CENTER);
-				final JDialog d = new JDialog();
-				d.addComponentListener(new ComponentAdapter() {
-					@Override
-					public void componentResized(ComponentEvent e) {
-						int skalierteBreite = 0;
-						int skalierteHoehe = 0;
-						float breitenFaktor = (float)p.getSize().width / breite;
-						float hoehenFaktor = (float)p.getSize().height / hoehe;
-						if (breitenFaktor > hoehenFaktor) {
-							skalierteHoehe = p.getSize().height;
-							skalierteBreite = (int)(breite * hoehenFaktor);
-						}
-						else {
-							skalierteBreite = p.getSize().width;
-							skalierteHoehe = (int)(hoehe * breitenFaktor);
-						}
-						Image neuSkaliert = i.getScaledInstance(skalierteBreite, skalierteHoehe,  java.awt.Image.SCALE_SMOOTH);
-						l.setIcon(new ImageIcon(neuSkaliert));
-					}
-				});
-				d.getContentPane().add(p);
-				d.pack();
-				d.setVisible(true);
-			}
-		});
+		birdsview.addActionListener(e -> {
+            if (hauptSequenzContainer == null) {
+                return;
+            }
+            final int breite = hauptSequenzContainer.getBounds().width;
+            final int hoehe = hauptSequenzContainer.getBounds().height;
+            final Image i = createImage(breite, hoehe);
+            Graphics g = i.getGraphics();
+            hauptSequenzContainer.paint(g);
+            final JPanel p = new JPanel();
+            p.setLayout(new BorderLayout());
+            final Image scaledImage = i.getScaledInstance(breite / 5, hoehe / 5,  Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(scaledImage);
+            final JLabel l = new JLabel(icon);
+            p.add(l, BorderLayout.CENTER);
+            final JDialog d = new JDialog();
+            d.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    int skalierteBreite = 0;
+                    int skalierteHoehe = 0;
+                    float breitenFaktor = (float)p.getSize().width / breite;
+                    float hoehenFaktor = (float)p.getSize().height / hoehe;
+                    if (breitenFaktor > hoehenFaktor) {
+                        skalierteHoehe = p.getSize().height;
+                        skalierteBreite = (int)(breite * hoehenFaktor);
+                    } else {
+                        skalierteBreite = p.getSize().width;
+                        skalierteHoehe = (int)(hoehe * breitenFaktor);
+                    }
+                    if (skalierteBreite > 0 && skalierteHoehe > 0) {
+                        Image neuSkaliert = i.getScaledInstance(skalierteBreite, skalierteHoehe,  Image.SCALE_SMOOTH);
+                        l.setIcon(new ImageIcon(neuSkaliert));
+                    }
+                }
+            });
+            d.getContentPane().add(p);
+            d.pack();
+            d.setVisible(true);
+        });
 
 		aenderungenUebernehmen.addActionListener(new ActionListener() {
 			@Override
