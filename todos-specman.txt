@@ -10,7 +10,6 @@ Abschluss für Go-Live
 - Ordentliche Fehlermeldungsanzeige
 - Permanente Aktualisierung der Birdsview oder vielleicht erst mal Birdsview rausnehmen
 - Vielleicht eine kleiner Top-Inset für Schritt-Texte, um die Überschneidung mit den Labels zu verringern?
-- Umschalten auf Quelle aus Menü entfernen
 - Doku aktualisieren
 - Beschriftungen internationalisieren
 

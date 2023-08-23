@@ -205,11 +205,6 @@ public class HTMLEditorPane extends JPanel
 
     // create edit menu
     ActionList lst = new ActionList("edits");
-    Action act = new ChangeTabAction(0);
-    lst.add(act);
-    act = new ChangeTabAction(1);
-    lst.add(act);
-    lst.add(null);//separator
     lst.addAll(editActions);
     lst.add(null);
     lst.add(new FindReplaceAction(false));
@@ -229,7 +224,7 @@ public class HTMLEditorPane extends JPanel
     actionList.addAll(lst);
     formatMenu.add(createMenu(lst, i18n.str("style")));
 
-    act = new HTMLFontColorAction();
+    Action act = new HTMLFontColorAction();
     actionList.add(act);
     formatMenu.add(act);
 
