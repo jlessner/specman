@@ -1,6 +1,9 @@
 Abschluss für Go-Live
-- Schrittnummer-Referenzen im Text
-- Alten Menüpunkt zum Einfügen von Bildern in Texte durch neuen ersetzen
+- Schrittnummer-Referenzen im Text, Restarbeiten
+  - Aktualisierung bei Verschieben des referenzierten Schritts
+  - Verhalten bei Löschen des referenzierten Schritts
+  - Nice to have: Verhalten bei gelöscht-markieren des referenzierten Schritts
+  - Aufbau der Referenzen im Hintergrund nach Lesen von Datei (vgl. Ziel/Quellschritte bei verschoben-markiert
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
