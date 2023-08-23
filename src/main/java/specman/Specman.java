@@ -404,27 +404,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 
-		imageEinfuegen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (lastFocusedTextArea != null) {
-					JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setCurrentDirectory(new File("."));
-					fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-					fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "gif", "bmp"));
-					fileChooser.setAcceptAllFileFilterUsed(true);
-					int result = fileChooser.showOpenDialog(arbeitsbereich);
-					if (result == JFileChooser.APPROVE_OPTION) {
-						File selectedFile = fileChooser.getSelectedFile();
-						if (selectedFile != null && selectedFile.exists()) {
-							lastFocusedTextArea.addImage(selectedFile, initialArt());
-							diagrammAktualisieren(null);
-						}
-					}
-				}
-			}
-		});
-
 		exportPDF.addActionListener((new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -611,6 +590,24 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 
+	}
+
+	public void addImageViaFileChooser() {
+		if (lastFocusedTextArea != null) {
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setCurrentDirectory(new File("."));
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "gif", "bmp"));
+			fileChooser.setAcceptAllFileFilterUsed(true);
+			int result = fileChooser.showOpenDialog(arbeitsbereich);
+			if (result == JFileChooser.APPROVE_OPTION) {
+				File selectedFile = fileChooser.getSelectedFile();
+				if (selectedFile != null && selectedFile.exists()) {
+					lastFocusedTextArea.addImage(selectedFile, initialArt());
+					diagrammAktualisieren(null);
+				}
+			}
+		}
 	}
 
 	private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) throws EditException {
@@ -814,7 +811,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		breakSchrittAnhaengen = new JButton();
 		catchSchrittAnhaengen = new JButton();
 		caseAnhaengen = new JButton();
-		imageEinfuegen = new JButton();
 		exportPDF = new JButton();
 		einfaerben = new JButton();
 		loeschen = new JButton();
@@ -852,8 +848,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolbarButtonHinzufuegen(breakSchrittAnhaengen, "break-schritt", "Break anh\u00E4ngen", buttonBar);
 		toolbarButtonHinzufuegen(catchSchrittAnhaengen, "catch-schritt", "Catchblock anh\u00E4ngen", buttonBar);
 		toolbarButtonHinzufuegen(caseAnhaengen, "zweig", "Case anh\u00E4ngen", buttonBar);
-		buttonBar.addSeparator();
-		toolbarButtonHinzufuegen(imageEinfuegen, "image", "Image hinzufügen", buttonBar);
 		buttonBar.addSeparator();
 		toolbarButtonHinzufuegen(exportPDF, "pdf", "PDF exportieren", buttonBar);
 		//toolBar.addSeparator();   //ToDo
@@ -969,7 +963,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JButton breakSchrittAnhaengen;
 	private JButton catchSchrittAnhaengen;
 	private JButton caseAnhaengen;
-	private JButton imageEinfuegen;
 	private JButton exportPDF;
 	private JButton einfaerben;
 	private JButton loeschen;
@@ -1106,10 +1099,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	public JButton getCaseAnhaengen() {
 		return caseAnhaengen;
-	}
-
-	public JButton getImageEinfuegen() {
-		return imageEinfuegen;
 	}
 
 	public void darfSchrittGeloeschtWerden(AbstractSchrittView schritt) throws EditException {
