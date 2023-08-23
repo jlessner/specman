@@ -21,6 +21,7 @@ Bugs fixen
 - Fokus setzen beim Entfernen des vorletzten Schritts
 - Löschen des vorletzten Zweigs erlauben
 - Abfangen des Löschens des letzten Zweigs im Case
+- NumberStepBackground in RoundedBorderDecorator schwarz färben wenn Schritt gelöscht ist
 
 
 Auf längere Sicht - nicht notwendig für ersten Go-Live:
