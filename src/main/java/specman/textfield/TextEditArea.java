@@ -373,6 +373,10 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     private void markCurrentPositionAsDeleted() {
         StyledDocument doc = (StyledDocument) getDocument();
         int position = getCaretPosition() - 1;
+        if (position < 0) {
+            return;
+        }
+
         Element element = doc.getCharacterElement(position);
 
         if (elementIsChangedButNotMarkedAsDeleted(element)) {
