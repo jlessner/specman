@@ -827,7 +827,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		speichernUnter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK + KeyEvent.SHIFT_DOWN_MASK));
 		laden = new JMenuItem("Laden...");
 		laden.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
-		exportAsPDFMenuItem = new JMenuItem("Als PDF exportieren");
+		exportAsPDFMenuItem = new JMenuItem("Als PDF exportieren...");
 		exportAsPDFMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
 		//======== this ========
 		Container contentPane = getContentPane();
