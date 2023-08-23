@@ -409,16 +409,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 
-		exportPDF.addActionListener((new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Shape all = new Shape();
-				//all.add(new Shape(intro, null));
-				all.add(hauptSequenz.getShapeSequence());
-				//all.add(new Shape(outro, null));
-				new PDFRenderer("sample.pdf").render(all);
-			}
-		}));
+		exportPDF.addActionListener((e -> {
+            exportAsPDF();
+        }));
 
 		einfaerben.addActionListener(new ActionListener() {
 			@Override
@@ -510,11 +503,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		});
 
-		export.addActionListener(new ActionListener() {
-			@Override public void actionPerformed(ActionEvent e) {
-				diagrammExportieren();
-			}
-		});
+		exportAsPDFMenuItem.addActionListener(e -> exportAsPDF());
 
 		review.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
@@ -838,8 +827,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		speichernUnter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK + KeyEvent.SHIFT_DOWN_MASK));
 		laden = new JMenuItem("Laden...");
 		laden.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
-		export = new JMenuItem("Exportieren");
-		export.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
+		exportAsPDFMenuItem = new JMenuItem("Als PDF exportieren");
+		exportAsPDFMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
 		//======== this ========
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout("pref, default:grow", "default, default, fill:10px:grow")); //ToDo Sidebar added "pref"
@@ -953,7 +942,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		dateiMenu.add(recentFiles.menu());
 		dateiMenu.add(speichern);
 		dateiMenu.add(speichernUnter);
-		dateiMenu.add(export);
+		dateiMenu.add(exportAsPDFMenuItem);
 		return dateiMenu;
 	}
 
@@ -983,7 +972,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JMenuItem speichern;
 	private JMenuItem speichernUnter;
 	private JMenuItem laden;
-	private JMenuItem export;
+	private JMenuItem exportAsPDFMenuItem;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 
 	private static Specman instance;
@@ -1011,7 +1000,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return model;
 	}
 
-	public void diagrammExportieren() {
+	public void exportAsGraphviz() {
 		SchrittSequenzModel_V001 model = hauptSequenz.generiereSchittSequenzModel(false);
 		try {
 			new GraphvizExporter("export.gv").export(model);
@@ -1019,6 +1008,29 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		catch(IOException iox) {
 			iox.printStackTrace();
 		}
+	}
+
+	public void exportAsPDF() {
+		final String PDF_EXTENSION = ".pdf";
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File("."));
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(PDF_EXTENSION, "pdf"));
+        fileChooser.setAcceptAllFileFilterUsed(true);
+        int result = fileChooser.showSaveDialog(arbeitsbereich);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            if (selectedFile != null) {
+
+                Shape all = new Shape();
+                //all.add(new Shape(intro, null));
+                all.add(hauptSequenz.getShapeSequence());
+                //all.add(new Shape(outro, null));
+                new PDFRenderer(selectedFile.getAbsolutePath() + PDF_EXTENSION).render(all);
+
+            }
+        }
 	}
 
 	public BreakSchrittView findeBreakSchritt(CatchSchrittView fuerCatchSchritt) {
