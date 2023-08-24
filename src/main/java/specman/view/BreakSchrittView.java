@@ -135,6 +135,9 @@ public class BreakSchrittView extends AbstractSchrittView {
 
 	@Override
 	public Shape getShape() {
-		return super.getShape().add(buildTriangle());
+		return new Shape(getComponent(), this)
+			.add(editContainer.getShape())
+			.add(buildTriangle());
 	}
+
 }

@@ -35,6 +35,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import static specman.Specman.initialtext;
+import static specman.pdf.Shape.GAP_COLOR;
 import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 
@@ -540,17 +541,18 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	@Override
 	public Shape getShape() {
-		Shape shape = super
-			.getShape()
-			.add(new Shape(panelCase))
-			.add(new Shape(panelSonst))
-			.add(new Shape(panelFall1))
+		Shape shape = new Shape(getComponent())
+			.withBackgroundColor(GAP_COLOR)
+			.add(lueckenFueller)
+			.add(new Shape(panelCase).add(editContainer.getShape()))
+			.add(new Shape(panelSonst).add(sonstSequenz.ueberschrift.getShape()))
+			.add(new Shape(panelFall1).add(caseSequenzen.get(0).ueberschrift.getShape()))
+			.add(caseSequenzen.get(0).getShapeSequence())
 			.add(sonstSequenz.getShapeSequence());
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen.subList(1, caseSequenzen.size())) {
-			shape.add(new Shape(caseSequenz.ueberschrift));
-		}
-		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
-			shape.add(caseSequenz.getShapeSequence());
+			shape
+				.add(caseSequenz.getShapeSequence())
+				.add(caseSequenz.ueberschrift.getShape());
 		}
 		return shape.add(createDiamond());
 	}

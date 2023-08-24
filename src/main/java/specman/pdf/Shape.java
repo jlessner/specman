@@ -12,45 +12,37 @@ import static specman.view.AbstractSchrittView.LINIENBREITE;
 public class Shape {
   public static final com.itextpdf.kernel.color.Color DEFAULT_FILL_COLOR = com.itextpdf.kernel.color.Color.WHITE;
   public static final com.itextpdf.kernel.color.Color DEFAULT_LINE_COLOR = com.itextpdf.kernel.color.Color.BLACK;
+  public static final Color GAP_COLOR = Color.BLACK;
   static final int PDF_LINIENBREITE = LINIENBREITE / 2;
 
   protected List<Point> path = new ArrayList<>();
   protected Color backgroundColor;
-  protected boolean withBorder;
   private List<Shape> subshapes = new ArrayList<>();
   private Object source;
+  private boolean withOutline;
+
+  public Shape() {}
 
   public Shape(Component component) {
-    this(component, true, null);
+    this(component, null);
   }
 
-  public Shape(Component component, AbstractSchrittView source) {
-    this(component, true, source);
-  }
-
-  public Shape(Component component, boolean withBorder, Object source) {
-    this.withBorder = withBorder;
+  public Shape(Component component, Object source) {
     this.source = source;
     Rectangle r = component.getBounds();
-    int pathExtension = withBorder ? PDF_LINIENBREITE : 0;
-    add(r.x - pathExtension, r.y - pathExtension)
-      .add(r.x + r.width + pathExtension, r.y - pathExtension)
-      .add(r.x + r.width + pathExtension, r.y + r.height + pathExtension)
-      .add(r.x - pathExtension, r.y + r.height + pathExtension);
+    add(r.x, r.y)
+      .add(r.x + r.width, r.y)
+      .add(r.x + r.width, r.y + r.height)
+      .add(r.x, r.y + r.height);
     backgroundColor = component.getBackground();
   }
 
-  public Shape() {
-    withBorder(true);
+  public Shape(Point start) {
+    add(start.x, start.y);
   }
 
   public Shape withBackgroundColor(Color color) {
     this.backgroundColor = color;
-    return this;
-  }
-
-  public Shape withBorder(boolean withBorder) {
-    this.withBorder = withBorder;
     return this;
   }
 
@@ -81,10 +73,18 @@ public class Shape {
     return this;
   }
 
+  public Shape add(Component subComponent) {
+    return (subComponent != null)
+      ? add(new Shape(subComponent, subComponent))
+      : this;
+  }
+
   public List<Shape> getSubshapes() { return subshapes; }
 
   public Point translate(Point renderOffset) {
-    return renderOffset;
+    Point translatedOffset = new Point(renderOffset);
+    translatedOffset.translate(start().x, -start().y);
+    return translatedOffset;
   }
 
   public boolean isLine() { return path.size() == 2; }
@@ -108,5 +108,14 @@ public class Shape {
     return new DeviceRgb(awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue());
   }
 
+  public boolean hasForm() { return path.size() > 0; }
 
+  public boolean withOutline() {
+    return withOutline || isLine();
+  }
+
+  public Shape withOutline(boolean withOutline) {
+    this.withOutline = withOutline;
+    return this;
+  }
 }

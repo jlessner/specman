@@ -330,11 +330,12 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 
 	@Override
 	public Shape getShape() {
-		return super
-			.getShape()
-			.add(new Shape(panelBedingung))
-			.add(new Shape(panelElse))
-			.add(new Shape(panelIf))
+		return new Shape(getComponent(), this)
+			.withBackgroundColor(Shape.GAP_COLOR)
+			.add(leeresFeld)
+			.add(new Shape(panelBedingung).add(editContainer.getShape()))
+			.add(new Shape(panelElse).add(elseSequenz.ueberschrift.getShape()))
+			.add(new Shape(panelIf).add(ifSequenz.ueberschrift.getShape()))
 			.add(ifSequenz.getShapeSequence())
 			.add(elseSequenz.getShapeSequence())
 			.add(createDiamond());

@@ -14,7 +14,6 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.pdf.Shape;
-import specman.pdf.ShapeSequence;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
 import specman.textfield.EditContainer;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static specman.Specman.initialtext;
+import static specman.pdf.Shape.GAP_COLOR;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RelativeStepPosition.Before;
 import static specman.view.RoundedBorderDecorationStyle.Co;
@@ -616,12 +616,13 @@ public class SchrittSequenzView {
 		return Co;
 	}
 
-	public ShapeSequence getShapeSequence() {
-		Rectangle r = getContainer().getBounds();
-		ShapeSequence sequence = new ShapeSequence(r.x, r.y);
+	public Shape getShapeSequence() {
+		Shape sequence = new Shape(sequenzBereich).withBackgroundColor(GAP_COLOR);
 		for (AbstractSchrittView schritt : schritte) {
 			sequence.add(schritt.getShape());
 		}
-		return sequence;
+		return new Shape(getContainer(), this)
+			.withBackgroundColor(GAP_COLOR)
+			.add(sequence);
 	}
 }

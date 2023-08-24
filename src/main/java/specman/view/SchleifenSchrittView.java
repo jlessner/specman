@@ -24,6 +24,8 @@ import java.awt.Color;
 import java.awt.event.ComponentEvent;
 import java.util.List;
 
+import static specman.pdf.Shape.GAP_COLOR;
+
 public class SchleifenSchrittView extends AbstractSchrittView implements SpaltenContainerI {
 
 	final JPanel panel;
@@ -254,6 +256,10 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	public Shape getShape() {
 		return super
 			.getShape()
+			.withBackgroundColor(GAP_COLOR)
+			.add(linkerBalken)
+			.add(untererBalken)
+			.add(editContainer.getShape())
 			.add(wiederholSequenz.getShapeSequence());
 	}
 }

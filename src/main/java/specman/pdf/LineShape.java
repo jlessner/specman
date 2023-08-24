@@ -8,7 +8,6 @@ public class LineShape extends Shape {
   }
 
   public LineShape(Point from, Point to) {
-    super();
     add(from).add(to);
   }
 

@@ -140,6 +140,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		int layoutSpaltenbreite = (int)breiteLayoutspalteBerechnen();
 		int editContainerHeight = editContainer.getHeight();
 		return new Shape()
+			.withOutline(true)
 			.add(mittelpunktRaute.x - layoutSpaltenbreite, editContainerHeight)
 			.add(mittelpunktRaute.x, editContainerHeight - layoutSpaltenbreite)
 			.add(mittelpunktRaute.x + layoutSpaltenbreite, editContainerHeight)

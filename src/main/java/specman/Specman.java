@@ -13,6 +13,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
+import specman.pdf.LineShape;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
 import specman.textfield.EditContainer;
@@ -1013,24 +1014,24 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void exportAsPDF() {
 		final String PDF_EXTENSION = ".pdf";
 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File("."));
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(PDF_EXTENSION, "pdf"));
-        fileChooser.setAcceptAllFileFilterUsed(true);
-        int result = fileChooser.showSaveDialog(arbeitsbereich);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
+//        JFileChooser fileChooser = new JFileChooser();
+//        fileChooser.setCurrentDirectory(new File("."));
+//        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+//        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(PDF_EXTENSION, "pdf"));
+//        fileChooser.setAcceptAllFileFilterUsed(true);
+//        int result = fileChooser.showSaveDialog(arbeitsbereich);
+//        if (result == JFileChooser.APPROVE_OPTION) {
+//            File selectedFile = fileChooser.getSelectedFile();
+						File selectedFile = new File("sample.pdf");
             if (selectedFile != null) {
-
-                Shape all = new Shape();
-                //all.add(new Shape(intro, null));
-                all.add(hauptSequenz.getShapeSequence());
-                //all.add(new Shape(outro, null));
+                Shape all = new Shape(arbeitsbereich.getBounds().getLocation())
+									.add(new Shape(intro))
+									.add(hauptSequenz.getShapeSequence())
+									.add(breitenAnpasser.getShape())
+									.add(new Shape(outro));
                 new PDFRenderer(selectedFile.getAbsolutePath() + PDF_EXTENSION).render(all);
-
             }
-        }
+//        }
 	}
 
 	public BreakSchrittView findeBreakSchritt(CatchSchrittView fuerCatchSchritt) {

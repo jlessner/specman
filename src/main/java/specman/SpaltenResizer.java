@@ -1,5 +1,7 @@
 package specman;
 
+import specman.pdf.LineShape;
+import specman.pdf.Shape;
 import specman.undo.UndoableSpaltenbreiteAngepasst;
 
 import javax.swing.ImageIcon;
@@ -78,4 +80,7 @@ public class SpaltenResizer extends JPanel {
 		return leftRightCursor;
 	}
 
+	public Shape getShape() {
+		return new LineShape(getX(), getY(), getX(), getY() + getHeight());
+	}
 }

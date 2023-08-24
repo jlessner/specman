@@ -39,4 +39,8 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	@Override
 	public JComponent getPanel() { return editContainer; }
 
+	public specman.pdf.Shape getShape() {
+		return editContainer.getShape();
+	}
+
 }

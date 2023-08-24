@@ -52,26 +52,19 @@ public class PDFRenderer {
   }
 
   private void drawShape(Shape shape, Point renderOffset) {
-    renderOffset = shape.translate(renderOffset);
-    if (shape.start() != null) {
-      if (!shape.isLine()) {
-        pdfCanvas.setFillColor(shape.getPDFBackgroundColor());
-        runPath(shape, renderOffset);
-        pdfCanvas.fill();
-      }
-      if (!shape.withBorder) {
-        pdfCanvas.setStrokeColor(Color.ORANGE);
-      }
-      else {
-        pdfCanvas.setStrokeColor(DEFAULT_LINE_COLOR);
-      }
-      runPath(shape, renderOffset);
-      pdfCanvas.stroke();
-      renderOffset = new Point(renderOffset);
-      int pathReduction = shape.withBorder ? PDF_LINIENBREITE : 0;
-      //int pathReduction = 0;
-      renderOffset.translate(shape.start().x + pathReduction, -shape.start().y - pathReduction);
+    if (shape.hasForm()) {
+        if (!shape.isLine()) {
+          pdfCanvas.setFillColor(shape.getPDFBackgroundColor());
+          runPath(shape, renderOffset);
+          pdfCanvas.fill();
+        }
+        if (shape.withOutline()) {
+          pdfCanvas.setStrokeColor(DEFAULT_LINE_COLOR);
+          runPath(shape, renderOffset);
+          pdfCanvas.stroke();
+        }
     }
+    renderOffset = shape.translate(renderOffset);
     for (Shape subshape: shape.getSubshapes()) {
       drawShape(subshape, renderOffset);
     }
