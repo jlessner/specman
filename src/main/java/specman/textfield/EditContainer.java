@@ -12,6 +12,7 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
+import specman.pdf.Shape;
 import specman.undo.UndoableImageAdded;
 import specman.undo.UndoableImageRemoved;
 import specman.undo.manager.UndoRecording;
@@ -428,4 +429,9 @@ public class EditContainer extends JPanel {
 		return editAreas.stream().anyMatch(ea -> ea.enthaeltAenderungsmarkierungen());
 	}
 
+	public specman.pdf.Shape getShape() {
+		return null;
+		//return new Shape(this, false, this);
+//			.add(new Shape(schrittNummer, false, null));
+	}
 }

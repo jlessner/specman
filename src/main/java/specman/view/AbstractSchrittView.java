@@ -102,7 +102,9 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	abstract public JComponent getComponent();
 
 	public specman.pdf.Shape getShape() {
-		return new specman.pdf.Shape(getComponent(), this).withColor(editContainer.getBackground());
+		return new specman.pdf.Shape(getComponent(), this)
+			.withBackgroundColor(editContainer.getBackground())
+			.add(editContainer.getShape());
 	}
 
 	protected JComponent decorated(JComponent core) {

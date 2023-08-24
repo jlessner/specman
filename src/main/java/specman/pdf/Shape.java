@@ -11,31 +11,46 @@ import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class Shape {
   public static final com.itextpdf.kernel.color.Color DEFAULT_FILL_COLOR = com.itextpdf.kernel.color.Color.WHITE;
+  public static final com.itextpdf.kernel.color.Color DEFAULT_LINE_COLOR = com.itextpdf.kernel.color.Color.BLACK;
   static final int PDF_LINIENBREITE = LINIENBREITE / 2;
 
   protected List<Point> path = new ArrayList<>();
-  protected Color color;
+  protected Color backgroundColor;
+  protected boolean withBorder;
   private List<Shape> subshapes = new ArrayList<>();
-  private AbstractSchrittView source;
+  private Object source;
 
   public Shape(Component component) {
-    this(component, null);
+    this(component, true, null);
   }
 
   public Shape(Component component, AbstractSchrittView source) {
-    this.source = source;
-    Rectangle r = component.getBounds();
-    add(r.x - PDF_LINIENBREITE, r.y - PDF_LINIENBREITE)
-      .add(r.x + r.width + PDF_LINIENBREITE, r.y - PDF_LINIENBREITE)
-      .add(r.x + r.width + PDF_LINIENBREITE, r.y + r.height + PDF_LINIENBREITE)
-      .add(r.x - PDF_LINIENBREITE, r.y + r.height + PDF_LINIENBREITE);
-    color = component.getBackground();
+    this(component, true, source);
   }
 
-  public Shape() {}
+  public Shape(Component component, boolean withBorder, Object source) {
+    this.withBorder = withBorder;
+    this.source = source;
+    Rectangle r = component.getBounds();
+    int pathExtension = withBorder ? PDF_LINIENBREITE : 0;
+    add(r.x - pathExtension, r.y - pathExtension)
+      .add(r.x + r.width + pathExtension, r.y - pathExtension)
+      .add(r.x + r.width + pathExtension, r.y + r.height + pathExtension)
+      .add(r.x - pathExtension, r.y + r.height + pathExtension);
+    backgroundColor = component.getBackground();
+  }
 
-  public Shape withColor(Color color) {
-    this.color = color;
+  public Shape() {
+    withBorder(true);
+  }
+
+  public Shape withBackgroundColor(Color color) {
+    this.backgroundColor = color;
+    return this;
+  }
+
+  public Shape withBorder(boolean withBorder) {
+    this.withBorder = withBorder;
     return this;
   }
 
@@ -55,7 +70,9 @@ public class Shape {
   public List<Point> allButStart() { return path.subList(1, path.size()); }
 
   public Shape add(Shape subshape) {
-    subshapes.add(subshape);
+    if (subshape != null) {
+      subshapes.add(subshape);
+    }
     return this;
   }
 
@@ -80,10 +97,16 @@ public class Shape {
     return path.stream().mapToInt(point -> point.y).toArray();
   }
 
-  public com.itextpdf.kernel.color.Color getPDFColor() {
-    if (color == null) {
-      return DEFAULT_FILL_COLOR;
-    }
-    return new DeviceRgb(color.getRed(), color.getGreen(), color.getBlue());
+  public com.itextpdf.kernel.color.Color getPDFBackgroundColor() {
+    return toPDFColor(backgroundColor, DEFAULT_FILL_COLOR);
   }
+
+  private static com.itextpdf.kernel.color.Color toPDFColor(Color awtColor, com.itextpdf.kernel.color.Color fallback) {
+    if (awtColor == null) {
+      return fallback;
+    }
+    return new DeviceRgb(awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue());
+  }
+
+
 }

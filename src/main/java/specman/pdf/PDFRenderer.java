@@ -1,5 +1,6 @@
 package specman.pdf;
 
+import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -7,6 +8,7 @@ import com.itextpdf.layout.Document;
 
 import java.awt.*;
 
+import static specman.pdf.Shape.DEFAULT_LINE_COLOR;
 import static specman.pdf.Shape.PDF_LINIENBREITE;
 
 public class PDFRenderer {
@@ -25,6 +27,7 @@ public class PDFRenderer {
       pdfCanvas = new PdfCanvas(pdfDoc.addNewPage());
       pdfCanvas.setLineWidth(PDF_LINIENBREITE);
       pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
+      pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
       document = new Document(pdfDoc);
     }
     catch(Exception x) {
@@ -52,14 +55,22 @@ public class PDFRenderer {
     renderOffset = shape.translate(renderOffset);
     if (shape.start() != null) {
       if (!shape.isLine()) {
-        pdfCanvas.setFillColor(shape.getPDFColor());
+        pdfCanvas.setFillColor(shape.getPDFBackgroundColor());
         runPath(shape, renderOffset);
         pdfCanvas.fill();
+      }
+      if (!shape.withBorder) {
+        pdfCanvas.setStrokeColor(Color.ORANGE);
+      }
+      else {
+        pdfCanvas.setStrokeColor(DEFAULT_LINE_COLOR);
       }
       runPath(shape, renderOffset);
       pdfCanvas.stroke();
       renderOffset = new Point(renderOffset);
-      renderOffset.translate(shape.start().x + PDF_LINIENBREITE, -shape.start().y - PDF_LINIENBREITE);
+      int pathReduction = shape.withBorder ? PDF_LINIENBREITE : 0;
+      //int pathReduction = 0;
+      renderOffset.translate(shape.start().x + pathReduction, -shape.start().y - pathReduction);
     }
     for (Shape subshape: shape.getSubshapes()) {
       drawShape(subshape, renderOffset);
