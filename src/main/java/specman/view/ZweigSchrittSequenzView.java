@@ -7,8 +7,6 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
-import specman.pdf.Shape;
-import specman.pdf.ShapeSequence;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
 import specman.textfield.EditContainer;
