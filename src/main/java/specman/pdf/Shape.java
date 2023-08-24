@@ -20,6 +20,7 @@ public class Shape {
   private List<Shape> subshapes = new ArrayList<>();
   private Object source;
   private boolean withOutline;
+  private ShapeText text;
 
   public Shape() {}
 
@@ -117,5 +118,14 @@ public class Shape {
   public Shape withOutline(boolean withOutline) {
     this.withOutline = withOutline;
     return this;
+  }
+
+  public Shape withText(ShapeText text) {
+    this.text = text;
+    return this;
+  }
+
+  public ShapeText getText() {
+    return text;
   }
 }

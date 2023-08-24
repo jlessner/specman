@@ -432,7 +432,7 @@ public class EditContainer extends JPanel {
 	public specman.pdf.Shape getShape() {
 		Shape shape = new Shape(this);
 		if (schrittNummer != null && schrittNummerSichtbar) {
-			shape.add(schrittNummer);
+			shape.add(schrittNummer.getShape());
 		}
 		return shape;
 	}

@@ -3,6 +3,8 @@ package specman.textfield;
 import specman.SchrittID;
 import specman.Specman;
 import specman.draganddrop.DragMouseAdapter;
+import specman.pdf.Shape;
+import specman.pdf.ShapeText;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -94,4 +96,7 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
     setText(HTML_INTRO + BODY_INTRO + intro + schrittNummerText + outro + BODY_OUTRO + HTML_OUTRO);
   }
 
+  public Shape getShape() {
+    return new Shape(this).withText(new ShapeText(getText(), getFont().getSize(), getInsets().left));
+  }
 }

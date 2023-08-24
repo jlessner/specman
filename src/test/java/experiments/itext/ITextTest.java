@@ -139,6 +139,31 @@ public class ITextTest {
   }
 
   @Test
+  void testShowText() throws Exception {
+    String dest = "sample.pdf";
+    PdfWriter writer = new PdfWriter(dest);
+    PdfDocument pdf = new PdfDocument(writer);
+    Document document = new Document(pdf);
+
+    PdfFont labelFont = PdfFontFactory.createFont(FontConstants.HELVETICA);
+
+    PdfPage page =  pdf.addNewPage();
+    PdfCanvas pdfCanvas = new PdfCanvas(page);
+    pdfCanvas.setFillColor(Color.BLUE);
+
+    pdfCanvas.beginText().setFontAndSize(labelFont, 7)
+      .moveText(20, 800)
+      .showText("Hello World!")
+      .endText();
+
+    document.close();
+    pdf.close();
+
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
+  }
+
+  @Test
   void testSpecmanLookAlike() throws Exception {
     PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
     Document document = new Document(pdf);
