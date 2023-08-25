@@ -16,7 +16,15 @@ import static specman.pdf.Shape.DEFAULT_LINE_COLOR;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class PDFRenderer {
-  public static float SWING2PDF_SCALEFACTOR_100PERCENT = 0.7f;
+  // This factor turned out to be the one, which causes the PDF-rendered
+  // diagramm to get nearly the same size in Acrobat Reader as it appears
+  // in the UI on the same monitor. For size comparison, make sure to
+  // set the Acrobat Reader's zoom factor in a way, that the pages are actually
+  // displayed with the size of an A4 sheet. Hold a sheet on the monitor for
+  // zoom factor adaption. On my monitor the Acrobat Reader requires a zoom
+  // factor of 85% rather than 100% to display the pages correctly.
+  public static float SWING2PDF_SCALEFACTOR_100PERCENT = 0.77f;
+
   public static PageSize PAGESIZE = PageSize.A4;
   public static final int LEFT_RIGHT_PAGE_MARGIN = 10;
   String pdfFilename;
