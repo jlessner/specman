@@ -8,15 +8,17 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
+import specman.view.AbstractSchrittView;
 
 import java.awt.*;
 
 import static specman.pdf.Shape.DEFAULT_LINE_COLOR;
-import static specman.pdf.Shape.PDF_LINIENBREITE;
+import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class PDFRenderer {
-  public static float SWING2PDF_SCALEFACTOR = 0.7f;
+  public static float SWING2PDF_SCALEFACTOR_100PERCENT = 0.7f;
   public static PageSize PAGESIZE = PageSize.A4;
+  public static final int LEFT_RIGHT_PAGE_MARGIN = 10;
   String pdfFilename;
   PdfWriter writer;
   PdfDocument pdfDoc;
@@ -24,6 +26,7 @@ public class PDFRenderer {
   PdfCanvas pdfCanvas;
   PdfFont labelFont;
   PdfFont textFont;
+  float swing2pdfScaleFactor;
 
   public PDFRenderer(String pdfFilename) {
     try {
@@ -31,7 +34,6 @@ public class PDFRenderer {
       writer = new PdfWriter(pdfFilename);
       pdfDoc = new PdfDocument(writer);
       pdfCanvas = new PdfCanvas(pdfDoc.addNewPage(PAGESIZE));
-      pdfCanvas.setLineWidth(PDF_LINIENBREITE);
       pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
       pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
       document = new Document(pdfDoc);
@@ -44,7 +46,17 @@ public class PDFRenderer {
   }
 
   public void render(Shape shape) {
-    Point topLeftPDFCorner = new Point(10, (int)(PAGESIZE.getHeight() / SWING2PDF_SCALEFACTOR));
+    int shapeWidth = shape.getWidth();
+    float availableWidth100Percent = PAGESIZE.getWidth() / SWING2PDF_SCALEFACTOR_100PERCENT;
+    float requiredWidth = shapeWidth + 2 * LEFT_RIGHT_PAGE_MARGIN;
+    if (requiredWidth > availableWidth100Percent) {
+      swing2pdfScaleFactor = availableWidth100Percent / requiredWidth * SWING2PDF_SCALEFACTOR_100PERCENT;
+    }
+    else {
+      swing2pdfScaleFactor = SWING2PDF_SCALEFACTOR_100PERCENT;
+    }
+    pdfCanvas.setLineWidth(((float)LINIENBREITE) * swing2pdfScaleFactor);
+    Point topLeftPDFCorner = new Point(0, (int)(PAGESIZE.getHeight() / swing2pdfScaleFactor));
     render(shape, topLeftPDFCorner);
   }
 
@@ -88,11 +100,11 @@ public class PDFRenderer {
   private void writeShapeText(Shape shape, Point renderOffset) {
     ShapeText text = shape.getText();
     if (text != null) {
-      float scaledFontSize = text.getFontsize() * SWING2PDF_SCALEFACTOR;
+      float scaledFontSize = text.getFontsize() * swing2pdfScaleFactor;
       pdfCanvas.setFillColor(text.getPDFColor());
       PdfFont font = text.getFont().getFamily().contains("Sans") ? labelFont : textFont;
       pdfCanvas.beginText().setFontAndSize(font, scaledFontSize)
-        .moveText((renderOffset.x + text.getInsets().left -1) * SWING2PDF_SCALEFACTOR, (renderOffset.y - text.getInsets().top +1) * SWING2PDF_SCALEFACTOR - scaledFontSize)
+        .moveText((renderOffset.x + text.getInsets().left -1) * swing2pdfScaleFactor, (renderOffset.y - text.getInsets().top +1) * swing2pdfScaleFactor - scaledFontSize)
         .showText(text.getContent())
         .endText();
     }
@@ -105,14 +117,14 @@ public class PDFRenderer {
   }
 
   private PdfCanvas moveTo(Point p, Point renderOffset) {
-    float x = (p.x + renderOffset.x)*SWING2PDF_SCALEFACTOR;
-    float y = (renderOffset.y - p.y)*SWING2PDF_SCALEFACTOR;
+    float x = (p.x + renderOffset.x)*swing2pdfScaleFactor;
+    float y = (renderOffset.y - p.y)*swing2pdfScaleFactor;
     return pdfCanvas.moveTo(x, y);
   }
 
   private PdfCanvas lineTo(Point p, Point renderOffset) {
-    float x = (p.x + renderOffset.x)*SWING2PDF_SCALEFACTOR;
-    float y = (renderOffset.y - p.y)*SWING2PDF_SCALEFACTOR;
+    float x = (p.x + renderOffset.x)*swing2pdfScaleFactor;
+    float y = (renderOffset.y - p.y)*swing2pdfScaleFactor;
     return pdfCanvas.lineTo(x, y);
   }
 }

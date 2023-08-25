@@ -7,13 +7,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static specman.view.AbstractSchrittView.LINIENBREITE;
-
 public class Shape {
   public static final com.itextpdf.kernel.color.Color DEFAULT_FILL_COLOR = com.itextpdf.kernel.color.Color.WHITE;
   public static final com.itextpdf.kernel.color.Color DEFAULT_LINE_COLOR = com.itextpdf.kernel.color.Color.BLACK;
   public static final Color GAP_COLOR = Color.BLACK;
-  static final int PDF_LINIENBREITE = LINIENBREITE / 2;
 
   protected List<Point> path = new ArrayList<>();
   protected Color backgroundColor;
@@ -109,7 +106,7 @@ public class Shape {
     return new DeviceRgb(awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue());
   }
 
-  public boolean hasForm() { return path.size() > 0; }
+  public boolean hasForm() { return path.size() > 1; }
 
   public boolean withOutline() {
     return withOutline || isLine();
@@ -127,5 +124,13 @@ public class Shape {
 
   public ShapeText getText() {
     return text;
+  }
+
+  /** This is very primitive yet - should be improved! */
+  public int getWidth() {
+    if (hasForm()) {
+      return path.stream().mapToInt(p -> p.x).max().orElse(0);
+    }
+    return subshapes.stream().mapToInt(s -> s.getWidth()).max().orElse(0);
   }
 }
