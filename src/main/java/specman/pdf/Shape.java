@@ -102,7 +102,7 @@ public class Shape {
     return toPDFColor(backgroundColor, DEFAULT_FILL_COLOR);
   }
 
-  private static com.itextpdf.kernel.color.Color toPDFColor(Color awtColor, com.itextpdf.kernel.color.Color fallback) {
+  static com.itextpdf.kernel.color.Color toPDFColor(Color awtColor, com.itextpdf.kernel.color.Color fallback) {
     if (awtColor == null) {
       return fallback;
     }

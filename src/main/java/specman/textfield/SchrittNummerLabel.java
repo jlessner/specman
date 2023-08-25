@@ -97,6 +97,6 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
   }
 
   public Shape getShape() {
-    return new Shape(this).withText(new ShapeText(getText(), getFont().getSize(), getInsets().left));
+    return new Shape(this).withText(new ShapeText(getText(), getInsets(), getForeground(), getFont()));
   }
 }

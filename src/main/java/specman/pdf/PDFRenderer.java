@@ -1,7 +1,6 @@
 package specman.pdf;
 
 import com.itextpdf.io.font.FontConstants;
-import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -15,7 +14,6 @@ import static specman.pdf.Shape.DEFAULT_LINE_COLOR;
 import static specman.pdf.Shape.PDF_LINIENBREITE;
 
 public class PDFRenderer {
-  //public static float SWING2PDF_SCALEFACTOR = 0.65f;
   public static float SWING2PDF_SCALEFACTOR = 0.7f;
   String pdfFilename;
   PdfWriter writer;
@@ -23,7 +21,7 @@ public class PDFRenderer {
   Document document;
   PdfCanvas pdfCanvas;
   PdfFont labelFont;
-
+  PdfFont textFont;
 
   public PDFRenderer(String pdfFilename) {
     try {
@@ -35,7 +33,8 @@ public class PDFRenderer {
       pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
       pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
       document = new Document(pdfDoc);
-      labelFont = PdfFontFactory.createFont(FontConstants.HELVETICA);
+      labelFont = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+      textFont = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
     }
     catch(Exception x) {
       x.printStackTrace();
@@ -63,6 +62,12 @@ public class PDFRenderer {
         if (!shape.isLine()) {
           pdfCanvas.setFillColor(shape.getPDFBackgroundColor());
           runPath(shape, renderOffset);
+          // This looks wrong and is probably caused by a lack of knowledge of the iText API:
+          // If we run the shape's path *twice*, the gap between the shapes shows up with a
+          // reasonable width. If we run the path only *once*, the gaps appear thinner than
+          // expected when displaying the PDF in Acrobat Reader in 100% resolution. The
+          // solution with the double-run was an accidential finding.
+          runPath(shape, renderOffset);
           pdfCanvas.fill();
         }
         if (shape.withOutline()) {
@@ -81,10 +86,11 @@ public class PDFRenderer {
   private void writeShapeText(Shape shape, Point renderOffset) {
     ShapeText text = shape.getText();
     if (text != null) {
-      float scaledFontSize = text.getFontsize() * (SWING2PDF_SCALEFACTOR + 0.05f);
-      pdfCanvas.setFillColor(Color.WHITE);
-      pdfCanvas.beginText().setFontAndSize(labelFont, scaledFontSize)
-        .moveText((renderOffset.x + text.getLeftMargin() -1) * SWING2PDF_SCALEFACTOR, (renderOffset.y +1) * SWING2PDF_SCALEFACTOR - scaledFontSize)
+      float scaledFontSize = text.getFontsize() * SWING2PDF_SCALEFACTOR;
+      pdfCanvas.setFillColor(text.getPDFColor());
+      PdfFont font = text.getFont().getFamily().contains("Sans") ? labelFont : textFont;
+      pdfCanvas.beginText().setFontAndSize(font, scaledFontSize)
+        .moveText((renderOffset.x + text.getInsets().left -1) * SWING2PDF_SCALEFACTOR, (renderOffset.y - text.getInsets().top +1) * SWING2PDF_SCALEFACTOR - scaledFontSize)
         .showText(text.getContent())
         .endText();
     }

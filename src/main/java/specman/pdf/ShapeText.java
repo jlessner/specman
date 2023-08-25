@@ -1,14 +1,20 @@
 package specman.pdf;
 
+import com.itextpdf.kernel.font.PdfFont;
+
+import java.awt.*;
+
 public class ShapeText {
   private String content;
-  private int fontsize;
-  private int leftMargin;
+  private Insets insets;
+  private Color color;
+  private Font font;
 
-  public ShapeText(String content, int fontsize, int leftMargin) {
+  public ShapeText(String content, Insets insets, Color color, Font font) {
     this.content = content;
-    this.fontsize = fontsize;
-    this.leftMargin = leftMargin;
+    this.insets = insets;
+    this.color = color;
+    this.font = font;
   }
 
   public String getContent() {
@@ -16,10 +22,18 @@ public class ShapeText {
   }
 
   public int getFontsize() {
-    return fontsize;
+    return font.getSize();
   }
 
-  public int getLeftMargin() {
-    return leftMargin;
+  public Insets getInsets() {
+    return insets;
+  }
+
+  public com.itextpdf.kernel.color.Color getPDFColor() {
+    return Shape.toPDFColor(color, Shape.DEFAULT_LINE_COLOR);
+  }
+
+  public Font getFont() {
+    return font;
   }
 }
