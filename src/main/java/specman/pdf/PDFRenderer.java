@@ -8,7 +8,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
-import specman.view.AbstractSchrittView;
 
 import java.awt.*;
 
@@ -32,12 +31,13 @@ public class PDFRenderer {
   PdfDocument pdfDoc;
   Document document;
   PdfCanvas pdfCanvas;
-  PdfFont labelFont;
-  PdfFont textFont;
   float swing2pdfScaleFactor;
 
   public PDFRenderer(String pdfFilename) {
     try {
+      LabelShapeText.initFont();
+      FormatedShapeText.initFont();
+
       this.pdfFilename = pdfFilename;
       writer = new PdfWriter(pdfFilename);
       pdfDoc = new PdfDocument(writer);
@@ -45,8 +45,6 @@ public class PDFRenderer {
       pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
       pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
       document = new Document(pdfDoc);
-      labelFont = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
-      textFont = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
     }
     catch(Exception x) {
       x.printStackTrace();
@@ -108,15 +106,9 @@ public class PDFRenderer {
   }
 
   private void writeShapeText(Shape shape, Point renderOffset) {
-    ShapeText text = shape.getText();
+    AbstractShapeText text = shape.getText();
     if (text != null) {
-      float scaledFontSize = text.getFontsize() * swing2pdfScaleFactor;
-      pdfCanvas.setFillColor(text.getPDFColor());
-      PdfFont font = text.getFont().getFamily().contains("Sans") ? labelFont : textFont;
-      pdfCanvas.beginText().setFontAndSize(font, scaledFontSize)
-        .moveText((renderOffset.x + text.getInsets().left -1) * swing2pdfScaleFactor, (renderOffset.y - text.getInsets().top +1) * swing2pdfScaleFactor - scaledFontSize)
-        .showText(text.getContent())
-        .endText();
+      text.writeToPDF(renderOffset, pdfCanvas, swing2pdfScaleFactor);
     }
   }
 

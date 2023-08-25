@@ -1,7 +1,6 @@
 package specman.pdf;
 
 import com.itextpdf.kernel.color.DeviceRgb;
-import specman.view.AbstractSchrittView;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class Shape {
   private List<Shape> subshapes = new ArrayList<>();
   private Object source;
   private boolean withOutline;
-  private ShapeText text;
+  private AbstractShapeText text;
 
   public Shape() {}
 
@@ -117,12 +116,12 @@ public class Shape {
     return this;
   }
 
-  public Shape withText(ShapeText text) {
+  public Shape withText(AbstractShapeText text) {
     this.text = text;
     return this;
   }
 
-  public ShapeText getText() {
+  public AbstractShapeText getText() {
     return text;
   }
 
