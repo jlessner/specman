@@ -1,14 +1,14 @@
 package specman.pdf;
 
-import com.itextpdf.kernel.color.DeviceRgb;
+import com.itextpdf.kernel.colors.DeviceRgb;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Shape {
-  public static final com.itextpdf.kernel.color.Color DEFAULT_FILL_COLOR = com.itextpdf.kernel.color.Color.WHITE;
-  public static final com.itextpdf.kernel.color.Color DEFAULT_LINE_COLOR = com.itextpdf.kernel.color.Color.BLACK;
+  public static final com.itextpdf.kernel.colors.Color DEFAULT_FILL_COLOR = DeviceRgb.WHITE;
+  public static final com.itextpdf.kernel.colors.Color DEFAULT_LINE_COLOR = DeviceRgb.BLACK;
   public static final Color GAP_COLOR = Color.BLACK;
 
   protected List<Point> path = new ArrayList<>();
@@ -94,11 +94,11 @@ public class Shape {
     return path.stream().mapToInt(point -> point.y).toArray();
   }
 
-  public com.itextpdf.kernel.color.Color getPDFBackgroundColor() {
+  public com.itextpdf.kernel.colors.Color getPDFBackgroundColor() {
     return toPDFColor(backgroundColor, DEFAULT_FILL_COLOR);
   }
 
-  static com.itextpdf.kernel.color.Color toPDFColor(Color awtColor, com.itextpdf.kernel.color.Color fallback) {
+  static com.itextpdf.kernel.colors.Color toPDFColor(Color awtColor, com.itextpdf.kernel.colors.Color fallback) {
     if (awtColor == null) {
       return fallback;
     }

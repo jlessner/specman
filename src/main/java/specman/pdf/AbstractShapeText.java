@@ -1,6 +1,5 @@
 package specman.pdf;
 
-import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -27,7 +26,7 @@ abstract class AbstractShapeText {
     return insets;
   }
 
-  public com.itextpdf.kernel.color.Color getPDFColor() {
+  public com.itextpdf.kernel.colors.Color getPDFColor() {
     return Shape.toPDFColor(color, Shape.DEFAULT_LINE_COLOR);
   }
 

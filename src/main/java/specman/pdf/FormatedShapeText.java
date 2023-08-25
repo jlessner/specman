@@ -1,9 +1,8 @@
 package specman.pdf;
 
-import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import specman.EditException;
+import com.itextpdf.text.pdf.BaseFont;
 import specman.textfield.TextEditArea;
 
 import javax.swing.*;
@@ -56,7 +55,7 @@ public class FormatedShapeText extends AbstractShapeText {
   protected PdfFont getPDFFont() { return TEXT_FONT; }
 
   public static void initFont() {
-    TEXT_FONT = createFont(FontConstants.TIMES_ROMAN);
+    TEXT_FONT = createFont(BaseFont.TIMES_ROMAN);
   }
 
 }
