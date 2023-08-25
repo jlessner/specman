@@ -1,16 +1,15 @@
 package specman.pdf;
 
+import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.text.pdf.BaseFont;
 import specman.textfield.TextEditArea;
 
-import javax.swing.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
 import javax.swing.text.Utilities;
 import java.awt.*;
+
+import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
 
 public class FormatedShapeText extends AbstractShapeText {
 
@@ -55,7 +54,7 @@ public class FormatedShapeText extends AbstractShapeText {
   protected PdfFont getPDFFont() { return TEXT_FONT; }
 
   public static void initFont() {
-    TEXT_FONT = createFont(BaseFont.TIMES_ROMAN);
+    TEXT_FONT = createFont(StandardFonts.TIMES_ROMAN);
   }
 
 }

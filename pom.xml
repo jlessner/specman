@@ -19,7 +19,8 @@
     <properties>
         <maven.compiler.source>1.17</maven.compiler.source>
         <maven.compiler.target>1.17</maven.compiler.target>
-        <itext.version>8.0.1</itext.version>
+        <!-- Latest version is 8, but most example code in the web ist based on version 7 -->
+        <itext.version>7.2.5</itext.version>
     </properties>
 
     <dependencies>
