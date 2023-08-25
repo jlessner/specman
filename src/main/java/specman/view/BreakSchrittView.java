@@ -12,7 +12,6 @@ import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.pdf.LineShape;
-import specman.pdf.RectangleShapeGC;
 import specman.pdf.Shape;
 
 import javax.swing.*;

@@ -3,6 +3,7 @@ package specman.pdf;
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -15,6 +16,7 @@ import static specman.pdf.Shape.PDF_LINIENBREITE;
 
 public class PDFRenderer {
   public static float SWING2PDF_SCALEFACTOR = 0.7f;
+  public static PageSize PAGESIZE = PageSize.A4;
   String pdfFilename;
   PdfWriter writer;
   PdfDocument pdfDoc;
@@ -28,7 +30,7 @@ public class PDFRenderer {
       this.pdfFilename = pdfFilename;
       writer = new PdfWriter(pdfFilename);
       pdfDoc = new PdfDocument(writer);
-      pdfCanvas = new PdfCanvas(pdfDoc.addNewPage());
+      pdfCanvas = new PdfCanvas(pdfDoc.addNewPage(PAGESIZE));
       pdfCanvas.setLineWidth(PDF_LINIENBREITE);
       pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
       pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
@@ -42,7 +44,7 @@ public class PDFRenderer {
   }
 
   public void render(Shape shape) {
-    Point topLeftPDFCorner = new Point(10, 1200);
+    Point topLeftPDFCorner = new Point(10, (int)(PAGESIZE.getHeight() / SWING2PDF_SCALEFACTOR));
     render(shape, topLeftPDFCorner);
   }
 
