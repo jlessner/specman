@@ -46,18 +46,20 @@ public class PDFRenderer {
   }
 
   public void render(Shape shape) {
+    initScaleFactor(shape);
+    Point topLeftCorner = new Point(0, (int)(PAGESIZE.getHeight() / swing2pdfScaleFactor));
+    render(shape, topLeftCorner);
+  }
+
+  private void initScaleFactor(Shape shape) {
+    swing2pdfScaleFactor = SWING2PDF_SCALEFACTOR_100PERCENT;
     int shapeWidth = shape.getWidth();
     float availableWidth100Percent = PAGESIZE.getWidth() / SWING2PDF_SCALEFACTOR_100PERCENT;
     float requiredWidth = shapeWidth + 2 * LEFT_RIGHT_PAGE_MARGIN;
     if (requiredWidth > availableWidth100Percent) {
-      swing2pdfScaleFactor = availableWidth100Percent / requiredWidth * SWING2PDF_SCALEFACTOR_100PERCENT;
-    }
-    else {
-      swing2pdfScaleFactor = SWING2PDF_SCALEFACTOR_100PERCENT;
+      swing2pdfScaleFactor *= availableWidth100Percent / requiredWidth;
     }
     pdfCanvas.setLineWidth(((float)LINIENBREITE) * swing2pdfScaleFactor);
-    Point topLeftPDFCorner = new Point(0, (int)(PAGESIZE.getHeight() / swing2pdfScaleFactor));
-    render(shape, topLeftPDFCorner);
   }
 
   private void render(Shape shape, Point renderOffset) {
