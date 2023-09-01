@@ -10,19 +10,31 @@ import specman.model.v001.ImageEditAreaModel_V001;
 import specman.undo.UndoableImageRemovedMarkiert;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
 import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
@@ -277,5 +289,10 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public boolean enthaeltAenderungsmarkierungen() { return aenderungsart != null; }
+
+  @Override
+  public List<String> findStepnumberLinkIDs() {
+    return new ArrayList<>(); // There are no stepnumberLinks in an ImageArea
+  }
 
 }

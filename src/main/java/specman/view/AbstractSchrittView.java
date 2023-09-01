@@ -20,6 +20,7 @@ import specman.model.v001.WhileWhileSchrittModel_V001;
 import specman.textfield.EditContainer;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
+import specman.textfield.TextEditArea;
 import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableSchrittEntferntMarkiert;
 
@@ -31,7 +32,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
@@ -56,6 +59,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	protected QuellSchrittView quellschritt;
 
+	private final java.util.List<TextEditArea> referencedByTextEditAreas = new ArrayList<>();
+
 	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialContent, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
 		this.aenderungsart = aenderungsart;
@@ -75,8 +80,16 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void setId(SchrittID id) {
+		SchrittID oldStepID = this.id;
+
 		this.id = id;
 		editContainer.setId(id.toString());
+
+		if (!oldStepID.equals(id)) {
+			for (TextEditArea textEditArea : referencedByTextEditAreas) {
+				textEditArea.updateLink(oldStepID, id);
+			}
+		}
 	}
 
 	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
@@ -97,6 +110,10 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public Color getBackground() {
 		return editContainer.getBackground();
+	}
+
+	public void scrollTo() {
+		editContainer.scrollRectToVisible(editContainer.getBounds());
 	}
 
 	abstract public JComponent getComponent();
@@ -377,19 +394,37 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void viewsNachinitialisieren() {
 		if (aenderungsart != null) {
-			switch(aenderungsart) {
-				case Geloescht:
-					setGeloeschtMarkiertStil();
-					break;
-				case Quellschritt:
-					((QuellSchrittView)this).setQuellStil();
-					break;
-				case Zielschritt:
-					setZielschrittStil();
-					break;
-			}
+            switch (aenderungsart) {
+                case Geloescht -> setGeloeschtMarkiertStil();
+                case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
+                case Zielschritt -> setZielschrittStil();
+            }
 		}
+		registerAllExistingStepnumbers();
 	}
+
+	/**
+	 * Registers all stepnumbers found in all editAreas.
+	 * <p>
+	 * This is needed for loading diagrams since the references between stepnumberLinks
+	 * and its referenced stepnumber are not saved.
+	 * <p>
+	 * This can be further optimized by using a HashMap as a cache to prevent
+	 * calling {@link Specman#findStepByStepID(String)} more than once for the same step.
+	 * However, to benefit from such a cache it needs to be shared with other {@link AbstractSchrittView}s
+	 */
+    protected void registerAllExistingStepnumbers() {
+        HashMap<TextEditArea, List<String>> stepnumberLinks = editContainer.findStepnumberLinkIDs();
+        for (Map.Entry<TextEditArea, List<String>> listEntry : stepnumberLinks.entrySet()) {
+			TextEditArea referencingTextEditArea = listEntry.getKey();
+			List<String> stepIDs = listEntry.getValue();
+
+            for (String stepID : stepIDs) {
+				AbstractSchrittView step = Specman.instance().findStepByStepID(stepID);
+                step.registerStepnumberLink(referencingTextEditArea);
+            }
+        }
+    }
 
 	public AbstractSchrittView findeSchrittZuId(SchrittID id) {
 		return (this.id.equals(id)) ? this : null;
@@ -459,6 +494,18 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	protected void aenderungsmarkierungenVerwerfen() {
 		editContainer.aenderungsmarkierungenVerwerfen();
+	}
+
+	public void registerStepnumberLink(TextEditArea textEditArea) {
+		referencedByTextEditAreas.add(textEditArea);
+	}
+
+	public void unregisterStepnumberLink(TextEditArea textEditArea) {
+		if (!referencedByTextEditAreas.remove(textEditArea)) {
+			throw new IllegalArgumentException(
+					"The referenced TextEditArea '" + textEditArea.getPlainText() + "' was not registered." +
+					" If there was a recent Undo/Redo, check if registerStepnumberLink() was called.");
+		}
 	}
 
 	@Override

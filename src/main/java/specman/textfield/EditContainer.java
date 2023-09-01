@@ -13,26 +13,33 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.pdf.FormatedShapeText;
-import specman.pdf.LabelShapeText;
 import specman.pdf.Shape;
 import specman.undo.UndoableImageAdded;
 import specman.undo.UndoableImageRemoved;
 import specman.undo.manager.UndoRecording;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.StyleConstants;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static specman.Specman.schrittHintergrund;
 import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
-import static specman.textfield.TextStyles.*;
+import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
+import static specman.textfield.TextStyles.SCHRITTNR_FONTSIZE;
+import static specman.textfield.TextStyles.labelFont;
 
 /** Zentrales grafisches Containerpanel für einen zusammenhängenden Text mit einem Nummernlabel
  * für Schrittbeschreibungen. Normalerweise besteht diese Beschreibung aus einem einzelnen HTML
@@ -140,7 +147,7 @@ public class EditContainer extends JPanel {
 	}
 
 	public void aenderungsmarkierungenEntfernen(SchrittID id) {
-		editAreas.stream().forEach(ea -> ea.setStandardStil());
+		editAreas.forEach(EditArea::setStandardStil);
 		setBackground(Hintergrundfarbe_Standard);
 		if (schrittNummer != null) {
 			schrittNummer.setStandardStil(id);
@@ -438,5 +445,16 @@ public class EditContainer extends JPanel {
 			shape.add(schrittNummer.getShape());
 		}
 		return shape;
+	}
+
+	public HashMap<TextEditArea, List<String>> findStepnumberLinkIDs() {
+		HashMap<TextEditArea, List<String>> stepnumberLinkMap = new HashMap<>();
+		for (EditArea editArea : editAreas) {
+            List<String> stepnumberLinkIDs = editArea.findStepnumberLinkIDs();
+            if (!stepnumberLinkIDs.isEmpty()) {
+                stepnumberLinkMap.put((TextEditArea) editArea, stepnumberLinkIDs);
+            }
+		}
+		return stepnumberLinkMap;
 	}
 }

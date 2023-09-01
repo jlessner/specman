@@ -3,11 +3,15 @@ package specman.textfield;
 import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
 import specman.Aenderungsart;
 import specman.EditorI;
+import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextEditAreaModel_V001;
+import specman.undo.UndoableStepnumberLinkAdded;
+import specman.undo.UndoableStepnumberLinkRemoved;
+import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.JEditorPane;
@@ -24,11 +28,15 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import static specman.textfield.HTMLTags.BODY_INTRO;
 import static specman.textfield.HTMLTags.BODY_OUTRO;
@@ -52,12 +60,55 @@ import static specman.textfield.TextStyles.standardStil;
 import static specman.textfield.TextStyles.stepnumberLinkStyleColor;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
+    private boolean isMousePressed = false;
+    private boolean alreadyScrolledDuringCurrentMouseclick = false;
+
     public TextEditArea(EditorI editor, String initialerText, Color initialBackground) {
         editor.instrumentWysEditor(this, initialerText, 0);
         putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         setFont(font);
         addKeyListener(this);
+        addMouseListener();
+        //addMouseMotionListener();
         setBackground(initialBackground);
+    }
+
+    private void addMouseListener() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                isMousePressed = true;
+                alreadyScrolledDuringCurrentMouseclick = false;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                isMousePressed = false;
+            }
+        });
+    }
+
+    private void addMouseMotionListener() {
+        addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                /*Point p = e.getPoint(); // TODO Change cursor when hovering over stepnumberlink
+
+                List<Element> stepnumberLinks = findStepnumberLinks();
+                for (Element stepnumberLink : stepnumberLinks) {
+                    stepnumberLink.getDocument().getStartPosition();
+                    SwingUtilities.convertPointToScreen();
+                    Component f = (Component) stepnumberLink;
+                    Point less = f.getLocationOnScreen();
+                }*/
+            }
+        });
     }
 
     @Override
@@ -76,6 +127,12 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         setBackground(backgroundColor);
     }
 
+    private boolean hasStyle(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
+        StyledDocument doc = (StyledDocument) getDocument();
+        AttributeSet attributes = doc.getCharacterElement(0).getAttributes();
+        return attributes.containsAttributes(attr) && isEditable() == editable && getBackground() == backgroundColor;
+    }
+
     @Override
     public void setQuellStil() {
         setStyle(quellschrittStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
@@ -83,7 +140,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void setStandardStil() {
-        setStyle(standardStil, Hintergrundfarbe_Standard, true);
+        if (!hasStandardStyle()) {
+            setStyle(standardStil, Hintergrundfarbe_Standard, true);
+        }
+    }
+
+    private boolean hasStandardStyle() {
+        return hasStyle(standardStil, Hintergrundfarbe_Standard, true);
     }
 
     @Override
@@ -178,9 +241,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
     public void aenderungsmarkierungenUebernehmen() {
+        EditorI editor = Specman.instance();
         StyledDocument doc = (StyledDocument) getDocument();
-        CompoundUndoManager.beginCompoundEdit(doc);
-
         List<GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
         for (Element e : doc.getRootElements()) {
             aenderungsmarkierungenUebernehmen(e, loeschungen);
@@ -188,20 +250,17 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         for (int i = 0; i < loeschungen.size(); i++) {
             GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) - 1 - i);
             try {
-                doc.remove(loeschung.getVon(), loeschung.getBis());
+                removeTextAndUnregisterStepnumberLinks(loeschung.getVon(), loeschung.getBis(), editor);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        CompoundUndoManager.endCompoundEdit(doc);
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
     public void aenderungsmarkierungenVerwerfen() {
+        EditorI editor = Specman.instance();
         StyledDocument doc = (StyledDocument) getDocument();
-        CompoundUndoManager.beginCompoundEdit(doc);
-
         List<GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
         for (Element e : doc.getRootElements()) {
             aenderungsmarkierungenVerwerfen(e, loeschungen);
@@ -209,13 +268,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         for (int i = 0; i < loeschungen.size(); i++) {
             GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) - 1 - i);
             try {
-                doc.remove(loeschung.getVon(), loeschung.getBis());
+                removeTextAndUnregisterStepnumberLinks(loeschung.getVon(), loeschung.getBis(), editor);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        CompoundUndoManager.endCompoundEdit(doc);
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
@@ -225,7 +282,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         StyledDocument doc = (StyledDocument) e.getDocument();
         if (elementHatAenderungshintergrund(e)) {
             if (elementHatDurchgestrichenenText(e)) {
-                loeschungen.add(new GeloeschtMarkierung_V001(e.getStartOffset(), e.getEndOffset() - e.getStartOffset()));
+                loeschungen.add(new GeloeschtMarkierung_V001(e.getStartOffset(), e.getEndOffset()));
             } else {
                 AttributeSet attribute = e.getAttributes();
                 MutableAttributeSet entfaerbt = new SimpleAttributeSet();
@@ -248,7 +305,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         StyledDocument doc = (StyledDocument) e.getDocument();
         if (elementHatAenderungshintergrund(e)) {
             if (!elementHatDurchgestrichenenText(e)) {
-                loeschungen.add(new GeloeschtMarkierung_V001(e.getStartOffset(), e.getEndOffset() - e.getStartOffset()));
+                loeschungen.add(new GeloeschtMarkierung_V001(e.getStartOffset(), e.getEndOffset()));
             } else {
                 AttributeSet attribute = e.getAttributes();
                 MutableAttributeSet entfaerbt = new SimpleAttributeSet();
@@ -339,6 +396,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                     return;
                 }
             }
+            case KeyEvent.VK_CONTROL -> {
+                if (isMousePressed && !alreadyScrolledDuringCurrentMouseclick && stepnumberLinkNormalOrChangedStyleSet(getCaretPosition())) {
+                    scrollToStepnumber();
+                }
+            }
             default -> {
                 if (shouldPreventActionInsideStepnumberLink()) {
                     e.consume();
@@ -361,9 +423,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             return;
         }
 
-        int selectionStart = getSelectionStart();
-        int selectionEnd = getSelectionEnd();
-        if (selectionStart != selectionEnd) {
+        if (getSelectionStart() != getSelectionEnd()) {
             markSelectionAsDeleted();
         } else {
             markCurrentPositionAsDeleted();
@@ -380,7 +440,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         Element element = doc.getCharacterElement(position);
 
         if (elementIsChangedButNotMarkedAsDeleted(element)) {
-            delete(position, 1, doc);
+            deleteText(position, 1, doc);
         } else {
             int linkStilStart = getStartOffsetFromPosition(position);
             int linkStilEnd = getEndOffsetFromPosition(position);
@@ -421,7 +481,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
         CompoundUndoManager.beginCompoundEdit(doc);
 
-        for (int position = selectionStart; position < selectionEnd; ) {
+        for (int position = selectionStart; position < selectionEnd; ) { // The missing position++ is intended, see below
             int endPosition = Math.min(selectionEnd, getEndOffsetFromPosition(position));
             int length = endPosition - position;
             Element element = doc.getCharacterElement(position);
@@ -443,7 +503,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         for (Map.Entry<Integer, Integer> positionSet : positionsToDelete.entrySet()) {
             int position = positionSet.getKey();
             int length = positionSet.getValue();
-            delete(position - offset, length, doc);
+            deleteText(position - offset, length, doc);
             offset += length;
         }
 
@@ -457,7 +517,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 && !elementHatDurchgestrichenenText(element);
     }
 
-    private void delete(int position, int length, StyledDocument doc) {
+    private void deleteText(int position, int length, StyledDocument doc) {
         try {
             doc.remove(position, length);
         } catch (BadLocationException e) {
@@ -488,15 +548,34 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         return getSelectionStart() == getSelectionEnd() && getSelectionEnd() < linkStyleEnd && getSelectionStart() > linkStyleStart;
     }
 
-    private void removePreviousStepnumberLink() {
-        int position = getSelectionEnd() - 1;
-        try {
-            int startPosition = Math.min(getSelectionStart(), getStartOffsetFromPosition(position));
+    private void removeTextAndUnregisterStepnumberLinks(int startOffset, int endOffset, EditorI editor) {
+        StyledDocument doc = (StyledDocument) getDocument();
 
-            StyledDocument doc = (StyledDocument) getDocument();
-            doc.remove(startPosition, getEndOffsetFromPosition(position) - startPosition);
-        } catch (BadLocationException ex) {
-            throw new RuntimeException(ex);
+        for (int currentOffset = startOffset; currentOffset < endOffset; ) { // The missing currentOffset++ is intended
+            int currentEndOffset = getEndOffsetFromPosition(currentOffset);
+            int length = currentEndOffset - currentOffset;
+            Element element = doc.getCharacterElement(currentOffset);
+
+            if (stepnumberLinkNormalOrChangedStyleSet(element)) {
+                String stepnumberLinkID = getStepnumberLinkIDFromElement(currentOffset, currentEndOffset);
+                AbstractSchrittView step = editor.findStepByStepID(stepnumberLinkID);
+                step.unregisterStepnumberLink(this);
+                editor.addEdit(new UndoableStepnumberLinkRemoved(step, this));
+            }
+
+            currentOffset += length; // Skip already processed positions
+        }
+
+        deleteText(startOffset, endOffset - startOffset, doc);
+    }
+
+    private void removePreviousStepnumberLink() {
+        EditorI editor = Specman.instance();
+        try (UndoRecording ur = editor.composeUndo()) {
+            int position = getSelectionEnd() - 1;
+            int startOffset = Math.min(getSelectionStart(), getStartOffsetFromPosition(position));
+            int endOffset = getEndOffsetFromPosition(position);
+            removeTextAndUnregisterStepnumberLinks(startOffset, endOffset, editor);
         }
     }
 
@@ -614,38 +693,38 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
 
-    public void addStepnumberLink(AbstractSchrittView selectedStep) {
-        String stepnumberText = selectedStep.getId().toString();
-        String tooltipText = selectedStep.toString();
+    public void addStepnumberLink(AbstractSchrittView referencedStep) {
+        EditorI editor = Specman.instance();
+        try (UndoRecording ur = editor.composeUndo()) {
+            String stepnumberText = referencedStep.getId().toString();
+            StyledDocument doc = (StyledDocument) getDocument();
+            int caretPos = getCaretPosition();
 
-        StyledDocument doc = (StyledDocument) getDocument();
-        int caretPos = getCaretPosition();
+            // Add space between two stepnumberlinks to prevent merging them
+            if (stepnumberLinkNormalOrChangedStyleSet(caretPos - 1)) {
+                try {
+                    doc.insertString(caretPos, " ", null);
+                } catch (BadLocationException e) {
+                    throw new RuntimeException(e);
+                }
+                caretPos++;
+            }
 
-        CompoundUndoManager.beginCompoundEdit(doc);
+            AttributeSet previousAttribute = doc.getCharacterElement(caretPos).getAttributes();
+            MutableAttributeSet stepnumberAttribute = new SimpleAttributeSet(previousAttribute);
+            stepnumberAttribute.addAttributes(TextStyles.stepnumberLinkStyle);
+            StyleConstants.setBackground(stepnumberAttribute,
+                    isTrackingChanges() ? TextStyles.changedStepnumberLinkColor : TextStyles.stepnumberLinkStyleColor);
 
-        // Add space between two stepnumberlinks
-        if (stepnumberLinkNormalOrChangedStyleSet(caretPos -1)) {
             try {
-                doc.insertString(caretPos, " ", null);
+                doc.insertString(caretPos, stepnumberText, stepnumberAttribute);
             } catch (BadLocationException e) {
                 throw new RuntimeException(e);
             }
-            caretPos++;
+
+            referencedStep.registerStepnumberLink(this);
+            editor.addEdit(new UndoableStepnumberLinkAdded(referencedStep, this));
         }
-
-        AttributeSet previousAttribute = doc.getCharacterElement(caretPos).getAttributes();
-        MutableAttributeSet stepnumberAttribute = new SimpleAttributeSet(previousAttribute);
-        stepnumberAttribute.addAttributes(TextStyles.stepnumberLinkStyle);
-        StyleConstants.setBackground(stepnumberAttribute,
-                isTrackingChanges() ? TextStyles.changedStepnumberLinkColor : TextStyles.stepnumberLinkStyleColor);
-
-        try {
-            doc.insertString(caretPos, stepnumberText, stepnumberAttribute);
-        } catch (BadLocationException e) {
-            throw new RuntimeException(e);
-        }
-
-        CompoundUndoManager.endCompoundEdit(doc);
     }
 
     private boolean stepnumberLinkNormalStyleSet() {
@@ -722,5 +801,96 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     @Override
     public boolean enthaeltAenderungsmarkierungen() {
         return !findeAenderungsmarkierungen(true).isEmpty();
+    }
+
+    private void scrollToStepnumber() {
+        alreadyScrolledDuringCurrentMouseclick = true;
+
+        StyledDocument doc = (StyledDocument) getDocument();
+        Element element = doc.getCharacterElement(getCaretPosition());
+
+        String stepnumberLinkID = getStepnumberLinkIDFromElement(element.getStartOffset(), element.getEndOffset());
+        AbstractSchrittView step = Specman.instance().findStepByStepID(stepnumberLinkID);
+        step.scrollTo();
+    }
+
+    public void updateLink(SchrittID oldID, SchrittID newID) {
+        StyledDocument doc = (StyledDocument) getDocument();
+        for (Element e : doc.getRootElements()) {
+            if (replaceStepnumberLink(e, oldID, newID)) {
+                return;
+            }
+        }
+        throw new RuntimeException("Could not find old StepnumberLink " + oldID.toString()
+                + " in TextArea '" + getPlainText() + "'. This indicates a missing unregisterStepnumberLink() call.");
+    }
+
+    private boolean replaceStepnumberLink(Element e, SchrittID oldID, SchrittID newID) {
+        StyledDocument doc = (StyledDocument) getDocument();
+        if (stepnumberLinkNormalOrChangedStyleSet(e)) {
+            try {
+                String stepnumberLinkID = getStepnumberLinkIDFromElement(e);
+                if (stepnumberLinkID.equals(oldID.toString())) {
+                    CompoundUndoManager.beginCompoundEdit(doc);
+
+                    AttributeSet previousAttribute = doc.getCharacterElement(e.getStartOffset()).getAttributes();
+                    deleteText(e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), doc);
+                    doc.insertString(e.getStartOffset(), newID.toString(), previousAttribute);
+
+                    CompoundUndoManager.endCompoundEdit(doc);
+                    return true;
+                }
+            } catch (BadLocationException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        for (int i = 0; i < e.getElementCount(); i++) {
+            if (replaceStepnumberLink(e.getElement(i), oldID, newID)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Element> findStepnumberLinks() {
+        StyledDocument doc = (StyledDocument) getDocument();
+        List<Element> stepnumberLinks = new ArrayList<>();
+        for (Element e : doc.getRootElements()) {
+            stepnumberLinks.addAll(findStepnumberLinks(e));
+        }
+
+        return stepnumberLinks;
+    }
+
+    private List<Element> findStepnumberLinks(Element e) {
+        List<Element> stepnumberLinks = new ArrayList<>();
+
+        if (stepnumberLinkNormalOrChangedStyleSet(e)) {
+            stepnumberLinks.add(e);
+        }
+        for (int i = 0; i < e.getElementCount(); i++) {
+            stepnumberLinks.addAll(findStepnumberLinks(e.getElement(i)));
+        }
+        return stepnumberLinks;
+    }
+
+    public List<String> findStepnumberLinkIDs() {
+        return findStepnumberLinks()
+                .stream()
+                .map(this::getStepnumberLinkIDFromElement)
+                .collect(Collectors.toList());
+    }
+
+    private String getStepnumberLinkIDFromElement(Element element) {
+        return getStepnumberLinkIDFromElement(element.getStartOffset(), element.getEndOffset());
+    }
+
+    private String getStepnumberLinkIDFromElement(int startOffset, int endOffset) {
+        StyledDocument doc = (StyledDocument) getDocument();
+        try {
+            return doc.getText(startOffset, endOffset - startOffset);
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

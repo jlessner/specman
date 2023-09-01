@@ -3,10 +3,8 @@ package specman;
 import specman.textfield.InteractiveStepFragment;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
-import specman.view.SchrittSequenzView;
 
-import javax.swing.*;
-import javax.swing.text.JTextComponent;
+import javax.swing.JEditorPane;
 import javax.swing.undo.UndoableEdit;
 import java.awt.event.FocusListener;
 import java.io.File;
@@ -27,5 +25,6 @@ public interface EditorI extends FocusListener {
 	void addEdit(UndoableEdit edit);
 	UndoRecording pauseUndo();
 	UndoRecording composeUndo();
-  void showError(EditException ex);
+    void showError(EditException ex);
+	AbstractSchrittView findStepByStepID(String stepnumberLinkID);
 }

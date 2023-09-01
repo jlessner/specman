@@ -1,12 +1,12 @@
 package specman.textfield;
 
-import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.AbstractEditAreaModel_V001;
 
 import javax.swing.border.Border;
-import javax.swing.text.MutableAttributeSet;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.FocusListener;
+import java.util.List;
 
 public interface EditArea extends InteractiveStepFragment {
   void addSchrittnummer(SchrittNummerLabel schrittNummer);
@@ -50,4 +50,6 @@ public interface EditArea extends InteractiveStepFragment {
   void setStandardStil();
 
   boolean enthaeltAenderungsmarkierungen();
+
+  List<String> findStepnumberLinkIDs();
 }

@@ -13,7 +13,6 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
-import specman.pdf.LineShape;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
 import specman.textfield.EditContainer;
@@ -562,30 +561,27 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
             d.setVisible(true);
         });
 
-		aenderungenUebernehmen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		aenderungenUebernehmen.addActionListener(e -> {
+			try (UndoRecording ur = composeUndo()) {
 				try {
 					hauptSequenz.aenderungenUebernehmen(Specman.this);
 					diagrammAktualisieren(null);
-				}
-				catch(EditException ex) {
+				} catch (EditException ex) {
 					showError(ex);
 				}
 			}
-		});
+        });
 
-		aenderungenVerwerfen.addActionListener(new ActionListener() {
-			@Override public void actionPerformed(ActionEvent e) {
+		aenderungenVerwerfen.addActionListener(e -> {
+			try (UndoRecording ur = composeUndo()) {
 				try {
 					hauptSequenz.aenderungenVerwerfen(Specman.this);
 					diagrammAktualisieren(null);
-				}
-				catch(EditException ex) {
+				} catch (EditException ex) {
 					showError(ex);
 				}
 			}
-		});
+        });
 
 	}
 
@@ -1171,5 +1167,38 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 
 		return allSteps;
+	}
+
+	@Override
+	public AbstractSchrittView findStepByStepID(String stepID) {
+		AbstractSchrittView result = findStepByStepID(getHauptSequenz().getSchritte(), stepID);
+		if (result == null) {
+			throw new RuntimeException("Could not find stepnumber " + stepID + "."
+					+ " This is a bug. Make sure not to search for an outdated stepnumber.");
+		}
+		return result;
+	}
+
+	/**
+	 * Returns a step if the provided stepnumber matches.
+	 * This could be optimized by skipping all steps after the position where the step is supposed to be.
+	 * <p>
+	 * However, this case shouldn't be called since that means we are searching for a non-existing step which
+	 * currently isn't possible - Except due to a bug, that's why we throw the Exception above.
+	 */
+	private static AbstractSchrittView findStepByStepID(final List<AbstractSchrittView> steps, String stepID) {
+		for (AbstractSchrittView step : steps) {
+			if (stepID.equals(step.getId().toString())) {
+				return step;
+			}
+			for (SchrittSequenzView unterSequenz : step.unterSequenzen()) {
+				List<AbstractSchrittView> schritte = unterSequenz.getSchritte();
+				AbstractSchrittView result = findStepByStepID(schritte, stepID);
+				if (result != null) {
+					return result;
+				}
+			}
+		}
+		return null;
 	}
 }
