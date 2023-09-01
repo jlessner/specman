@@ -413,63 +413,62 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
             exportAsPDF();
         }));
 
-		einfaerben.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				Color aktuelleHintergrundfarbe = schritt.getBackground();
-				int farbwert = aktuelleHintergrundfarbe.getRed() == 240 ? 255 : 240;
-				Color neueHintergrundfarbe = new Color(farbwert, farbwert, farbwert);
-				schritt.setBackground(neueHintergrundfarbe);
-				addEdit(new UndoableSchrittEingefaerbt(schritt, aktuelleHintergrundfarbe, neueHintergrundfarbe));
+		einfaerben.addActionListener(e -> {
+            if (lastFocusedTextArea != null) {
+                AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
+                Color aktuelleHintergrundfarbe = schritt.getBackground();
+                int farbwert = aktuelleHintergrundfarbe.getRed() == 240 ? 255 : 240;
+                Color neueHintergrundfarbe = new Color(farbwert, farbwert, farbwert);
+                schritt.setBackground(neueHintergrundfarbe);
+                addEdit(new UndoableSchrittEingefaerbt(schritt, aktuelleHintergrundfarbe, neueHintergrundfarbe));
+            }
+        });
+
+		loeschen.addActionListener(e -> {
+			if (lastFocusedTextArea == null) {
+				return;
 			}
-		});
+            try {
+                AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
+                if (schritt == null) {
+                    // Sollte nur der Fall sein, wenn man den Fokus im Intro oder Outro stehen hat
+                    fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + lastFocusedTextArea.getText());
+                    return;
+                }
 
-		loeschen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
-					if (schritt == null) {
-						// Sollte nur der Fall sein, wenn man den Fokus im Intro oder Outro stehen hat
-						fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + lastFocusedTextArea.getText());
-						return;
-					}
+                //Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
+                if (instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
 
-					//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
-					if (instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
+                    //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
+                    if (schritt.getAenderungsart() == Aenderungsart.Geloescht) {
+                        return;
+                    } else {
+                        schrittAlsGeloeschtMarkieren(schritt);
+                    }
+                }
 
-						//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
-						if (schritt.getAenderungsart() == Aenderungsart.Geloescht) {
-							return;
-						} else {
-							schrittAlsGeloeschtMarkieren(schritt);
-						}
-					}
-
-					//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
-					else {
-						if (schritt instanceof CaseSchrittView) {
-							CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-							ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(lastFocusedTextArea);
-							if (zweig != null) {
-								int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
-								undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
-							}
-							return;
-						}
-						darfSchrittGeloeschtWerden(schritt);
-						SchrittSequenzView sequenz = schritt.getParent();
-						int schrittIndex = sequenz.schrittEntfernen(schritt);
-						undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
-					}
-					hauptSequenz.resyncSchrittnummerStil();
-				}
-				catch (EditException ex) {
-					showError(ex);
-				}
-			}
-		});
+                //Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
+                else {
+                    if (schritt instanceof CaseSchrittView) {
+                        CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+                        ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(lastFocusedTextArea);
+                        if (zweig != null) {
+                            int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
+                            undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+                        }
+                        return;
+                    }
+                    darfSchrittGeloeschtWerden(schritt);
+                    SchrittSequenzView sequenz = schritt.getParent();
+                    int schrittIndex = sequenz.schrittEntfernen(schritt);
+                    undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+                }
+                hauptSequenz.resyncSchrittnummerStil();
+            }
+            catch (EditException ex) {
+                showError(ex);
+            }
+        });
 
 
 		toggleBorderType.addActionListener(new ActionListener() {
