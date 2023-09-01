@@ -504,6 +504,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		exportAsPDFMenuItem.addActionListener(e -> exportAsPDF());
 
+		exitMenuItem.addActionListener(e -> System.exit(0));
+
 		review.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
 				hauptSequenz.zusammenklappenFuerReview();
@@ -825,6 +827,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		laden.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
 		exportAsPDFMenuItem = new JMenuItem("Als PDF exportieren...");
 		exportAsPDFMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
+		exitMenuItem = new JMenuItem("Beenden");
+		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK + KeyEvent.SHIFT_DOWN_MASK));
 		//======== this ========
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout("pref, default:grow", "default, default, fill:10px:grow")); //ToDo Sidebar added "pref"
@@ -939,6 +943,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		dateiMenu.add(speichern);
 		dateiMenu.add(speichernUnter);
 		dateiMenu.add(exportAsPDFMenuItem);
+		dateiMenu.add(exitMenuItem);
 		return dateiMenu;
 	}
 
@@ -969,6 +974,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JMenuItem speichernUnter;
 	private JMenuItem laden;
 	private JMenuItem exportAsPDFMenuItem;
+	private JMenuItem exitMenuItem;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 
 	private static Specman instance;
