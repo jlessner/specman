@@ -698,6 +698,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void diagrammLaden(File diagramFile) {
 		try {
 			dropWelcomeMessage();
+			aenderungenVerfolgen.setSelected(false);
 			postInitSchritte = new ArrayList<AbstractSchrittView>();
 			setDiagrammDatei(diagramFile);
 
