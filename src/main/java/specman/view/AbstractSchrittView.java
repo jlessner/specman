@@ -87,7 +87,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 		if (!oldStepID.equals(id)) {
 			for (TextEditArea textEditArea : referencedByTextEditAreas) {
-				textEditArea.updateLink(oldStepID, id);
+				textEditArea.updateStepnumberLink(oldStepID.toString(), id.toString());
 			}
 		}
 	}
@@ -411,17 +411,20 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	 * <p>
 	 * This can be further optimized by using a HashMap as a cache to prevent
 	 * calling {@link Specman#findStepByStepID(String)} more than once for the same step.
-	 * However, to benefit from such a cache it needs to be shared with other {@link AbstractSchrittView}s
+	 * However, to benefit from such a cache it would need to be shared with other {@link AbstractSchrittView}s
 	 */
     protected void registerAllExistingStepnumbers() {
+		EditorI editor = Specman.instance();
         HashMap<TextEditArea, List<String>> stepnumberLinks = editContainer.findStepnumberLinkIDs();
         for (Map.Entry<TextEditArea, List<String>> listEntry : stepnumberLinks.entrySet()) {
 			TextEditArea referencingTextEditArea = listEntry.getKey();
 			List<String> stepIDs = listEntry.getValue();
 
             for (String stepID : stepIDs) {
-				AbstractSchrittView step = Specman.instance().findStepByStepID(stepID);
-                step.registerStepnumberLink(referencingTextEditArea);
+				if (!referencingTextEditArea.isStepnumberLinkDefect(stepID)) {
+					AbstractSchrittView step = editor.findStepByStepID(stepID);
+					step.registerStepnumberLink(referencingTextEditArea);
+				}
             }
         }
     }
@@ -452,6 +455,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 					break;
 				case Geloescht:
 				case Quellschritt:
+					markStepnumberLinksAsDefect();
 					getParent().schrittEntfernen(this);
 					break;
 				case Zielschritt:
@@ -471,6 +475,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		if (aenderungsart != null) {
 			switch (aenderungsart) {
 				case Hinzugefuegt:
+                    markStepnumberLinksAsDefect();
 					getParent().schrittEntfernen(this);
 					break;
 				case Geloescht:
@@ -506,6 +511,16 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 					"The referenced TextEditArea '" + textEditArea.getPlainText() + "' was not registered." +
 					" If there was a recent Undo/Redo, check if registerStepnumberLink() was called.");
 		}
+	}
+
+	public void markStepnumberLinksAsDefect() {
+        for (TextEditArea referencedByTextEditArea : referencedByTextEditAreas) {
+            referencedByTextEditArea.markStepnumberLinkAsDefect(getId().toString());
+        }
+	}
+
+	public boolean hasStepnumberLinks() {
+		return !referencedByTextEditAreas.isEmpty();
 	}
 
 	@Override

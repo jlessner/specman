@@ -3,7 +3,6 @@ package specman.textfield;
 import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
 import specman.Aenderungsart;
 import specman.EditorI;
-import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.Aenderungsmarkierung_V001;
@@ -15,6 +14,7 @@ import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
@@ -62,6 +62,7 @@ import static specman.textfield.TextStyles.stepnumberLinkStyleColor;
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     private boolean isMousePressed = false;
     private boolean alreadyScrolledDuringCurrentMouseclick = false;
+    private final static String STEPNUMBER_DEFECT_MARK = "?";
 
     public TextEditArea(EditorI editor, String initialerText, Color initialBackground) {
         editor.instrumentWysEditor(this, initialerText, 0);
@@ -558,9 +559,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
             if (stepnumberLinkNormalOrChangedStyleSet(element)) {
                 String stepnumberLinkID = getStepnumberLinkIDFromElement(currentOffset, currentEndOffset);
-                AbstractSchrittView step = editor.findStepByStepID(stepnumberLinkID);
-                step.unregisterStepnumberLink(this);
-                editor.addEdit(new UndoableStepnumberLinkRemoved(step, this));
+                if (!isStepnumberLinkDefect(stepnumberLinkID)) {
+                    AbstractSchrittView step = editor.findStepByStepID(stepnumberLinkID);
+                    step.unregisterStepnumberLink(this);
+                    editor.addEdit(new UndoableStepnumberLinkRemoved(step, this));
+                }
             }
 
             currentOffset += length; // Skip already processed positions
@@ -804,38 +807,50 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     private void scrollToStepnumber() {
+        EditorI editor = Specman.instance();
         alreadyScrolledDuringCurrentMouseclick = true;
 
         StyledDocument doc = (StyledDocument) getDocument();
         Element element = doc.getCharacterElement(getCaretPosition());
 
         String stepnumberLinkID = getStepnumberLinkIDFromElement(element.getStartOffset(), element.getEndOffset());
-        AbstractSchrittView step = Specman.instance().findStepByStepID(stepnumberLinkID);
+
+        if (isStepnumberLinkDefect(stepnumberLinkID)) {
+            JOptionPane.showMessageDialog(this,
+                    "Der Schritt, auf den der SchrittnummerLink verwiesen hat, existiert nicht mehr.",
+                    "Springen nicht möglich", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        AbstractSchrittView step = editor.findStepByStepID(stepnumberLinkID);
         step.scrollTo();
     }
 
-    public void updateLink(SchrittID oldID, SchrittID newID) {
+    public void markStepnumberLinkAsDefect(String id) {
+        updateStepnumberLink(id, id + STEPNUMBER_DEFECT_MARK);
+    }
+
+    public void updateStepnumberLink(String oldID, String newID) {
         StyledDocument doc = (StyledDocument) getDocument();
         for (Element e : doc.getRootElements()) {
             if (replaceStepnumberLink(e, oldID, newID)) {
                 return;
             }
         }
-        throw new RuntimeException("Could not find old StepnumberLink " + oldID.toString()
-                + " in TextArea '" + getPlainText() + "'. This indicates a missing unregisterStepnumberLink() call.");
+        throw new RuntimeException("Could not find old StepnumberLink " + oldID + " in TextArea '" + getPlainText() + "'."
+                + " This indicates a missing unregisterStepnumberLink() call.");
     }
 
-    private boolean replaceStepnumberLink(Element e, SchrittID oldID, SchrittID newID) {
+    private boolean replaceStepnumberLink(Element e, String oldID, String newID) {
         StyledDocument doc = (StyledDocument) getDocument();
         if (stepnumberLinkNormalOrChangedStyleSet(e)) {
             try {
                 String stepnumberLinkID = getStepnumberLinkIDFromElement(e);
-                if (stepnumberLinkID.equals(oldID.toString())) {
+                if (stepnumberLinkID.equals(oldID)) {
                     CompoundUndoManager.beginCompoundEdit(doc);
 
                     AttributeSet previousAttribute = doc.getCharacterElement(e.getStartOffset()).getAttributes();
-                    deleteText(e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), doc);
-                    doc.insertString(e.getStartOffset(), newID.toString(), previousAttribute);
+                    doc.remove(e.getStartOffset(), e.getEndOffset() - e.getStartOffset());
+                    doc.insertString(e.getStartOffset(), newID, previousAttribute);
 
                     CompoundUndoManager.endCompoundEdit(doc);
                     return true;
@@ -892,5 +907,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean isStepnumberLinkDefect(String stepnumberLinkID) {
+        return stepnumberLinkID.endsWith(STEPNUMBER_DEFECT_MARK);
     }
 }

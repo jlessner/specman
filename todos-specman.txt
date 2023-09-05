@@ -1,6 +1,5 @@
 Abschluss für Go-Live
 - Schrittnummer-Referenzen im Text, Restarbeiten
-  - Verhalten bei Löschen des referenzierten Schritts
   - Nice to have: Verhalten bei gelöscht-markieren des referenzierten Schritts
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
