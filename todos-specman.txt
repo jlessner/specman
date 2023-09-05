@@ -1,7 +1,6 @@
 Abschluss für Go-Live
 - Schrittnummer-Referenzen im Text, Restarbeiten
   - Nice to have: Verhalten bei gelöscht-markieren des referenzierten Schritts
-  - Change cursor when hovering over Stepnumberlink
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
