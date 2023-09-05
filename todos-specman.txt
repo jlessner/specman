@@ -1,6 +1,7 @@
 Abschluss für Go-Live
 - Schrittnummer-Referenzen im Text, Restarbeiten
   - Nice to have: Verhalten bei gelöscht-markieren des referenzierten Schritts
+  - Change cursor when hovering over Stepnumberlink
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
@@ -19,6 +20,7 @@ Bugs fixen
 - Löschen des vorletzten Zweigs erlauben
 - Abfangen des Löschens des letzten Zweigs im Case
 - NumberStepBackground in RoundedBorderDecorator schwarz färben wenn Schritt gelöscht ist
+- 'Cannot invoke "specman.SpaltenResizer.getShape()" because "this.breitenAnpasser" is null' in PDF-Export with no diagram
 
 
 Auf längere Sicht - nicht notwendig für ersten Go-Live:
