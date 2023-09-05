@@ -26,6 +26,8 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.CSS;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -68,7 +70,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         setFont(font);
         addKeyListener(this);
         addMouseListener();
-        //addMouseMotionListener();
+        addMouseMotionListener();
         setBackground(initialBackground);
     }
 
@@ -97,15 +99,17 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                /*Point p = e.getPoint(); // TODO Change cursor when hovering over stepnumberlink
+                JEditorPane jEditorPane = (JEditorPane) e.getSource();
+                Point p = new Point(e.getX(), e.getY());
+                int pos = jEditorPane.viewToModel2D(p);
 
-                List<Element> stepnumberLinks = findStepnumberLinks();
-                for (Element stepnumberLink : stepnumberLinks) {
-                    stepnumberLink.getDocument().getStartPosition();
-                    SwingUtilities.convertPointToScreen();
-                    Component f = (Component) stepnumberLink;
-                    Point less = f.getLocationOnScreen();
-                }*/
+                StyledDocument doc = (StyledDocument) getDocument();
+                Element element = doc.getCharacterElement(pos);
+                if (stepnumberLinkNormalOrChangedStyleSet(element)) {
+                    Specman.instance().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                } else {
+                    Specman.instance().setCursor(Cursor.getDefaultCursor());
+                }
             }
         });
     }
