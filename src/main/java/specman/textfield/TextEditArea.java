@@ -34,8 +34,6 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static specman.textfield.HTMLTags.BODY_INTRO;
@@ -358,7 +356,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         // markierten Buchstaben alle einzelne Elements werden.
         // Wenn an der aktuellen Position schon gelbe Hintegrundfarbe
         // eingestellt ist, dann Ändern wir den aktuellen Style gar nicht mehr.
-        if (!aenderungsStilGesetzt() && !stepnumberLinkNormalStyleSet()) {
+        if (!aenderungsStilGesetzt() && !stepnumberLinkNormalStyleSet(getCaretPosition())) {
             StyledEditorKit k = (StyledEditorKit) getEditorKit();
             MutableAttributeSet inputAttributes = k.getInputAttributes();
             StyleConstants.setStrikeThrough(inputAttributes, false); // Falls noch Gelöscht-Stil herrschte
@@ -376,7 +374,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                     return;
                 }
                 if (isTrackingChanges()) {
-                    markPendingRemovalAsDeleted();
+                    handleTextDeletion();
                     e.consume();
                     return;
                 } else if (stepnumberLinkNormalOrChangedStyleSet(getSelectionEnd() - 1)) {
@@ -417,113 +415,81 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
     }
 
-    private void markPendingRemovalAsDeleted() {
-        if (stepnumberLinkChangedStyleSet() && !elementHatDurchgestrichenenText()) {
-            // Changed stepnumberlinks need to be removed instead of marked as deleted
-            removePreviousStepnumberLink();
-            return;
-        }
-
-        if (getSelectionStart() != getSelectionEnd()) {
-            markSelectionAsDeleted();
+    private void handleTextDeletion() {
+        if (getSelectionStart() == getSelectionEnd()) {
+            handleTextDeletion(getSelectionStart() - 1, getSelectionEnd());
         } else {
-            markCurrentPositionAsDeleted();
-        }
-    }
-
-    private void markCurrentPositionAsDeleted() {
-        StyledDocument doc = (StyledDocument) getDocument();
-        int position = getCaretPosition() - 1;
-        if (position < 0) {
-            return;
-        }
-
-        Element element = doc.getCharacterElement(position);
-
-        if (elementIsChangedButNotMarkedAsDeleted(element)) {
-            deleteText(position, 1, doc);
-        } else {
-            int linkStilStart = getStartOffsetFromPosition(position);
-            int linkStilEnd = getEndOffsetFromPosition(position);
-
-            if (elementHatDurchgestrichenenText(element)) { // No need to reapply deletedStyle if it's already set
-                if (stepnumberLinkChangedStyleSet(position)) {
-                    setCaretPosition(linkStilStart);
-                } else {
-                    setCaretPosition(position);
-                }
-            } else if (stepnumberLinkNormalStyleSet(position)) {
-                int length = linkStilEnd - linkStilStart;
-                markRangeAsDeleted(linkStilStart, length, deletedStepnumberLinkStyle);
-            } else {
-                markRangeAsDeleted(position, 1, geloeschtStil);
-            }
+            handleTextDeletion(getSelectionStart(), getSelectionEnd());
         }
     }
 
     private void markRangeAsDeleted(int deleteStart, int deleteLength, MutableAttributeSet deleteStyle) {
         StyledDocument doc = (StyledDocument) getDocument();
-
-        setCaretPosition(deleteStart);
         doc.setCharacterAttributes(deleteStart, deleteLength, deleteStyle, false);
     }
 
     /**
-     * When deleting a range there can be the following items in it:
-     * - Normal text - White Background - Gets marked as deleted
-     * - Changed text - Yellow Background - Gets deleted
+     * This handles the deletion/mark as deletion of text. <p>
+     * When looping backwards through the selected text, there's no need to worry
+     * about the next text position being moved because of a deletion.
+     * <p>
+     * When deleting a range there can be the following items in it: <p>
+     * - Normal text - White Background - Gets marked as deleted <p>
+     * - Changed text - Yellow Background - Gets deleted <p>
      * - Marked as deleted text - Yellow Background with strikethrough - No changes
      */
-    private void markSelectionAsDeleted() {
+    private void handleTextDeletion(int startOffset, int endOffset) {
+        if (startOffset <= 0) {
+            setCaretPosition(1);
+            return;
+        }
+
         StyledDocument doc = (StyledDocument) getDocument();
-        int selectionStart = getSelectionStart();
-        int selectionEnd = getSelectionEnd();
-        TreeMap<Integer, Integer> positionsToDelete = new TreeMap<>();
+        EditorI editor = Specman.instance();
 
-        CompoundUndoManager.beginCompoundEdit(doc);
+        try (UndoRecording ur = editor.composeUndo()) {
+            for (int currentEndPosition = endOffset; currentEndPosition > startOffset; ) { // The missing position-- is intended, see below
+                Element element = doc.getCharacterElement(currentEndPosition - 1); // -1 since we look at the previous character
+                int linkStilStart = element.getStartOffset();
+                int linkStilEnd = element.getEndOffset();
+                int currentStartPosition = Math.max(startOffset, linkStilStart);
+                int length = currentEndPosition - currentStartPosition;
 
-        for (int position = selectionStart; position < selectionEnd; ) { // The missing position++ is intended, see below
-            int endPosition = Math.min(selectionEnd, getEndOffsetFromPosition(position));
-            int length = endPosition - position;
-            Element element = doc.getCharacterElement(position);
-
-            if (elementIsChangedButNotMarkedAsDeleted(element)) {
-                positionsToDelete.put(position, length);
-            } else {
-                if (stepnumberLinkNormalStyleSet(position)) {
-                    markRangeAsDeleted(position, length, deletedStepnumberLinkStyle);
-                } else if (!elementHatDurchgestrichenenText(element)) { // No need to reapply deletedStyle if it's already set
-                    markRangeAsDeleted(position, length, geloeschtStil);
+                if (length < 1) {
+                    throw new RuntimeException("Deletion length <= 1. There seems to be a bug in this method().");
                 }
+
+                if (elementIsChangedButNotMarkedAsDeleted(element)) {
+                    if (stepnumberLinkChangedStyleSet(element)) {
+                        removeTextAndUnregisterStepnumberLinks(linkStilStart, linkStilEnd, editor);
+                    } else {
+                        removeTextAndUnregisterStepnumberLinks(currentStartPosition, currentEndPosition, editor);
+                    }
+                } else {
+                    if (elementHatDurchgestrichenenText(element)) { // No need to reapply deletedStyle if it's already set
+                        if (stepnumberLinkChangedStyleSet(currentStartPosition)) {
+                            setCaretPosition(linkStilStart);
+                        } else {
+                            setCaretPosition(currentStartPosition);
+                        }
+                    } else if (stepnumberLinkNormalStyleSet(currentStartPosition)) {
+                        markRangeAsDeleted(linkStilStart, linkStilEnd - linkStilStart, deletedStepnumberLinkStyle);
+                        setCaretPosition(linkStilStart);
+                    } else {
+                        markRangeAsDeleted(currentStartPosition, length, geloeschtStil);
+                        setCaretPosition(currentStartPosition);
+                    }
+                }
+
+                currentEndPosition -= length; // Skip already processed positions
             }
-
-            position += length; // Skip already processed positions
         }
 
-        int offset = 0;
-        for (Map.Entry<Integer, Integer> positionSet : positionsToDelete.entrySet()) {
-            int position = positionSet.getKey();
-            int length = positionSet.getValue();
-            deleteText(position - offset, length, doc);
-            offset += length;
-        }
-
-        setCaretPosition(selectionEnd - offset); // Set caret at new end of selection
-
-        CompoundUndoManager.endCompoundEdit(doc);
     }
 
     private boolean elementIsChangedButNotMarkedAsDeleted(Element element) {
         return (elementHatAenderungshintergrund(element) || stepnumberLinkChangedStyleSet(element))
                 && !elementHatDurchgestrichenenText(element);
-    }
-
-    private void deleteText(int position, int length, StyledDocument doc) {
-        try {
-            doc.remove(position, length);
-        } catch (BadLocationException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private boolean shouldPreventActionInsideStepnumberLink() {
@@ -550,6 +516,10 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     private void removeTextAndUnregisterStepnumberLinks(int startOffset, int endOffset, EditorI editor) {
+        if (startOffset > endOffset) {
+            throw new IllegalArgumentException("StartOffSet is greater than EndOffset - Make sure not to set the length as endOffset");
+        }
+
         StyledDocument doc = (StyledDocument) getDocument();
 
         for (int currentOffset = startOffset; currentOffset < endOffset; ) { // The missing currentOffset++ is intended
@@ -569,7 +539,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             currentOffset += length; // Skip already processed positions
         }
 
-        deleteText(startOffset, endOffset - startOffset, doc);
+        try {
+            doc.remove(startOffset, endOffset - startOffset);
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void removePreviousStepnumberLink() {
@@ -720,16 +694,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
     }
 
-    private boolean stepnumberLinkNormalStyleSet() {
-        StyledEditorKit k = (StyledEditorKit) getEditorKit();
-        Object backgroundColor = k.getInputAttributes().getAttribute(CSS.Attribute.BACKGROUND_COLOR);
-        if (backgroundColor != null) {
-            String value = backgroundColor.toString();
-            return value.equals(TextStyles.stepnumberLinkStyleHTMLColor);
-        }
-        return false;
-    }
-
     private boolean stepnumberLinkNormalStyleSet(int position) {
         StyledDocument doc = (StyledDocument) getDocument();
         return stepnumberLinkNormalStyleSet(doc.getCharacterElement(position));
@@ -740,16 +704,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         return color != null && color.equalsIgnoreCase(TextStyles.stepnumberLinkStyleHTMLColor);
     }
 
-
-    private boolean stepnumberLinkChangedStyleSet() {
-        StyledEditorKit k = (StyledEditorKit) getEditorKit();
-        Object backgroundColor = k.getInputAttributes().getAttribute(CSS.Attribute.BACKGROUND_COLOR);
-        if (backgroundColor != null) {
-            String value = backgroundColor.toString();
-            return value.equals(TextStyles.changedStepnumberLinkHTMLColor);
-        }
-        return false;
-    }
 
     private boolean stepnumberLinkChangedStyleSet(int position) {
         StyledDocument doc = (StyledDocument) getDocument();
