@@ -6,6 +6,7 @@ import specman.view.AbstractSchrittView;
 
 import javax.swing.JEditorPane;
 import javax.swing.undo.UndoableEdit;
+import java.awt.Cursor;
 import java.awt.event.FocusListener;
 import java.io.File;
 
@@ -27,4 +28,6 @@ public interface EditorI extends FocusListener {
 	UndoRecording composeUndo();
     void showError(EditException ex);
 	AbstractSchrittView findStepByStepID(String stepnumberLinkID);
+	boolean isKeyPressed(int keyCode);
+	void setCursor(Cursor cursorToUse);
 }

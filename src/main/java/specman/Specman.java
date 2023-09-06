@@ -69,6 +69,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -83,7 +84,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.textfield.TextStyles.INDIKATOR_GELB;
@@ -117,6 +120,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	//TODO window for dragging
 	public final JWindow window = new JWindow();
+	private final Set<Integer> pressedKeys = new HashSet<>();
 
 	public Specman() throws Exception {
 		setApplicationIcon();
@@ -176,6 +180,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		// die schon etwas im Undo-Manager hinterlassen.
 		undoManager.discardAllEdits();
 		this.setGlassPane(new GlassPane((SwingUtilities.convertPoint(this.getContentPane(), 0, 0,this).y)-getJMenuBar().getHeight()));
+
+		configureKeyboardManager();
 	}
 
 	private void setInitialWindowSizeAndScreenCenteredLocation() {
@@ -186,6 +192,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		int x = (dim.width-w)/2;
 		int y = (dim.height-h)/2;
 		this.setLocation(x, y);
+	}
+
+	/**
+	 * Sets up a KeyEventDispatcher to provide a list of pressed keys used by another container.
+	 */
+	private void configureKeyboardManager() {
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
+			if (e.getID() == KeyEvent.KEY_PRESSED) {
+				pressedKeys.add(e.getKeyCode());
+			} else if (e.getID() == KeyEvent.KEY_RELEASED) {
+				pressedKeys.remove(e.getKeyCode());
+			}
+			return false;
+		});
 	}
 
 	private void displayWelcomeMessage() {
@@ -1218,5 +1238,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
 		}
 		return null;
+	}
+
+	public boolean isKeyPressed(int keyCode) {
+		return pressedKeys.contains(keyCode);
 	}
 }

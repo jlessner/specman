@@ -102,18 +102,33 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                findHoveredElement(e);
+                setHandCursorWhenHoveringStepnumberLink(e);
             }
         });
     }
 
-    private void findHoveredElement(MouseEvent e) { // TODO Not working when mouse cursor is in different step
-        JEditorPane jEditorPane = (JEditorPane) e.getSource();
+    /**
+     * Changes the cursor when pressing the CONTROL key and hovering over a StepnumberLink.
+     * <p>
+     * If the text cursor resides in a different TextEditArea than the mouse cursor it's not possible to
+     * correctly check both conditions, since they are processed in two different TextEditAreas.
+     * So we query if the CONTROL key is currently pressed via a KeyEventDispatcher from {@link Specman}.
+     */
+    private void setHandCursorWhenHoveringStepnumberLink(MouseEvent e) {
         Point p = new Point(e.getX(), e.getY());
-        int textPosition = jEditorPane.viewToModel2D(p);
+        int textPosition = viewToModel2D(p);
 
-        StyledDocument doc = (StyledDocument) jEditorPane.getDocument();
+        StyledDocument doc = (StyledDocument) this.getDocument();
         hoveredElement = doc.getCharacterElement(textPosition);
+
+        EditorI editor = Specman.instance();
+        Cursor cursorToUse;
+        if (editor.isKeyPressed(KeyEvent.VK_CONTROL) && stepnumberLinkNormalOrChangedStyleSet(hoveredElement)) {
+            cursorToUse = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        } else {
+            cursorToUse = Cursor.getDefaultCursor();
+        }
+        editor.setCursor(cursorToUse);
     }
 
     private void registerToolTipManager() {
@@ -414,7 +429,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 }
             }
             case KeyEvent.VK_CONTROL -> {
-                showHandCursorIfHoveringStepnumberLink(true);
                 if (isMousePressed && !alreadyScrolledDuringCurrentMouseclick && stepnumberLinkNormalOrChangedStyleSet(getCaretPosition())) {
                     scrollToStepnumber();
                 }
@@ -432,16 +446,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         } else {
             standardStilSetzenWennNochNichtVorhanden();
         }
-    }
-
-    private void showHandCursorIfHoveringStepnumberLink(boolean show) {
-        Cursor cursorToUse;
-        if (show && stepnumberLinkNormalOrChangedStyleSet(hoveredElement)) {
-            cursorToUse = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-        } else {
-            cursorToUse = Cursor.getDefaultCursor();
-        }
-        Specman.instance().setCursor(cursorToUse);
     }
 
     private void handleTextDeletion() {
@@ -638,7 +642,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        showHandCursorIfHoveringStepnumberLink(false);
     }
 
     @Override
