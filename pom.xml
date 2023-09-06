@@ -128,6 +128,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>html2pdf</artifactId>
+            <!-- Different version from core. See https://kb.itextpdf.com/home/it7kb/compatibility-matrix for matching versions -->
+            <version>4.0.5</version>
+        </dependency>
+
+        <dependency>
 	        <groupId>org.junit.jupiter</groupId>
 	        <artifactId>junit-jupiter-engine</artifactId>
 	        <version>5.4.0</version>
