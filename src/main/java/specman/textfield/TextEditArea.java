@@ -15,6 +15,7 @@ import specman.view.AbstractSchrittView;
 
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
+import javax.swing.ToolTipManager;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
@@ -60,9 +61,10 @@ import static specman.textfield.TextStyles.standardStil;
 import static specman.textfield.TextStyles.stepnumberLinkStyleColor;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
+    private final static String STEPNUMBER_DEFECT_MARK = "?";
     private boolean isMousePressed = false;
     private boolean alreadyScrolledDuringCurrentMouseclick = false;
-    private final static String STEPNUMBER_DEFECT_MARK = "?";
+    private Element hoveredElement = null;
 
     public TextEditArea(EditorI editor, String initialerText, Color initialBackground) {
         editor.instrumentWysEditor(this, initialerText, 0);
@@ -72,6 +74,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         addMouseListener();
         addMouseMotionListener();
         setBackground(initialBackground);
+        registerToolTipManager();
     }
 
     private void addMouseListener() {
@@ -99,22 +102,30 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                JEditorPane jEditorPane = (JEditorPane) e.getSource();
-                Point p = new Point(e.getX(), e.getY());
-                int textPosition = jEditorPane.viewToModel2D(p);
-
-                StyledDocument doc = (StyledDocument) getDocument();
-                Element element = doc.getCharacterElement(textPosition);
-
-                Cursor cursorToUse;
-                if (stepnumberLinkNormalOrChangedStyleSet(element)) {
-                    cursorToUse = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-                } else {
-                    cursorToUse = Cursor.getDefaultCursor();
-                }
-                Specman.instance().setCursor(cursorToUse);
+                findHoveredElement(e);
             }
         });
+    }
+
+    private void findHoveredElement(MouseEvent e) { // TODO Not working when mouse cursor is in different step
+        JEditorPane jEditorPane = (JEditorPane) e.getSource();
+        Point p = new Point(e.getX(), e.getY());
+        int textPosition = jEditorPane.viewToModel2D(p);
+
+        StyledDocument doc = (StyledDocument) jEditorPane.getDocument();
+        hoveredElement = doc.getCharacterElement(textPosition);
+    }
+
+    private void registerToolTipManager() {
+        ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
+        toolTipManager.registerComponent(this);
+    }
+
+    @Override public String getToolTipText() {
+        if (stepnumberLinkNormalOrChangedStyleSet(hoveredElement)) {
+            return "STRG+Klicken um Link zu folgen";
+        }
+        return super.getToolTipText();
     }
 
     @Override
@@ -403,6 +414,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 }
             }
             case KeyEvent.VK_CONTROL -> {
+                showHandCursorIfHoveringStepnumberLink(true);
                 if (isMousePressed && !alreadyScrolledDuringCurrentMouseclick && stepnumberLinkNormalOrChangedStyleSet(getCaretPosition())) {
                     scrollToStepnumber();
                 }
@@ -420,6 +432,16 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         } else {
             standardStilSetzenWennNochNichtVorhanden();
         }
+    }
+
+    private void showHandCursorIfHoveringStepnumberLink(boolean show) {
+        Cursor cursorToUse;
+        if (show && stepnumberLinkNormalOrChangedStyleSet(hoveredElement)) {
+            cursorToUse = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+        } else {
+            cursorToUse = Cursor.getDefaultCursor();
+        }
+        Specman.instance().setCursor(cursorToUse);
     }
 
     private void handleTextDeletion() {
@@ -616,6 +638,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        showHandCursorIfHoveringStepnumberLink(false);
     }
 
     @Override
@@ -729,7 +752,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     private boolean stepnumberLinkNormalOrChangedStyleSet(Element element) {
-        return stepnumberLinkNormalStyleSet(element) || stepnumberLinkChangedStyleSet(element);
+        return element != null && (stepnumberLinkNormalStyleSet(element) || stepnumberLinkChangedStyleSet(element));
     }
 
 
