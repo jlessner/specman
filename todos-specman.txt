@@ -1,6 +1,7 @@
 Abschluss für Go-Live
 - Schrittnummer-Referenzen im Text, Restarbeiten
   - Nice to have: Verhalten bei gelöscht-markieren des referenzierten Schritts
+  - Nice to have: Tooltip beim Hovern über eine Referenz, solange man STRG noch nicht gedrückt hat (in Word: STRG+Klicken um Link zu folgen)
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
