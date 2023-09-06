@@ -2,6 +2,15 @@ Abschluss für Go-Live
 - Schrittnummer-Referenzen im Text, Restarbeiten
   - Nice to have: Verhalten bei gelöscht-markieren des referenzierten Schritts
   - Nice to have: Tooltip beim Hovern über eine Referenz, solange man STRG noch nicht gedrückt hat (in Word: STRG+Klicken um Link zu folgen)
+- PDF-Export
+  - Aktuell in Arbeit: Font-Probleme
+  - Abgesetzte Darstellung
+  - Stylesheet um alle HTML-Elemente erweitern
+  - Seitenumbrüche
+  - Formatauswahl: A4/A3, Querformat/Hochformat, Auswahl in den Benutzereinstellungen oder im Modell persistieren
+  - Nice to have: Springen über Schrittreferenzen im PDF
+- Änderungsmodus in Modell aufnehmen
+- Änderungsmodus beim Laden von Datei temporär abstellen und anschließend gemäß Modell setzen
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
