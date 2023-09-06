@@ -101,15 +101,18 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             public void mouseMoved(MouseEvent e) {
                 JEditorPane jEditorPane = (JEditorPane) e.getSource();
                 Point p = new Point(e.getX(), e.getY());
-                int pos = jEditorPane.viewToModel2D(p);
+                int textPosition = jEditorPane.viewToModel2D(p);
 
                 StyledDocument doc = (StyledDocument) getDocument();
-                Element element = doc.getCharacterElement(pos);
+                Element element = doc.getCharacterElement(textPosition);
+
+                Cursor cursorToUse;
                 if (stepnumberLinkNormalOrChangedStyleSet(element)) {
-                    Specman.instance().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    cursorToUse = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
                 } else {
-                    Specman.instance().setCursor(Cursor.getDefaultCursor());
+                    cursorToUse = Cursor.getDefaultCursor();
                 }
+                Specman.instance().setCursor(cursorToUse);
             }
         });
     }

@@ -1,20 +1,22 @@
 package specman.draganddrop;
 
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.Specman;
 import specman.textfield.InteractiveStepFragment;
 import specman.view.AbstractSchrittView;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import static specman.draganddrop.InsertDecision.Insert;
 import static specman.draganddrop.InsertDecision.NoInsert;
@@ -49,7 +51,7 @@ public class DragMouseAdapter extends MouseAdapter {
 			JComponent parent = (JComponent) e.getComponent();
 			Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, specman);
 			if(!specman.getGlassPane().isVisible() ) {
-				specman.setCursor(Cursor.DEFAULT_CURSOR);
+				specman.setCursor(Cursor.getDefaultCursor());
 			}
 			specman.getGlassPane().setVisible(false);
 			specman.window.add(dummy);
@@ -73,11 +75,11 @@ public class DragMouseAdapter extends MouseAdapter {
 	public void mouseReleased(MouseEvent e) {
 		try {
 			if(checkEinzigerSchritt(e)){
-				specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				specman.setCursor(Cursor.getDefaultCursor());
 				return;
 			}
 			if(checkGeloeschterSchritt(e) || checkQuellSchritt(e)){
-				specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				specman.setCursor(Cursor.getDefaultCursor());
 				return;
 			}
 			specman.window.setVisible(false);
@@ -85,7 +87,7 @@ public class DragMouseAdapter extends MouseAdapter {
 			draggingLogic.dragGlassPanePos(ptCon, specman.hauptSequenz.schritte,Insert,e);
 			//System.out.println(e.getSource());
 			specman.getGlassPane().setVisible(false);
-			specman.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			specman.setCursor(Cursor.getDefaultCursor());
 			specman.window.remove(dummy);
 		}
 		catch(EditException ex) {
