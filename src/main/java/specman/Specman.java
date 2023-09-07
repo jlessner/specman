@@ -6,6 +6,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
+import org.apache.commons.lang.StringUtils;
 import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
 import specman.model.ModelEnvelope;
@@ -1146,24 +1147,22 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public boolean isStepDeletionAllowed(AbstractSchrittView schritt) throws EditException {
+        int geloeschtzaehler = 1;
+        for (AbstractSchrittView suchSchritt : schritt.getParent().schritte) {
+            if (suchSchritt.getAenderungsart() == Aenderungsart.Geloescht) {
+                geloeschtzaehler++;
+            }
+        }
+        if (schritt.getParent().schritte.size() <= geloeschtzaehler) {
+            throw new EditException("Der letzte Schritt kann nicht entfernt werden.");
+        }
         if (schritt.hasStepnumberLinks()) {
             int dialogResult = JOptionPane.showConfirmDialog(this,
                     "Der zu löschende Schritt wird referenziert. Möchten Sie den Schritt " +
                             "wirklich löschen?\nDie Referenzen werden dann als 'Defekt' markiert.",
                     "Verknüpfte Schrittreferenzen", JOptionPane.OK_CANCEL_OPTION);
-            if (dialogResult == JOptionPane.CANCEL_OPTION) {
-                return false;
-            }
+            return dialogResult == JOptionPane.OK_OPTION;
         }
-		int geloeschtzaehler = 1;
-		for(AbstractSchrittView suchSchritt : schritt.getParent().schritte){
-			if (suchSchritt.getAenderungsart() == Aenderungsart.Geloescht){
-				geloeschtzaehler++;
-			}
-		}
-		if (schritt.getParent().schritte.size() <= geloeschtzaehler) {
-            throw new EditException("Letzten Schritt entfernen ist nicht");
-		}
         return true;
 	}
 
@@ -1207,8 +1206,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return allSteps;
 	}
 
+	/**
+	 * Finds the step by their StepID and throws an exception if it doesn't exist.
+	 * <p>
+	 * A possible {@link TextEditArea#STEPNUMBER_PENDING_DEFECT_MARK} gets stripped before the search
+	 * since the step still exists.
+	 */
 	@Override
 	public AbstractSchrittView findStepByStepID(String stepID) {
+		if (stepID.endsWith(TextEditArea.STEPNUMBER_PENDING_DEFECT_MARK)) {
+			stepID = StringUtils.removeEnd(stepID, TextEditArea.STEPNUMBER_PENDING_DEFECT_MARK);
+		}
+
 		AbstractSchrittView result = findStepByStepID(getHauptSequenz().getSchritte(), stepID);
 		if (result == null) {
 			throw new RuntimeException("Could not find stepnumber '" + stepID + "'."

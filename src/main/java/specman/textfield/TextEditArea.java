@@ -1,6 +1,7 @@
 package specman.textfield;
 
 import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
+import org.apache.commons.lang.StringUtils;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
@@ -61,7 +62,8 @@ import static specman.textfield.TextStyles.standardStil;
 import static specman.textfield.TextStyles.stepnumberLinkStyleColor;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
-    private final static String STEPNUMBER_DEFECT_MARK = "?";
+    public final static String STEPNUMBER_PENDING_DEFECT_MARK = "?";
+    public final static String STEPNUMBER_DEFECT_MARK = "X";
     private boolean isMousePressed = false;
     private boolean alreadyScrolledDuringCurrentMouseclick = false;
     private Element hoveredElement = null;
@@ -707,6 +709,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         EditorI editor = Specman.instance();
         try (UndoRecording ur = editor.composeUndo()) {
             String stepnumberText = referencedStep.getId().toString();
+
+            if (referencedStep.getAenderungsart() == Aenderungsart.Geloescht) {
+                stepnumberText += STEPNUMBER_PENDING_DEFECT_MARK;
+            }
+
             StyledDocument doc = (StyledDocument) getDocument();
             int caretPos = getCaretPosition();
 
@@ -802,8 +809,14 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         step.scrollTo();
     }
 
+    /**
+     * Marks a StepnumberLink as defect.
+     * <p>
+     * If the ID already has a marking like {@link #STEPNUMBER_PENDING_DEFECT_MARK} it gets stripped
+     * to prevent invalid chained markings like "1.1?X".
+     */
     public void markStepnumberLinkAsDefect(String id) {
-        updateStepnumberLink(id, id + STEPNUMBER_DEFECT_MARK);
+        updateStepnumberLink(id, getCleanStepnumberLink(id) + STEPNUMBER_DEFECT_MARK);
     }
 
     public void updateStepnumberLink(String oldID, String newID) {
@@ -815,6 +828,14 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
         throw new RuntimeException("Could not find old StepnumberLink " + oldID + " in TextArea '" + getPlainText() + "'."
                 + " This indicates a missing unregisterStepnumberLink() call.");
+    }
+
+    public void addPendingDefectMarkToStepnumberLinks(String id) {
+        updateStepnumberLink(id, id + STEPNUMBER_PENDING_DEFECT_MARK);
+    }
+
+    public void removePendingDefectMarkFromStepnumberLink(String id) {
+        updateStepnumberLink(id + STEPNUMBER_PENDING_DEFECT_MARK, id);
     }
 
     private boolean replaceStepnumberLink(Element e, String oldID, String newID) {
@@ -888,5 +909,19 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     public boolean isStepnumberLinkDefect(String stepnumberLinkID) {
         return stepnumberLinkID.endsWith(STEPNUMBER_DEFECT_MARK);
+    }
+
+    public boolean isStepnumberLinkPendingDefect(String stepnumberLinkID) {
+        return stepnumberLinkID.endsWith(STEPNUMBER_PENDING_DEFECT_MARK);
+    }
+
+    private String getCleanStepnumberLink(String id) {
+        if (isStepnumberLinkPendingDefect(id)) {
+            id = StringUtils.remove(id, STEPNUMBER_PENDING_DEFECT_MARK);
+        }
+        if (isStepnumberLinkDefect(id)) {
+            id = StringUtils.remove(id, STEPNUMBER_DEFECT_MARK);
+        }
+        return id;
     }
 }

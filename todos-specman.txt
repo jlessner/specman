@@ -1,6 +1,4 @@
 Abschluss für Go-Live
-- Schrittnummer-Referenzen im Text, Restarbeiten
-  - Nice to have: Verhalten bei gelöscht-markieren des referenzierten Schritts
 - PDF-Export
   - Aktuell in Arbeit: Font-Probleme
   - Abgesetzte Darstellung
