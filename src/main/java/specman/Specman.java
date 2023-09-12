@@ -585,6 +585,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
             d.setVisible(true);
         });
 
+		aenderungenVerfolgen.addActionListener(e -> {
+			boolean enabled = aenderungenVerfolgen.isSelected();
+			aenderungenUebernehmen.setEnabled(enabled);
+			aenderungenVerwerfen.setEnabled(enabled);
+		});
+
 		aenderungenUebernehmen.addActionListener(e -> {
 			try (UndoRecording ur = composeUndo()) {
 				try {
@@ -594,7 +600,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					showError(ex);
 				}
 			}
+			disableChangeActionButtons();
         });
+		aenderungenUebernehmen.setEnabled(false);
 
 		aenderungenVerwerfen.addActionListener(e -> {
 			try (UndoRecording ur = composeUndo()) {
@@ -605,8 +613,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					showError(ex);
 				}
 			}
+			disableChangeActionButtons();
         });
+		aenderungenVerwerfen.setEnabled(false);
 
+	}
+
+	private void disableChangeActionButtons() {
+		aenderungenUebernehmen.setEnabled(false);
+		aenderungenVerwerfen.setEnabled(false);
+
+		aenderungenVerfolgen.setEnabled(true);
+		aenderungenVerfolgen.setSelected(false);
 	}
 
 	public void addImageViaFileChooser() {
