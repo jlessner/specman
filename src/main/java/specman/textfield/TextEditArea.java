@@ -716,6 +716,16 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             StyledDocument doc = (StyledDocument) getDocument();
             int caretPos = getCaretPosition();
 
+            // Add space between two stepnumberlinks to prevent merging them
+            if (stepnumberLinkNormalOrChangedStyleSet(caretPos - 1)) {
+                try {
+                    doc.insertString(caretPos, " ", null);
+                } catch (BadLocationException e) {
+                    throw new RuntimeException(e);
+                }
+                caretPos++;
+            }
+
             AttributeSet previousAttribute = doc.getCharacterElement(caretPos).getAttributes();
             MutableAttributeSet stepnumberAttribute = new SimpleAttributeSet(previousAttribute);
             stepnumberAttribute.addAttributes(TextStyles.stepnumberLinkStyle);
