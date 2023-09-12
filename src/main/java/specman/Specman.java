@@ -597,7 +597,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					showError(ex);
 				}
 			}
-			aenderungenVerfolgen.setSelected(false);
         });
 
 		aenderungenVerwerfen.addActionListener(e -> {
@@ -613,7 +612,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					showError(ex);
 				}
 			}
-			aenderungenVerfolgen.setSelected(false);
         });
 
 	}
