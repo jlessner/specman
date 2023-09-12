@@ -1,7 +1,7 @@
 package specman.undo.manager;
 
+import org.apache.commons.lang.StringUtils;
 import specman.Specman;
-import specman.undo.UndoableImageAdded;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -78,13 +78,12 @@ public class SpecmanUndoManager extends UndoManager {
     private void updateUnsavedChangesIndicatorInTitleBar() {
         String currentTitle = specman.getTitle();
         if (canUndo()) {
-            if (!currentTitle.endsWith(UNSAVED_CHANGES_INDICATOR)) {
-                specman.setTitle(currentTitle + UNSAVED_CHANGES_INDICATOR);
+            if (!currentTitle.startsWith(UNSAVED_CHANGES_INDICATOR)) {
+                specman.setTitle(UNSAVED_CHANGES_INDICATOR + currentTitle);
             }
-        }
-        else {
-            if (currentTitle.endsWith(UNSAVED_CHANGES_INDICATOR)) {
-                specman.setTitle(currentTitle.substring(0, currentTitle.length() - UNSAVED_CHANGES_INDICATOR.length()));
+        } else {
+            if (currentTitle.startsWith(UNSAVED_CHANGES_INDICATOR)) {
+                specman.setTitle(StringUtils.removeStart(currentTitle, UNSAVED_CHANGES_INDICATOR));
             }
         }
     }

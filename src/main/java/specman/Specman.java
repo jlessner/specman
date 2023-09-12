@@ -122,9 +122,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	//TODO window for dragging
 	public final JWindow window = new JWindow();
 	private final Set<Integer> pressedKeys = new HashSet<>();
+	public static final String SPECMAN_TITLE = "Specman";
 
 	public Specman() throws Exception {
 		setApplicationIcon();
+		setTitle(SPECMAN_TITLE);
 
 		recentFiles = new RecentFiles(this);
 		undoManager = new SpecmanUndoManager(this);
@@ -282,7 +284,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	private void setDiagrammDatei(File diagrammDatei) {
 		this.diagrammDatei = diagrammDatei;
-		setTitle(diagrammDatei.getName());
+		setTitle(diagrammDatei.getName() + " - "+ SPECMAN_TITLE);
 	}
 
 	private void fehler(String text) {
