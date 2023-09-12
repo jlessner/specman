@@ -325,8 +325,8 @@ public class EditContainer extends JPanel {
 	 * to be removed from the list. */
 	private List<EditArea> modifyableEditAreas() { return new ArrayList<>(editAreas); }
 
-	public void aenderungsmarkierungenUebernehmen() {
-		modifyableEditAreas().forEach(ea -> ea.aenderungsmarkierungenUebernehmen());
+	public int aenderungsmarkierungenUebernehmen() {
+        return modifyableEditAreas().stream().mapToInt(EditArea::aenderungsmarkierungenUebernehmen).sum();
 	}
 
 	public void aenderungsmarkierungenVerwerfen() {

@@ -492,28 +492,31 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		return panelFall1;
 	}
 
-	@Override protected void textAenderungenUebernehmen() {
-		super.textAenderungenUebernehmen();
-		sonstSequenz.ueberschriftAenderungenUebernehmen();
+	@Override protected int textAenderungenUebernehmen() {
+		int changesMade = super.textAenderungenUebernehmen();
+		changesMade += sonstSequenz.ueberschriftAenderungenUebernehmen();
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
-			caseSequenz.ueberschriftAenderungenUebernehmen();
+			changesMade += caseSequenz.ueberschriftAenderungenUebernehmen();
 		}
+		return changesMade;
 	}
 
-	@Override public void aenderungenUebernehmen(EditorI editor) throws EditException {
+	@Override public int aenderungenUebernehmen(EditorI editor) throws EditException {
 		panelFall1.setBackground(Hintergrundfarbe_Standard);
 		setBackground(Hintergrundfarbe_Standard);
-		sonstSequenz.aenderungenUebernehmen(editor);
+		int changesMade = sonstSequenz.aenderungenUebernehmen(editor);
 		List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(this.caseSequenzen);
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			if (caseSequenz.getAenderungsart() == Aenderungsart.Geloescht) {
 				zweigEntfernen(editor, caseSequenz);
+				changesMade++;
 			}
 			else {
-				caseSequenz.aenderungenUebernehmen(editor);
+				changesMade += caseSequenz.aenderungenUebernehmen(editor);
 			}
 		}
-		super.aenderungenUebernehmen(editor);
+		changesMade += super.aenderungenUebernehmen(editor);
+		return changesMade;
 	}
 
 	@Override protected void aenderungsmarkierungenVerwerfen() {

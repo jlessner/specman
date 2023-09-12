@@ -37,7 +37,7 @@ public interface EditArea extends InteractiveStepFragment {
 
   Color getBackground();
 
-  void aenderungsmarkierungenUebernehmen();
+  int aenderungsmarkierungenUebernehmen();
 
   void aenderungsmarkierungenVerwerfen();
 

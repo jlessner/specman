@@ -142,9 +142,10 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return findeSchrittZuIdIncludingSubSequences(id, subsequenz);
 	}
 
-	@Override public void aenderungenUebernehmen(EditorI editor) throws EditException {
-		super.aenderungenUebernehmen(editor);
-		subsequenz.aenderungenUebernehmen(editor);
+	@Override public int aenderungenUebernehmen(EditorI editor) throws EditException {
+		int changesMade = super.aenderungenUebernehmen(editor);
+		changesMade += subsequenz.aenderungenUebernehmen(editor);
+		return changesMade;
 	}
 
 	@Override public void aenderungenVerwerfen(EditorI editor) throws EditException {

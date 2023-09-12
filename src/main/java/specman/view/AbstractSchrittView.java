@@ -447,8 +447,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return result;
 	}
 
-	public void aenderungenUebernehmen(EditorI editor) throws EditException {
-		textAenderungenUebernehmen();
+	public int aenderungenUebernehmen(EditorI editor) throws EditException {
+		int changesMade = textAenderungenUebernehmen();
 		if (aenderungsart != null) {
 			switch (aenderungsart) {
 				case Hinzugefuegt:
@@ -464,11 +464,13 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 					setStandardStil();
 			}
 			setAenderungsart(null);
+			changesMade++;
 		}
+		return changesMade;
 	}
 
-	protected void textAenderungenUebernehmen() {
-		editContainer.aenderungsmarkierungenUebernehmen();
+	protected int textAenderungenUebernehmen() {
+		return editContainer.aenderungsmarkierungenUebernehmen();
 	}
 
 	public void aenderungenVerwerfen(EditorI editor) throws EditException {

@@ -272,21 +272,26 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
-    public void aenderungsmarkierungenUebernehmen() {
+    public int aenderungsmarkierungenUebernehmen() {
         EditorI editor = Specman.instance();
         StyledDocument doc = (StyledDocument) getDocument();
+        int changesMade = 0;
+
         List<GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
         for (Element e : doc.getRootElements()) {
-            aenderungsmarkierungenUebernehmen(e, loeschungen);
+            changesMade += aenderungsmarkierungenUebernehmen(e, loeschungen);
         }
         for (int i = 0; i < loeschungen.size(); i++) {
             GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) - 1 - i);
             try {
                 removeTextAndUnregisterStepnumberLinks(loeschung.getVon(), loeschung.getBis(), editor);
+                changesMade++;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        return changesMade;
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
@@ -308,9 +313,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
-    private void aenderungsmarkierungenUebernehmen(
+    private int aenderungsmarkierungenUebernehmen(
             Element e,
             List<GeloeschtMarkierung_V001> loeschungen) {
+        int changesMade = 0;
+
         StyledDocument doc = (StyledDocument) e.getDocument();
         if (elementHatAenderungshintergrund(e)) {
             if (elementHatDurchgestrichenenText(e)) {
@@ -321,13 +328,16 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 entfaerbt.addAttributes(attribute);
                 StyleConstants.setBackground(entfaerbt, stepnumberLinkChangedStyleSet(e) ? stepnumberLinkStyleColor : Hintergrundfarbe_Standard);
                 doc.setCharacterAttributes(e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), entfaerbt, true);
+                changesMade++;
             }
 
         }
 
         for (int i = 0; i < e.getElementCount(); i++) {
-            aenderungsmarkierungenUebernehmen(e.getElement(i), loeschungen);
+            changesMade += aenderungsmarkierungenUebernehmen(e.getElement(i), loeschungen);
         }
+
+        return changesMade;
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden

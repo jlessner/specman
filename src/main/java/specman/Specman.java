@@ -584,24 +584,21 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
             d.setVisible(true);
         });
 
-		aenderungenVerfolgen.addActionListener(e -> {
-			boolean enabled = aenderungenVerfolgen.isSelected();
-			aenderungenUebernehmen.setEnabled(enabled);
-			aenderungenVerwerfen.setEnabled(enabled);
-		});
-
 		aenderungenUebernehmen.addActionListener(e -> {
 			try (UndoRecording ur = composeUndo()) {
 				try {
-					hauptSequenz.aenderungenUebernehmen(Specman.this);
-					diagrammAktualisieren(null);
+					int changesMade = hauptSequenz.aenderungenUebernehmen(Specman.this);
+					if (changesMade > 0) {
+						diagrammAktualisieren(null);
+					} else {
+						JOptionPane.showMessageDialog(this, "Das Diagramm enthält keine Änderungen.");
+					}
 				} catch (EditException ex) {
 					showError(ex);
 				}
 			}
-			disableChangeActionButtons();
+			aenderungenVerfolgen.setSelected(false);
         });
-		aenderungenUebernehmen.setEnabled(false);
 
 		aenderungenVerwerfen.addActionListener(e -> {
 			try (UndoRecording ur = composeUndo()) {
@@ -612,18 +609,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					showError(ex);
 				}
 			}
-			disableChangeActionButtons();
+			aenderungenVerfolgen.setSelected(false);
         });
-		aenderungenVerwerfen.setEnabled(false);
 
-	}
-
-	private void disableChangeActionButtons() {
-		aenderungenUebernehmen.setEnabled(false);
-		aenderungenVerwerfen.setEnabled(false);
-
-		aenderungenVerfolgen.setEnabled(true);
-		aenderungenVerfolgen.setSelected(false);
 	}
 
 	public void addImageViaFileChooser() {

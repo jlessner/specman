@@ -4,7 +4,6 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
@@ -14,12 +13,14 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.pdf.Shape;
+import specman.textfield.EditContainer;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
-import specman.textfield.EditContainer;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Component;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -49,11 +50,11 @@ public class SchrittSequenzView {
 	boolean schrittnummernSichtbar = true;
 	final FormLayout huellLayout;
 	final AbstractSchrittView parent;
-	
+
 	public SchrittSequenzView() {
 		this(null, new SchrittID(0), null);
 	}
-	
+
 	public SchrittSequenzView(AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart) {
 		this.parent = parent;
 		panel = new JPanel();
@@ -70,7 +71,7 @@ public class SchrittSequenzView {
 		catchBereich = new CatchBereich();
 		panel.add(catchBereich, CC.xy(1, 2));
 	}
-	
+
 	public Aenderungsart getAenderungsart() {
 		return aenderungsart;
 	}
@@ -101,7 +102,7 @@ public class SchrittSequenzView {
 		catchBereich.umgehungBreiteSetzen(model.catchBloeckeUmgehungBreite);
 		catchBereich.klappen.init(model.catchBloeckeZugeklappt);
 	}
-	
+
 	public JPanel getContainer() {
 		return panel;
 	}
@@ -111,7 +112,7 @@ public class SchrittSequenzView {
 			return schritte.get(schritte.size() - 1).newStepIDInSameSequence(After);
 		return sequenzBasisId.naechsteID();
 	}
-	
+
 	void schrittnummerSichtbarkeitSetzen(boolean sichtbar) {
 		schrittnummernSichtbar = sichtbar;
 		for (AbstractSchrittView schritt: schritte) {
@@ -430,7 +431,7 @@ public class SchrittSequenzView {
 	protected SchrittSequenzModel_V001 newModel() {
 		return new SchrittSequenzModel_V001();
 	}
-	
+
 	public boolean enthaeltAenderungsmarkierungen() {
 		for (AbstractSchrittView schritt: schritte) {
 			if (schritt.enthaeltAenderungsmarkierungen())
@@ -499,11 +500,13 @@ public class SchrittSequenzView {
 		return null;
 	}
 
-	public void aenderungenUebernehmen(EditorI editor) throws EditException {
+	public int aenderungenUebernehmen(EditorI editor) throws EditException {
+		int changesMade = 0;
 		for (AbstractSchrittView schritt: schritte) {
-			schritt.aenderungenUebernehmen(editor);
+			changesMade += schritt.aenderungenUebernehmen(editor);
 		}
 		setAenderungsart(null);
+		return changesMade;
 	}
 
 	public void aenderungenVerwerfen(EditorI editor) throws EditException {

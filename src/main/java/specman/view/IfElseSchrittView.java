@@ -283,16 +283,18 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.aenderungsmarkierungenEntfernen();
 	}
 
-	@Override protected void textAenderungenUebernehmen() {
-		super.textAenderungenUebernehmen();
-		elseSequenz.ueberschriftAenderungenUebernehmen();
-		ifSequenz.ueberschriftAenderungenUebernehmen();
+	@Override protected int textAenderungenUebernehmen() {
+		int changesMade = super.textAenderungenUebernehmen();
+		changesMade += elseSequenz.ueberschriftAenderungenUebernehmen();
+		changesMade += ifSequenz.ueberschriftAenderungenUebernehmen();
+		return changesMade;
 	}
 
-	@Override public void aenderungenUebernehmen(EditorI editor) throws EditException {
-		super.aenderungenUebernehmen(editor);
-		elseSequenz.aenderungenUebernehmen(editor);
-		ifSequenz.aenderungenUebernehmen(editor);
+	@Override public int aenderungenUebernehmen(EditorI editor) throws EditException {
+		int changesMade = super.aenderungenUebernehmen(editor);
+		changesMade += elseSequenz.aenderungenUebernehmen(editor);
+		changesMade += ifSequenz.aenderungenUebernehmen(editor);
+		return changesMade;
 	}
 
 	@Override protected void aenderungsmarkierungenVerwerfen() {

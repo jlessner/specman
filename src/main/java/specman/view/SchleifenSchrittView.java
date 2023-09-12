@@ -209,9 +209,10 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		return findeSchrittZuIdIncludingSubSequences(id, wiederholSequenz);
 	}
 
-	@Override public void aenderungenUebernehmen(EditorI editor) throws EditException {
-		super.aenderungenUebernehmen(editor);
-		wiederholSequenz.aenderungenUebernehmen(editor);
+	@Override public int aenderungenUebernehmen(EditorI editor) throws EditException {
+		int changesMade = super.aenderungenUebernehmen(editor);
+		changesMade += wiederholSequenz.aenderungenUebernehmen(editor);
+		return changesMade;
 	}
 
 	@Override public void aenderungenVerwerfen(EditorI editor) throws EditException {

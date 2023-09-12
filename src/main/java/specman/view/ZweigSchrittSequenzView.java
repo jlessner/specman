@@ -7,9 +7,9 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
+import specman.textfield.EditContainer;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
-import specman.textfield.EditContainer;
 
 import java.awt.Color;
 
@@ -57,7 +57,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	public boolean hatUeberschrift(InteractiveStepFragment fragment) {
 		return ueberschrift.enthaelt(fragment);
 	}
-	
+
 	public SchrittID naechsteNachbarSequenzID() {
 		return sequenzBasisId.naechsteID();
 	}
@@ -71,7 +71,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	public EditContainer getUeberschrift() {
 		return ueberschrift;
 	}
-	
+
 	//Die Backgroundcolor in IfSchrittViews anpassen
 	public void setBackground(Color bg) {
 		sequenzBereich.setBackground(bg);
@@ -93,7 +93,9 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		ueberschrift.aenderungsmarkierungenEntfernen(null);
 	}
 
-	public void ueberschriftAenderungenUebernehmen() { ueberschrift.aenderungsmarkierungenUebernehmen(); }
+	public int ueberschriftAenderungenUebernehmen() {
+		return ueberschrift.aenderungsmarkierungenUebernehmen();
+	}
 
 	public void ueberschriftAenderungenVerwerfen() {
 		ueberschrift.aenderungsmarkierungenVerwerfen();
