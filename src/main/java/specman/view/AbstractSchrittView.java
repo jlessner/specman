@@ -202,13 +202,11 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
 		setGeloeschtMarkiertStil();
-		addPendingDefectMarkToStepnumberLinks();
 		return new UndoableSchrittEntferntMarkiert(this, editor);
 	}
 
 	public void aenderungsmarkierungenEntfernen() {
 		setStandardStil();
-		removePendingDefectMarkFromStepnumberLinks();
 	}
 
 	public boolean enthaeltAenderungsmarkierungen() {
@@ -457,7 +455,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 					break;
 				case Geloescht:
 				case Quellschritt:
-					markStepnumberLinksAsDefect(true);
+					markStepnumberLinksAsDefect();
 					getParent().schrittEntfernen(this);
 					break;
 				case Zielschritt:
@@ -515,27 +513,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		}
 	}
 
-	public void addPendingDefectMarkToStepnumberLinks() {
-		for (TextEditArea referencedByTextEditArea : referencedByTextEditAreas) {
-			referencedByTextEditArea.addPendingDefectMarkToStepnumberLinks(getId().toString());
-		}
-	}
-
-	public void removePendingDefectMarkFromStepnumberLinks() {
-		for (TextEditArea referencedByTextEditArea : referencedByTextEditAreas) {
-			referencedByTextEditArea.removePendingDefectMarkFromStepnumberLink(getId().toString());
-		}
-	}
-
 	public void markStepnumberLinksAsDefect() {
-		markStepnumberLinksAsDefect(false);
-	}
-
-	private void markStepnumberLinksAsDefect(boolean previouslyDefect) {
 		String id = getId().toString();
-		if (previouslyDefect) {
-			id += TextEditArea.STEPNUMBER_PENDING_DEFECT_MARK;
-		}
         for (TextEditArea referencedByTextEditArea : referencedByTextEditAreas) {
             referencedByTextEditArea.markStepnumberLinkAsDefect(id);
         }

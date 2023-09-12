@@ -6,7 +6,6 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
-import org.apache.commons.lang.StringUtils;
 import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
 import specman.model.ModelEnvelope;
@@ -1227,17 +1226,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	/**
-	 * Finds the step by their StepID and throws an exception if it doesn't exist.
-	 * <p>
-	 * A possible {@link TextEditArea#STEPNUMBER_PENDING_DEFECT_MARK} gets stripped before the search
-	 * since the step still exists.
+	 * Finds a step by their StepID and throws an exception if it doesn't exist.
 	 */
 	@Override
 	public AbstractSchrittView findStepByStepID(String stepID) {
-		if (stepID.endsWith(TextEditArea.STEPNUMBER_PENDING_DEFECT_MARK)) {
-			stepID = StringUtils.removeEnd(stepID, TextEditArea.STEPNUMBER_PENDING_DEFECT_MARK);
-		}
-
 		AbstractSchrittView result = findStepByStepID(getHauptSequenz().getSchritte(), stepID);
 		if (result == null) {
 			throw new RuntimeException("Could not find stepnumber '" + stepID + "'."
