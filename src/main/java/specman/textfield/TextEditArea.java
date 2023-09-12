@@ -295,21 +295,26 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
-    public void aenderungsmarkierungenVerwerfen() {
+    public int aenderungsmarkierungenVerwerfen() {
         EditorI editor = Specman.instance();
         StyledDocument doc = (StyledDocument) getDocument();
+        int changesReverted = 0;
+
         List<GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
         for (Element e : doc.getRootElements()) {
-            aenderungsmarkierungenVerwerfen(e, loeschungen);
+            changesReverted += aenderungsmarkierungenVerwerfen(e, loeschungen);
         }
         for (int i = 0; i < loeschungen.size(); i++) {
             GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) - 1 - i);
             try {
                 removeTextAndUnregisterStepnumberLinks(loeschung.getVon(), loeschung.getBis(), editor);
+                changesReverted++;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        return changesReverted;
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
@@ -341,9 +346,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
-    private void aenderungsmarkierungenVerwerfen(
+    private int aenderungsmarkierungenVerwerfen(
             Element e,
             List<GeloeschtMarkierung_V001> loeschungen) {
+        int changesReverted = 0;
+
         StyledDocument doc = (StyledDocument) e.getDocument();
         if (elementHatAenderungshintergrund(e)) {
             if (!elementHatDurchgestrichenenText(e)) {
@@ -355,12 +362,15 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 StyleConstants.setBackground(entfaerbt, stepnumberLinkChangedStyleSet(e) ? stepnumberLinkStyleColor : Hintergrundfarbe_Standard);
                 StyleConstants.setStrikeThrough(entfaerbt, false);
                 doc.setCharacterAttributes(e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), entfaerbt, true);
+                changesReverted++;
             }
 
         }
         for (int i = 0; i < e.getElementCount(); i++) {
-            aenderungsmarkierungenVerwerfen(e.getElement(i), loeschungen);
+            changesReverted += aenderungsmarkierungenVerwerfen(e.getElement(i), loeschungen);
         }
+
+        return changesReverted;
     }
 
     private boolean elementHatDurchgestrichenenText() {

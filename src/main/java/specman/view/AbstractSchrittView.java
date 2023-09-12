@@ -473,8 +473,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return editContainer.aenderungsmarkierungenUebernehmen();
 	}
 
-	public void aenderungenVerwerfen(EditorI editor) throws EditException {
-		aenderungsmarkierungenVerwerfen();
+	public int aenderungenVerwerfen(EditorI editor) throws EditException {
+		int changesReverted = aenderungsmarkierungenVerwerfen();
 		if (aenderungsart != null) {
 			switch (aenderungsart) {
 				case Hinzugefuegt:
@@ -496,12 +496,13 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 					this.setStandardStil();
 			}
 			setAenderungsart(null);
+			changesReverted++;
 		}
-
+		return changesReverted;
 	}
 
-	protected void aenderungsmarkierungenVerwerfen() {
-		editContainer.aenderungsmarkierungenVerwerfen();
+	protected int  aenderungsmarkierungenVerwerfen() {
+		return editContainer.aenderungsmarkierungenVerwerfen();
 	}
 
 	public void registerStepnumberLink(TextEditArea textEditArea) {

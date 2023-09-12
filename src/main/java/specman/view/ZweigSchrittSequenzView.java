@@ -83,9 +83,10 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		ueberschrift.setGeloeschtMarkiertStil(null);
 	}
 
-	public void aenderungenVerwerfen(EditorI editor) throws EditException {
-		super.aenderungenVerwerfen(editor);
+	public int aenderungenVerwerfen(EditorI editor) throws EditException {
+		int changesReverted = super.aenderungenVerwerfen(editor);
 		aenderungsmarkierungenEntfernen();
+		return changesReverted;
 	}
 
 	public void aenderungsmarkierungenEntfernen() {
@@ -97,8 +98,8 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		return ueberschrift.aenderungsmarkierungenUebernehmen();
 	}
 
-	public void ueberschriftAenderungenVerwerfen() {
-		ueberschrift.aenderungsmarkierungenVerwerfen();
+	public int ueberschriftAenderungenVerwerfen() {
+		return ueberschrift.aenderungsmarkierungenVerwerfen();
 	}
 
 }

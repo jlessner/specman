@@ -148,9 +148,10 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return changesMade;
 	}
 
-	@Override public void aenderungenVerwerfen(EditorI editor) throws EditException {
-		super.aenderungenVerwerfen(editor);
-		subsequenz.aenderungenVerwerfen(editor);
+	@Override public int aenderungenVerwerfen(EditorI editor) throws EditException {
+		int changesReverted = super.aenderungenVerwerfen(editor);
+		changesReverted += subsequenz.aenderungenVerwerfen(editor);
+		return changesReverted;
 	}
 
 	@Override public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {

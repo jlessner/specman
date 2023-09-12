@@ -509,11 +509,13 @@ public class SchrittSequenzView {
 		return changesMade;
 	}
 
-	public void aenderungenVerwerfen(EditorI editor) throws EditException {
+	public int  aenderungenVerwerfen(EditorI editor) throws EditException {
+		int changesReverted = 0;
 		for (AbstractSchrittView schritt: schritte) {
-			schritt.aenderungenVerwerfen(editor);
+			changesReverted += schritt.aenderungenVerwerfen(editor);
 		}
 		setAenderungsart(null);
+		return changesReverted;
 	}
 
 	public void alsGeloeschtMarkieren(EditorI editor) {

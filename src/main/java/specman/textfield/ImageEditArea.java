@@ -272,13 +272,16 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   @Override
-  public void aenderungsmarkierungenVerwerfen() {
+  public int aenderungsmarkierungenVerwerfen() {
+    int changesReverted = 0;
     if (aenderungsart != null) {
       switch(aenderungsart) {
         case Hinzugefuegt -> getParent().removeImage(this);
         case Geloescht -> updateChangetypeAndDependentStyling(null);
       }
+      changesReverted++;
     }
+    return changesReverted;
   }
 
   @Override

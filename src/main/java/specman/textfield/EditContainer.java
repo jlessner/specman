@@ -329,8 +329,8 @@ public class EditContainer extends JPanel {
         return modifyableEditAreas().stream().mapToInt(EditArea::aenderungsmarkierungenUebernehmen).sum();
 	}
 
-	public void aenderungsmarkierungenVerwerfen() {
-		modifyableEditAreas().forEach(ea -> ea.aenderungsmarkierungenVerwerfen());
+	public int aenderungsmarkierungenVerwerfen() {
+		return modifyableEditAreas().stream().mapToInt(EditArea::aenderungsmarkierungenVerwerfen).sum();
 	}
 
 	public boolean enthaelt(InteractiveStepFragment fragment) {

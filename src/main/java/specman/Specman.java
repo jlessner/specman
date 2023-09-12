@@ -603,8 +603,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		aenderungenVerwerfen.addActionListener(e -> {
 			try (UndoRecording ur = composeUndo()) {
 				try {
-					hauptSequenz.aenderungenVerwerfen(Specman.this);
-					diagrammAktualisieren(null);
+					int changesReverted = hauptSequenz.aenderungenVerwerfen(Specman.this);
+					if (changesReverted > 0) {
+						diagrammAktualisieren(null);
+					} else {
+						JOptionPane.showMessageDialog(this, "Das Diagramm enthält keine Änderungen.");
+					}
 				} catch (EditException ex) {
 					showError(ex);
 				}
