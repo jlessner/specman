@@ -23,10 +23,10 @@ import static specman.undo.manager.UndoRecordingMode.ComposingWhilePaused;
  * The manager's recording mode is organized as a stack in case it is changed multiple times within a
  * call chain. It behaves a bit like a simple transaction manager. */
 public class SpecmanUndoManager extends UndoManager {
-    private static final String UNSAVED_CHANGES_INDICATOR = " *";
+    private static final String UNSAVED_CHANGES_INDICATOR = "*";
 
     private final Specman specman;
-    private Stack<UndoRecordingMode> recordingMode = new Stack<>();
+    private final Stack<UndoRecordingMode> recordingMode = new Stack<>();
     private UndoableComposition recordingComposition;
 
     public SpecmanUndoManager(Specman specman) {
