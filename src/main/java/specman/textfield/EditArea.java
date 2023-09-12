@@ -43,6 +43,8 @@ public interface EditArea extends InteractiveStepFragment {
 
   TextEditArea asTextArea();
 
+  boolean isTextArea();
+
   ImageEditArea asImageArea();
 
   void setQuellStil();

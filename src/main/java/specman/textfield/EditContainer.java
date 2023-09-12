@@ -457,4 +457,13 @@ public class EditContainer extends JPanel {
 		}
 		return stepnumberLinkMap;
 	}
+
+	public void setCaretAtStart() {
+		requestFocus();
+		for (EditArea editArea : editAreas) {
+			if (editArea.isTextArea()) {
+				editArea.asTextArea().setCaretPosition(1);
+			}
+		}
+	}
 }

@@ -114,6 +114,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void scrollTo() {
 		editContainer.scrollRectToVisible(editContainer.getBounds());
+		editContainer.setCaretAtStart();
 	}
 
 	abstract public JComponent getComponent();

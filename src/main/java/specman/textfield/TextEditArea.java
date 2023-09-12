@@ -1,7 +1,6 @@
 package specman.textfield;
 
 import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
-import org.apache.commons.lang.StringUtils;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
@@ -682,6 +681,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     @Override
     public TextEditArea asTextArea() {
         return this;
+    }
+
+    @Override
+    public boolean isTextArea() {
+        return true;
     }
 
     @Override
