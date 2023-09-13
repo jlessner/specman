@@ -729,8 +729,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	public void diagrammLaden(File diagramFile) {
 		try {
-			dropWelcomeMessage();
 			aenderungenVerfolgen.setSelected(false);
+			dropWelcomeMessage();
 			postInitSchritte = new ArrayList<AbstractSchrittView>();
 			setDiagrammDatei(diagramFile);
 
@@ -753,6 +753,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			neueSchritteNachinitialisieren();
 			quellZielZuweisung(model.queryAllSteps());
 			hauptSequenz.viewsNachinitialisieren();
+			aenderungenVerfolgen.setSelected(model.changeModeenabled);
 			recentFiles.add(diagramFile);
 			undoManager.discardAllEdits();
 		} catch (IOException e) {
@@ -1029,6 +1030,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			getName(),
 			diagrammbreite,
 			zoomFaktor,
+			aenderungenVerfolgen(),
 			hauptSequenz.generiereSchittSequenzModel(formatierterText),
 			intro.editorContent2Model(formatierterText),
 			outro.editorContent2Model(formatierterText));

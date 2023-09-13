@@ -7,7 +7,6 @@ Abschluss für Go-Live
   - Seitenumbrüche
   - Formatauswahl: A4/A3, Querformat/Hochformat, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
-- Änderungsmodus in Modell aufnehmen
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung

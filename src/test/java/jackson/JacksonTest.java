@@ -1,21 +1,20 @@
 package jackson;
 
-import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import static specman.view.RoundedBorderDecorationStyle.None;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
+import org.junit.jupiter.api.Test;
 import specman.SchrittID;
 import specman.model.ModelEnvelope;
 import specman.model.v001.EinfacherSchrittModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
-import specman.view.RoundedBorderDecorationStyle;
 
-import java.awt.*;
+import java.awt.Color;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static specman.view.RoundedBorderDecorationStyle.None;
 
 public class JacksonTest {
 
@@ -39,7 +38,7 @@ public class JacksonTest {
 	@Test
 	void testEnvelope() throws Exception {
 		SchrittID id = new SchrittID(0);
-		StruktogrammModel_V001 model = new StruktogrammModel_V001(null, 10, 100, null, null, null);
+		StruktogrammModel_V001 model = new StruktogrammModel_V001(null, 10, 100, false, null, null, null);
 		ModelEnvelope writeenvelope = new ModelEnvelope();
 		writeenvelope.model = model;
 		writeenvelope.modelType = model.getClass().getName();
