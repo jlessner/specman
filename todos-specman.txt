@@ -21,7 +21,12 @@ Bugs fixen
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
-- Exception beim Zurücknehmen von Einfügungen mit Zeilenumbrüchen:
+- Letzter Zeilenumbruch in einem Schritt kann nicht entfernt werden
+    - Problem ist, dass der Umbruch nicht entfernt werden kann, da der Offset angeblich größer als das Dokumentenende ist:
+      RemoveAction.actionPerformed(e) -> HTMLUtils.removeElement()Zeile199 - Es wird erkannt, dass der Offset des zu entfernenden Elements größer ist
+      als die Länge des Documents und die zu entfernende Länge auf 0 reduziert wird. Dies führt dazu, dass der Zeilenumbruch nicht entfernt wird.
+      Eine Ausgabe von document.getText() mit den Offsets gibt jedoch den erwarteten Text (\n) zurück.
+- Gleiches Problem wie oben, nur andere Stelle: Exception beim Zurücknehmen von Einfügungen mit Zeilenumbrüchen:
     Caused by: javax.swing.text.BadLocationException: Invalid remove
         at java.desktop/javax.swing.text.AbstractDocument.handleRemove(AbstractDocument.java:634)
         at java.desktop/javax.swing.text.AbstractDocument.remove(AbstractDocument.java:619)
