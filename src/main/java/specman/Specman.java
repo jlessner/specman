@@ -1094,12 +1094,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 //        if (result == JFileChooser.APPROVE_OPTION) {
 //            File selectedFile = fileChooser.getSelectedFile();
 						File selectedFile = new File("sample.pdf");
+		System.out.println(arbeitsbereich.getLocation());
+		System.out.println(hauptSequenzContainer.getLocation());
+		System.out.println(intro.getSize());
             if (selectedFile != null) {
-                Shape all = new Shape(arbeitsbereich.getBounds().getLocation())
-									.add(new Shape(intro))
-									.add(hauptSequenz.getShapeSequence())
-									.add(breitenAnpasser.getShape())
-									.add(new Shape(outro));
+                Shape all = new Shape(hauptSequenzContainer)
+									.add(intro.getShape())
+									.add(hauptSequenz.getShapeSequence().translate(0, -15))
+									.add(breitenAnpasser.getShape().translate(0, -15))
+									.add(outro.getShape());
                 new PDFRenderer(selectedFile.getAbsolutePath(), zoomFaktor).render(all);
             }
 //        }

@@ -132,4 +132,9 @@ public class Shape {
     }
     return subshapes.stream().mapToInt(s -> s.getWidth()).max().orElse(0);
   }
+
+  public Shape translate(int dx, int dy) {
+    path.stream().forEach(p -> p.translate(dx, dy));
+    return this;
+  }
 }

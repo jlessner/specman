@@ -5,7 +5,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.IElement;
 
 import java.awt.*;
 
@@ -34,7 +33,7 @@ public class PDFRenderer {
   public PDFRenderer(String pdfFilename, int zoomfactor) {
     try {
       LabelShapeText.initFont(zoomfactor);
-      FormatedShapeText.initFont(zoomfactor);
+      FormattedShapeText.initFont(zoomfactor);
 
       this.pdfFilename = pdfFilename;
       writer = new PdfWriter(pdfFilename);

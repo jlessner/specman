@@ -12,7 +12,7 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
-import specman.pdf.FormatedShapeText;
+import specman.pdf.FormattedShapeText;
 import specman.pdf.Shape;
 import specman.undo.UndoableImageAdded;
 import specman.undo.UndoableImageRemoved;
@@ -440,7 +440,7 @@ public class EditContainer extends JPanel {
 
 	public specman.pdf.Shape getShape() {
 		TextEditArea edit1 = (TextEditArea) editAreas.get(0);
-		Shape shape = new Shape(this).withText(new FormatedShapeText(edit1));
+		Shape shape = new Shape(this).withText(new FormattedShapeText(edit1));
 		if (schrittNummer != null && schrittNummerSichtbar) {
 			shape.add(schrittNummer.getShape());
 		}

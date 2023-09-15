@@ -22,11 +22,10 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FormatedShapeText extends AbstractShapeText {
+public class FormattedShapeText extends AbstractShapeText {
   private static final String HTML2PDF_STYLESHEET = "src/main/resources/stylesheets/specman-pdf.css";
   private static final Pattern FONTSIZE_PATTERN = Pattern.compile("(.*font-size:[\\s]*)([\\d\\.]+)(.+)");
 
@@ -35,7 +34,7 @@ public class FormatedShapeText extends AbstractShapeText {
 
   private TextEditArea content;
 
-  public FormatedShapeText(TextEditArea content) {
+  public FormattedShapeText(TextEditArea content) {
     super(content.getInsets(), content.getForeground(), content.getFont());
     this.content = content;
   }

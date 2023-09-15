@@ -1,11 +1,11 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Aktuell in Arbeit: Font-Probleme
-  - Fettschrift in PDF-Texten funktioniert nicht trotz gleichen Truetype-Font in Swing und PDF
   - Abgesetzte Darstellung
+  - Bilder und unterstrukturierte EditContainer (aktuello nur 1. TextEditArea)
   - Stylesheet um alle HTML-Elemente erweitern
   - Texte über und unter Diagramm
   - Seitenumbrüche
+  - Fettschrift in PDF-Texten funktioniert nicht trotz gleichen Truetype-Font in Swing und PDF
   - Formatauswahl: A4/A3, Querformat/Hochformat, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
 - Darstellung von Catch-Bereichen überarbeiten
