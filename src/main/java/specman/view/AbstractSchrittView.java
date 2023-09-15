@@ -20,6 +20,7 @@ import specman.model.v001.WhileWhileSchrittModel_V001;
 import specman.textfield.EditContainer;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
+import specman.textfield.StepnumberLink;
 import specman.textfield.TextEditArea;
 import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableSchrittEntferntMarkiert;
@@ -422,7 +423,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 			List<String> stepIDs = listEntry.getValue();
 
             for (String stepID : stepIDs) {
-				if (!referencingTextEditArea.isStepnumberLinkDefect(stepID)) {
+				if (!StepnumberLink.isStepnumberLinkDefect(stepID)) {
 					AbstractSchrittView step = editor.findStepByStepID(stepID);
 					step.registerStepnumberLink(referencingTextEditArea);
 				}

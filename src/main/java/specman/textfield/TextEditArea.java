@@ -61,7 +61,6 @@ import static specman.textfield.TextStyles.standardStil;
 import static specman.textfield.TextStyles.stepnumberLinkStyleColor;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
-    public final static String STEPNUMBER_DEFECT_MARK = "?";
     private boolean isMousePressed = false;
     private boolean alreadyScrolledDuringCurrentMouseclick = false;
     private Element hoveredElement = null;
@@ -582,7 +581,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
             if (stepnumberLinkNormalOrChangedStyleSet(element)) {
                 String stepnumberLinkID = getStepnumberLinkIDFromElement(currentOffset, currentEndOffset);
-                if (!isStepnumberLinkDefect(stepnumberLinkID)) {
+                if (!StepnumberLink.isStepnumberLinkDefect(stepnumberLinkID)) {
                     AbstractSchrittView step = editor.findStepByStepID(stepnumberLinkID);
                     step.unregisterStepnumberLink(this);
                     editor.addEdit(new UndoableStepnumberLinkRemoved(step, this));
@@ -828,7 +827,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
         String stepnumberLinkID = getStepnumberLinkIDFromElement(element.getStartOffset(), element.getEndOffset());
 
-        if (isStepnumberLinkDefect(stepnumberLinkID)) {
+        if (StepnumberLink.isStepnumberLinkDefect(stepnumberLinkID)) {
             JOptionPane.showMessageDialog(this,
                     "Der Schritt, auf den der SchrittnummerLink verwiesen hat, existiert nicht mehr.",
                     "Springen nicht möglich", JOptionPane.ERROR_MESSAGE);
@@ -842,7 +841,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
      * Marks a StepnumberLink as defect.
      */
     public void markStepnumberLinkAsDefect(String id) {
-        updateStepnumberLink(id,id + STEPNUMBER_DEFECT_MARK);
+        updateStepnumberLink(id,id + StepnumberLink.STEPNUMBER_DEFECT_MARK);
     }
 
     public void updateStepnumberLink(String oldID, String newID) {
@@ -923,9 +922,5 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public boolean isStepnumberLinkDefect(String stepnumberLinkID) {
-        return stepnumberLinkID.endsWith(STEPNUMBER_DEFECT_MARK);
     }
 }
