@@ -78,11 +78,11 @@ public class SpecmanUndoManager extends UndoManager {
     private void updateUnsavedChangesIndicatorInTitleBar() {
         String currentTitle = specman.getTitle();
         if (canUndo()) {
-            if (!currentTitle.startsWith(UNSAVED_CHANGES_INDICATOR)) {
+            if (!hasUnsavedChanges()) {
                 specman.setTitle(UNSAVED_CHANGES_INDICATOR + currentTitle);
             }
         } else {
-            if (currentTitle.startsWith(UNSAVED_CHANGES_INDICATOR)) {
+            if (hasUnsavedChanges()) {
                 specman.setTitle(StringUtils.removeStart(currentTitle, UNSAVED_CHANGES_INDICATOR));
             }
         }
@@ -105,5 +105,9 @@ public class SpecmanUndoManager extends UndoManager {
             addEdit(recordingComposition);
             recordingComposition = null;
         }
+    }
+
+    public boolean hasUnsavedChanges() {
+        return specman.getTitle().startsWith(UNSAVED_CHANGES_INDICATOR);
     }
 }

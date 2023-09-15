@@ -57,6 +57,7 @@ import javax.swing.JToolBar;
 import javax.swing.JWindow;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.undo.UndoableEdit;
@@ -78,6 +79,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -184,6 +187,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		this.setGlassPane(new GlassPane((SwingUtilities.convertPoint(this.getContentPane(), 0, 0,this).y)-getJMenuBar().getHeight()));
 
 		configureKeyboardManager();
+		setupQuestionDialogWhenClosingWithoutSaving();
 	}
 
 	private void setInitialWindowSizeAndScreenCenteredLocation() {
@@ -225,6 +229,37 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	private void setApplicationIcon() {
 		setIconImage(readImageIcon("specman").getImage());
+	}
+
+	private void setupQuestionDialogWhenClosingWithoutSaving() {
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (undoManager.hasUnsavedChanges()) {
+					int dialogResult = JOptionPane.showConfirmDialog(Specman.instance,
+							"Änderungen am Dokument '" + getDiagramFilename() + "' vor dem Schließen speichern?" +
+									"\nIhre Änderungen gehen verloren, wenn Sie diese nicht speichern.",
+							"Diagramm speichern?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+					if (dialogResult == JOptionPane.CANCEL_OPTION) { // Prevent closing
+						return;
+					} else if (dialogResult == JOptionPane.YES_OPTION) { // Save & Close
+						diagrammSpeichern(false);
+					}
+                }
+
+				dispose();
+				System.exit(0);
+			}
+		});
+	}
+
+	private String getDiagramFilename() {
+		if (diagrammDatei != null) {
+			return diagrammDatei.getName();
+		}
+		return "Unbekannt";
 	}
 
 	@Override
@@ -283,7 +318,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	private void setDiagrammDatei(File diagrammDatei) {
 		this.diagrammDatei = diagrammDatei;
-		setTitle(diagrammDatei.getName() + " - "+ SPECMAN_TITLE);
+		setTitle(getDiagramFilename() + " - "+ SPECMAN_TITLE);
 	}
 
 	private void fehler(String text) {
@@ -526,7 +561,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		exportAsPDFMenuItem.addActionListener(e -> exportAsPDF());
 
-		exitMenuItem.addActionListener(e -> System.exit(0));
+		exitMenuItem.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
 
 		review.addActionListener(new ActionListener() {
 			@Override public void actionPerformed(ActionEvent e) {
