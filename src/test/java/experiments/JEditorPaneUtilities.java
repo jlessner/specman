@@ -4,6 +4,9 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
 import javax.swing.*;
+import javax.swing.text.Element;
+import javax.swing.text.Style;
+import javax.swing.text.StyledDocument;
 import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -20,7 +23,8 @@ public class JEditorPaneUtilities extends JFrame {
     JEditorPane field = new JEditorPane();
     field.setContentType("text/html");
     pane.add(field, CC.xy(1, 2));
-    field.setText("<html>Lorem ipsum dol\nor <font size=\"+3\">sit</font> amet, consetetur sadipscing <h1>elitr</h1></html>");
+    //field.setText("<html>Lorem ipsum dol\nor <font size=\"+3\">sit</font> amet, consetetur sadipscing <h1>elitr</h1></html>");
+    field.setText("<html>eins<i>one</i><br>zwei<ul><li>drei</ul>vier</html>");
     this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     this.addComponentListener(new ComponentListener() {
@@ -43,13 +47,14 @@ public class JEditorPaneUtilities extends JFrame {
         //   man für diese ja auch keine Y-Position mehr. Die Höhe des Gesamtfeldes ist ja bekannt, und es bleibt dann unterhelb einer H1 in der letzten
         //   Zeile der passende leere Abstand.
         try {
+          StyledDocument document = (StyledDocument)field.getDocument();
           System.out.println(field.getHeight());
-          for (int i = 0; i < field.getDocument().getLength(); i++) {
-            System.out.println(field.modelToView2D(i));
+          for (int i = 0; i < document.getLength(); i++) {
+            System.out.println(i + ", " + field.modelToView2D(i));
           }
-          for (int pos = 1; pos < field.getDocument().getLength(); pos++) {
+          for (int pos = 1; pos < document.getLength(); pos++) {
             pos = Utilities.getRowEnd(field, pos);
-            System.out.println("Zeile bis " + pos + ", Höhe " + field.modelToView2D(pos).getHeight());
+            System.out.println("Zeile bis " + pos + ", Höhe " + field.modelToView2D(pos).getHeight() + ", y = " + field.modelToView2D(pos).getY());
           }
         }
         catch(Exception x) {

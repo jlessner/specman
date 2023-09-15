@@ -1100,7 +1100,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 									.add(hauptSequenz.getShapeSequence())
 									.add(breitenAnpasser.getShape())
 									.add(new Shape(outro));
-                new PDFRenderer(selectedFile.getAbsolutePath()).render(all);
+                new PDFRenderer(selectedFile.getAbsolutePath(), zoomFaktor).render(all);
             }
 //        }
 	}

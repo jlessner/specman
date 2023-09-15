@@ -1,6 +1,7 @@
 Abschluss für Go-Live
 - PDF-Export
   - Aktuell in Arbeit: Font-Probleme
+  - Fettschrift in PDF-Texten funktioniert nicht trotz gleichen Truetype-Font in Swing und PDF
   - Abgesetzte Darstellung
   - Stylesheet um alle HTML-Elemente erweitern
   - Texte über und unter Diagramm

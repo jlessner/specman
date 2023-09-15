@@ -6,6 +6,9 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.html.HTML;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TextStyles {
     public static final int FONTSIZE = 15;
@@ -20,7 +23,30 @@ public class TextStyles {
     public static MutableAttributeSet changedStepnumberLinkStyle = new SimpleAttributeSet();
     public static MutableAttributeSet deletedStepnumberLinkStyle = new SimpleAttributeSet();
 
-    public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
+    //public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
+    //public static Font font = new Font("Times New Roman", Font.PLAIN, FONTSIZE);
+
+    /**
+     * The following font is part of the Specman delivery and turned out to be rendered
+     * almost identical in both Swing UI and PDF export. This is a crucial aspect as the
+     * sizes of the text boxes in PDF are directly derived from the sizes in Swing. So the
+     * text rendering within the boxes must match very well. It is not easy to find a font
+     * which guarantees that. E.g. using simply a font construction like
+     * <pre>new Font("Times New Roman", Font.PLAIN, FONTSIZE);</pre>
+     * and using "Times New Roman" also for PDF rendering, causes slightly different lengths
+     * of the text lines.
+     */
+    public static final String SERIF_FONT = "src/main/resources/fonts/Sitka-Display.ttf";
+    public static Font font;
+    static {
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, new java.io.File(SERIF_FONT));
+        }
+        catch(Exception x) {
+            x.printStackTrace();
+        }
+    }
+
     public static Font labelFont = new Font(Font.SANS_SERIF, Font.BOLD, SCHRITTNR_FONTSIZE);
 
     public static final Color Hintergrundfarbe_Schrittenummer = Color.LIGHT_GRAY;

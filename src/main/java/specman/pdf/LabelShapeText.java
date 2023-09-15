@@ -2,6 +2,7 @@ package specman.pdf;
 
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.layout.Document;
 
 import java.awt.*;
 
@@ -16,11 +17,11 @@ public class LabelShapeText extends AbstractShapeText {
     this.content = content;
   }
 
-  public static void initFont() {
+  public static void initFont(int zoomfactor) {
     LABEL_FONT = createFont("Helvetica");
   }
 
-  public void writeToPDF(Point renderOffset, PdfCanvas pdfCanvas, float swing2pdfScaleFactor) {
+  public void writeToPDF(Point renderOffset, PdfCanvas pdfCanvas, Document document, float swing2pdfScaleFactor) {
     float scaledFontSize = getFontsize() * swing2pdfScaleFactor;
     pdfCanvas.setFillColor(getPDFColor());
     pdfCanvas.beginText().setFontAndSize(getPDFFont(), scaledFontSize)

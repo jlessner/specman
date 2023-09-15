@@ -31,10 +31,10 @@ public class PDFRenderer {
   PdfCanvas pdfCanvas;
   float swing2pdfScaleFactor;
 
-  public PDFRenderer(String pdfFilename) {
+  public PDFRenderer(String pdfFilename, int zoomfactor) {
     try {
-      LabelShapeText.initFont();
-      FormatedShapeText.initFont();
+      LabelShapeText.initFont(zoomfactor);
+      FormatedShapeText.initFont(zoomfactor);
 
       this.pdfFilename = pdfFilename;
       writer = new PdfWriter(pdfFilename);
@@ -106,7 +106,7 @@ public class PDFRenderer {
   private void writeShapeText(Shape shape, Point renderOffset) {
     AbstractShapeText text = shape.getText();
     if (text != null) {
-      text.writeToPDF(renderOffset, pdfCanvas, swing2pdfScaleFactor);
+      text.writeToPDF(renderOffset, pdfCanvas, document, swing2pdfScaleFactor);
     }
   }
 

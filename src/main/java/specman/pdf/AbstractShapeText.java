@@ -3,6 +3,7 @@ package specman.pdf;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.layout.Document;
 
 import java.awt.*;
 import java.io.IOException;
@@ -30,7 +31,7 @@ abstract class AbstractShapeText {
     return Shape.toPDFColor(color, Shape.DEFAULT_LINE_COLOR);
   }
 
-  public abstract void writeToPDF(Point renderOffset, PdfCanvas pdfCanvas, float swing2pdfScaleFactor);
+  public abstract void writeToPDF(Point renderOffset, PdfCanvas pdfCanvas, Document document, float swing2pdfScaleFactor);
 
   public static PdfFont createFont(String fontProgram) {
     try {

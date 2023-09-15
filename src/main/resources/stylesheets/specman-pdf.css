@@ -1,0 +1,28 @@
+ul {
+  /* Just to check if the stylesheet has an effect*/
+  /* color: red; */
+
+  /* Following line allows to adapt the list items indention. Unfortunately it causes the items dots to disappear */
+  /* padding-inline-start: 20px; */
+
+  margin: 0.5em;
+}
+
+li {
+  margin-top: -0.1em;
+  /* According font size, see div */
+  font-size: 0.94em;
+}
+
+h1 {
+  font-size: 1.7em;
+  font-weight: bold;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+}
+
+div {
+  /* The JEditorPane often encapsules parts of a text in divs. For an unknown reason, html2pdf renders these
+   parts with a slightly bigger font than the text outside of diffs. The font size below is a correction. */
+  font-size: 0.94em;
+}

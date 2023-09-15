@@ -1,5 +1,10 @@
 package experiments.itext;
 
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
@@ -9,10 +14,17 @@ import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.IBlockElement;
+import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.font.FontProvider;
+import com.itextpdf.layout.properties.Leading;
+import com.itextpdf.layout.properties.LineHeight;
+import com.itextpdf.layout.properties.Property;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.io.IOException;
 
 import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
 
@@ -90,9 +102,13 @@ public class ITextTest {
     PdfCanvas pdfCanvas = new PdfCanvas(page);
     pdfCanvas.setFillColor(DeviceRgb.BLUE);
 
-    pdfCanvas.beginText().setFontAndSize(labelFont, 7)
+    pdfCanvas.beginText().setFontAndSize(labelFont, 12)
       .moveText(20, 800)
-      .showText("Hello World!")
+      .showText("Hell")
+      .setFontAndSize(labelFont, 20)
+      .showText("o")
+      .setFontAndSize(labelFont, 12)
+      .showText(" World!")
       .endText();
 
     document.close();
@@ -100,6 +116,116 @@ public class ITextTest {
 
     Desktop desktop = Desktop.getDesktop();
     desktop.open(new java.io.File("sample.pdf"));
+  }
+
+  @Test
+  void testHTML() throws Exception {
+    java.util.List<IElement> elements = HtmlConverter.convertToElements("<H1>Thank</H1>God, its <i>Friday</i>!<H1>Hello</H1>zero<ul><li>one<br>oneone one<li>two</ul>three<li>four");
+    System.out.println(elements);
+
+//    https://kb.itextpdf.com/home/it7kb/ebooks/itext-7-converting-html-to-pdf-with-pdfhtml/chapter-5-custom-tag-workers-and-css-appliers
+//    letter-spacing: 0.3px;
+//    line-height: 18.8px;
+
+    PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
+    Document document = new Document(pdf);
+    document.setFontSize(10.0f);
+    for (IElement element : elements) {
+      document.add(new Paragraph(element.getClass().getName() + "eins zwei drei vier fünf sches sieben acht neuen zehn eld zwölf dreizehn vierzehn fünfzehn sechszehn").setMargin(0).setPadding(0).setPadding(0));
+      document.setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA));
+      //document.add((IBlockElement)element);
+      //document.add(new Paragraph().add((IBlockElement)element));
+    }
+    document.close();
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
+  }
+
+  @Test
+  void testHTMLParagraph() throws Exception {
+    ConverterProperties properties = new ConverterProperties();
+    FontProvider fontProvider = new DefaultFontProvider(false, false, false);
+
+//    fontProvider.addFont(FontProgramFactory.createFont("C:/Windows/Fonts/times.ttf"));
+//    fontProvider.addFont(FontProgramFactory.createFont("C:/Windows/Fonts/timesi.ttf"));
+//    fontProvider.addFont(FontProgramFactory.createFont("C:/Windows/Fonts/timesbd.ttf"));
+    fontProvider.addFont(FontProgramFactory.createFont("C:/work/jlessner/opensource/specman/src/main/resources/fonts/Sitka-Display.ttf"));
+    //fontProvider.addFont(FontProgramFactory.createFont("C:/Users/jlessner/AppData/Local/Microsoft/Windows/Fonts/TimesNewRomanPSMT.ttf"));
+
+    properties.setFontProvider(fontProvider);
+
+    java.util.List<IElement> elements = HtmlConverter.convertToElements(
+      "<html><head></head>" +
+        "<link rel=\"stylesheet\" type=\"text/css\" href=\"src/main/resources/stylesheets/specman-pdf.css\">" +
+        "<H1>WWWWWW</H1>WWWWWW<br>God, its <i>Friday</i>!<H1>iiiiiiiiiiiiiii</H1>zero<ul><li>one<br>oneone one<li>two<li>sublist<ul><li>sub 1<li>sub2</ul></ul>three four eins zwei drei vier fünf sechs sieben acht neuen zehn elf zwölf dreizehn vierzehn fünfzehn sechzehn siebzehn achtzehn<br>Neunzehn" +
+        "</html>",
+      properties);
+    System.out.println(elements);
+
+    PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
+    Document document = new Document(pdf);
+    //document.setFontSize(10.0f);
+    //document.setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA));
+    Paragraph superp = new Paragraph();
+    for (IElement element : elements) {
+      Paragraph p = new Paragraph();
+      p.setCharacterSpacing(0.2f); // Damit können wir die Schrift "zusammendrücken"
+      p.setWordSpacing(-1.5f);
+      p.setMargin(0);
+      // Folgendes ist relevant für den Abstand zwischen den Paragrafen. Muss aber auch mir Margin 0 kombiniert werden
+      p.setMultipliedLeading(1.37f);
+      // Folgendes ist relevant für den Abstand der Zeilen innerhalb eines automatisch umgebrochenen Texten in einem Paragrafen
+      p.setProperty(Property.LINE_HEIGHT, LineHeight.createMultipliedValue(1.37f)); // Damit geht's aber
+      p.add((IBlockElement)element);
+      superp.add(p);
+      superp.add("\n");
+    }
+    document.add(superp);
+    document.close();
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
+  }
+
+  @Test
+  void testWoSindDiePunkteHin() throws Exception {
+    PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
+    Document document = new Document(pdf);
+    try {
+      document.setFontSize(10.0f);
+      ConverterProperties properties = new ConverterProperties();
+      FontProvider fontProvider = new DefaultFontProvider(false, false, false);
+      FontProgram fontProgram = FontProgramFactory.createFont("src/main/resources/fonts/Sitka-Display.ttf");
+      fontProvider.addFont(fontProgram);
+      properties.setFontProvider(fontProvider);
+      String htmlContent = "<html><head>"
+        + "<link rel=\"stylesheet\" type=\"text/css\" href=\"src/main/resources/stylesheets/specman-pdf.css\">"
+        + "</head><body>eins<ul><li>zwei<li>drei</ul>vier</body></html>";
+
+      java.util.List<IElement> elements = HtmlConverter.convertToElements(htmlContent, properties);
+
+      Paragraph superp = new Paragraph()
+        .setFixedPosition(20, 600, 300)
+        .setMargin(0)
+        .setMultipliedLeading(1.0f);
+      for (IElement element : elements) {
+        Paragraph paragraph = new Paragraph()
+          .setMargin(0)
+          .setMultipliedLeading(1.0f)
+          .setCharacterSpacing(0.0f)
+          .setFontSize(10.0f);
+        paragraph.setProperty(Property.LINE_HEIGHT, LineHeight.createMultipliedValue(1.37f));
+        paragraph.add((IBlockElement)element);
+        superp.add(paragraph);
+        superp.add("\n");
+      }
+      document.add(superp);
+      document.close();
+      Desktop desktop = Desktop.getDesktop();
+      desktop.open(new java.io.File("sample.pdf"));
+    }
+    catch(IOException iox) {
+      iox.printStackTrace();
+    }
   }
 
 }
