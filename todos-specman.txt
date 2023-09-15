@@ -3,7 +3,7 @@ Abschluss für Go-Live
   - Abgesetzte Darstellung
   - Bilder und unterstrukturierte EditContainer (aktuello nur 1. TextEditArea)
   - Stylesheet um alle HTML-Elemente erweitern
-  - Texte über und unter Diagramm
+  x Texte über und unter Diagramm
   - Seitenumbrüche
   - Fettschrift in PDF-Texten funktioniert nicht trotz gleichen Truetype-Font in Swing und PDF
   - Formatauswahl: A4/A3, Querformat/Hochformat, Auswahl in den Benutzereinstellungen oder im Modell persistieren

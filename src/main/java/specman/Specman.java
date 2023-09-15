@@ -1098,10 +1098,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		System.out.println(hauptSequenzContainer.getLocation());
 		System.out.println(intro.getSize());
             if (selectedFile != null) {
-                Shape all = new Shape(hauptSequenzContainer)
+                Shape all = new Shape(arbeitsbereich.getLocation())
 									.add(intro.getShape())
-									.add(hauptSequenz.getShapeSequence().translate(0, -15))
-									.add(breitenAnpasser.getShape().translate(0, -15))
+									.add(hauptSequenz.getShapeSequence())
+									.add(breitenAnpasser.getShape())
 									.add(outro.getShape());
                 new PDFRenderer(selectedFile.getAbsolutePath(), zoomFaktor).render(all);
             }
