@@ -8,6 +8,8 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextEditAreaModel_V001;
+import specman.pdf.FormattedShapeText;
+import specman.pdf.Shape;
 import specman.undo.UndoableStepnumberLinkAdded;
 import specman.undo.UndoableStepnumberLinkRemoved;
 import specman.undo.manager.UndoRecording;
@@ -27,10 +29,7 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.CSS;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.StyleSheet;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -67,7 +66,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     private boolean alreadyScrolledDuringCurrentMouseclick = false;
     private Element hoveredElement = null;
 
-    public TextEditArea(EditorI editor, String initialerText, Color initialBackground) {
+    public TextEditArea(EditorI editor, String initialerText, Color initialBackground, Font font) {
         editor.instrumentWysEditor(this, initialerText, 0);
         putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         setFont(font);
@@ -688,7 +687,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         try {
             int textLength = getDocument().getLength();
             if (textLength > textPosition) {
-                TextEditArea splittedArea = new TextEditArea(Specman.instance(), getText(), this.getBackground());
+                TextEditArea splittedArea = new TextEditArea(Specman.instance(), getText(), this.getBackground(), this.getFont());
                 getDocument().remove(textPosition, textLength - textPosition);
                 splittedArea.getDocument().remove(0, textPosition);
                 return splittedArea;
@@ -924,5 +923,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Shape getShape() {
+        return new Shape(this).withText(new FormattedShapeText(this));
     }
 }

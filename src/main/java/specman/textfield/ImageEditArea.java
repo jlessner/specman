@@ -7,6 +7,8 @@ import specman.Aenderungsart;
 import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
+import specman.pdf.Shape;
+import specman.pdf.ShapeImage;
 import specman.undo.UndoableImageRemovedMarkiert;
 
 import javax.imageio.ImageIO;
@@ -53,6 +55,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   private BufferedImage fullSizeImage;
   private String imageType;
   private ImageIcon scaledIcon;
+  private float scalePercent;
   private JLabel image;
   private ImageEditAreaGlassPane focusGlass;
   private Aenderungsart aenderungsart;
@@ -183,7 +186,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
       int maximumZoomedWidth = fullSizeImage.getWidth() * Specman.instance().getZoomFactor() / 100;
       int scaledWidth = Math.min(availableWidth, maximumZoomedWidth);
       if (scaledIcon == null || scaledWidth != scaledIcon.getIconWidth()) {
-        float scalePercent = (float)scaledWidth / (float)fullSizeImage.getWidth();
+        scalePercent = (float)scaledWidth / (float)fullSizeImage.getWidth();
         scaledIcon = new ImageIcon(fullSizeImage
           .getScaledInstance((int)(fullSizeImage.getWidth() * scalePercent),
             (int)(fullSizeImage.getHeight() * scalePercent), Image.SCALE_SMOOTH));
@@ -306,4 +309,17 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     return new ArrayList<>(); // There are no stepnumberLinks in an ImageArea
   }
 
+  public Shape getShape() {
+    return new Shape(this)
+      .add(new Shape(BORDER_THICKNESS, 0)
+        .withImage(new ShapeImage(this)));
+  }
+
+  public BufferedImage getFullSizeImage() { return fullSizeImage; }
+
+  public float getScalePercent() { return scalePercent; }
+
+  public int getImageType() { return fullSizeImage.getType(); }
+
+  public String getImageFiletype() { return imageType; }
 }

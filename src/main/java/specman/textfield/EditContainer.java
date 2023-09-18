@@ -126,7 +126,7 @@ public class EditContainer extends JPanel {
 			EditArea editArea;
 			if (editAreaModel instanceof TextEditAreaModel_V001) {
 				TextEditAreaModel_V001 textEditAreaModel = (TextEditAreaModel_V001)editAreaModel;
-				editArea = new TextEditArea(editor, textEditAreaModel.text, schrittHintergrund());
+				editArea = new TextEditArea(editor, textEditAreaModel.text, schrittHintergrund(), TextStyles.font);
 			}
 			else if (editAreaModel instanceof ImageEditAreaModel_V001) {
 				ImageEditAreaModel_V001 imageEditAreaModel = (ImageEditAreaModel_V001)editAreaModel;
@@ -439,10 +439,13 @@ public class EditContainer extends JPanel {
 	}
 
 	public specman.pdf.Shape getShape() {
-		TextEditArea edit1 = (TextEditArea) editAreas.get(0);
-		Shape shape = new Shape(this).withText(new FormattedShapeText(edit1));
-		if (schrittNummer != null && schrittNummerSichtbar) {
-			shape.add(schrittNummer.getShape());
+		Shape shape = new Shape(this);
+		for (int i = 0; i < editAreas.size(); i++) {
+			Shape areaShape = editAreas.get(i).getShape();
+			if (i == 0 && schrittNummer != null && schrittNummerSichtbar) {
+				areaShape.add(schrittNummer.getShape());
+			}
+			shape.add(areaShape);
 		}
 		return shape;
 	}

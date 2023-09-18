@@ -1,6 +1,7 @@
 package specman.textfield;
 
 import specman.model.v001.AbstractEditAreaModel_V001;
+import specman.pdf.Shape;
 
 import javax.swing.border.Border;
 import java.awt.Color;
@@ -54,4 +55,6 @@ public interface EditArea extends InteractiveStepFragment {
   boolean enthaeltAenderungsmarkierungen();
 
   List<String> findStepnumberLinkIDs();
+
+  public Shape getShape();
 }

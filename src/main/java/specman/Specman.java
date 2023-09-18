@@ -1094,9 +1094,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 //        if (result == JFileChooser.APPROVE_OPTION) {
 //            File selectedFile = fileChooser.getSelectedFile();
 						File selectedFile = new File("sample.pdf");
-		System.out.println(arbeitsbereich.getLocation());
-		System.out.println(hauptSequenzContainer.getLocation());
-		System.out.println(intro.getSize());
             if (selectedFile != null) {
                 Shape all = new Shape(arbeitsbereich.getLocation())
 									.add(intro.getShape())

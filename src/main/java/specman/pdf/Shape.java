@@ -17,6 +17,7 @@ public class Shape {
   private Object source;
   private boolean withOutline;
   private AbstractShapeText text;
+  private ShapeImage image;
 
   public Shape() {}
 
@@ -32,6 +33,10 @@ public class Shape {
       .add(r.x + r.width, r.y + r.height)
       .add(r.x, r.y + r.height);
     backgroundColor = component.getBackground();
+  }
+
+  public Shape(int startX, int startY) {
+    add(startX, startY);
   }
 
   public Shape(Point start) {
@@ -133,8 +138,12 @@ public class Shape {
     return subshapes.stream().mapToInt(s -> s.getWidth()).max().orElse(0);
   }
 
-  public Shape translate(int dx, int dy) {
-    path.stream().forEach(p -> p.translate(dx, dy));
+  public Shape withImage(ShapeImage shapeImage) {
+    this.image = shapeImage;
     return this;
+  }
+
+  public ShapeImage getImage() {
+    return image;
   }
 }

@@ -6,6 +6,8 @@ import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
 import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
@@ -23,7 +25,12 @@ import com.itextpdf.layout.properties.LineHeight;
 import com.itextpdf.layout.properties.Property;
 import org.junit.jupiter.api.Test;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
@@ -149,7 +156,7 @@ public class ITextTest {
 //    fontProvider.addFont(FontProgramFactory.createFont("C:/Windows/Fonts/times.ttf"));
 //    fontProvider.addFont(FontProgramFactory.createFont("C:/Windows/Fonts/timesi.ttf"));
 //    fontProvider.addFont(FontProgramFactory.createFont("C:/Windows/Fonts/timesbd.ttf"));
-    fontProvider.addFont(FontProgramFactory.createFont("C:/work/jlessner/opensource/specman/src/main/resources/fonts/Sitka-Display.ttf"));
+    fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/Sitka-Display.ttf"));
     //fontProvider.addFont(FontProgramFactory.createFont("C:/Users/jlessner/AppData/Local/Microsoft/Windows/Fonts/TimesNewRomanPSMT.ttf"));
 
     properties.setFontProvider(fontProvider);
@@ -228,4 +235,45 @@ public class ITextTest {
     }
   }
 
+  @Test
+  void testScaledImage() throws Exception {
+    PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
+    Document document = new Document(pdf);
+    Paragraph p = new Paragraph()
+      .setFixedPosition(20, 500, 400)
+      .setMargin(0);
+
+    //ImageData data = ImageDataFactory.create("testimage-small.jpg");
+
+    BufferedImage fullSizeImage = ImageIO.read(new File("testimage-small.jpg"));
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    ImageIO.write(fullSizeImage, "jpg", bytes);
+    ImageData data = ImageDataFactory.create(bytes.toByteArray());
+
+
+//    BufferedImage fullSizeImage = ImageIO.read(new File("testimage-small.jpg"));
+//    Image scaledImage = fullSizeImage.getScaledInstance(
+//      fullSizeImage.getWidth() / 2,
+//      fullSizeImage.getHeight() / 2,
+//      Image.SCALE_SMOOTH);
+//    BufferedImage scaledBufferedImage = new BufferedImage(
+//      scaledImage.getWidth(null), scaledImage.getHeight(null),
+//      fullSizeImage.getType());
+//
+//    Graphics2D graphics2D = scaledBufferedImage.createGraphics();
+//    graphics2D.drawImage(scaledImage, 0, 0, null);
+//    graphics2D.dispose();
+//    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//    ImageIO.write(scaledBufferedImage, "jpg", bytes);
+//    ImageData data = ImageDataFactory.create(bytes.toByteArray());
+
+    com.itextpdf.layout.element.Image img = new com.itextpdf.layout.element.Image(data);
+    img.setAutoScale(true);
+    p.add(img);
+
+    document.add(p);
+    document.close();
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
+  }
 }

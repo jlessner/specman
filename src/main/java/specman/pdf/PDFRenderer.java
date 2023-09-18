@@ -97,8 +97,16 @@ public class PDFRenderer {
     }
     renderOffset = shape.translate(renderOffset);
     writeShapeText(shape, renderOffset);
+    drawShapeImage(shape, renderOffset);
     for (Shape subshape: shape.getSubshapes()) {
       drawShape(subshape, renderOffset);
+    }
+  }
+
+  private void drawShapeImage(Shape shape, Point renderOffset) {
+    ShapeImage image = shape.getImage();
+    if (image != null) {
+      image.drawToPDF(renderOffset, pdfCanvas, document, swing2pdfScaleFactor);
     }
   }
 
