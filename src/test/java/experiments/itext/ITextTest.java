@@ -240,7 +240,7 @@ public class ITextTest {
     PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
     Document document = new Document(pdf);
     Paragraph p = new Paragraph()
-      .setFixedPosition(20, 500, 400)
+      .setFixedPosition(20, 500, 100)
       .setMargin(0);
 
     //ImageData data = ImageDataFactory.create("testimage-small.jpg");
@@ -250,25 +250,9 @@ public class ITextTest {
     ImageIO.write(fullSizeImage, "jpg", bytes);
     ImageData data = ImageDataFactory.create(bytes.toByteArray());
 
-
-//    BufferedImage fullSizeImage = ImageIO.read(new File("testimage-small.jpg"));
-//    Image scaledImage = fullSizeImage.getScaledInstance(
-//      fullSizeImage.getWidth() / 2,
-//      fullSizeImage.getHeight() / 2,
-//      Image.SCALE_SMOOTH);
-//    BufferedImage scaledBufferedImage = new BufferedImage(
-//      scaledImage.getWidth(null), scaledImage.getHeight(null),
-//      fullSizeImage.getType());
-//
-//    Graphics2D graphics2D = scaledBufferedImage.createGraphics();
-//    graphics2D.drawImage(scaledImage, 0, 0, null);
-//    graphics2D.dispose();
-//    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//    ImageIO.write(scaledBufferedImage, "jpg", bytes);
-//    ImageData data = ImageDataFactory.create(bytes.toByteArray());
-
     com.itextpdf.layout.element.Image img = new com.itextpdf.layout.element.Image(data);
     img.setAutoScale(true);
+
     p.add(img);
 
     document.add(p);
