@@ -1,13 +1,13 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Seitenumbrüche
-  - Scrollposition aus der Positionierung im PDF heraus rechnen
   - Abgesetzte Darstellung
   - Korrekte Behandlung von Zoomfaktor
   - Stylesheet um alle HTML-Elemente erweitern
   - Fettschrift in PDF-Texten funktioniert nicht trotz gleichen Truetype-Font in Swing und PDF
-  - Formatauswahl: A4/A3, Querformat/Hochformat, Auswahl in den Benutzereinstellungen oder im Modell persistieren
+  - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
+  x Scrollposition aus der Positionierung im PDF herausrechnen
+  x Seitenumbrüche
   x Texte über und unter Diagramm
   x Bilder und unterstrukturierte EditContainer (aktuell nur 1. TextEditArea)
 - Darstellung von Catch-Bereichen überarbeiten
