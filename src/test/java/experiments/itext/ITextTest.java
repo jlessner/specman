@@ -11,10 +11,14 @@ import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.IElement;
@@ -29,9 +33,11 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
 
@@ -194,48 +200,6 @@ public class ITextTest {
   }
 
   @Test
-  void testWoSindDiePunkteHin() throws Exception {
-    PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
-    Document document = new Document(pdf);
-    try {
-      document.setFontSize(10.0f);
-      ConverterProperties properties = new ConverterProperties();
-      FontProvider fontProvider = new DefaultFontProvider(false, false, false);
-      FontProgram fontProgram = FontProgramFactory.createFont("src/main/resources/fonts/Sitka-Display.ttf");
-      fontProvider.addFont(fontProgram);
-      properties.setFontProvider(fontProvider);
-      String htmlContent = "<html><head>"
-        + "<link rel=\"stylesheet\" type=\"text/css\" href=\"src/main/resources/stylesheets/specman-pdf.css\">"
-        + "</head><body>eins<ul><li>zwei<li>drei</ul>vier</body></html>";
-
-      java.util.List<IElement> elements = HtmlConverter.convertToElements(htmlContent, properties);
-
-      Paragraph superp = new Paragraph()
-        .setFixedPosition(20, 600, 300)
-        .setMargin(0)
-        .setMultipliedLeading(1.0f);
-      for (IElement element : elements) {
-        Paragraph paragraph = new Paragraph()
-          .setMargin(0)
-          .setMultipliedLeading(1.0f)
-          .setCharacterSpacing(0.0f)
-          .setFontSize(10.0f);
-        paragraph.setProperty(Property.LINE_HEIGHT, LineHeight.createMultipliedValue(1.37f));
-        paragraph.add((IBlockElement)element);
-        superp.add(paragraph);
-        superp.add("\n");
-      }
-      document.add(superp);
-      document.close();
-      Desktop desktop = Desktop.getDesktop();
-      desktop.open(new java.io.File("sample.pdf"));
-    }
-    catch(IOException iox) {
-      iox.printStackTrace();
-    }
-  }
-
-  @Test
   void testScaledImage() throws Exception {
     PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
     Document document = new Document(pdf);
@@ -260,4 +224,5 @@ public class ITextTest {
     Desktop desktop = Desktop.getDesktop();
     desktop.open(new java.io.File("sample.pdf"));
   }
+
 }
