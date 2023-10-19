@@ -8,6 +8,8 @@ import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
@@ -200,6 +202,33 @@ public class ITextTest {
   }
 
   @Test
+  void testHTMLTextAlignment() throws Exception {
+    java.util.List<IElement> elements = HtmlConverter.convertToElements(
+      "<html><head></head>" +
+        "<div style=\"color:red;text-align:right;width:100%\">Div1</div>" +
+        "<div style=\"color:red;text-align:center;width:100%\">Div2</div>" +
+        "<div align=\"center\">Div3</div>" +
+        "</html>");
+
+    PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
+    Document document = new Document(pdf);
+    Paragraph superp = new Paragraph();
+    superp.setFixedPosition(0, 700, 300);
+    for (IElement element : elements) {
+      Paragraph p = new Paragraph();
+      p.setBackgroundColor(ColorConstants.YELLOW);
+      p.setWidth(300);
+      p.add((IBlockElement)element);
+      superp.add(p);
+      superp.add("\n");
+    }
+    document.add(superp);
+    document.close();
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
+  }
+
+  @Test
   void testScaledImage() throws Exception {
     PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
     Document document = new Document(pdf);
@@ -225,4 +254,9 @@ public class ITextTest {
     desktop.open(new java.io.File("sample.pdf"));
   }
 
+  @Test
+  void testStylifyTextAlignment() {
+    String rawHTML = "<div align=\"right\">      Neuer Schritt 1    </div>";
+    System.out.println(rawHTML.replaceAll("align=\"([a-z]+)\"", "style=\"text-align:$1\""));
+  }
 }

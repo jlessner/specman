@@ -6,6 +6,7 @@ Abschluss für Go-Live
   - Fettschrift in PDF-Texten funktioniert nicht trotz gleichen Truetype-Font in Swing und PDF
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
+  x rechtsbündige und zentrierte Texte nicht korrekt platziert
   x Scrollposition aus der Positionierung im PDF herausrechnen
   x Seitenumbrüche
   x Texte über und unter Diagramm
@@ -24,6 +25,7 @@ Bugs fixen
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
+- Ändern des Paragraphtypen lässt sich nicht zurücknehmen
 - Letzter Zeilenumbruch in einem Schritt kann nicht entfernt werden
     - Problem ist, dass der Umbruch nicht entfernt werden kann, da der Offset angeblich größer als das Dokumentenende ist:
       RemoveAction.actionPerformed(e) -> HTMLUtils.removeElement()Zeile199 - Es wird erkannt, dass der Offset des zu entfernenden Elements größer ist

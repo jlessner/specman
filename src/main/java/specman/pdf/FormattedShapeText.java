@@ -45,15 +45,16 @@ public class FormattedShapeText extends AbstractShapeText {
     pdfCanvas.setFillColor(getPDFColor());
 
     document.setFontSize(scaledFontSize);
-    String htmlContent = injectStylesheet(content.getText());
+    String htmlContent = injectStylesheet(stylifyTextAlignment(content.getText()));
 
     java.util.List<IElement> elements = HtmlConverter.convertToElements(htmlContent, properties);
 
+    float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right - 7) * swing2pdfScaleFactor;
     Paragraph superp = new Paragraph()
       .setFixedPosition(
         (renderOffset.x + insets.left) * swing2pdfScaleFactor,
         (renderOffset.y - content.getHeight() + getInsets().bottom) * swing2pdfScaleFactor,
-        (content.getWidth() - getInsets().left - getInsets().right - 7) * swing2pdfScaleFactor)
+        paragraphWidth)
       .setMargin(0)
       .setMultipliedLeading(1.0f)
       .setFontSize(scaledFontSize);
@@ -62,13 +63,25 @@ public class FormattedShapeText extends AbstractShapeText {
         .setMargin(0)
         .setMultipliedLeading(1.0f)
         .setCharacterSpacing(0.0f)
-        .setFontSize(scaledFontSize);
+        .setFontSize(scaledFontSize)
+        .setWidth(paragraphWidth); // Setting width for sub paragraph is important for text alignments
       paragraph.setProperty(Property.LINE_HEIGHT, LineHeight.createMultipliedValue(1.37f));
       paragraph.add((IBlockElement)element);
       superp.add(paragraph);
       superp.add("\n");
     }
     document.add(superp);
+  }
+
+  /** JEditorPane expresses text alignment by plain HTML form in div elements like that:
+   * <div align="right">text goes here</div>
+   * This is not suitable für pdf2html which only supports text alignment to be expressed by styling like that:
+   * <div style="text-align: right">text goes here</div>
+   * This must be morphed before rendering. In addition, we have to add a 100% width style info as otherwise the
+   * div will shrink to its text width and the alignment has no effekt. Fortunately there occurs no other styling
+   * of divs in JEditorPane, so we can simply work with an ordinary regexp replacement. */
+  private String stylifyTextAlignment(String rawHTML) {
+    return rawHTML.replaceAll("align=\"([a-z]+)\"", "style=\"text-align:$1;width:100%\"");
   }
 
   private String injectStylesheet(String rawHTML) {
