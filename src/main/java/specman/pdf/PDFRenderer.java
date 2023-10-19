@@ -2,11 +2,18 @@ package specman.pdf;
 
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.layout.Document;
 
 import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import static specman.pdf.Shape.DEFAULT_LINE_COLOR;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
@@ -21,26 +28,28 @@ public class PDFRenderer {
   // factor of 85% rather than 100% to display the pages correctly.
   public static float SWING2PDF_SCALEFACTOR_100PERCENT = 0.77f;
 
-  public static PageSize PAGESIZE = PageSize.A4;
   public static final int LEFT_RIGHT_PAGE_MARGIN = 10;
   String pdfFilename;
   PdfWriter writer;
   PdfDocument pdfDoc;
   Document document;
   PdfCanvas pdfCanvas;
+  ByteArrayOutputStream pdfOutputStream;
+  PageSize pageSize;
+  boolean withPageTiling;
   float swing2pdfScaleFactor;
 
-  public PDFRenderer(String pdfFilename, int zoomfactor) {
+  public PDFRenderer(String pdfFilename, PageSize pageSize, boolean withPageTiling, int zoomfactor) {
     try {
       LabelShapeText.initFont(zoomfactor);
       FormattedShapeText.initFont(zoomfactor);
 
       this.pdfFilename = pdfFilename;
-      writer = new PdfWriter(pdfFilename);
+      this.pageSize = pageSize;
+      this.withPageTiling = withPageTiling;
+      pdfOutputStream = new ByteArrayOutputStream();
+      writer = new PdfWriter(pdfOutputStream);
       pdfDoc = new PdfDocument(writer);
-      pdfCanvas = new PdfCanvas(pdfDoc.addNewPage(PAGESIZE));
-      pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
-      pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
       document = new Document(pdfDoc);
     }
     catch(Exception x) {
@@ -48,32 +57,85 @@ public class PDFRenderer {
     }
   }
 
-  public void render(Shape shape) {
-    initScaleFactor(shape);
-    Point topLeftCorner = new Point(0, (int)(PAGESIZE.getHeight() / swing2pdfScaleFactor));
-    render(shape, topLeftCorner);
+  public void render(Shape rootShape) {
+    PageSize overlengthPagesize = initPdfCanvasAndScaleFactor(rootShape);
+    int yTop = hasOverlength(overlengthPagesize)
+      ? rootShape.getHeight()
+      : (int)(pageSize.getHeight() / swing2pdfScaleFactor);
+    Point topLeftCorner = new Point(0, yTop);
+    render(rootShape, topLeftCorner, overlengthPagesize);
   }
 
-  private void initScaleFactor(Shape shape) {
+  private PageSize initPdfCanvasAndScaleFactor(Shape rootShape) {
     swing2pdfScaleFactor = SWING2PDF_SCALEFACTOR_100PERCENT;
-    int shapeWidth = shape.getWidth();
-    float availableWidth100Percent = PAGESIZE.getWidth() / SWING2PDF_SCALEFACTOR_100PERCENT;
+    int shapeWidth = rootShape.getWidth();
+    float availableWidth100Percent = pageSize.getWidth() / SWING2PDF_SCALEFACTOR_100PERCENT;
     float requiredWidth = shapeWidth + 2 * LEFT_RIGHT_PAGE_MARGIN;
     if (requiredWidth > availableWidth100Percent) {
       swing2pdfScaleFactor *= availableWidth100Percent / requiredWidth;
     }
+
+    // We create a canvas which is high enough to contain the whole shape but therefore potentially
+    // exceeds the maximum height of the selected page size. This happens on purpose. Either the user
+    // has decided to allow over-length pages or we split the over-length page into multiple tiles
+    // later on. There is currently no intelligent way to find reasonable splitting points in a
+    // multipage rendering
+    PageSize overlengthPagesize = new PageSize(pageSize.getWidth(),
+      Math.max(pageSize.getHeight(), rootShape.getHeight() * swing2pdfScaleFactor));
+    pdfCanvas = new PdfCanvas(pdfDoc.addNewPage(overlengthPagesize));
+
+    pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
+    pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
     pdfCanvas.setLineWidth(((float)LINIENBREITE) * swing2pdfScaleFactor);
+
+    return overlengthPagesize;
   }
 
-  private void render(Shape shape, Point renderOffset) {
+  private void render(Shape rootShape, Point renderOffset, PageSize overlengthPagesize) {
     try {
-      drawShape(shape, renderOffset);
+      drawShape(rootShape, renderOffset);
       document.close();
+      pdfOutputStream.close();
+
+      tileOverlengthPage(overlengthPagesize);
+
+      FileOutputStream fos = new FileOutputStream(pdfFilename);
+      fos.write(pdfOutputStream.toByteArray());
+      fos.close();
       Desktop.getDesktop().open(new java.io.File(pdfFilename));
     }
     catch(Exception x) {
       x.printStackTrace();
     }
+  }
+
+  private boolean hasOverlength(PageSize overlengthPagesize) {
+    return overlengthPagesize.getHeight() > pageSize.getHeight();
+  }
+
+  private void tileOverlengthPage(PageSize overlengthPagesize) throws IOException {
+    if (!hasOverlength(overlengthPagesize) || !withPageTiling) {
+      return;
+    }
+    ByteArrayInputStream is = new ByteArrayInputStream(pdfOutputStream.toByteArray());
+    PdfReader overlengthReader = new PdfReader(is);
+    PdfDocument overlengthPdf = new PdfDocument(overlengthReader);
+    PdfPage overlengthPage = overlengthPdf.getPage(1); // Overlength PDF has only one page
+    com.itextpdf.kernel.geom.Rectangle overlengthRect = overlengthPage.getPageSizeWithRotation();
+
+    pdfOutputStream = new ByteArrayOutputStream();
+    PdfDocument tilePdf = new PdfDocument(new PdfWriter(pdfOutputStream));
+    PdfFormXObject overlengthForm = overlengthPage.copyAsFormXObject(tilePdf);
+
+    float tileHeight = pageSize.getHeight();
+
+    for (int tileNo = 1; (tileNo-1) * tileHeight < overlengthRect.getHeight(); tileNo++) {
+      PdfPage tilePage = tilePdf.addNewPage(pageSize);
+      PdfCanvas canvas = new PdfCanvas(tilePage);
+      canvas.addXObject(overlengthForm, 0, -overlengthRect.getHeight() + tileHeight * tileNo);
+    }
+    tilePdf.close();
+    pdfOutputStream.close();
   }
 
   private void drawShape(Shape shape, Point renderOffset) {

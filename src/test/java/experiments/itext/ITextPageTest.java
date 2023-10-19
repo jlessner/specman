@@ -100,27 +100,23 @@ public class ITextPageTest {
     PdfReader reader = new PdfReader(is);
     pdf = new PdfDocument(reader);
     PdfPage page = pdf.getPage(1);
+    com.itextpdf.kernel.geom.Rectangle oversizedRect = page.getPageSizeWithRotation();
 
     String a4sized = "sample-a4.pdf";
     PdfWriter a4writer = new PdfWriter(a4sized);
     PdfDocument a4pdf = new PdfDocument(a4writer);
 
-    com.itextpdf.kernel.geom.Rectangle oversizedRect = page.getPageSizeWithRotation();
     // Getting the size of the page
     PdfFormXObject pageCopy = page.copyAsFormXObject(a4pdf);
 
-    // Tile size
-    Rectangle tileSize = PageSize.A4;
+    PageSize tileSize = PageSize.A4;
+    float tileHeight = tileSize.getHeight();
 
-    // The first tile
-    PdfPage a4page1 = a4pdf.addNewPage(PageSize.A4);
-    PdfCanvas canvas1 = new PdfCanvas(a4page1);
-    canvas1.addXObject(pageCopy, 0, -oversizedRect.getHeight() + tileSize.getHeight());
-
-    // The second tile
-    PdfPage a4page2 = a4pdf.addNewPage(PageSize.A4);
-    PdfCanvas canvas2 = new PdfCanvas(a4page2);
-    canvas2.addXObject(pageCopy, 0, -oversizedRect.getHeight() + 2 * tileSize.getHeight());
+    for (int tileNo = 1; tileNo * tileHeight < oversizedRect.getHeight(); tileNo++) {
+      PdfPage a4page = a4pdf.addNewPage(tileSize);
+      PdfCanvas canvas = new PdfCanvas(a4page);
+      canvas.addXObject(pageCopy, 0, -oversizedRect.getHeight() + tileHeight * tileNo);
+    }
 
     a4pdf.close();
 

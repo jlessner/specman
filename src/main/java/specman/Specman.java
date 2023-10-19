@@ -2,6 +2,7 @@ package specman;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itextpdf.kernel.geom.PageSize;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -1100,7 +1101,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 									.add(hauptSequenz.getShapeSequence())
 									.add(breitenAnpasser.getShape())
 									.add(outro.getShape());
-                new PDFRenderer(selectedFile.getAbsolutePath(), zoomFaktor).render(all);
+                new PDFRenderer(selectedFile.getAbsolutePath(), PageSize.A4, true, zoomFaktor).render(all);
             }
 //        }
 	}

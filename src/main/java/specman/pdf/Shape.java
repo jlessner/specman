@@ -138,6 +138,13 @@ public class Shape {
     return subshapes.stream().mapToInt(s -> s.getWidth()).max().orElse(0);
   }
 
+  public int getHeight() {
+    if (hasForm()) {
+      return path.stream().mapToInt(p -> p.y).max().orElse(0);
+    }
+    return subshapes.stream().mapToInt(s -> s.getHeight()).max().orElse(0);
+  }
+
   public Shape withImage(ShapeImage shapeImage) {
     this.image = shapeImage;
     return this;
@@ -146,4 +153,5 @@ public class Shape {
   public ShapeImage getImage() {
     return image;
   }
+
 }
