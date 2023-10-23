@@ -31,7 +31,7 @@ abstract class AbstractShapeText {
     return Shape.toPDFColor(color, Shape.DEFAULT_LINE_COLOR);
   }
 
-  public abstract void writeToPDF(Point renderOffset, PdfCanvas pdfCanvas, Document document, float swing2pdfScaleFactor);
+  public abstract void writeToPDF(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas, Document document);
 
   public static PdfFont createFont(String fontProgram) {
     try {

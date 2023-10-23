@@ -37,16 +37,15 @@ public class PDFRenderer {
   ByteArrayOutputStream pdfOutputStream;
   PageSize pageSize;
   boolean withPageTiling;
+  int uizoomfactor;
   float swing2pdfScaleFactor;
 
-  public PDFRenderer(String pdfFilename, PageSize pageSize, boolean withPageTiling, int zoomfactor) {
+  public PDFRenderer(String pdfFilename, PageSize pageSize, boolean withPageTiling, int uizoomfactor) {
     try {
-      LabelShapeText.initFont(zoomfactor);
-      FormattedShapeText.initFont(zoomfactor);
-
       this.pdfFilename = pdfFilename;
       this.pageSize = pageSize;
       this.withPageTiling = withPageTiling;
+      this.uizoomfactor = uizoomfactor;
       pdfOutputStream = new ByteArrayOutputStream();
       writer = new PdfWriter(pdfOutputStream);
       pdfDoc = new PdfDocument(writer);
@@ -87,6 +86,9 @@ public class PDFRenderer {
     pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
     pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
     pdfCanvas.setLineWidth(((float)LINIENBREITE) * swing2pdfScaleFactor);
+
+    LabelShapeText.initFont(uizoomfactor, swing2pdfScaleFactor);
+    FormattedShapeText.initFont(uizoomfactor, swing2pdfScaleFactor);
 
     return overlengthPagesize;
   }
@@ -142,18 +144,18 @@ public class PDFRenderer {
     if (shape.hasForm()) {
         if (!shape.isLine()) {
           pdfCanvas.setFillColor(shape.getPDFBackgroundColor());
-          runPath(shape, renderOffset);
+          shape.runPath(renderOffset, swing2pdfScaleFactor, pdfCanvas);
           // This looks wrong and is probably caused by a lack of knowledge of the iText API:
           // If we run the shape's path *twice*, the gap between the shapes shows up with a
           // reasonable width. If we run the path only *once*, the gaps appear thinner than
           // expected when displaying the PDF in Acrobat Reader in 100% resolution. The
           // solution with the double-run was an accidential finding.
-          runPath(shape, renderOffset);
+          shape.runPath(renderOffset, swing2pdfScaleFactor, pdfCanvas);
           pdfCanvas.fill();
         }
         if (shape.withOutline()) {
           pdfCanvas.setStrokeColor(DEFAULT_LINE_COLOR);
-          runPath(shape, renderOffset);
+          shape.runPath(renderOffset, swing2pdfScaleFactor, pdfCanvas);
           pdfCanvas.stroke();
         }
     }
@@ -163,37 +165,21 @@ public class PDFRenderer {
     for (Shape subshape: shape.getSubshapes()) {
       drawShape(subshape, renderOffset);
     }
+    shape.applyDecoration(renderOffset, swing2pdfScaleFactor, pdfCanvas);
   }
 
   private void drawShapeImage(Shape shape, Point renderOffset) {
     ShapeImage image = shape.getImage();
     if (image != null) {
-      image.drawToPDF(renderOffset, pdfCanvas, document, swing2pdfScaleFactor);
+      image.drawToPDF(renderOffset, swing2pdfScaleFactor, pdfCanvas, document);
     }
   }
 
   private void writeShapeText(Shape shape, Point renderOffset) {
     AbstractShapeText text = shape.getText();
     if (text != null) {
-      text.writeToPDF(renderOffset, pdfCanvas, document, swing2pdfScaleFactor);
+      text.writeToPDF(renderOffset, swing2pdfScaleFactor, pdfCanvas, document);
     }
   }
 
-  private void runPath(Shape shape, Point renderOffset) {
-    moveTo(shape.start(), renderOffset);
-    shape.allButStart().forEach(p -> lineTo(p, renderOffset));
-    lineTo(shape.start(), renderOffset);
-  }
-
-  private PdfCanvas moveTo(Point p, Point renderOffset) {
-    float x = (p.x + renderOffset.x)*swing2pdfScaleFactor;
-    float y = (renderOffset.y - p.y)*swing2pdfScaleFactor;
-    return pdfCanvas.moveTo(x, y);
-  }
-
-  private PdfCanvas lineTo(Point p, Point renderOffset) {
-    float x = (p.x + renderOffset.x)*swing2pdfScaleFactor;
-    float y = (renderOffset.y - p.y)*swing2pdfScaleFactor;
-    return pdfCanvas.lineTo(x, y);
-  }
 }

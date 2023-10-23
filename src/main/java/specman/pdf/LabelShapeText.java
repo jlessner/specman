@@ -17,11 +17,11 @@ public class LabelShapeText extends AbstractShapeText {
     this.content = content;
   }
 
-  public static void initFont(int zoomfactor) {
+  public static void initFont(int uizoomfactor, float swing2pdfScaleFactor) {
     LABEL_FONT = createFont("Helvetica");
   }
 
-  public void writeToPDF(Point renderOffset, PdfCanvas pdfCanvas, Document document, float swing2pdfScaleFactor) {
+  public void writeToPDF(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas, Document document) {
     float scaledFontSize = getFontsize() * swing2pdfScaleFactor;
     pdfCanvas.setFillColor(getPDFColor());
     pdfCanvas.beginText().setFontAndSize(getPDFFont(), scaledFontSize)

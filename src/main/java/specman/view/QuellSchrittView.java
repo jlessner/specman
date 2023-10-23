@@ -25,7 +25,7 @@ public class QuellSchrittView extends AbstractSchrittView{
     }
 
     @Override
-    public JComponent getComponent() { return decorated(editContainer); }
+    public JComponent getDecoratedComponent() { return decorated(editContainer); }
 
     public QuellSchrittView(EditorI editor, SchrittSequenzView parent, QuellSchrittModel_V001 model) {
         super(editor, parent, model.inhalt, model.id, model.aenderungsart);

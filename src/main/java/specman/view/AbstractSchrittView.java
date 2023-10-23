@@ -17,6 +17,8 @@ import specman.model.v001.QuellSchrittModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
+import specman.pdf.RoundedBorderShape;
+import specman.pdf.Shape;
 import specman.textfield.EditContainer;
 import specman.textfield.Indentions;
 import specman.textfield.InteractiveStepFragment;
@@ -118,16 +120,24 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		editContainer.setCaretAtStart();
 	}
 
-	abstract public JComponent getComponent();
-
 	public specman.pdf.Shape getShape() {
-		return new specman.pdf.Shape(getComponent(), this)
+		return decoratedShape(new specman.pdf.Shape(getPanel(), this)
 			.withBackgroundColor(editContainer.getBackground())
-			.add(editContainer.getShape());
+			.add(editContainer.getShape()));
 	}
 
-	protected JComponent decorated(JComponent core) {
-		return roundedBorderDecorator != null ? roundedBorderDecorator : core;
+	protected Shape decoratedShape(Shape undecoratedShape) {
+		return roundedBorderDecorator != null
+			? new RoundedBorderShape(roundedBorderDecorator, undecoratedShape)
+			: undecoratedShape;
+	}
+
+	public JComponent getDecoratedComponent() {
+		return decorated(getPanel());
+	}
+
+	protected JComponent decorated(JComponent undecoratedComponent) {
+		return roundedBorderDecorator != null ? roundedBorderDecorator : undecoratedComponent;
 	}
 
 	public boolean isStrukturiert() { return false; }
@@ -304,7 +314,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	public JComponent toggleBorderType() {
 		JComponent toggleResult;
 		if (roundedBorderDecorator == null) {
-			JComponent coreComponent = getComponent();
+			JComponent coreComponent = getDecoratedComponent();
 			roundedBorderDecorator = new RoundedBorderDecorator(coreComponent, editContainer.getStepNumberBounds().getHeight());
 			RoundedBorderDecorationStyle requiredDecorationStyle =
 					parent.deriveDecorationStyleFromPosition(this);

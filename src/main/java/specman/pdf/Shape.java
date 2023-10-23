@@ -1,6 +1,7 @@
 package specman.pdf;
 
 import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -152,6 +153,47 @@ public class Shape {
 
   public ShapeImage getImage() {
     return image;
+  }
+
+  public void runPath(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas) {
+    moveTo(start(), renderOffset, swing2pdfScaleFactor, pdfCanvas);
+    allButStart().forEach(p -> lineTo(p, renderOffset, swing2pdfScaleFactor, pdfCanvas));
+    lineTo(start(), renderOffset, swing2pdfScaleFactor, pdfCanvas);
+  }
+
+  protected PdfCanvas moveTo(Point p, Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas) {
+    com.itextpdf.kernel.geom.Point pdfPoint = toPdfPoint(p, renderOffset, swing2pdfScaleFactor);
+    return pdfCanvas.moveTo(pdfPoint.x, pdfPoint.y);
+  }
+
+  protected PdfCanvas lineTo(Point p, Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas) {
+    com.itextpdf.kernel.geom.Point pdfPoint = toPdfPoint(p, renderOffset, swing2pdfScaleFactor);
+    return pdfCanvas.lineTo(pdfPoint.x, pdfPoint.y);
+  }
+
+  protected com.itextpdf.kernel.geom.Point toPdfPoint(Point p, Point renderOffset, float swing2pdfScaleFactor) {
+    float x = toPdfX(p.x, renderOffset, swing2pdfScaleFactor);
+    float y = toPdfY(p.y, renderOffset, swing2pdfScaleFactor);
+    return new com.itextpdf.kernel.geom.Point(x, y);
+  }
+
+  protected float toPdfX(int x, Point renderOffset, float swing2pdfScaleFactor) {
+    return (x + renderOffset.x)*swing2pdfScaleFactor;
+  }
+
+  protected float toPdfY(int y, Point renderOffset, float swing2pdfScaleFactor) {
+    return (renderOffset.y - y)*swing2pdfScaleFactor;
+  }
+
+  protected float toPdfX(double x, Point renderOffset, float swing2pdfScaleFactor) {
+    return ((float)x + renderOffset.x)*swing2pdfScaleFactor;
+  }
+
+  protected float toPdfY(double y, Point renderOffset, float swing2pdfScaleFactor) {
+    return (renderOffset.y - (float)y)*swing2pdfScaleFactor;
+  }
+
+  public void applyDecoration(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas) {
   }
 
 }

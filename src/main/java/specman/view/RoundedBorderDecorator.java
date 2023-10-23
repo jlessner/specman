@@ -79,7 +79,7 @@ public class RoundedBorderDecorator extends JPanel {
     g2d.setRenderingHints(rh);
   }
 
-  private RoundRectangle2D.Float createInnerShape() {
+  public RoundRectangle2D.Float createInnerShape() {
     int borderX = inset + (INNER_BORDERLINE_WIDTH / 2);
     int borderY = style.withTopInset() ? borderX : INNER_BORDERLINE_WIDTH / 2;
     int borderWidthMinus = borderX * 2;
@@ -135,4 +135,5 @@ public class RoundedBorderDecorator extends JPanel {
     layout.setRowSpec(3, RowSpec.decode(otherInsetSpec));
   }
 
+  public int getArc() { return arc; }
 }

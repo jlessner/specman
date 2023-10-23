@@ -5,6 +5,8 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.EinfacherSchrittModel_V001;
+import specman.pdf.RoundedBorderShape;
+import specman.pdf.Shape;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +23,7 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() { return decorated(editContainer); }
+	public JComponent getDecoratedComponent() { return decorated(editContainer); }
 
 	@Override
 	public EinfacherSchrittModel_V001 generiereModel(boolean formatierterText) {
@@ -40,7 +42,7 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 	public JComponent getPanel() { return editContainer; }
 
 	public specman.pdf.Shape getShape() {
-		return editContainer.getShape();
+		return decoratedShape(editContainer.getShape());
 	}
 
 }

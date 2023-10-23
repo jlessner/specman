@@ -73,7 +73,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	}
 
 	@Override
-	public JComponent getComponent() { return decorated(panel); }
+	public JComponent getDecoratedComponent() { return decorated(panel); }
 
 	@Override
 	public boolean isStrukturiert() {
@@ -151,10 +151,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 
 	abstract protected int texteinrueckungNeuberechnen();
 
-	//TODO get Panel
-	public JPanel getPanel() {
-		return panel;
-	}
+	public JPanel getPanel() { return panel; }
 
 	public void skalieren(int prozentNeu, int prozentAktuell) {
 		super.skalieren(prozentNeu, prozentAktuell);

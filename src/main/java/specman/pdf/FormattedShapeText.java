@@ -7,6 +7,7 @@ import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.element.Paragraph;
@@ -25,6 +26,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static specman.pdf.PDFRenderer.SWING2PDF_SCALEFACTOR_100PERCENT;
+
 public class FormattedShapeText extends AbstractShapeText {
   private static final String HTML2PDF_STYLESHEET = "src/main/resources/stylesheets/specman-pdf.css";
   private static final Pattern FONTSIZE_PATTERN = Pattern.compile("(.*font-size:[\\s]*)([\\d\\.]+)(.+)");
@@ -39,9 +42,9 @@ public class FormattedShapeText extends AbstractShapeText {
     this.content = content;
   }
 
-  public void writeToPDF(Point renderOffset, PdfCanvas pdfCanvas, com.itextpdf.layout.Document document, float swing2pdfScaleFactor) {
+  public void writeToPDF(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas, Document document) {
     // Is not really clear why we have to slightly reduce the font size
-    float scaledFontSize = getFontsize() * swing2pdfScaleFactor * 0.98f;
+    float scaledFontSize = getFontsize() * swing2pdfScaleFactor;
     pdfCanvas.setFillColor(getPDFColor());
 
     document.setFontSize(scaledFontSize);
@@ -62,9 +65,9 @@ public class FormattedShapeText extends AbstractShapeText {
       Paragraph paragraph = new Paragraph()
         .setMargin(0)
         .setMultipliedLeading(1.0f)
-        .setCharacterSpacing(0.0f)
+        .setCharacterSpacing(-0.1f)
         .setFontSize(scaledFontSize)
-        .setWidth(paragraphWidth); // Setting width for sub paragraph is important for text alignments
+        .setWidth(paragraphWidth); // Setting width for sub paragraph is important for text alignments right, center, ...
       paragraph.setProperty(Property.LINE_HEIGHT, LineHeight.createMultipliedValue(1.37f));
       paragraph.add((IBlockElement)element);
       superp.add(paragraph);
@@ -78,8 +81,8 @@ public class FormattedShapeText extends AbstractShapeText {
    * This is not suitable für pdf2html which only supports text alignment to be expressed by styling like that:
    * <div style="text-align: right">text goes here</div>
    * This must be morphed before rendering. In addition, we have to add a 100% width style info as otherwise the
-   * div will shrink to its text width and the alignment has no effekt. Fortunately there occurs no other styling
-   * of divs in JEditorPane, so we can simply work with an ordinary regexp replacement. */
+   * div will shrink to its text width and the alignment has no effect. Fortunately there occurs no other styling
+   * of divs in JEditorPane, so we can simply work with an ordinary regexp replacement without merging. */
   private String stylifyTextAlignment(String rawHTML) {
     return rawHTML.replaceAll("align=\"([a-z]+)\"", "style=\"text-align:$1;width:100%\"");
   }
@@ -88,16 +91,13 @@ public class FormattedShapeText extends AbstractShapeText {
     int headEnd = rawHTML.indexOf(HTMLTags.HEAD_OUTRO);
     String frontHTML = rawHTML.substring(0, headEnd-1);
     String tailHTML = rawHTML.substring(headEnd);
-    return frontHTML +
-      //"<link rel=\"stylesheet\" type=\"text/css\" href=\"" + HTML2PDF_STYLESHEET + "\">" +
-      "<style>" + htmlStyles + "</style>" +
-      tailHTML;
+    return frontHTML + "<style>" + htmlStyles + "</style>" + tailHTML;
   }
 
   @Override
   protected PdfFont getPDFFont() { return null; }
 
-  public static void initFont(int zoompercent) {
+  public static void initFont(int uizoomfactor, float swing2pdfScaleFactor) {
     try {
       properties = new ConverterProperties();
       FontProvider fontProvider = new DefaultFontProvider(false, false, false);
@@ -108,7 +108,7 @@ public class FormattedShapeText extends AbstractShapeText {
 ////        fontProvider.addFont(fontProgram);
 ////      }
       properties.setFontProvider(fontProvider);
-      initHTMLStyles(zoompercent);
+      initHTMLStyles(uizoomfactor, swing2pdfScaleFactor);
     }
     catch(IOException iox) {
       iox.printStackTrace();
@@ -116,18 +116,22 @@ public class FormattedShapeText extends AbstractShapeText {
   }
 
   /** The method reads Specman's style sheet for PDF rendering and resizes any
-   * fonts according to the current zoomfactor. If the zoomfactor is 100%, the
-   * method simply returns the stylesheet content as is. */
-  private static void initHTMLStyles(int zoompercent) throws IOException {
-    float zoomfactor = (float)zoompercent / 100.0f;
+   * fonts according to the UI zoom factor and the scaling factor required to
+   * fit the diagramm into the maximum PDF page width. If the factors have the
+   * default of 100% UI and {@link PDFRenderer#SWING2PDF_SCALEFACTOR_100PERCENT},
+   * the method simply returns the stylesheet content as is. */
+  private static void initHTMLStyles(int uiZoomfactor, float swing2pdfScaleFactor) throws IOException {
+    float fontShrinkingFactor = swing2pdfScaleFactor / SWING2PDF_SCALEFACTOR_100PERCENT;
+    float zoomAndScalefactor = fontShrinkingFactor * uiZoomfactor / 100.0f;
+    //float zoomAndScalefactor = uiZoomfactor / 100.0f;
     StringBuilder sb = new StringBuilder();
     java.util.List<String> rawStylesheet = FileUtils.readLines(new File(HTML2PDF_STYLESHEET), StandardCharsets.US_ASCII);
     for (String line: rawStylesheet) {
-      if (zoompercent != 100) {
+      if (uiZoomfactor != 100 || swing2pdfScaleFactor != SWING2PDF_SCALEFACTOR_100PERCENT) {
         Matcher matcher = FONTSIZE_PATTERN.matcher(line);
         if (matcher.matches()) {
           float rawFontsize = Float.parseFloat(matcher.group(2));
-          float zoomedFontsize = rawFontsize * zoomfactor;
+          float zoomedFontsize = rawFontsize * zoomAndScalefactor;
           sb.append(matcher.group(1));
           sb.append(zoomedFontsize);
           sb.append(matcher.group(3));

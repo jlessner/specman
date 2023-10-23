@@ -10,8 +10,8 @@ ul {
 
 li {
   margin-top: -0.1em;
-  /* According font size, see div */
-  font-size: 14.95px;
+  /* Concerning font size, see div */
+  font-size: 15.28px;
 }
 
 h1 {
@@ -28,17 +28,17 @@ h1>span {
 p {
   margin-top: 1em;
   margin-bottom: 0em;
-  font-size: 14.95px;
+  font-size: 15.28px;
 }
 
 div {
   /* The JEditorPane often encapsules parts of a text in divs. For an unknown reason, html2pdf renders these
-   parts with a slightly bigger font than the text outside of diffs. The font size below is a correction. */
-  /** font-size: 0.94em; */
-  font-size: 14.95px;
+   parts with a slightly different font size than the text outside of diffs. The font size below is a correction.
+   The size defined in here will be multiplied with a dynamic factor before rendering. See initHTMLStyles() */
+  font-size: 15.28px;
 }
 
 span {
   /* See div */
-  font-size: 14.95px;
+  font-size: 15.28px;
 }

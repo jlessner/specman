@@ -75,7 +75,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent(){
+	public JComponent getDecoratedComponent(){
 		return decorated(panel);
 	}
 
@@ -129,14 +129,12 @@ public class BreakSchrittView extends AbstractSchrittView {
 		layout.setColumnSpec(1, ColumnSpec.decode(umgehungLayout()));
 	}
 
-	public JPanel getPanel() {
-		return panel;
-	}
+	@Override
+	public JPanel getPanel() { return panel; }
 
 	@Override
 	public Shape getShape() {
-		return new Shape(getComponent(), this)
-			.add(editContainer.getShape())
+		return super.getShape()
 			.add(buildTriangle());
 	}
 

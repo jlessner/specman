@@ -73,7 +73,25 @@ public class ITextTest {
     canvas.closePathStroke();
 
     document.close();
-    System.out.println("PDF Created");
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
+  }
+
+  @Test
+  void testDrawRoundedRectangle() throws Exception {
+    String dest = "sample.pdf";
+    PdfWriter writer = new PdfWriter(dest);
+    PdfDocument pdfDoc = new PdfDocument(writer);
+    PdfPage page = pdfDoc.addNewPage();
+    Document document = new Document(pdfDoc);
+
+    PdfCanvas canvas = new PdfCanvas(page);
+    canvas.roundRectangle(50, 700, 300, 50, 10);
+    canvas.closePathStroke();
+
+    document.close();
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
   }
 
   @Test

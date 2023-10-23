@@ -123,7 +123,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() { return decorated(schrittPanel); }
+	public JComponent getDecoratedComponent() { return decorated(schrittPanel); }
 
 	@Override
 	public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
@@ -279,8 +279,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 		private String zeilenLayoutSchmalsterSchritt() {
 			int schmalsterSchritt = editContainer.getHeight() > 0 ? editContainer.getHeight() : 25;
 			for (AbstractSchrittView schritt: schritte) {
-				if (schritt.getComponent().getHeight() > 0) { // Noch nicht gerenderte Schritte bleiben unberücksichtigt
-					schmalsterSchritt = Math.min(schmalsterSchritt, schritt.getComponent().getHeight());
+				if (schritt.getDecoratedComponent().getHeight() > 0) { // Noch nicht gerenderte Schritte bleiben unberücksichtigt
+					schmalsterSchritt = Math.min(schmalsterSchritt, schritt.getDecoratedComponent().getHeight());
 				}
 			}
 			return "fill:" + schmalsterSchritt + "px";

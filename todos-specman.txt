@@ -1,11 +1,11 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Abgesetzte Darstellung
-  - Korrekte Behandlung von Zoomfaktor
   - Stylesheet um alle HTML-Elemente erweitern
   - Fettschrift in PDF-Texten funktioniert nicht trotz gleichen Truetype-Font in Swing und PDF
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
+  x Korrekte Behandlung von Zoomfaktor kombiniert mit Swing-zu-PDF-Skalierung
+  x Abgesetzte Darstellung
   x rechtsbündige und zentrierte Texte nicht korrekt platziert
   x Scrollposition aus der Positionierung im PDF herausrechnen
   x Seitenumbrüche
@@ -22,6 +22,8 @@ Abschluss für Go-Live
 
 
 Bugs fixen
+- Zusammenklappen von Case-Schritt geht nicht
+- Zusammenklappen / Wiederaufklappen von If- und IfElse-Schritt nicht korrekt
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
@@ -57,3 +59,6 @@ Auf längere Sicht - nicht notwendig für ersten Go-Live:
 - Spellchecker
 - Mehrere Changesets
 - Annehmen *einzelner* Änderungen
+
+Tipps und Tricks
+- Pixelgenauer Größenvergleich zwischen UI und PDF-Export geht mit 85,2% Zoomfaktor im Acrobat Reader

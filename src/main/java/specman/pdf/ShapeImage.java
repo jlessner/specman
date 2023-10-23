@@ -21,7 +21,7 @@ public class ShapeImage {
     this.content = content;
   }
 
-  public void drawToPDF(Point renderOffset, PdfCanvas pdfCanvas, Document document, float swing2pdfScaleFactor) {
+  public void drawToPDF(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas, Document document) {
     try {
       BufferedImage fullSizeImage = content.getFullSizeImage();
       float scaleFactor = content.getScalePercent() * swing2pdfScaleFactor;

@@ -128,7 +128,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	}
 
 	@Override
-	public JComponent getComponent() { return decorated(panel); }
+	public JComponent getDecoratedComponent() { return decorated(panel); }
 
 	@Override
 	public boolean isStrukturiert() {
@@ -261,7 +261,6 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			.withBackgroundColor(GAP_COLOR)
 			.add(linkerBalken)
 			.add(untererBalken)
-			.add(editContainer.getShape())
 			.add(wiederholSequenz.getShapeSequence());
 	}
 }

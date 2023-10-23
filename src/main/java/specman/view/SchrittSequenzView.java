@@ -61,6 +61,7 @@ public class SchrittSequenzView {
 		huellLayout = new FormLayout("10px:grow", ZEILENLAYOUT_LETZTER_SCHRITT + ", " + ZEILENLAYOUT_CATCHBEREICH);
 		panel.setLayout(huellLayout);
 		panel.setBackground(Specman.schrittHintergrund());
+		panel.setBackground(Color.GREEN);
 		this.sequenzBasisId = sequenzBasisId;
 		sequenzBereich = new JPanel();
 		sequenzBereich.setBackground(Color.black);
@@ -206,7 +207,7 @@ public class SchrittSequenzView {
 			sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		}
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
-		sequenzBereich.add(schritt.getComponent(), constraints4step(schritte.size()));
+		sequenzBereich.add(schritt.getDecoratedComponent(), constraints4step(schritte.size()));
 		schritte.add(schritt);
 		updateLayoutRowspecsForAllsStepsAndGaps();
 		return schritt;
@@ -304,11 +305,11 @@ public class SchrittSequenzView {
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
 		sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_SCHRITT));
 
-		sequenzBereich.add(newStep.getComponent(), constraints4step(newStepIndex));
+		sequenzBereich.add(newStep.getDecoratedComponent(), constraints4step(newStepIndex));
 
 		for (int followerIndex = newStepIndex; followerIndex < schritte.size(); followerIndex++) {
 			AbstractSchrittView nachfolger = schritte.get(followerIndex);
-			sequenzbereichLayout.setConstraints(nachfolger.getComponent(), constraints4step(followerIndex+1));
+			sequenzbereichLayout.setConstraints(nachfolger.getDecoratedComponent(), constraints4step(followerIndex+1));
 		}
 
 		schritte.add(newStepIndex, newStep);
@@ -357,7 +358,7 @@ public class SchrittSequenzView {
 		else {
 			checkSchrittEntfernen(schritt);
 			schritt.entfernen(this);
-			sequenzBereich.remove(schritt.getComponent());
+			sequenzBereich.remove(schritt.getDecoratedComponent());
 			schrittIndex = schritte.indexOf(schritt);
 			int layoutZeilenLoeschIndex = (schrittIndex == 0) ? 1 : schrittIndex*2;
 			sequenzbereichLayout.removeRow(layoutZeilenLoeschIndex);
@@ -543,7 +544,7 @@ public class SchrittSequenzView {
 
 	/** Find the index of a step's grafical root component within this sequence' panel */
 	int stepComponentIndex(AbstractSchrittView step) {
-		JComponent stepComponent = step.getComponent();
+		JComponent stepComponent = step.getDecoratedComponent();
 		Component[] sequenceChildren = sequenzBereich.getComponents();
 		for (int componentIndex = 0; componentIndex < sequenceChildren.length; componentIndex++) {
 			if (sequenceChildren[componentIndex] == stepComponent) {

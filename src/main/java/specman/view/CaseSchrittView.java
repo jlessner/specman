@@ -546,7 +546,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 	@Override
 	public Shape getShape() {
-		Shape shape = new Shape(getComponent())
+		Shape shape = new Shape(getPanel())
 			.withBackgroundColor(GAP_COLOR)
 			.add(lueckenFueller)
 			.add(new Shape(panelCase).add(editContainer.getShape()))
@@ -559,6 +559,6 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 				.add(caseSequenz.getShapeSequence())
 				.add(caseSequenz.ueberschrift.getShape());
 		}
-		return shape.add(createDiamond());
+		return decoratedShape(shape.add(createDiamond()));
 	}
 }

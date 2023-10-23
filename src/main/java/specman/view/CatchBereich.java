@@ -8,11 +8,9 @@ import specman.Specman;
 import specman.textfield.InteractiveStepFragment;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +64,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 	public void catchAnhaengen(CatchSchrittView schritt) {
 		layout.appendRow(RowSpec.decode(AbstractSchrittView.FORMLAYOUT_GAP));
 		layout.appendRow(RowSpec.decode("pref:grow"));
-		catchBloeckeContainer.add(schritt.getComponent(), CC.xy(1, (catchBloecke.size()+1) * 2));
+		catchBloeckeContainer.add(schritt.getDecoratedComponent(), CC.xy(1, (catchBloecke.size()+1) * 2));
 
 		if (catchBloecke.size() > 0) {
 			alleGrundlinienAnschluesseEntfernen();
@@ -128,7 +126,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 
 	private void alleSchritteEntfernen() {
 		for (CatchSchrittView schritt: catchBloecke) {
-			catchBloeckeContainer.remove(schritt.getComponent());
+			catchBloeckeContainer.remove(schritt.getDecoratedComponent());
 		}
 	}
 
@@ -143,7 +141,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 		int spaltenbreite = anzahlNachfolger * 2 + 1;
 		int zeilenposition = (index+1) * 2;
 		//layout.setConstraints(catchSchrittView.getComponent(), CC.xywh(1, 2, 3, 1));
-		layout.setConstraints(catchSchrittView.getComponent(), CC.xywh(1, zeilenposition, spaltenbreite, 1));
+		layout.setConstraints(catchSchrittView.getDecoratedComponent(), CC.xywh(1, zeilenposition, spaltenbreite, 1));
 
 		int spaltenpositionGrundlinienAnschluss = spaltenbreite;
 		int zeilenpositionGrundlinienAnschluss = zeilenposition+1;

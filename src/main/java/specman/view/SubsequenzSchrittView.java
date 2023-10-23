@@ -78,7 +78,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public JComponent getComponent() { return decorated(panel); }
+	public JComponent getDecoratedComponent() { return decorated(panel); }
 
 	@Override
 	public boolean isStrukturiert() {
@@ -165,9 +165,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		subsequenz.updateTextfieldDecorationIndentions(substepIndentions);
 	}
 
-	public JPanel getPanel() {
-		return panel;
-	}
+	public JPanel getPanel() { return panel; }
 
 	public SchrittSequenzView getSubsequenz() {
 		return subsequenz;
@@ -181,8 +179,8 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 
 	@Override
 	public Shape getShape() {
-		return new Shape(panel)
-			.add(editContainer.getShape())
+		return super.getShape()
+			.withBackgroundColor(panel.getBackground())
 			.add(subsequenz.getShapeSequence());
 	}
 }
