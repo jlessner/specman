@@ -36,11 +36,16 @@ public class TextStyles {
      * and using "Times New Roman" also for PDF rendering, causes slightly different lengths
      * of the text lines.
      */
-    public static final String SERIF_FONT = "src/main/resources/fonts/Sitka-Display.ttf";
+    public static final String SERIF_FONTCOLLECTION_REGULAR = "src/main/resources/fonts/Sitka.ttc";
+    public static final int FONT_INDEX = 4;
+
+    //public static final String SERIF_FONT = "C:/Windows/Fonts/times.ttf";
+    //public static final String SERIF_FONT = "C:/Users/jlessner/AppData/Local/Microsoft/Windows/Fonts/TimesNewRomanPSMT.ttf";
     public static Font font;
     static {
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new java.io.File(SERIF_FONT));
+            Font[] fonts = Font.createFonts(new java.io.File(SERIF_FONTCOLLECTION_REGULAR));
+            font = fonts[FONT_INDEX];
         }
         catch(Exception x) {
             x.printStackTrace();

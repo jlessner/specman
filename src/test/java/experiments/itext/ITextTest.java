@@ -164,10 +164,8 @@ public class ITextTest {
     Document document = new Document(pdf);
     document.setFontSize(10.0f);
     for (IElement element : elements) {
-      document.add(new Paragraph(element.getClass().getName() + "eins zwei drei vier fünf sches sieben acht neuen zehn eld zwölf dreizehn vierzehn fünfzehn sechszehn").setMargin(0).setPadding(0).setPadding(0));
       document.setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA));
-      //document.add((IBlockElement)element);
-      //document.add(new Paragraph().add((IBlockElement)element));
+      document.add(new Paragraph().add((IBlockElement)element));
     }
     document.close();
     Desktop desktop = Desktop.getDesktop();
@@ -179,11 +177,10 @@ public class ITextTest {
     ConverterProperties properties = new ConverterProperties();
     FontProvider fontProvider = new DefaultFontProvider(false, false, false);
 
-//    fontProvider.addFont(FontProgramFactory.createFont("C:/Windows/Fonts/times.ttf"));
-//    fontProvider.addFont(FontProgramFactory.createFont("C:/Windows/Fonts/timesi.ttf"));
-//    fontProvider.addFont(FontProgramFactory.createFont("C:/Windows/Fonts/timesbd.ttf"));
-    fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/Sitka-Display.ttf"));
-    //fontProvider.addFont(FontProgramFactory.createFont("C:/Users/jlessner/AppData/Local/Microsoft/Windows/Fonts/TimesNewRomanPSMT.ttf"));
+    fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/Sitka.ttc", 4, false));
+    fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaB.ttc", 4, false));
+    fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaI.ttc", 4, false));
+    fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaZ.ttc", 4, false));
 
     properties.setFontProvider(fontProvider);
 

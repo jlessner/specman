@@ -101,12 +101,10 @@ public class FormattedShapeText extends AbstractShapeText {
     try {
       properties = new ConverterProperties();
       FontProvider fontProvider = new DefaultFontProvider(false, false, false);
-      FontProgram fontProgram = FontProgramFactory.createFont(TextStyles.SERIF_FONT);
-      fontProvider.addFont(fontProgram);
-////      for (int i = 0; i < 6; i++) {
-////        FontProgram fontProgram = FontProgramFactory.createFont("src/main/resources/fonts/sitka-small-599.ttf", i, true);
-////        fontProvider.addFont(fontProgram);
-////      }
+      fontProvider.addFont(FontProgramFactory.createFont(TextStyles.SERIF_FONTCOLLECTION_REGULAR, TextStyles.FONT_INDEX, false));
+      fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaB.ttc", TextStyles.FONT_INDEX, false));
+      fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaI.ttc", TextStyles.FONT_INDEX, false));
+      fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaZ.ttc", TextStyles.FONT_INDEX, false));
       properties.setFontProvider(fontProvider);
       initHTMLStyles(uizoomfactor, swing2pdfScaleFactor);
     }
