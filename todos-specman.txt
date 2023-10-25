@@ -44,7 +44,6 @@ Bugs fixen
 - Abfangen des Löschens des letzten Zweigs im Case
 - NumberStepBackground in RoundedBorderDecorator schwarz färben wenn Schritt gelöscht ist
 - 'Cannot invoke "specman.SpaltenResizer.getShape()" because "this.breitenAnpasser" is null' in PDF-Export with no diagram
-- Zusammenklappen von Case-Schritt geht nicht
 
 
 Auf längere Sicht - nicht notwendig für ersten Go-Live:
