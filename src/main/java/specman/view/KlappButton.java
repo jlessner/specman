@@ -77,9 +77,13 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
     } else {
       hintergrundfarbeVonParentUebernehmen();
     }
+    refreshGeklappt();
+  }
+
+  public void refreshGeklappt() {
     String benoetigtesZeilenLayout = isSelected() ?
-        AbstractSchrittView.ZEILENLAYOUT_INHALT_VERBORGEN :
-        AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
+      AbstractSchrittView.ZEILENLAYOUT_INHALT_VERBORGEN :
+      AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
     layout.setRowSpec(klappzeile, RowSpec.decode(benoetigtesZeilenLayout));
     klappbarerBereich.geklappt(!isSelected());
   }

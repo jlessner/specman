@@ -23,9 +23,7 @@ import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigEntferntMarkiert;
 
 import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.event.ComponentListener;
+import java.awt.*;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -40,7 +38,7 @@ import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE
 import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
 
 
-public class CaseSchrittView extends VerzweigungSchrittView implements ComponentListener, FocusListener {
+public class CaseSchrittView extends VerzweigungSchrittView {
 	// Alle Components kriegen am Anfang einen sinnfreien Dummy und werden dann
 	// über die Methode layoutCojnstraintsSetzen korrekt plaziert. Damit verhindern
 	// wir, dass die relativ komplizierte Positionsvergabe redundant im Code auftaucht
@@ -111,19 +109,35 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 		klappen.init(model.zugeklappt);
 	}
 
+	@Override
+	public void geklappt(boolean auf) {
+		// It's not really clear why we have to set these component's visibility at all as the KlappButton
+		// turns the layout row of all of them to 0px which should be enough. However, when recreating
+		// the resizers on adding or removing a case sequence, there remains a little space even with a
+		// 0px layout row.
+		sonstSequenz.setVisible(auf);
+		caseSequenzen.forEach(seq -> seq.setVisible(auf));
+		getSpaltenResizers().forEach(resizer -> resizer.setVisible(auf));
+	}
+
 	private void spaltenResizerAnlegen(EditorI editor) {
 		for (int i = 0; i < caseSequenzen.size(); i++) {
-			panel.add(new SpaltenResizer(this, i, editor), CC.xywh(2 + 2*i, 4, 1, 2)); /**@author PVN */
+			panel.add(new SpaltenResizer(this, i, editor), CC.xywh(2 + 2*i, 4, 1, 2));
 		}
 	}
 
-	private void spaltenResizerEntfernen() {
-		for (MouseListener ml: panel.getMouseListeners()) {
-			if (ml instanceof SpaltenResizer)
-				panel.removeMouseListener(ml);
-		}
+	private List<SpaltenResizer> getSpaltenResizers() {
+		return Arrays.stream(panel.getComponents())
+			.filter(c -> c instanceof SpaltenResizer)
+			.map(c -> (SpaltenResizer)c)
+			.collect(Collectors.toList());
 	}
-	/** @author PVN */
+
+	private void spaltenResizerEntfernen() {
+		List<SpaltenResizer> currentResizers = getSpaltenResizers();
+		currentResizers.forEach(resizer -> panel.remove(resizer));
+	}
+
 	private static FormLayout createPanelLayout(int anzahlCases) {
 		String spaltenSpec = "10px:grow, " + FORMLAYOUT_GAP + ", 10px:grow, " + FORMLAYOUT_GAP;
 		for (int i = 2; i < anzahlCases; i++)
@@ -142,12 +156,6 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 	@Override
 	public void skalieren(int prozentNeu, int prozentAktuell) {
 		super.skalieren(prozentNeu, prozentAktuell);
-		// Wenn der Kopftext einzeilig ist, bleibt der entsprechende Bereich sehr schmal und die
-		// flachen Dreieckslinien ragen rechts und linke initial weit in den Text hinein. Deswegen
-		// w�hlen wir das Layout so, dass die Layoutzeile so gro� wird, wie das Textfeld Platz
-		// braucht, jedoch mindestens 30 dlu, multipliziert mit dem aktuellen Zoomfaktor.
-		// Cool, was das FormLayout so alles kann ;-)
-		// Syntaxtricks von hier: http://manual.openestate.org/extern/forms-1.2.1/reference/variables.html
 		panelLayout.setRowSpec(1, RowSpec.decode(layoutRowSpec1()));
 		int neueSpaltenbreite = spalteUmrechnen(prozentNeu); /** @author PVN */
 		panelCase.setLayout(new FormLayout(neueSpaltenbreite + ", 10px:grow", "fill:pref:grow")); /**@author SD */
@@ -341,6 +349,7 @@ public class CaseSchrittView extends VerzweigungSchrittView implements Component
 
 		setId(id);
 		parent.folgeschritteRenummerieren(this);
+		klappen.refreshGeklappt();
 
 		editor.diagrammAktualisieren(null);
 	}

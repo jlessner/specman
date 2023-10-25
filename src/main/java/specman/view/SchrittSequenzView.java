@@ -61,7 +61,6 @@ public class SchrittSequenzView {
 		huellLayout = new FormLayout("10px:grow", ZEILENLAYOUT_LETZTER_SCHRITT + ", " + ZEILENLAYOUT_CATCHBEREICH);
 		panel.setLayout(huellLayout);
 		panel.setBackground(Specman.schrittHintergrund());
-		panel.setBackground(Color.GREEN);
 		this.sequenzBasisId = sequenzBasisId;
 		sequenzBereich = new JPanel();
 		sequenzBereich.setBackground(Color.black);

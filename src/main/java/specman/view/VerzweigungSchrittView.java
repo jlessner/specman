@@ -34,15 +34,10 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		};
 
 		panel.setBackground(Color.black);
-		//createPanelLayout(caseInitialtexte.length);
 		panel.setLayout(panelLayout);
 		panel.addComponentListener(this);
 		panel.setEnabled(false);
-		// TODO JL: Die Platzierung des Klappbuttons muss neu gebaut werden. Weder das Textfeld noch
-		// das Hauptpanel sind geeignet, weil diese ein Formlayout haben. Allerdings dürfte sich das
-		// Problem erledigen, wenn die Aktogramm-Darstellung kommt. Dann ist links oben gar kein Text
-		// mehr und somit Platz für den Klapp-Button.
-		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, 4);
+		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, 5);
 		klappen.addComponentListener(new ComponentAdapter() {
 			// Kleine Sch�nheitsgeschichte: Der Klapp-Button liegt �ber der linken Dreieckslinie.
 			// Wenn der Button durch Mausbewegungen verschwindet, m�ssen wir daf�r sorgen, das dort,
@@ -52,7 +47,6 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 				panel.repaint();
 			}
 		});
-
 	}
 
 	/** If the step is placed into a {@link RoundedBorderDecorator}, painting the step
@@ -90,7 +84,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		double textEinrueckung = texteinrueckungNeuberechnen();
 		editContainer.setLeftInset((int)textEinrueckung);
 		editContainer.setRightInset((int)textEinrueckung);
-		panel.repaint(); // Sorgt dafür, dass das umplazierte Textfeld und alles andere auf dem Panel sofort neu gezeichnet wird
+		panel.repaint(); // Sorgt dafür, dass das umplatzierte Textfeld und alles andere auf dem Panel sofort neu gezeichnet wird
 		klappen.updateLocation(editContainer.getStepNumberBounds());
 	}
 
