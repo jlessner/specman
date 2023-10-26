@@ -1,9 +1,9 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Abstände um eine H1 herum wachsen bei Änderung des UI-Zoomfaktors überproportional
   - Stylesheet um alle HTML-Elemente erweitern
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
+  x Abstände um eine H1 herum wachsen bei Änderung des UI-Zoomfaktors überproportional
   x Fettschrift in PDF-Texten funktioniert nicht trotz gleichem Truetype-Font in Swing und PDF
      So la la gelöst. UI morphed den regulären Font, html2pdf arbeitet mit 4 Fontfamilien (regular, bold, italic, bold+italic)
   x Korrekte Behandlung von Zoomfaktor kombiniert mit Swing-zu-PDF-Skalierung
