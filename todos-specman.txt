@@ -1,5 +1,6 @@
 Abschluss für Go-Live
 - PDF-Export
+  - Abstände um eine H2 und H3 herum wachsen bei Änderung des UI-Zoomfaktors leicht überproportional. Bei H1 ist es einigermaßen OK
   - Stylesheet um alle HTML-Elemente erweitern
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
