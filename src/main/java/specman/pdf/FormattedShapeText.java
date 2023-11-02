@@ -69,7 +69,7 @@ public class FormattedShapeText extends AbstractShapeText {
           .setFontSize(scaledFontSize)
           .setFixedPosition(
           (renderOffset.x + line.getX()) * swing2pdfScaleFactor,
-          (renderOffset.y - line.getY() - line.getHeight() - insets.top) * swing2pdfScaleFactor,
+          (renderOffset.y - line.getY() - line.getHeight()) * swing2pdfScaleFactor,
           paragraphWidth);
         p.add((IBlockElement)elements.get(0));
         document.add(p);

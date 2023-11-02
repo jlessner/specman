@@ -1,11 +1,16 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Anpassung der Fontgrößen aus Tags wie <font size="6">
-  - Text, der übermäßig viel Platz in der Höhe hat (wegen Nachbartext mit höherem Bedarf), wird am Fuß angezeigt statt am Kopf des Bereichs
-  - Abstände um H2 - H6 und Blockquote herum wachsen bei Änderung des UI-Zoomfaktors leicht überproportional. Bei H1 ist es einigermaßen OK
-  - Stylesheet um alle HTML-Elemente erweitern
+  - Rendering von Bulletpoints und Zahlen für Listitems
+  - Renderfehler von gutenmorgen.xsd lösen:
+    - Gelber Hintergrund von "auf Snooze stellen" nur halb hoch
+    - g von "Solange" bei 120% abgeschnitten
+    - "Werktag" nicht zu sehen
+    - "Wochentag prüfen" und "Lust auf Kaffee" rechtsbündig statt zentriert
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
+  x Überschriften erscheinen nach oben versetzt
+  x Text, der übermäßig viel Platz in der Höhe hat (wegen Nachbartext mit höherem Bedarf), wird am Fuß angezeigt statt am Kopf des Bereichs
+  x Anpassung der Fontgrößen aus Tags wie <font size="6">
   x Abstände um eine H1 herum wachsen bei Änderung des UI-Zoomfaktors überproportional
   x Fettschrift in PDF-Texten funktioniert nicht trotz gleichem Truetype-Font in Swing und PDF
      So la la gelöst. UI morphed den regulären Font, html2pdf arbeitet mit 4 Fontfamilien (regular, bold, italic, bold+italic)
