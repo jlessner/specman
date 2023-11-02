@@ -1,24 +1,10 @@
-ul {
-  /* Just to check if the stylesheet has an effect*/
-  /* color: red; */
-
-  /* Following line allows to adapt the list items indention. Unfortunately it causes the items dots to disappear */
-  /* padding-inline-start: 20px; */
-
-  margin: 0.5em;
-}
-
 li {
-  margin-top: -0.1em;
   /* Concerning font size, see div */
   font-size: 15.28px;
 }
 
 h1 {
   font-size: 26.2px;
-  font-weight: bold;
-  margin-top: 7.3px;
-  margin-bottom: 7.3px;
 }
 
 h1>span {
@@ -27,9 +13,6 @@ h1>span {
 
 h2 {
   font-size: 20.2px;
-  font-weight: bold;
-  margin-top: 8px;
-  margin-bottom: 8px;
 }
 
 h2>span {
@@ -38,9 +21,6 @@ h2>span {
 
 h3 {
   font-size: 16px;
-  font-weight: bold;
-  margin-top: 8.5px;
-  margin-bottom: 8.5px;
 }
 
 h3>span {
@@ -49,9 +29,6 @@ h3>span {
 
 h4 {
   font-size: 13px;
-  font-weight: bold;
-  margin-top: 9px;
-  margin-bottom: 9px;
 }
 
 h4>span {
@@ -60,10 +37,6 @@ h4>span {
 
 blockquote {
   font-size: 15.28px;
-  margin-top: 3.5px;
-  margin-bottom: 3.5px;
-  margin-left: 35px;
-  margin-right: 35px;
 }
 
 blockquote>span {
@@ -71,8 +44,6 @@ blockquote>span {
 }
 
 p {
-  margin-top: 1em;
-  margin-bottom: 0em;
   font-size: 15.28px;
 }
 
@@ -83,7 +54,26 @@ div {
   font-size: 15.28px;
 }
 
+font[size="7"] { font-size: 39.6px; padding-top: -10px; }
+font[size="7"]>span { font-size: 39.6px; }
+
+font[size="6"] { font-size: 26px; padding-top: -10px; }
+font[size="6"]>span { font-size: 26px; }
+
+font[size="5"] { font-size: 20px; padding-top: -10px; }
+font[size="5"]>span { font-size: 20px; }
+
+font[size="3"] { font-size: 12px; padding-top: -10px; }
+font[size="3"]>span { font-size: 12px; }
+
+font[size="2"] { font-size: 10px; padding-top: -10px; }
+font[size="2"]>span { font-size: 10px; }
+
+font[size="1"] { font-size: 8px; padding-top: -10px; }
+font[size="1"]>span { font-size: 8px; }
+
 span {
   /* See div */
   font-size: 15.28px;
+  padding-top: -10px; padding-bottom: -1px;
 }

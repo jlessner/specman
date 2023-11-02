@@ -1,6 +1,8 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Abstände um eine H2 und H3 herum wachsen bei Änderung des UI-Zoomfaktors leicht überproportional. Bei H1 ist es einigermaßen OK
+  - Anpassung der Fontgrößen aus Tags wie <font size="6">
+  - Text, der übermäßig viel Platz in der Höhe hat (wegen Nachbartext mit höherem Bedarf), wird am Fuß angezeigt statt am Kopf des Bereichs
+  - Abstände um H2 - H6 und Blockquote herum wachsen bei Änderung des UI-Zoomfaktors leicht überproportional. Bei H1 ist es einigermaßen OK
   - Stylesheet um alle HTML-Elemente erweitern
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
@@ -14,6 +16,8 @@ Abschluss für Go-Live
   x Seitenumbrüche
   x Texte über und unter Diagramm
   x Bilder und unterstrukturierte EditContainer (aktuell nur 1. TextEditArea)
+- Neben Serif-Font auch Sans Serif und Monospace Font einbauen und alle anderen entfernen
+  - Muss auch alles PDF-tauglich sein
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung

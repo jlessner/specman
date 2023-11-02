@@ -3,7 +3,6 @@ package specman.pdf;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
-import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -12,17 +11,20 @@ import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.font.FontProvider;
-import com.itextpdf.layout.properties.LineHeight;
-import com.itextpdf.layout.properties.Property;
 import org.apache.commons.io.FileUtils;
 import specman.textfield.HTMLTags;
 import specman.textfield.TextEditArea;
 import specman.textfield.TextStyles;
 
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,37 +45,93 @@ public class FormattedShapeText extends AbstractShapeText {
   }
 
   public void writeToPDF(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas, Document document) {
-    // Is not really clear why we have to slightly reduce the font size
     float scaledFontSize = getFontsize() * swing2pdfScaleFactor;
     pdfCanvas.setFillColor(getPDFColor());
-
     document.setFontSize(scaledFontSize);
-    String htmlContent = injectStylesheet(stylifyTextAlignment(content.getText()));
 
-    java.util.List<IElement> elements = HtmlConverter.convertToElements(htmlContent, properties);
+    try {
+      java.util.List<TextlineDimension> lines = scanLineDimensions();
+      float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right) * swing2pdfScaleFactor;
 
-    float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right - 7) * swing2pdfScaleFactor;
-    Paragraph superp = new Paragraph()
-      .setFixedPosition(
-        (renderOffset.x + insets.left) * swing2pdfScaleFactor,
-        (renderOffset.y - content.getHeight() + getInsets().bottom) * swing2pdfScaleFactor,
-        paragraphWidth)
-      .setMargin(0)
-      .setMultipliedLeading(1.0f)
-      .setFontSize(scaledFontSize);
-    for (IElement element : elements) {
-      Paragraph paragraph = new Paragraph()
-        .setMargin(0)
-        .setMultipliedLeading(1.0f)
-        .setCharacterSpacing(-0.1f)
-        .setFontSize(scaledFontSize)
-        .setWidth(paragraphWidth); // Setting width for sub paragraph is important for text alignments right, center, ...
-      paragraph.setProperty(Property.LINE_HEIGHT, LineHeight.createMultipliedValue(1.37f));
-      paragraph.add((IBlockElement)element);
-      superp.add(paragraph);
-      superp.add("\n");
+      for (TextlineDimension line: lines) {
+        System.out.println("Zeile bis " + line.getDocIndexTo() + ", Höhe " + line.getHeight() + ", y = " + line.getY());
+
+        String lineHtml = line.extractLineHtml(content);
+        lineHtml = removeLinebreakingElementsFromHtmlLine(lineHtml);
+        lineHtml = stylifyTextAlignment(lineHtml);
+        lineHtml = injectStylesheet(lineHtml);
+        java.util.List<IElement> elements = HtmlConverter.convertToElements(lineHtml, properties);
+
+        Paragraph p = new Paragraph()
+          .setMargin(0)
+          .setMultipliedLeading(0.0f)
+          .setCharacterSpacing(-0.1f)
+          .setFontSize(scaledFontSize)
+          .setFixedPosition(
+          (renderOffset.x + line.getX()) * swing2pdfScaleFactor,
+          (renderOffset.y - line.getY() - line.getHeight() - insets.top) * swing2pdfScaleFactor,
+          paragraphWidth);
+        p.add((IBlockElement)elements.get(0));
+        document.add(p);
+      }
+
     }
-    document.add(superp);
+    catch(Exception x) {
+      x.printStackTrace();
+    }
+
+
+//    String htmlContent = injectStylesheet(stylifyTextAlignment(content.getText()));
+//
+//    java.util.List<IElement> elements = HtmlConverter.convertToElements(htmlContent, properties);
+//
+//    float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right - 7) * swing2pdfScaleFactor;
+//    Paragraph superp = new Paragraph()
+//      .setFixedPosition(
+//        (renderOffset.x + insets.left) * swing2pdfScaleFactor,
+//        (renderOffset.y - content.getHeight() + getInsets().bottom) * swing2pdfScaleFactor,
+//        paragraphWidth)
+//      .setMargin(0)
+//      .setMultipliedLeading(-0.0f)
+//      .setFontSize(scaledFontSize);
+//    for (IElement element : elements) {
+//      Paragraph paragraph = new Paragraph()
+//        .setMargin(0)
+//        .setMultipliedLeading(0.0f)
+//        .setCharacterSpacing(-0.1f)
+//        .setFontSize(scaledFontSize)
+//        .setWidth(paragraphWidth); // Setting width for sub paragraph is important for text alignments right, center, ...
+//      paragraph.setProperty(Property.LINE_HEIGHT, LineHeight.createMultipliedValue(1.37f));
+//      paragraph.add((IBlockElement)element);
+//      superp.add(paragraph);
+//      superp.add("\n");
+//    }
+//    document.add(superp);
+  }
+
+  private String removeLinebreakingElementsFromHtmlLine(String subHtml) {
+    return subHtml
+      .replace("<li>", "")
+      .replace("</li>", "")
+      .replace("<ol>", "")
+      .replace("</ol>", "")
+      .replace("<ul>", "")
+      .replace("</ul>", "")
+      .replace("<div>", "")
+      .replace("</div>", "")
+      .replace("<br>", "");
+  }
+
+  private List<TextlineDimension> scanLineDimensions() throws BadLocationException {
+    List<TextlineDimension> lines = new ArrayList<>();
+    javax.swing.text.Document document = content.getDocument();
+    for (int rowStart = 1; rowStart < document.getLength(); rowStart++) {
+      Rectangle2D lineSpace = content.modelToView2D(rowStart);
+      int rowEnd = Utilities.getRowEnd(content, rowStart);
+      lines.add(new TextlineDimension(rowStart, rowEnd, lineSpace));
+      rowStart = rowEnd;
+    }
+    return lines;
   }
 
   /** JEditorPane expresses text alignment by plain HTML form in div elements like that:
