@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static specman.pdf.ListItemTracker.LISTITEM_IDENTION;
 import static specman.pdf.PDFRenderer.SWING2PDF_SCALEFACTOR_100PERCENT;
 
 public class FormattedShapeText extends AbstractShapeText {
@@ -52,11 +53,13 @@ public class FormattedShapeText extends AbstractShapeText {
     try {
       java.util.List<TextlineDimension> lines = scanLineDimensions();
       float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right) * swing2pdfScaleFactor;
+      ListItemTracker listItemTracker = new ListItemTracker();
 
       for (TextlineDimension line: lines) {
         System.out.println("Zeile bis " + line.getDocIndexTo() + ", Höhe " + line.getHeight() + ", y = " + line.getY());
 
         String lineHtml = line.extractLineHtml(content);
+        String lineItemPrompt = listItemTracker.nextLine(lineHtml);
         lineHtml = removeLinebreakingElementsFromHtmlLine(lineHtml);
         lineHtml = stylifyTextAlignment(lineHtml);
         lineHtml = injectStylesheet(lineHtml);
@@ -72,7 +75,24 @@ public class FormattedShapeText extends AbstractShapeText {
           (renderOffset.y - line.getY() - line.getHeight()) * swing2pdfScaleFactor,
           paragraphWidth);
         p.add((IBlockElement)elements.get(0));
+
         document.add(p);
+
+        if (lineItemPrompt != null) {
+          p = new Paragraph()
+            .setMargin(0)
+            .setMultipliedLeading(0.0f)
+            .setCharacterSpacing(-0.1f)
+            .setFontSize(scaledFontSize)
+            .setFixedPosition(
+              (renderOffset.x + line.getX() - LISTITEM_IDENTION) * swing2pdfScaleFactor,
+              (renderOffset.y - line.getY() - line.getHeight()) * swing2pdfScaleFactor,
+              (LISTITEM_IDENTION - 5) * swing2pdfScaleFactor);
+          elements = HtmlConverter.convertToElements(lineItemPrompt, properties);
+          p.add((IBlockElement)elements.get(0));
+          document.add(p);
+        }
+
       }
 
     }
@@ -117,8 +137,6 @@ public class FormattedShapeText extends AbstractShapeText {
       .replace("</ol>", "")
       .replace("<ul>", "")
       .replace("</ul>", "")
-      .replace("<div>", "")
-      .replace("</div>", "")
       .replace("<br>", "");
   }
 
@@ -138,11 +156,10 @@ public class FormattedShapeText extends AbstractShapeText {
    * <div align="right">text goes here</div>
    * This is not suitable für pdf2html which only supports text alignment to be expressed by styling like that:
    * <div style="text-align: right">text goes here</div>
-   * This must be morphed before rendering. In addition, we have to add a 100% width style info as otherwise the
-   * div will shrink to its text width and the alignment has no effect. Fortunately there occurs no other styling
-   * of divs in JEditorPane, so we can simply work with an ordinary regexp replacement without merging. */
+   * This must be morphed before rendering. Fortunately there occurs no other styling of divs in JEditorPane, so
+   * we can simply work with an ordinary regexp replacement without merging. */
   private String stylifyTextAlignment(String rawHTML) {
-    return rawHTML.replaceAll("align=\"([a-z]+)\"", "style=\"text-align:$1;width:100%\"");
+    return rawHTML.replaceAll("align=\"([a-z]+)\"", "style=\"text-align:$1\"");
   }
 
   private String injectStylesheet(String rawHTML) {
