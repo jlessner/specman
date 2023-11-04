@@ -1085,13 +1085,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public void exportAsPDF() {
-		arbeitsbereich.setVisible(false);
-		arbeitsbereich.setVisible(true);
+		// Force complete rendering (to an unused image) to record line item prompt positions
 		LIRecordingListView.startRecording();
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				final String PDF_EXTENSION = ".pdf";
+		final Image unused = createImage(arbeitsbereich.getWidth(), arbeitsbereich.getHeight());
+		arbeitsbereich.paint(unused.getGraphics());
+
+		final String PDF_EXTENSION = ".pdf";
 
 //        JFileChooser fileChooser = new JFileChooser();
 //        fileChooser.setCurrentDirectory(new File("."));
@@ -1101,23 +1100,21 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 //        int result = fileChooser.showSaveDialog(arbeitsbereich);
 //        if (result == JFileChooser.APPROVE_OPTION) {
 //            File selectedFile = fileChooser.getSelectedFile();
-				File selectedFile = new File("sample.pdf");
-				if (selectedFile != null) {
-					Point scrollPosition = scrollPane.getViewport().getViewPosition();
-					Point workingAreaLocation = arbeitsbereich.getLocation();
-					workingAreaLocation.translate(scrollPosition.x, scrollPosition.y);
-					Shape all = new Shape(workingAreaLocation)
-						.add(intro.getShape())
-						.add(hauptSequenz.getShapeSequence())
-						.add(breitenAnpasser.getShape())
-						.add(outro.getShape());
-					new PDFRenderer(selectedFile.getAbsolutePath(), PageSize.A4, true, zoomFaktor).render(all);
-					LIRecordingListView.stopRecording();
-				}
+		File selectedFile = new File("sample.pdf");
+		if (selectedFile != null) {
+			Point scrollPosition = scrollPane.getViewport().getViewPosition();
+			Point workingAreaLocation = arbeitsbereich.getLocation();
+			workingAreaLocation.translate(scrollPosition.x, scrollPosition.y);
+			Shape all = new Shape(workingAreaLocation)
+				.add(intro.getShape())
+				.add(hauptSequenz.getShapeSequence())
+				.add(breitenAnpasser.getShape())
+				.add(outro.getShape());
+			new PDFRenderer(selectedFile.getAbsolutePath(), PageSize.A4, true, zoomFaktor).render(all);
+			LIRecordingListView.stopRecording();
+		}
 //        }
 
-			}
-		});
 	}
 
 	public BreakSchrittView findeBreakSchritt(CatchSchrittView fuerCatchSchritt) {

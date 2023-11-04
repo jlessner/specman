@@ -109,7 +109,7 @@
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    S<span style=\"background-color:#ffffff\"><font color=\"#000000\">olange ich noch     nicht richtig wach bin und noch wenigstens 5 Minuten Zeit bleiben</font></span>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    S<span><font color=\"#000000\">olange ich noch     nicht richtig wach bin und noch wenigstens 5 Minuten Zeit bleiben</font></span>  </body></html>",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ]
               } ] ] ]
             },

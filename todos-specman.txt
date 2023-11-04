@@ -1,7 +1,5 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Rendering von Bulletpoints und Zahlen für Listitems
-    - Repaint erfolgt nur für die Bestandteile, die im sichtbaren Scrollbereich liegen - für die anderen fehlen dadurch das LI-Tracking
   - Renderfehler von gutenmorgen.xsd lösen:
     - Gelber Hintergrund von "auf Snooze stellen" nur halb hoch
     - g von "Solange" bei 120% abgeschnitten
@@ -10,6 +8,7 @@ Abschluss für Go-Live
   - Nicht essenziell aber wäre schöner: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
+  x Rendering von Bulletpoints und Zahlen für Listitems
   x Überschriften erscheinen nach oben versetzt
   x Text, der übermäßig viel Platz in der Höhe hat (wegen Nachbartext mit höherem Bedarf), wird am Fuß angezeigt statt am Kopf des Bereichs
   x Anpassung der Fontgrößen aus Tags wie <font size="6">
