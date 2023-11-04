@@ -1,10 +1,10 @@
 package specman.textfield.litrack;
 
-public class LITracked {
+public class LIRecord {
   private final int yPosition;
   private final int liIndex;
 
-  public LITracked(int yPosition, int liIndex) {
+  public LIRecord(int yPosition, int liIndex) {
     this.yPosition = yPosition;
     this.liIndex = liIndex;
   }

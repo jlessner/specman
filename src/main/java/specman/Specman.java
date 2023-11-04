@@ -17,7 +17,7 @@ import specman.model.v001.StruktogrammModel_V001;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
 import specman.textfield.EditContainer;
-import specman.textfield.litrack.LITrackingListView;
+import specman.textfield.litrack.LIRecordingListView;
 import specman.textfield.TextEditArea;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
@@ -1087,7 +1087,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void exportAsPDF() {
 		arbeitsbereich.setVisible(false);
 		arbeitsbereich.setVisible(true);
-		LITrackingListView.startTracking();
+		LIRecordingListView.startRecording();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -1112,7 +1112,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						.add(breitenAnpasser.getShape())
 						.add(outro.getShape());
 					new PDFRenderer(selectedFile.getAbsolutePath(), PageSize.A4, true, zoomFaktor).render(all);
-					LITrackingListView.stopTracking();
+					LIRecordingListView.stopRecording();
 				}
 //        }
 

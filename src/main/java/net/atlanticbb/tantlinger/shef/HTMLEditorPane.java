@@ -30,7 +30,7 @@ import novaworx.textpane.SyntaxGutterBase;
 import org.bushe.swing.action.ActionList;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
-import specman.textfield.litrack.LITrackingHTMLEditorKit;
+import specman.textfield.litrack.LIRecordingHTMLEditorKit;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -533,7 +533,7 @@ public class HTMLEditorPane extends JPanel
   }
 
   public void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation) {
-    ed.setEditorKit(new LITrackingHTMLEditorKit());
+    ed.setEditorKit(new LIRecordingHTMLEditorKit());
     ed.setContentType("text/html");
     initialText = this.formatInitialText(initialText, orientation);
     this.insertHTML(ed, initialText, 0);

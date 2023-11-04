@@ -9,8 +9,8 @@ import com.itextpdf.layout.element.Paragraph;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.pdf.TextlineDimension;
-import specman.textfield.litrack.LITrackingHTMLEditorKit;
-import specman.textfield.litrack.LITrackingListView;
+import specman.textfield.litrack.LIRecordingHTMLEditorKit;
+import specman.textfield.litrack.LIRecordingListView;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -37,7 +37,7 @@ public class JEditorPaneLines2PDFTest extends JFrame implements ComponentListene
     setSize(200, 350);
     Container pane = this.getContentPane();
     pane.setLayout(new FormLayout("80px:grow", "30px,fill:pref:grow,30px"));
-    field.setEditorKit(new LITrackingHTMLEditorKit());
+    field.setEditorKit(new LIRecordingHTMLEditorKit());
     field.setContentType("text/html");
     pane.add(field, CC.xy(1, 2));
     JButton button = new JButton("LOS");
@@ -47,11 +47,11 @@ public class JEditorPaneLines2PDFTest extends JFrame implements ComponentListene
       public void actionPerformed(ActionEvent e) {
         field.setVisible(false);
         field.setVisible(true);
-        LITrackingListView.startTracking();
+        LIRecordingListView.startRecording();
         SwingUtilities.invokeLater(() -> {
           System.out.println("Repaint done");
           lines2PDF();
-          LITrackingListView.stopTracking();
+          LIRecordingListView.stopRecording();
         });
       }
     });
@@ -98,7 +98,7 @@ public class JEditorPaneLines2PDFTest extends JFrame implements ComponentListene
         p.add((IBlockElement)elements.get(0));
         pdfdocument.add(p);
 
-        Integer liIndex = LITrackingListView.isLILine(htmldoc, line.getY());
+        Integer liIndex = LIRecordingListView.isLILine(htmldoc, line.getY());
         if (liIndex != null) {
           p = new Paragraph()
             .setFixedPosition((float)line.getX() - 10, 500 - (float)line.getY() - (float)line.getHeight(), 300.0f);
