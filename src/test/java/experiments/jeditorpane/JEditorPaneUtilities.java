@@ -49,11 +49,9 @@ public class JEditorPaneUtilities extends JFrame {
         //   Zeile der passende leere Abstand.
         // Eine neue Zeile für ein Listitem fängt an der eingerückten Y-Position des Textes an. Gilt auch für Folgezeilen im Falle eines Umbruchs
         //   innerhalb des Listitems.
-        // Die Einrückung pro Listenebene beträgt 50 Pixel, sowohl für OL als auch für UL
-        // Wenn man das Document einer JEditorPane auf den Indexbereich einer Zeile beschneidet und sich dann über field.getText() das resultierende
-        //   HTML geben lässt, dann kann man aus diesem mit etwas Gehirnschmalz herauslesen, ob eine Zeile ein Listitem einer OL oder UL repräsentiert
-        //   oder eine Folgezeile aus einem automatischen Umbruch und auf welcher Gliederungsebene. Aus der Information könnte man Bulletpoints bzw.
-        //   rechtsbündig vorangestellte Nummern vor dem eigentlichen Text rendern.
+        // Die Einrückung pro Listenebene beträgt 50 Pixel, sowohl für OL als auch für UL.
+        // Aktuell ist nicht klar, wie man einer aus dem Dokument extrahierten Zeile ansieht, ob sie die erste Zeile eines Listitems ist und nicht etwas
+        //   nur eine Folgezeile desselben Items durch einen Umbruch des Item-Texts.
         try {
           StyledDocument document = (StyledDocument)field.getDocument();
           System.out.println("Feldhöhe: " + field.getHeight());

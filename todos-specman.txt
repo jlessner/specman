@@ -1,6 +1,7 @@
 Abschluss für Go-Live
 - PDF-Export
   - Rendering von Bulletpoints und Zahlen für Listitems
+    - Repaint erfolgt nur für die Bestandteile, die im sichtbaren Scrollbereich liegen - für die anderen fehlen dadurch das LI-Tracking
   - Renderfehler von gutenmorgen.xsd lösen:
     - Gelber Hintergrund von "auf Snooze stellen" nur halb hoch
     - g von "Solange" bei 120% abgeschnitten
@@ -22,6 +23,12 @@ Abschluss für Go-Live
   x Seitenumbrüche
   x Texte über und unter Diagramm
   x Bilder und unterstrukturierte EditContainer (aktuell nur 1. TextEditArea)
+- Tabellen als separate Elemente analog Bilder
+  (ist sowieso sinnvoll, weil die built-in HTML-Tabellen von Shef nicht gut genug den Änderungsmodus berücksichtigen
+    und auch ansonsten nicht so hübsch un komfortabel sind.
+    Außerdem ist es zwingend notwendig geworden, seitdem das PDF-Rendering den Text eines JEditorPanes zeilenweise
+    auseinander nimmt, um eine saubere Platzierung zu garantieren. Seitdem funktioniert dort nur noch ausschließlich
+    Text und keinerlei grafische Bestandteile mehr)
 - Neben Serif-Font auch Sans Serif und Monospace Font einbauen und alle anderen entfernen
   - Muss auch alles PDF-tauglich sein
 - Darstellung von Catch-Bereichen überarbeiten

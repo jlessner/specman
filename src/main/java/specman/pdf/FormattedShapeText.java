@@ -13,6 +13,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.font.FontProvider;
 import org.apache.commons.io.FileUtils;
 import specman.textfield.HTMLTags;
+import specman.textfield.litrack.LITrackingListView;
 import specman.textfield.TextEditArea;
 import specman.textfield.TextStyles;
 
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static specman.pdf.ListItemTracker.LISTITEM_IDENTION;
+import static specman.pdf.ListItemPromptFactory.LISTITEM_IDENTION;
 import static specman.pdf.PDFRenderer.SWING2PDF_SCALEFACTOR_100PERCENT;
 
 public class FormattedShapeText extends AbstractShapeText {
@@ -53,13 +54,14 @@ public class FormattedShapeText extends AbstractShapeText {
     try {
       java.util.List<TextlineDimension> lines = scanLineDimensions();
       float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right) * swing2pdfScaleFactor;
-      ListItemTracker listItemTracker = new ListItemTracker();
+      ListItemPromptFactory listItemPromptFactory = new ListItemPromptFactory();
 
       for (TextlineDimension line: lines) {
         System.out.println("Zeile bis " + line.getDocIndexTo() + ", Höhe " + line.getHeight() + ", y = " + line.getY());
 
         String lineHtml = line.extractLineHtml(content);
-        String lineItemPrompt = listItemTracker.nextLine(lineHtml);
+        Integer liIndex = LITrackingListView.isLILine(content.getDocument(), line.getY());
+        String lineItemPrompt = listItemPromptFactory.createPrompt(lineHtml, liIndex);
         lineHtml = removeLinebreakingElementsFromHtmlLine(lineHtml);
         lineHtml = stylifyTextAlignment(lineHtml);
         lineHtml = injectStylesheet(lineHtml);
@@ -92,7 +94,6 @@ public class FormattedShapeText extends AbstractShapeText {
           p.add((IBlockElement)elements.get(0));
           document.add(p);
         }
-
       }
 
     }

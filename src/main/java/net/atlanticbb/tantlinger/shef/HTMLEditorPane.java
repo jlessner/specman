@@ -8,7 +8,6 @@ import net.atlanticbb.tantlinger.ui.text.Entities;
 import net.atlanticbb.tantlinger.ui.text.HTMLUtils;
 import net.atlanticbb.tantlinger.ui.text.IndentationFilter;
 import net.atlanticbb.tantlinger.ui.text.SourceCodeEditor;
-import net.atlanticbb.tantlinger.ui.text.WysiwygHTMLEditorKit;
 import net.atlanticbb.tantlinger.ui.text.actions.ClearStylesAction;
 import net.atlanticbb.tantlinger.ui.text.actions.FindReplaceAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLEditorActionFactory;
@@ -31,6 +30,7 @@ import novaworx.textpane.SyntaxGutterBase;
 import org.bushe.swing.action.ActionList;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
+import specman.textfield.litrack.LITrackingHTMLEditorKit;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -533,7 +533,7 @@ public class HTMLEditorPane extends JPanel
   }
 
   public void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation) {
-    ed.setEditorKitForContentType("text/html", new WysiwygHTMLEditorKit());
+    ed.setEditorKit(new LITrackingHTMLEditorKit());
     ed.setContentType("text/html");
     initialText = this.formatInitialText(initialText, orientation);
     this.insertHTML(ed, initialText, 0);

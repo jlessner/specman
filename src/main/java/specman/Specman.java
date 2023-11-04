@@ -17,6 +17,7 @@ import specman.model.v001.StruktogrammModel_V001;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
 import specman.textfield.EditContainer;
+import specman.textfield.litrack.LITrackingListView;
 import specman.textfield.TextEditArea;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
@@ -1084,7 +1085,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public void exportAsPDF() {
-		final String PDF_EXTENSION = ".pdf";
+		arbeitsbereich.setVisible(false);
+		arbeitsbereich.setVisible(true);
+		LITrackingListView.startTracking();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				final String PDF_EXTENSION = ".pdf";
 
 //        JFileChooser fileChooser = new JFileChooser();
 //        fileChooser.setCurrentDirectory(new File("."));
@@ -1094,19 +1101,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 //        int result = fileChooser.showSaveDialog(arbeitsbereich);
 //        if (result == JFileChooser.APPROVE_OPTION) {
 //            File selectedFile = fileChooser.getSelectedFile();
-						File selectedFile = new File("sample.pdf");
-            if (selectedFile != null) {
-							Point scrollPosition = scrollPane.getViewport().getViewPosition();
-							Point workingAreaLocation = arbeitsbereich.getLocation();
-							workingAreaLocation.translate(scrollPosition.x, scrollPosition.y);
-							Shape all = new Shape(workingAreaLocation)
-								.add(intro.getShape())
-								.add(hauptSequenz.getShapeSequence())
-								.add(breitenAnpasser.getShape())
-								.add(outro.getShape());
-							new PDFRenderer(selectedFile.getAbsolutePath(), PageSize.A4, true, zoomFaktor).render(all);
-            }
+				File selectedFile = new File("sample.pdf");
+				if (selectedFile != null) {
+					Point scrollPosition = scrollPane.getViewport().getViewPosition();
+					Point workingAreaLocation = arbeitsbereich.getLocation();
+					workingAreaLocation.translate(scrollPosition.x, scrollPosition.y);
+					Shape all = new Shape(workingAreaLocation)
+						.add(intro.getShape())
+						.add(hauptSequenz.getShapeSequence())
+						.add(breitenAnpasser.getShape())
+						.add(outro.getShape());
+					new PDFRenderer(selectedFile.getAbsolutePath(), PageSize.A4, true, zoomFaktor).render(all);
+					LITrackingListView.stopTracking();
+				}
 //        }
+
+			}
+		});
 	}
 
 	public BreakSchrittView findeBreakSchritt(CatchSchrittView fuerCatchSchritt) {
