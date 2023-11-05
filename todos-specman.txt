@@ -1,13 +1,13 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Renderfehler von gutenmorgen.xsd lösen:
-    - Gelber Hintergrund von "auf Snooze stellen" nur halb hoch
-    - g von "Solange" bei 120% abgeschnitten
-    x "Werktag" nicht zu sehen
-    x "Wochentag prüfen" und "Lust auf Kaffee" rechtsbündig statt zentriert
   - Nicht essenziell aber wäre schöner: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
   - Nice to have: Springen über Schrittreferenzen im PDF
+  x Renderfehler von gutenmorgen.xsd lösen:
+    x g von "Solange" bei 120% abgeschnitten
+    x Gelber Hintergrund von "auf Snooze stellen" nur halb hoch
+    x "Werktag" nicht zu sehen
+    x "Wochentag prüfen" und "Lust auf Kaffee" rechtsbündig statt zentriert
   x Rendering von Bulletpoints und Zahlen für Listitems
   x Überschriften erscheinen nach oben versetzt
   x Text, der übermäßig viel Platz in der Höhe hat (wegen Nachbartext mit höherem Bedarf), wird am Fuß angezeigt statt am Kopf des Bereichs
@@ -41,6 +41,8 @@ Abschluss für Go-Live
 
 
 Bugs fixen
+- Hellgelber Hintergrund wird beim Laden von Datei nicht überall wieder hergestellt
+- Schriftfarbe initialer Texte ist beim Anlegen neuer Schritte nicht überall gelb
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
@@ -63,6 +65,7 @@ Bugs fixen
 - Abfangen des Löschens des letzten Zweigs im Case
 - NumberStepBackground in RoundedBorderDecorator schwarz färben wenn Schritt gelöscht ist
 - 'Cannot invoke "specman.SpaltenResizer.getShape()" because "this.breitenAnpasser" is null' in PDF-Export with no diagram
+x Schrift ohne Änderungsmarkierung hat *weißen* Hintergrund, müsste aber *keinen* haben, damit die Hintergrundfarbe des Feldes durchscheint
 
 
 Auf längere Sicht - nicht notwendig für ersten Go-Live:

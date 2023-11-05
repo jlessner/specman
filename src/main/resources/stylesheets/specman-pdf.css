@@ -38,6 +38,13 @@ div {
    parts with a slightly different font size than the text outside of diffs. The font size below is a correction.
    The size defined in here will be multiplied with a dynamic factor before rendering. See initHTMLStyles() */
   font-size: 15.28px;
+  padding-top: -3pt;
+  padding-bottom: -1pt;
+}
+
+div>span>font>strike {
+  padding-top: -3pt;
+  padding-bottom: -1pt;
 }
 
 font[size="7"] { font-size: 39.6px; padding-top: -10px; }

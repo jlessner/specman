@@ -6,9 +6,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.html.HTML;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.font.TextAttribute;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Locale;
 
 public class TextStyles {
     public static final int FONTSIZE = 15;
@@ -59,7 +57,7 @@ public class TextStyles {
     public static final Color Hintergrundfarbe_Schrittnummer = Color.LIGHT_GRAY;
     public static final Color Hintergrundfarbe_Geloescht = Color.BLACK;
     public static final Color Schriftfarbe_Standard = Color.BLACK;
-    public static final Color Hintergrundfarbe_Standard = Color.WHITE;
+    public static final Color Hintergrundfarbe_Standard = new Color(255, 255, 255, 0);
     public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
     public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
     public static final Color SCHRITTNUMMER_VORDERGRUNDFARBE = Hintergrundfarbe_Standard;
@@ -135,6 +133,10 @@ public class TextStyles {
     public static String toHTMLColor(Color color) {
         if (color == null) {
             return "#000000";
+        }
+        else if (color.getAlpha() != 255) {
+            return String.format(Locale.US, "rgba(%d, %d, %d, %1.1f)",
+              color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255f);
         }
         return "#" + Integer.toHexString(color.getRGB()).substring(2).toLowerCase();
     }
