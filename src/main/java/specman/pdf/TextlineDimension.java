@@ -27,7 +27,9 @@ public class TextlineDimension {
   public String extractLineHtml(JEditorPane field) throws BadLocationException {
     subdocCarrier.setText(field.getText());
     Document subdoc = subdocCarrier.getDocument();
-    subdoc.remove(getDocIndexTo(), field.getDocument().getLength() - getDocIndexTo());
+    if (field.getDocument().getLength() > getDocIndexTo() + 1) {
+      subdoc.remove(getDocIndexTo(), field.getDocument().getLength() - getDocIndexTo());
+    }
     subdoc.remove(0, getDocIndexFrom());
     return subdocCarrier.getText();
   }
