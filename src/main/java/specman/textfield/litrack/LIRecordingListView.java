@@ -42,15 +42,9 @@ public class LIRecordingListView extends ListView {
     return null;
   }
 
-  public static void startRecording() {
-    System.out.println("LITrackingListView.startRecording");
-    liPrompts = new HashMap<>();
-  }
+  public static void startRecording() { liPrompts = new HashMap<>(); }
 
-  public static void stopRecording() {
-    System.out.println("LITrackingListView.stopRecording");
-    liPrompts = null;
-  }
+  public static void stopRecording() { liPrompts = null; }
 
   @Override
   /** This method is called by the parent views for every rendering of line item prompts
@@ -65,7 +59,7 @@ public class LIRecordingListView extends ListView {
   private boolean isTracking() { return liPrompts != null; }
 
   private void recordLiPrompt(Rectangle alloc, int index) {
-    System.out.println("recordLiPrompt " + alloc + " / " + index);
+    //System.out.println("recordLiPrompt " + alloc + " / " + index);
     Document doc = getElement().getDocument();
     List<LIRecord> liPromptsForDoc = liPrompts.get(doc);
     if (liPromptsForDoc == null) {

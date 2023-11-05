@@ -7,6 +7,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
+import org.jetbrains.annotations.Nullable;
 import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
 import specman.model.ModelEnvelope;
@@ -1133,10 +1134,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return Specman.instance.hauptSequenz == schrittSequenzView;
 	}
 
-	public static EditorContentModel_V001 initialtext(String text) {
+	public static EditorContentModel_V001 initialtext(String text) { return initialtext(text, null); }
+
+	public static EditorContentModel_V001 initialtext(String text, @Nullable String align) {
 		String styledText = (instance() != null && instance().aenderungenVerfolgen()) ?
 				"<span style=\"background-color:" + INDIKATOR_GELB + "\">" + text + "</span>" :
 				text;
+		if (align != null) {
+				styledText = "<div align='" + align + "'>" + styledText + "</div>";
+		}
 		return new EditorContentModel_V001(styledText);
 	}
 

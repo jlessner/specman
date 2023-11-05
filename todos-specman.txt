@@ -41,8 +41,6 @@ Abschluss für Go-Live
 
 
 Bugs fixen
-- Hellgelber Hintergrund wird beim Laden von Datei nicht überall wieder hergestellt
-- Schriftfarbe initialer Texte ist beim Anlegen neuer Schritte nicht überall gelb
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
@@ -65,6 +63,8 @@ Bugs fixen
 - Abfangen des Löschens des letzten Zweigs im Case
 - NumberStepBackground in RoundedBorderDecorator schwarz färben wenn Schritt gelöscht ist
 - 'Cannot invoke "specman.SpaltenResizer.getShape()" because "this.breitenAnpasser" is null' in PDF-Export with no diagram
+x Schriftfarbe initialer Texte ist beim Anlegen neuer Schritte nicht überall gelb
+x Hellgelber Hintergrund wird beim Laden von Datei nicht überall wieder hergestellt
 x Schrift ohne Änderungsmarkierung hat *weißen* Hintergrund, müsste aber *keinen* haben, damit die Hintergrundfarbe des Feldes durchscheint
 
 

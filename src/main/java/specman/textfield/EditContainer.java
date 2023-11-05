@@ -240,11 +240,11 @@ public class EditContainer extends JPanel {
 	}
 
 	public static EditorContentModel_V001 right(String text) {
-		return Specman.initialtext("<div align='right'>" + text + "</div>");
+		return Specman.initialtext(text, "right");
 	}
 
 	public static EditorContentModel_V001 center(String text) {
-		return Specman.initialtext("<div align='center'>" + text + "</div>");
+		return Specman.initialtext(text, "center");
 	}
 
 	public Container getKlappButtonParent() { return schrittNummer.getParent(); }
@@ -289,6 +289,14 @@ public class EditContainer extends JPanel {
 		// Null- und Size-Check ist notwendig, weil javax.swing.LookAndFeel bereits
 		// im Konstruktor einen Aufruf von getBackground vornimmt.
 		return editAreas != null && editAreas.size() > 0 ? editAreas.get(0).getBackground() : super.getBackground();
+	}
+
+	@Override
+	public void setBackground(Color bg) {
+		super.setBackground(bg);
+		if (editAreas != null) {
+			editAreas.forEach(ea -> ea.setBackground(bg));
+		}
 	}
 
 	public void updateDecorationIndentions(Indentions indentions) {
