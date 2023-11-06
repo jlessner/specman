@@ -941,6 +941,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         setBorder(border);
     }
 
+    @Override
+    public boolean enthaelt(InteractiveStepFragment fragment) { return this == fragment; }
+
     public Shape getShape() {
         return new Shape(this).withText(new FormattedShapeText(this));
     }

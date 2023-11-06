@@ -13,6 +13,8 @@ import specman.view.AbstractSchrittView;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ComponentListener;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +31,8 @@ public class TableEditArea extends JPanel implements EditArea {
   private List<List<EditContainer>> cells = new ArrayList<>();
   private FormLayout tableLayout;
   private Aenderungsart aenderungsart;
+  private final List<FocusListener> editAreasFocusListeners = new ArrayList<>();
+  private final List<ComponentListener> editAreasComponentListeners = new ArrayList<>();
 
   public TableEditArea(int columns, int rows, Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
@@ -60,6 +64,22 @@ public class TableEditArea extends JPanel implements EditArea {
       row.forEach(cell -> cell.setBackground(aenderungsart.toBackgroundColor()));
     }
     initBorder();
+  }
+
+  @Override
+  public synchronized void addFocusListener(FocusListener l) {
+    editAreasFocusListeners.add(l);
+    for (List<EditContainer> row: cells) {
+      row.forEach(cell -> cell.addEditAreasFocusListener(l));
+    }
+  }
+
+  @Override
+  public synchronized void addComponentListener(ComponentListener l) {
+    editAreasComponentListeners.add(l);
+    for (List<EditContainer> row: cells) {
+      row.forEach(cell -> cell.addEditComponentListener(l));
+    }
   }
 
   @Override
@@ -116,11 +136,6 @@ public class TableEditArea extends JPanel implements EditArea {
   }
 
   @Override
-  public void pack(int availableWidth) {
-
-  }
-
-  @Override
   public void markAsDeleted() {
 
   }
@@ -167,6 +182,16 @@ public class TableEditArea extends JPanel implements EditArea {
   }
 
   @Override
+  public boolean enthaelt(InteractiveStepFragment fragment) {
+    for (List<EditContainer> row: cells) {
+      if (row.stream().anyMatch(cell -> cell.enthaelt(fragment))) {
+        return true;
+      };
+    }
+    return false;
+  }
+
+  @Override
   public boolean enthaeltAenderungsmarkierungen() {
     return false;
   }
@@ -181,6 +206,7 @@ public class TableEditArea extends JPanel implements EditArea {
     return null;
   }
 
+  @Override public void pack(int availableWidth) { /* Nothing to do */ }
   @Override public void addSchrittnummer(SchrittNummerLabel schrittNummer) { add(schrittNummer); }
   @Override public Component asComponent() { return this; }
   @Override public String getPlainText() { return ""; }

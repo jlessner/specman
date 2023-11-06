@@ -314,6 +314,9 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     setBorder(border);
   }
 
+  @Override
+  public boolean enthaelt(InteractiveStepFragment fragment) { return false; }
+
   public Shape getShape() {
     return new Shape(this)
       .add(new Shape(BORDER_THICKNESS, 0)

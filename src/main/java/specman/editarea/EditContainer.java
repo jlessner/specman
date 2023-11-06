@@ -95,7 +95,6 @@ public class EditContainer extends JPanel {
 	private final List<ComponentListener> editAreasComponentListeners = new ArrayList<>();
 	private final SchrittNummerLabel schrittNummer;
 	private FormLayout layout;
-	private EmptyBorder editorPaneBorder;
 	private Indentions indentions;
 	private boolean schrittNummerSichtbar = true;
 
@@ -330,7 +329,7 @@ public class EditContainer extends JPanel {
 	}
 
 	public boolean enthaelt(InteractiveStepFragment fragment) {
-		return editAreas.stream().anyMatch(ea -> ea == fragment)
+		return editAreas.stream().anyMatch(ea -> ea.enthaelt(fragment))
 			|| schrittNummer == fragment;
 	}
 

@@ -61,4 +61,6 @@ public interface EditArea extends InteractiveStepFragment {
   void setEditBackground(Color bg);
 
   void setEditDecorationIndentions(Indentions indentions);
+
+  boolean enthaelt(InteractiveStepFragment fragment);
 }
