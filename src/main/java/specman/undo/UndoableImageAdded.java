@@ -20,13 +20,13 @@ public class UndoableImageAdded extends AbstractUndoableInteraction {
 
   @Override
   protected void undoEdit() throws EditException {
-    editContainer.removeImageByUndoRedo(imageArea, cutOffTextArea);
+    editContainer.removeEditAreaByUndoRedo(imageArea, cutOffTextArea);
     Specman.instance().diagrammAktualisieren(null);
   }
 
   @Override
   protected void redoEdit() throws EditException {
-    editContainer.addImageByUndoRedo(initiatingTextArea, imageArea, cutOffTextArea);
+    editContainer.addEditAreaByUndoRedo(initiatingTextArea, imageArea, cutOffTextArea);
     Specman.instance().diagrammAktualisieren(null);
   }
 }

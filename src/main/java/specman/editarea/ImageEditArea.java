@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
@@ -295,8 +296,8 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public boolean enthaeltAenderungsmarkierungen() { return aenderungsart != null; }
 
   @Override
-  public List<String> findStepnumberLinkIDs() {
-    return new ArrayList<>(); // There are no stepnumberLinks in an ImageArea
+  public void findStepnumberLinkIDs(HashMap<TextEditArea, List<String>> stepnumberLinkMap) {
+    // There are no stepnumberLinks in an ImageArea
   }
 
   @Override

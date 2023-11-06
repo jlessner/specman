@@ -21,13 +21,13 @@ public class UndoableTableAdded extends AbstractUndoableInteraction {
 
   @Override
   protected void undoEdit() throws EditException {
-    editContainer.removeTableByUndoRedo(tableArea, cutOffTextArea);
+    editContainer.removeEditAreaByUndoRedo(tableArea, cutOffTextArea);
     Specman.instance().diagrammAktualisieren(null);
   }
 
   @Override
   protected void redoEdit() throws EditException {
-    editContainer.addTableByUndoRedo(initiatingTextArea, tableArea, cutOffTextArea);
+    editContainer.addEditAreaByUndoRedo(initiatingTextArea, tableArea, cutOffTextArea);
     Specman.instance().diagrammAktualisieren(null);
   }
 }

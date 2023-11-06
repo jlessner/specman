@@ -37,6 +37,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -909,11 +910,14 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         return stepnumberLinks;
     }
 
-    public List<String> findStepnumberLinkIDs() {
-        return findStepnumberLinks()
-                .stream()
-                .map(this::getStepnumberLinkIDFromElement)
-                .collect(Collectors.toList());
+    public void findStepnumberLinkIDs(HashMap<TextEditArea, List<String>> stepnumberLinkMap) {
+        List<String> stepnumberLinkIDs = findStepnumberLinks()
+            .stream()
+            .map(this::getStepnumberLinkIDFromElement)
+            .collect(Collectors.toList());
+        if (!stepnumberLinkIDs.isEmpty()) {
+            stepnumberLinkMap.put(this, stepnumberLinkIDs);
+        }
     }
 
     private String getStepnumberLinkIDFromElement(Element element) {

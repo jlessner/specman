@@ -7,6 +7,7 @@ import javax.swing.border.Border;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.FocusListener;
+import java.util.HashMap;
 import java.util.List;
 
 public interface EditArea extends InteractiveStepFragment {
@@ -54,9 +55,9 @@ public interface EditArea extends InteractiveStepFragment {
 
   boolean enthaeltAenderungsmarkierungen();
 
-  List<String> findStepnumberLinkIDs();
+  void findStepnumberLinkIDs(HashMap<TextEditArea, List<String>> stepnumberLinkMap);
 
-  public Shape getShape();
+  Shape getShape();
 
   void setEditBackground(Color bg);
 

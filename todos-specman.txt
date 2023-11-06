@@ -7,8 +7,6 @@ Abschluss für Go-Live
     Text und keinerlei grafische Bestandteile mehr)
   - Codeduplikationen in EditContainer#addImage und #addTable aufräumen
   - Noch zu implementieren:
-    - EditContainer#removeTableByUndoRedo
-    - EditContainer#addTableByUndoRedo
     - UndoableTableRemoved
     - UndoableTableRemovedMarkiert
     - TableEditArea#findStepnumberLinkIDs

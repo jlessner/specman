@@ -20,7 +20,6 @@ import specman.undo.UndoableTableAdded;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.text.StyleConstants;
 import java.awt.Color;
 import java.awt.Container;
@@ -367,7 +366,7 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
-	public void addImageByUndoRedo(TextEditArea initiatingTextArea, ImageEditArea imageEditArea, TextEditArea cutOffTextArea) {
+	public void addEditAreaByUndoRedo(TextEditArea initiatingTextArea, EditArea imageEditArea, TextEditArea cutOffTextArea) {
 		try (UndoRecording ur = Specman.instance().pauseUndo()) {
 			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
 			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
@@ -392,16 +391,6 @@ public class EditContainer extends JPanel {
 		layout.appendRow(RowSpec.decode("0px"));
 	}
 
-	public void removeImageByUndoRedo(ImageEditArea imageEditArea, TextEditArea cutOffTextArea) {
-		try (UndoRecording ur = Specman.instance().pauseUndo()) {
-			removeEditArea(imageEditArea);
-			if (cutOffTextArea != null) {
-				removeEditArea(cutOffTextArea);
-			}
-		}
-		updateBounds();
-	}
-
 	public void removeImage(ImageEditArea image) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
@@ -424,12 +413,14 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
-	public void removeTableByUndoRedo(TableEditArea tableArea, TextEditArea cutOffTextArea) {
-
-	}
-
-	public void addTableByUndoRedo(TextEditArea initiatingTextArea, TableEditArea tableArea, TextEditArea cutOffTextArea) {
-
+	public void removeEditAreaByUndoRedo(EditArea editArea, TextEditArea cutOffTextArea) {
+		try (UndoRecording ur = Specman.instance().pauseUndo()) {
+			removeEditArea(editArea);
+			if (cutOffTextArea != null) {
+				removeEditArea(cutOffTextArea);
+			}
+		}
+		updateBounds();
 	}
 
 	private int removeEditArea(EditArea area) {
@@ -469,15 +460,10 @@ public class EditContainer extends JPanel {
 		return shape;
 	}
 
-	public HashMap<TextEditArea, List<String>> findStepnumberLinkIDs() {
-		HashMap<TextEditArea, List<String>> stepnumberLinkMap = new HashMap<>();
+	public void findStepnumberLinkIDs(HashMap<TextEditArea, List<String>> stepnumberLinkMap) {
 		for (EditArea editArea : editAreas) {
-            List<String> stepnumberLinkIDs = editArea.findStepnumberLinkIDs();
-            if (!stepnumberLinkIDs.isEmpty()) {
-                stepnumberLinkMap.put((TextEditArea) editArea, stepnumberLinkIDs);
-            }
+			editArea.findStepnumberLinkIDs(stepnumberLinkMap);
 		}
-		return stepnumberLinkMap;
 	}
 
 	public void setCaretAtStart() {
