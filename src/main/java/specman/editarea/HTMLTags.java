@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 public interface HTMLTags {
   String HTML_INTRO = "<html>";

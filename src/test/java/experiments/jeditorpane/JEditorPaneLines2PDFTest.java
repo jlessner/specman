@@ -9,8 +9,8 @@ import com.itextpdf.layout.element.Paragraph;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.pdf.TextlineDimension;
-import specman.textfield.litrack.LIRecordingHTMLEditorKit;
-import specman.textfield.litrack.LIRecordingListView;
+import specman.editarea.litrack.LIRecordingHTMLEditorKit;
+import specman.editarea.litrack.LIRecordingListView;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

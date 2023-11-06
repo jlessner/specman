@@ -9,7 +9,7 @@ import specman.model.v001.QuellSchrittModel_V001;
 import javax.swing.*;
 import java.awt.*;
 
-import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 
 public class QuellSchrittView extends AbstractSchrittView{
 

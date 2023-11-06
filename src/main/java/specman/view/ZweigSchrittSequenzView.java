@@ -7,9 +7,9 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
-import specman.textfield.EditContainer;
-import specman.textfield.Indentions;
-import specman.textfield.InteractiveStepFragment;
+import specman.editarea.EditContainer;
+import specman.editarea.Indentions;
+import specman.editarea.InteractiveStepFragment;
 
 import java.awt.Color;
 

@@ -30,7 +30,7 @@ import novaworx.textpane.SyntaxGutterBase;
 import org.bushe.swing.action.ActionList;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
-import specman.textfield.litrack.LIRecordingHTMLEditorKit;
+import specman.editarea.litrack.LIRecordingHTMLEditorKit;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;

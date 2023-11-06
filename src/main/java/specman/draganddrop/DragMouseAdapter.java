@@ -3,7 +3,7 @@ package specman.draganddrop;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.Specman;
-import specman.textfield.InteractiveStepFragment;
+import specman.editarea.InteractiveStepFragment;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.JComponent;

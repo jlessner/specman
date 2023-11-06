@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -12,7 +12,6 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
-import specman.pdf.FormattedShapeText;
 import specman.pdf.Shape;
 import specman.undo.UndoableImageAdded;
 import specman.undo.UndoableImageRemoved;
@@ -35,11 +34,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static specman.Specman.schrittHintergrund;
-import static specman.textfield.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
-import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
-import static specman.textfield.TextStyles.SCHRITTNR_FONTSIZE;
-import static specman.textfield.TextStyles.labelFont;
+import static specman.editarea.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.Hintergrundfarbe_Standard;
+import static specman.editarea.TextStyles.SCHRITTNR_FONTSIZE;
+import static specman.editarea.TextStyles.labelFont;
 
 /** Zentrales grafisches Containerpanel für einen zusammenhängenden Text mit einem Nummernlabel
  * für Schrittbeschreibungen. Normalerweise besteht diese Beschreibung aus einem einzelnen HTML

@@ -14,9 +14,9 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.IfElseSchrittModel_V001;
 import specman.pdf.Shape;
-import specman.textfield.EditContainer;
-import specman.textfield.Indentions;
-import specman.textfield.InteractiveStepFragment;
+import specman.editarea.EditContainer;
+import specman.editarea.Indentions;
+import specman.editarea.InteractiveStepFragment;
 import specman.undo.AbstractUndoableInteraction;
 
 import javax.swing.JPanel;

@@ -17,9 +17,9 @@ import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
-import specman.textfield.EditContainer;
-import specman.textfield.litrack.LIRecordingListView;
-import specman.textfield.TextEditArea;
+import specman.editarea.EditContainer;
+import specman.editarea.litrack.LIRecordingListView;
+import specman.editarea.TextEditArea;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
@@ -94,8 +94,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.textfield.TextStyles.INDIKATOR_GELB;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.INDIKATOR_GELB;
 import static specman.view.RelativeStepPosition.After;
 
 /**

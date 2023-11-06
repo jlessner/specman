@@ -1,4 +1,4 @@
-package specman.textfield.litrack;
+package specman.editarea.litrack;
 
 public class LIRecord {
   private final int yPosition;

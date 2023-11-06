@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;

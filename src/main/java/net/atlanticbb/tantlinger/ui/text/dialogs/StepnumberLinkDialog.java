@@ -5,7 +5,7 @@ import net.atlanticbb.tantlinger.ui.HeaderPanel;
 import net.atlanticbb.tantlinger.ui.UIUtils;
 import org.apache.commons.lang.StringUtils;
 import specman.Specman;
-import specman.textfield.TextEditArea;
+import specman.editarea.TextEditArea;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.BorderFactory;

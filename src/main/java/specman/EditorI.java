@@ -1,6 +1,6 @@
 package specman;
 
-import specman.textfield.InteractiveStepFragment;
+import specman.editarea.InteractiveStepFragment;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 

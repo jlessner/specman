@@ -2,7 +2,7 @@ package specman.undo;
 
 import specman.Aenderungsart;
 import specman.EditException;
-import specman.textfield.ImageEditArea;
+import specman.editarea.ImageEditArea;
 
 import javax.swing.undo.CannotRedoException;
 

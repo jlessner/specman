@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 public class StepnumberLink {
     public final static String STEPNUMBER_DEFECT_MARK = "?";

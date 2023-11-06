@@ -1,7 +1,7 @@
 package specman.undo;
 
 import specman.EditException;
-import specman.textfield.TextEditArea;
+import specman.editarea.TextEditArea;
 import specman.view.AbstractSchrittView;
 
 public class UndoableStepnumberLinkAdded extends AbstractUndoableInteraction {

@@ -1,7 +1,7 @@
 package experiments;
 
 import org.junit.jupiter.api.Test;
-import specman.textfield.TextStyles;
+import specman.editarea.TextStyles;
 
 import java.awt.*;
 

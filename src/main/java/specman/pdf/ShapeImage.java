@@ -5,7 +5,7 @@ import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import specman.textfield.ImageEditArea;
+import specman.editarea.ImageEditArea;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

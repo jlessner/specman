@@ -10,7 +10,7 @@ import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.IfSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.textfield.EditContainer;
+import specman.editarea.EditContainer;
 
 import java.awt.*;
 

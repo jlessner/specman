@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;

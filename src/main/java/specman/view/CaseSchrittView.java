@@ -16,16 +16,14 @@ import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.pdf.Shape;
-import specman.textfield.Indentions;
-import specman.textfield.InteractiveStepFragment;
+import specman.editarea.Indentions;
+import specman.editarea.InteractiveStepFragment;
 import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigEntferntMarkiert;
 
 import javax.swing.JPanel;
 import java.awt.*;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +32,8 @@ import java.util.stream.Collectors;
 
 import static specman.Specman.initialtext;
 import static specman.pdf.Shape.GAP_COLOR;
-import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.Hintergrundfarbe_Standard;
 
 
 public class CaseSchrittView extends VerzweigungSchrittView {

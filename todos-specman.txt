@@ -54,7 +54,7 @@ Bugs fixen
     Caused by: javax.swing.text.BadLocationException: Invalid remove
         at java.desktop/javax.swing.text.AbstractDocument.handleRemove(AbstractDocument.java:634)
         at java.desktop/javax.swing.text.AbstractDocument.remove(AbstractDocument.java:619)
-        at specman.textfield.TextEditArea.removeTextAndUnregisterStepnumberLinks(TextEditArea.java:580)
+        at specman.editarea.TextEditArea.removeTextAndUnregisterStepnumberLinks(TextEditArea.java:580)
         ... 44 more
 - Komplettes Rewrite von DraggingLogic
 - resyncSchrittnummerStil sollte nur beim Aufbau aus Modell verwendet werden. Ansonsten sollte beim (Neu-)Setzen der ID der Stil immer erhalten bleiben, abhängig von Geloescht und Quellschritt

@@ -12,10 +12,10 @@ import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.font.FontProvider;
 import org.apache.commons.io.FileUtils;
-import specman.textfield.HTMLTags;
-import specman.textfield.litrack.LIRecordingListView;
-import specman.textfield.TextEditArea;
-import specman.textfield.TextStyles;
+import specman.editarea.HTMLTags;
+import specman.editarea.litrack.LIRecordingListView;
+import specman.editarea.TextEditArea;
+import specman.editarea.TextStyles;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Utilities;

@@ -19,11 +19,11 @@ import specman.model.v001.WhileSchrittModel_V001;
 import specman.model.v001.WhileWhileSchrittModel_V001;
 import specman.pdf.RoundedBorderShape;
 import specman.pdf.Shape;
-import specman.textfield.EditContainer;
-import specman.textfield.Indentions;
-import specman.textfield.InteractiveStepFragment;
-import specman.textfield.StepnumberLink;
-import specman.textfield.TextEditArea;
+import specman.editarea.EditContainer;
+import specman.editarea.Indentions;
+import specman.editarea.InteractiveStepFragment;
+import specman.editarea.StepnumberLink;
+import specman.editarea.TextEditArea;
 import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableSchrittEntferntMarkiert;
 
@@ -39,8 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.Hintergrundfarbe_Standard;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;

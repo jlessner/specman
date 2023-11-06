@@ -5,7 +5,6 @@ import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.io.font.TrueTypeFont;
-import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -16,7 +15,7 @@ import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.font.FontProvider;
 import org.junit.jupiter.api.Test;
-import specman.textfield.TextStyles;
+import specman.editarea.TextStyles;
 
 import java.awt.*;
 import java.util.Arrays;

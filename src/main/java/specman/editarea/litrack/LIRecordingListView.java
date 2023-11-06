@@ -1,4 +1,4 @@
-package specman.textfield.litrack;
+package specman.editarea.litrack;
 
 import javax.swing.text.Document;
 import javax.swing.text.Element;

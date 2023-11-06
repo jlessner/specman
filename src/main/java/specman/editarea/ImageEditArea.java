@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
@@ -38,9 +38,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
-import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.textfield.TextStyles.Hintergrundfarbe_Standard;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.Hintergrundfarbe_Standard;
 
 public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener {
   static final Color FOCUS_BORDER_COLOR = Color.GRAY;

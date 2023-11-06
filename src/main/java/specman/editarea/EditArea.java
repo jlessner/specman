@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.pdf.Shape;

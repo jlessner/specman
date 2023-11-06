@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 import specman.SchrittID;
 import specman.Specman;
@@ -11,20 +11,20 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
-import static specman.textfield.HTMLTags.BODY_INTRO;
-import static specman.textfield.HTMLTags.BODY_OUTRO;
-import static specman.textfield.HTMLTags.HTML_INTRO;
-import static specman.textfield.HTMLTags.HTML_OUTRO;
-import static specman.textfield.HTMLTags.SPAN_INTRO;
-import static specman.textfield.HTMLTags.SPAN_OUTRO;
-import static specman.textfield.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.textfield.TextStyles.Hintergrundfarbe_Geloescht;
-import static specman.textfield.TextStyles.Hintergrundfarbe_Schrittenummer;
-import static specman.textfield.TextStyles.Hintergrundfarbe_Schrittnummer;
-import static specman.textfield.TextStyles.SCHRITTNUMMER_VORDERGRUNDFARBE;
-import static specman.textfield.TextStyles.SPAN_GELOESCHT_MARKIERT;
-import static specman.textfield.TextStyles.Schriftfarbe_Geloescht;
-import static specman.textfield.TextStyles.labelFont;
+import static specman.editarea.HTMLTags.BODY_INTRO;
+import static specman.editarea.HTMLTags.BODY_OUTRO;
+import static specman.editarea.HTMLTags.HTML_INTRO;
+import static specman.editarea.HTMLTags.HTML_OUTRO;
+import static specman.editarea.HTMLTags.SPAN_INTRO;
+import static specman.editarea.HTMLTags.SPAN_OUTRO;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.Hintergrundfarbe_Geloescht;
+import static specman.editarea.TextStyles.Hintergrundfarbe_Schrittenummer;
+import static specman.editarea.TextStyles.Hintergrundfarbe_Schrittnummer;
+import static specman.editarea.TextStyles.SCHRITTNUMMER_VORDERGRUNDFARBE;
+import static specman.editarea.TextStyles.SPAN_GELOESCHT_MARKIERT;
+import static specman.editarea.TextStyles.Schriftfarbe_Geloescht;
+import static specman.editarea.TextStyles.labelFont;
 
 public class SchrittNummerLabel extends JLabel implements InteractiveStepFragment {
   private static final Border STANDARD_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Schrittnummer);

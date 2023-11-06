@@ -13,7 +13,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
-import specman.textfield.InteractiveStepFragment;
+import specman.editarea.InteractiveStepFragment;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;

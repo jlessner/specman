@@ -2,9 +2,9 @@ package specman.undo;
 
 import specman.EditException;
 import specman.Specman;
-import specman.textfield.ImageEditArea;
-import specman.textfield.TextEditArea;
-import specman.textfield.EditContainer;
+import specman.editarea.ImageEditArea;
+import specman.editarea.TextEditArea;
+import specman.editarea.EditContainer;
 
 public class UndoableImageRemoved extends AbstractUndoableInteraction {
   private final EditContainer editContainer;

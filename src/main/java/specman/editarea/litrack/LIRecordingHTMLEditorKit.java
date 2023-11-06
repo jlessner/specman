@@ -1,4 +1,4 @@
-package specman.textfield.litrack;
+package specman.editarea.litrack;
 
 import net.atlanticbb.tantlinger.ui.text.WysiwygHTMLEditorKit;
 

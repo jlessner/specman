@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;

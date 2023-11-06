@@ -5,7 +5,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import specman.Specman;
-import specman.textfield.TextStyles;
+import specman.editarea.TextStyles;
 
 import javax.swing.*;
 import java.awt.*;

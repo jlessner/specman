@@ -1,4 +1,4 @@
-package specman.textfield;
+package specman.editarea;
 
 /** Tag Interface für grafische Bestandteile eines Schritts, die Ziel einer
  * Interaktion sind, und über die man den betreffenden Schritt im Diagramm
