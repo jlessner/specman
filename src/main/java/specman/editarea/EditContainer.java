@@ -43,14 +43,24 @@ import static specman.editarea.TextStyles.labelFont;
 /** Zentrales grafisches Containerpanel für einen zusammenhängenden Text mit einem Nummernlabel
  * für Schrittbeschreibungen. Normalerweise besteht diese Beschreibung aus einem einzelnen HTML
  * Text-Editorbereich (siehe Klasse {@link TextEditArea}). Sollen aber in einer Beschreibung auch
- * Bilder auftauchen, dann werden diese als separate grafische Elemente in den Container aufgenommen.
- * Im Prinzip können Bilder auch in dem HTML enthalten sein (siehe Klasse {@link HTMLEditorPane}),
- * aber das hat zwei entscheidende Limitierungen. Zum einen werden die Bilder darin ziemlich pixelig
- * skaliert, und zum anderen kann man sie dabei ausschließlich im Sinne von Referenzen auf separate
- * Dateien integrieren. Die selbstgebaute Komponente {@link ImageEditArea} sorgt für eine schönere
- * Skalierung und kann die Grafiken auch ins Diagramm <i>eingebettet</i> verwalten, wie man das
- * von Microsoft Word kennt. Das ist meistens sinnvoller, weil sich ja sonst Inhalte der Beschreibung
- * verändern können, ohne dass der User an dem Dokument gearbeitet hat.
+ * Bilder oder Tabellen auftauchen, dann werden diese als separate grafische Elemente in den Container
+ * aufgenommen. Im Prinzip können Bilder und Tabellen auch in dem HTML enthalten sein (siehe Klasse
+ * {@link HTMLEditorPane}), aber das hat einige entscheidende Limitierungen.
+ * <ul>
+ *   <li>Bilder werden innerhalb des HTMLs von HTMLEditorPane ziemlich pixelig skaliert</li>
+ *   <li>Bilder werden im HTML außerdem ausschließlich im Sinne von Referenzen auf separate
+ *    Dateien integriert. Die selbstgebaute Komponente {@link ImageEditArea} sorgt für eine schönere
+ *    Skalierung und kann die Grafiken auch ins Diagramm <i>eingebettet</i> verwalten, wie man das
+ *    von Microsoft Word kennt. Das ist meistens sinnvoller, weil sich ja sonst Inhalte der Beschreibung
+ *    verändern können, ohne dass der User an dem Dokument gearbeitet hat.</li>
+ *   <li>Tabellen direkt im HTMLEditorPane geben dem User zu wenig Bearbeitungskomfort.</li>
+ * </ul>
+ * Außerdem lässt der direkte Support von Bildern und Tabellen im HTMLEditorPane keine vernünftige
+ * Integration mit dem Änderungsmodus zu, um Veränderungen für den User zu visualisieren. Und
+ * schließlich passt das auch nicht mit dem PDF-Export zusammen, der für eine pixelgenaue
+ * Platzierung von Texten die Inhalte von Textfeldern Zeile für Zeile rendered. Das hat zur Folge,
+ * dass das Textrendering ausschließlich auf Texten operieren kann. Grafische Bestandteile müssen
+ * also grundsätzlich separate Bereiche bilden.
  * <p>
  * Der Container kümmert sich auch um die abgesetzte Darstellung von Schritten und um ein damit
  * zusammenhängendes ärgerliches Grafikproblem in Swing:
