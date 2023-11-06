@@ -1,4 +1,10 @@
 Abschluss für Go-Live
+- Tabellen als separate Elemente analog Bilder
+  (ist sowieso sinnvoll, weil die built-in HTML-Tabellen von Shef nicht gut genug den Änderungsmodus berücksichtigen
+    und auch ansonsten nicht so hübsch un komfortabel sind.
+    Außerdem ist es zwingend notwendig geworden, seitdem das PDF-Rendering den Text eines JEditorPanes zeilenweise
+    auseinander nimmt, um eine saubere Platzierung zu garantieren. Seitdem funktioniert dort nur noch ausschließlich
+    Text und keinerlei grafische Bestandteile mehr)
 - PDF-Export
   - Nicht essenziell aber wäre schöner: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
@@ -22,12 +28,6 @@ Abschluss für Go-Live
   x Seitenumbrüche
   x Texte über und unter Diagramm
   x Bilder und unterstrukturierte EditContainer (aktuell nur 1. TextEditArea)
-- Tabellen als separate Elemente analog Bilder
-  (ist sowieso sinnvoll, weil die built-in HTML-Tabellen von Shef nicht gut genug den Änderungsmodus berücksichtigen
-    und auch ansonsten nicht so hübsch un komfortabel sind.
-    Außerdem ist es zwingend notwendig geworden, seitdem das PDF-Rendering den Text eines JEditorPanes zeilenweise
-    auseinander nimmt, um eine saubere Platzierung zu garantieren. Seitdem funktioniert dort nur noch ausschließlich
-    Text und keinerlei grafische Bestandteile mehr)
 - Neben Serif-Font auch Sans Serif und Monospace Font einbauen und alle anderen entfernen
   - Muss auch alles PDF-tauglich sein
 - Darstellung von Catch-Bereichen überarbeiten
