@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.editarea.TextStyles.Hintergrundfarbe_Standard;
+import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
@@ -196,7 +196,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void setStandardStil() {
-		setBackground(Hintergrundfarbe_Standard);
+		setBackground(TEXT_BACKGROUND_COLOR_STANDARD);
 		editContainer.aenderungsmarkierungenEntfernen(id);
 		setAenderungsart(null);
 	}

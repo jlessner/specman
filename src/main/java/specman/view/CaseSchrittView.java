@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import static specman.Specman.initialtext;
 import static specman.pdf.Shape.GAP_COLOR;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.editarea.TextStyles.Hintergrundfarbe_Standard;
+import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 
 
 public class CaseSchrittView extends VerzweigungSchrittView {
@@ -439,7 +439,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 
 	@Override public void aenderungsmarkierungenEntfernen() {
 		super.aenderungsmarkierungenEntfernen();
-		panelFall1.setBackground(Hintergrundfarbe_Standard);
+		panelFall1.setBackground(TEXT_BACKGROUND_COLOR_STANDARD);
 		sonstSequenz.aenderungsmarkierungenEntfernen();
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			caseSequenz.aenderungsmarkierungenEntfernen();
@@ -509,8 +509,8 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 	}
 
 	@Override public int aenderungenUebernehmen(EditorI editor) throws EditException {
-		panelFall1.setBackground(Hintergrundfarbe_Standard);
-		setBackground(Hintergrundfarbe_Standard);
+		panelFall1.setBackground(TEXT_BACKGROUND_COLOR_STANDARD);
+		setBackground(TEXT_BACKGROUND_COLOR_STANDARD);
 		int changesMade = sonstSequenz.aenderungenUebernehmen(editor);
 		List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(this.caseSequenzen);
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {

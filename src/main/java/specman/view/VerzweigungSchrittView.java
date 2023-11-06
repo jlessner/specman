@@ -16,6 +16,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 
+import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 /** Basisklasse für If, If/Else und Case */
@@ -119,7 +120,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		//inner white diamond, filled
 		int[] polygonX = diamond.xPositionsAsArray();
 		int[] polygonY = diamond.yPositionsAsArray();
-		g.setColor(Color.WHITE);
+		g.setColor(BACKGROUND_COLOR_STANDARD);
 		g.fillPolygon(polygonX, polygonY, polygonX.length);
 
 		//outer black diamond, not filled

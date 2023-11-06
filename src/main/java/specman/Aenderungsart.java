@@ -1,5 +1,16 @@
 package specman;
 
+import java.awt.*;
+
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
+
 public enum Aenderungsart {
-	Hinzugefuegt, Geloescht, Quellschritt, Zielschritt;
+	Untracked, Hinzugefuegt, Geloescht, Quellschritt, Zielschritt;
+
+	public Color toBackgroundColor() {
+		return (this == Hinzugefuegt || this == Geloescht)
+			? AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE
+			: BACKGROUND_COLOR_STANDARD;
+	}
 }

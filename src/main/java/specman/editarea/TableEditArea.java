@@ -35,7 +35,7 @@ public class TableEditArea extends JPanel implements EditArea {
   public TableEditArea(int columns, int rows, Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
     setBackground(DIAGRAMM_LINE_COLOR);
-    setBorder(new LineBorder(Color.WHITE, BORDER_THICKNESS));
+    setBorderColor(Specman.schrittHintergrund());
     createLayout(columns, rows);
     addInitialCells(columns, rows);
   }
@@ -43,18 +43,23 @@ public class TableEditArea extends JPanel implements EditArea {
   public TableEditArea(TableEditAreaModel_V001 model) {
     this.aenderungsart = model.aenderungsart;
     setBackground(DIAGRAMM_LINE_COLOR);
-    setBorder(new LineBorder(Color.WHITE, BORDER_THICKNESS));
     int rows = model.cells.size();
     int columns = model.cells.get(0).size();
     createLayout(columns, rows);
     addCells(model.cells);
+    setEditBackground(null);
+  }
+
+  private void setBorderColor(Color borderColor) {
+    setBorder(new LineBorder(borderColor, BORDER_THICKNESS));
   }
 
   @Override
   public void setEditBackground(Color bg) {
     for (List<EditContainer> row: cells) {
-      row.forEach(cell -> cell.setBackground(bg));
+      row.forEach(cell -> cell.setBackground(aenderungsart.toBackgroundColor()));
     }
+    setBorderColor(aenderungsart.toBackgroundColor());
   }
 
   @Override

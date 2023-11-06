@@ -46,7 +46,7 @@ import static specman.editarea.HTMLTags.HTML_INTRO;
 import static specman.editarea.HTMLTags.HTML_OUTRO;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.FONTSIZE;
-import static specman.editarea.TextStyles.Hintergrundfarbe_Standard;
+import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.INDIKATOR_GELB;
 import static specman.editarea.TextStyles.INDIKATOR_GELOESCHT_MARKIERT;
 import static specman.editarea.TextStyles.INDIKATOR_GRAU;
@@ -173,12 +173,12 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     @Override
     public void setStandardStil() {
         if (!hasStandardStyle()) {
-            setStyle(standardStil, Hintergrundfarbe_Standard, true);
+            setStyle(standardStil, TEXT_BACKGROUND_COLOR_STANDARD, true);
         }
     }
 
     private boolean hasStandardStyle() {
-        return hasStyle(standardStil, Hintergrundfarbe_Standard, true);
+        return hasStyle(standardStil, TEXT_BACKGROUND_COLOR_STANDARD, true);
     }
 
     @Override
@@ -331,7 +331,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 AttributeSet attribute = e.getAttributes();
                 MutableAttributeSet entfaerbt = new SimpleAttributeSet();
                 entfaerbt.addAttributes(attribute);
-                StyleConstants.setBackground(entfaerbt, stepnumberLinkChangedStyleSet(e) ? stepnumberLinkStyleColor : Hintergrundfarbe_Standard);
+                StyleConstants.setBackground(entfaerbt, stepnumberLinkChangedStyleSet(e) ? stepnumberLinkStyleColor : TEXT_BACKGROUND_COLOR_STANDARD);
                 doc.setCharacterAttributes(e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), entfaerbt, true);
                 changesMade++;
             }
@@ -359,7 +359,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 AttributeSet attribute = e.getAttributes();
                 MutableAttributeSet entfaerbt = new SimpleAttributeSet();
                 entfaerbt.addAttributes(attribute);
-                StyleConstants.setBackground(entfaerbt, stepnumberLinkChangedStyleSet(e) ? stepnumberLinkStyleColor : Hintergrundfarbe_Standard);
+                StyleConstants.setBackground(entfaerbt, stepnumberLinkChangedStyleSet(e) ? stepnumberLinkStyleColor : TEXT_BACKGROUND_COLOR_STANDARD);
                 StyleConstants.setStrikeThrough(entfaerbt, false);
                 doc.setCharacterAttributes(e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), entfaerbt, true);
                 changesReverted++;

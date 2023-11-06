@@ -13,6 +13,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
+import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 public class RoundedBorderDecorator extends JPanel {
@@ -31,7 +32,7 @@ public class RoundedBorderDecorator extends JPanel {
   public RoundedBorderDecorator(JComponent componentToDecorate, double stepnumberTextheight) {
     inset = INSET;
     arc = ARC_SIZE;
-    setBackground(Color.white);
+    setBackground(BACKGROUND_COLOR_STANDARD);
     String commonInsetSpec = (inset + INNER_BORDERLINE_WIDTH) + "px";
     layout = new FormLayout("0px,10px:grow,0px", "0px,fill:pref:grow,0px");
     setLayout(layout);
@@ -115,7 +116,7 @@ public class RoundedBorderDecorator extends JPanel {
   }
 
   private void drawOuterBorderArea(Graphics2D g2d, Shape innerShape) {
-    g2d.setColor(Color.white);
+    g2d.setColor(BACKGROUND_COLOR_STANDARD);
     Shape outer = new Rectangle2D.Float(0, 0, getWidth(), getHeight());
     Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
     path.append(outer, false);

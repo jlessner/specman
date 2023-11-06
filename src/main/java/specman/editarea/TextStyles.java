@@ -58,10 +58,11 @@ public class TextStyles {
     public static final Color Hintergrundfarbe_Geloescht = Color.BLACK;
     public static final Color Schriftfarbe_Standard = Color.BLACK;
     public static final Color DIAGRAMM_LINE_COLOR = Color.black;
-    public static final Color Hintergrundfarbe_Standard = new Color(255, 255, 255, 0);
+    public static final Color TEXT_BACKGROUND_COLOR_STANDARD = new Color(255, 255, 255, 0);
+    public static final Color BACKGROUND_COLOR_STANDARD = Color.white;
     public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
     public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
-    public static final Color SCHRITTNUMMER_VORDERGRUNDFARBE = Hintergrundfarbe_Standard;
+    public static final Color SCHRITTNUMMER_VORDERGRUNDFARBE = TEXT_BACKGROUND_COLOR_STANDARD;
     public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
     public static final Color stepnumberLinkStyleColor = new Color(188, 188, 188);
     public static final Color changedStepnumberLinkColor = combineColors(stepnumberLinkStyleColor, AENDERUNGSMARKIERUNG_FARBE);
@@ -85,7 +86,7 @@ public class TextStyles {
         // https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
         String htmlStyle = "background-color:" + INDIKATOR_GELB;
         String htmlStyleSchwarz = "background-color:" + INDIKATOR_SCHWARZ;
-        String htmlStyleStandard = "background-color:" + toHTMLColor(Hintergrundfarbe_Standard);
+        String htmlStyleStandard = "background-color:" + toHTMLColor(TEXT_BACKGROUND_COLOR_STANDARD);
         String htmlStyleStepnumber = "background-color:" + stepnumberLinkStyleHTMLColor;
 
         SimpleAttributeSet htmlHintergrundStyle = new SimpleAttributeSet();
@@ -109,7 +110,7 @@ public class TextStyles {
 
         htmlHintergrundStyleStandard.addAttribute(HTML.Attribute.STYLE, htmlStyleStandard);
         standardStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleStandard);
-        StyleConstants.setBackground(standardStil, Hintergrundfarbe_Standard);
+        StyleConstants.setBackground(standardStil, TEXT_BACKGROUND_COLOR_STANDARD);
         StyleConstants.setStrikeThrough(standardStil, false);
         StyleConstants.setForeground(standardStil, Schriftfarbe_Standard);
 

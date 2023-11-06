@@ -25,7 +25,6 @@ import javax.swing.text.StyleConstants;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
@@ -36,9 +35,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static specman.Specman.schrittHintergrund;
-import static specman.editarea.Indentions.JEDITORPANE_DEFAULT_BORDER_THICKNESS;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.editarea.TextStyles.Hintergrundfarbe_Standard;
+import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.SCHRITTNR_FONTSIZE;
 import static specman.editarea.TextStyles.labelFont;
 
@@ -115,7 +113,7 @@ public class EditContainer extends JPanel {
 
 		initLayoutAndEditAreas(editor, initialContent);
 		updateDecorationIndentions(new Indentions());
-		setBackground(schrittHintergrund());
+		//setBackground(schrittHintergrund());
 
     skalieren(editor.getZoomFactor(), 0);
   }
@@ -163,7 +161,7 @@ public class EditContainer extends JPanel {
 
 	public void aenderungsmarkierungenEntfernen(SchrittID id) {
 		editAreas.forEach(EditArea::setStandardStil);
-		setBackground(Hintergrundfarbe_Standard);
+		setBackground(TEXT_BACKGROUND_COLOR_STANDARD);
 		if (schrittNummer != null) {
 			schrittNummer.setStandardStil(id);
 		}

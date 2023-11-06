@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
-import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.editarea.TextStyles.Hintergrundfarbe_Standard;
 
 public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener {
   static final Color FOCUS_BORDER_COLOR = Color.GRAY;
@@ -88,7 +86,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   private void postInit() {
     setLayout(new FormLayout("pref:grow", "fill:pref:grow"));
     setBorderByChangetype();
-    setBackground(null);
+    setEditBackground(null);
     this.image = new JLabel();
     add(image, CC.xy(1, 1));
     updateListeners();
@@ -303,8 +301,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public void setEditBackground(Color bg) {
-    setBackground(aenderungsart == Aenderungsart.Hinzugefuegt || aenderungsart == Aenderungsart.Geloescht
-      ? AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Hintergrundfarbe_Standard);
+    setBackground(aenderungsart.toBackgroundColor());
   }
 
   @Override
