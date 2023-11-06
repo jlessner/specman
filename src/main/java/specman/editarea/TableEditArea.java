@@ -3,7 +3,6 @@ package specman.editarea;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
-import specman.EditorI;
 import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -12,7 +11,6 @@ import specman.pdf.Shape;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ public class TableEditArea extends JPanel implements EditArea {
   public TableEditArea(int columns, int rows, Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
     setBackground(DIAGRAMM_LINE_COLOR);
-    setBorderColor(Specman.schrittHintergrund());
+    initBorder();
     createLayout(columns, rows);
     addInitialCells(columns, rows);
   }
@@ -50,8 +48,10 @@ public class TableEditArea extends JPanel implements EditArea {
     setEditBackground(null);
   }
 
-  private void setBorderColor(Color borderColor) {
-    setBorder(new LineBorder(borderColor, BORDER_THICKNESS));
+  private void initBorder() {
+    Color borderColor = aenderungsart.toBackgroundColor();
+    int borderThickness = (int)((float)BORDER_THICKNESS * (float)Specman.instance().getZoomFactor() / 100f);
+    setBorder(new LineBorder(borderColor, borderThickness));
   }
 
   @Override
@@ -59,7 +59,7 @@ public class TableEditArea extends JPanel implements EditArea {
     for (List<EditContainer> row: cells) {
       row.forEach(cell -> cell.setBackground(aenderungsart.toBackgroundColor()));
     }
-    setBorderColor(aenderungsart.toBackgroundColor());
+    initBorder();
   }
 
   @Override
@@ -140,7 +140,11 @@ public class TableEditArea extends JPanel implements EditArea {
 
   @Override
   public void skalieren(int prozentNeu, int prozentAktuell) {
-
+    cells
+      .stream()
+      .forEach(row -> row.stream()
+        .forEach(cell -> cell.skalieren(prozentNeu, prozentAktuell)));
+    initBorder();
   }
 
   @Override
