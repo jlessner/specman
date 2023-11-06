@@ -85,14 +85,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     }
   }
 
-  @Override
-  /** Override avoids color change by parent. As a difference to {@link TextEditArea}s,
-   * the background depends solely depends on the change type of the image itself. */
-  public void setBackground(Color bg) {
-    super.setBackground(aenderungsart == Aenderungsart.Hinzugefuegt || aenderungsart == Aenderungsart.Geloescht
-      ? AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Hintergrundfarbe_Standard);
-  }
-
   private void postInit() {
     setLayout(new FormLayout("pref:grow", "fill:pref:grow"));
     setBorderByChangetype();
@@ -307,6 +299,22 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override
   public List<String> findStepnumberLinkIDs() {
     return new ArrayList<>(); // There are no stepnumberLinks in an ImageArea
+  }
+
+  @Override
+  public void setEditBackground(Color bg) {
+    setBackground(aenderungsart == Aenderungsart.Hinzugefuegt || aenderungsart == Aenderungsart.Geloescht
+      ? AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE : Hintergrundfarbe_Standard);
+  }
+
+  @Override
+  public void setEditDecorationIndentions(Indentions indentions) {
+    Border border = new EmptyBorder(
+      indentions.topBorder(),
+      indentions.leftBorder(),
+      indentions.bottomBorder(),
+      indentions.rightBorder());
+    setBorder(border);
   }
 
   public Shape getShape() {

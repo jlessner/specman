@@ -18,6 +18,8 @@ import specman.view.AbstractSchrittView;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
@@ -671,6 +673,10 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         getParent().addImage(imageFile, this, aenderungsart);
     }
 
+    public void addTable(int columns, int rows, Aenderungsart aenderungsart) {
+        getParent().addTable(this, columns, rows, aenderungsart);
+    }
+
     @Override
     public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
         return getTextMitAenderungsmarkierungen(formatierterText);
@@ -921,6 +927,18 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         } catch (BadLocationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override public void setEditBackground(Color bg) { setBackground(bg); }
+
+    @Override
+    public void setEditDecorationIndentions(Indentions indentions) {
+        Border border = new EmptyBorder(
+          indentions.topBorder(),
+          indentions.leftBorder(),
+          indentions.bottomBorder(),
+          indentions.rightBorder());
+        setBorder(border);
     }
 
     public Shape getShape() {

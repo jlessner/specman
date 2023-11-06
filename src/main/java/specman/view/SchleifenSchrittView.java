@@ -11,6 +11,7 @@ import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
+import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
@@ -24,6 +25,7 @@ import java.awt.Color;
 import java.awt.event.ComponentEvent;
 import java.util.List;
 
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.pdf.Shape.GAP_COLOR;
 
 public class SchleifenSchrittView extends AbstractSchrittView implements SpaltenContainerI {
@@ -39,7 +41,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean mitUnteremBalken) {
 		super(editor, parent, initialerText, id, aenderungsart);
 		panel = new JPanel();
-		panel.setBackground(Color.black);
+		panel.setBackground(DIAGRAMM_LINE_COLOR);
 		balkenbreite = SPALTENLAYOUT_UMGEHUNG_GROESSE;
 		layout = new FormLayout(
 				umgehungLayout(balkenbreite) + ", " + FORMLAYOUT_GAP + ", 10dlu:grow",

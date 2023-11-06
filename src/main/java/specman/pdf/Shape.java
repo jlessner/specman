@@ -2,15 +2,18 @@ package specman.pdf;
 
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import specman.editarea.TextStyles;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
+
 public class Shape {
   public static final com.itextpdf.kernel.colors.Color DEFAULT_FILL_COLOR = DeviceRgb.WHITE;
   public static final com.itextpdf.kernel.colors.Color DEFAULT_LINE_COLOR = DeviceRgb.BLACK;
-  public static final Color GAP_COLOR = Color.BLACK;
+  public static final Color GAP_COLOR = DIAGRAMM_LINE_COLOR;
 
   protected List<Point> path = new ArrayList<>();
   protected Color backgroundColor;

@@ -10,6 +10,7 @@ import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import org.jetbrains.annotations.Nullable;
 import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
+import specman.editarea.TextStyles;
 import specman.model.ModelEnvelope;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -95,6 +96,7 @@ import java.util.List;
 import java.util.Set;
 
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.editarea.TextStyles.INDIKATOR_GELB;
 import static specman.view.RelativeStepPosition.After;
 
@@ -294,13 +296,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 		else {
 			breitenAnpasser = new SpaltenResizer(this, this);
-			breitenAnpasser.setBackground(Color.BLACK);
+			breitenAnpasser.setBackground(DIAGRAMM_LINE_COLOR);
 			breitenAnpasser.setOpaque(true);
 			arbeitsbereich.add(breitenAnpasser, CC.xy(3, 3));
 		}
 		hauptSequenzContainer = hauptSequenz.getContainer();
 		// Rundherum schwarze Linie au�er rechts. Da kommt stattdessen der breitenAnpasser hin
-		hauptSequenzContainer.setBorder(new MatteBorder(AbstractSchrittView.LINIENBREITE, AbstractSchrittView.LINIENBREITE, AbstractSchrittView.LINIENBREITE, 0, Color.BLACK));
+		hauptSequenzContainer.setBorder(new MatteBorder(
+			AbstractSchrittView.LINIENBREITE,
+			AbstractSchrittView.LINIENBREITE,
+			AbstractSchrittView.LINIENBREITE,
+			0,
+			DIAGRAMM_LINE_COLOR));
 		arbeitsbereich.add(hauptSequenzContainer, CC.xy(2, 3));
 		diagrammAktualisieren(null);
 	}
@@ -672,7 +679,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) throws EditException {
+	public void addTable() {
+		if (lastFocusedTextArea != null) {
+			lastFocusedTextArea.addTable(3, 3, initialArt());
+			diagrammAktualisieren(null);
+		}
+	}
+
+  private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) throws EditException {
 		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
 		if (isStepDeletionAllowed(schritt)) {
             try (UndoRecording ur = composeUndo()) {

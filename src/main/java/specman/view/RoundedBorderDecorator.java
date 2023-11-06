@@ -13,6 +13,8 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
+
 public class RoundedBorderDecorator extends JPanel {
   private static final int INSET = 15;
   private static final int INNER_BORDERLINE_WIDTH = 2;
@@ -107,7 +109,7 @@ public class RoundedBorderDecorator extends JPanel {
   }
 
   private void drawInnerBorderLine(Graphics2D g2d, Shape innerShape) {
-    g2d.setColor(Color.black);
+    g2d.setColor(DIAGRAMM_LINE_COLOR);
     g2d.setStroke(new BasicStroke(2));
     g2d.draw(innerShape);
   }

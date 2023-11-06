@@ -11,10 +11,12 @@ import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
+import specman.model.v001.TableEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.pdf.Shape;
 import specman.undo.UndoableImageAdded;
 import specman.undo.UndoableImageRemoved;
+import specman.undo.UndoableTableAdded;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.JPanel;
@@ -140,6 +142,10 @@ public class EditContainer extends JPanel {
 			else if (editAreaModel instanceof ImageEditAreaModel_V001) {
 				ImageEditAreaModel_V001 imageEditAreaModel = (ImageEditAreaModel_V001)editAreaModel;
 				editArea = new ImageEditArea(imageEditAreaModel);
+			}
+			else if (editAreaModel instanceof TableEditAreaModel_V001) {
+				TableEditAreaModel_V001 tableEditAreaModel = (TableEditAreaModel_V001)editAreaModel;
+				editArea = new TableEditArea(tableEditAreaModel);
 			}
 			else {
 				throw new RuntimeException("Noch nicht fertig: " + editAreaModel);
@@ -267,22 +273,6 @@ public class EditContainer extends JPanel {
 		editAreas.get(0).requestFocus();
 	}
 
-	public void setLeftInset(int px) {
-		// TODO JL: Das ist hier noch nicht sauber. Die Insets von Text- und Imagebereichen sind nicht gleich, und
-		// der oberste und unterste Editbereich haben unterschiedliche Top- und Bottom-Insets
-		Insets insets = editorPaneBorder.getBorderInsets();
-		insets.left = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
-		editorPaneBorder = new EmptyBorder(insets);
-		editAreas.forEach(ea -> ea.setBorder(editorPaneBorder));
-	}
-
-	public void setRightInset(int px) {
-		Insets insets = editorPaneBorder.getBorderInsets();
-		insets.right = JEDITORPANE_DEFAULT_BORDER_THICKNESS + px;
-		editorPaneBorder = new EmptyBorder(insets);
-		editAreas.forEach(ea -> ea.setBorder(editorPaneBorder));
-	}
-
 	@Override
 	public void setOpaque(boolean isOpaque) {
 		super.setOpaque(isOpaque);
@@ -304,30 +294,21 @@ public class EditContainer extends JPanel {
 	public void setBackground(Color bg) {
 		super.setBackground(bg);
 		if (editAreas != null) {
-			editAreas.forEach(ea -> ea.setBackground(bg));
+			editAreas.forEach(ea -> ea.setEditBackground(bg));
 		}
 	}
 
 	public void updateDecorationIndentions(Indentions indentions) {
-		this.indentions = indentions;
+		this.indentions = indentions.withIndividuals(this.indentions);
 
 		layout.setRowSpec(1, indentions.topInset());
 		layout.setRowSpec(editAreas.size()+2, indentions.bottomInset());
 		layout.setColumnSpec(1, indentions.leftInset());
 		layout.setColumnSpec(3, indentions.rightInset());
 
-		setEditorBorder(
-			indentions.topBorder(),
-			indentions.leftBorder(),
-			indentions.bottomBorder(),
-			indentions.rightBorder());
-	}
-
-	private void setEditorBorder(int top, int left, int bottom, int right) {
-		// TODO JL: Das ist hier noch nicht sauber. Die Insets von Text- und Imagebereichen sind nicht gleich, und
-		// der oberste und unterste Editbereich haben unterschiedliche Top- und Bottom-Insets
-		this.editorPaneBorder = new EmptyBorder(top, left, bottom, right);
-		editAreas.forEach(ea -> ea.setBorder(editorPaneBorder));
+		// TODO JL: Das ist hier noch nicht sauber. Der oberste und unterste Editbereich haben
+		//  unterschiedliche Top- und Bottom-Insets
+		editAreas.forEach(ea -> ea.setEditDecorationIndentions(this.indentions));
 	}
 
 	public Rectangle getStepNumberBounds() { return schrittNummer.getBounds(); }
@@ -356,6 +337,22 @@ public class EditContainer extends JPanel {
 	}
 
 	public InteractiveStepFragment asInteractiveFragment() { return editAreas.get(0); }
+
+	public void addTable(TextEditArea initiatingTextArea, int columns, int rows, Aenderungsart aenderungsart) {
+		EditorI editor = Specman.instance();
+		try (UndoRecording ur = editor.composeUndo()) {
+			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
+			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
+			TableEditArea tableEditArea = new TableEditArea(columns, rows, aenderungsart);
+			addEditArea(tableEditArea, initiatingTextAreaIndex+1);
+			TextEditArea cutOffTextArea = initiatingTextArea.split(initiatingCaretPosition);
+			if (cutOffTextArea != null) {
+				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
+			}
+			editor.addEdit(new UndoableTableAdded(this, initiatingTextArea, tableEditArea, cutOffTextArea));
+		}
+		updateBounds();
+	}
 
 	public void addImage(File imageFile, TextEditArea initiatingTextArea, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
@@ -430,6 +427,14 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
+	public void removeTableByUndoRedo(TableEditArea tableArea, TextEditArea cutOffTextArea) {
+
+	}
+
+	public void addTableByUndoRedo(TextEditArea initiatingTextArea, TableEditArea tableArea, TextEditArea cutOffTextArea) {
+
+	}
+
 	private int removeEditArea(EditArea area) {
 		int index = editAreas.indexOf(area);
 		editAreas.remove(area);
@@ -486,4 +491,5 @@ public class EditContainer extends JPanel {
 			}
 		}
 	}
+
 }

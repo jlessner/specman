@@ -6,6 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import specman.Specman;
 import specman.editarea.InteractiveStepFragment;
+import specman.editarea.TextStyles;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +14,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListener {
 	public static final String ZEILENLAYOUT_TRENNKOPF_SICHTBAR = "fill:10px";
@@ -49,7 +52,7 @@ class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListen
 		add(umgehung, CC.xy(2, 3));
 
 		catchBloeckeContainer = new JPanel();
-		catchBloeckeContainer.setBackground(Color.black);
+		catchBloeckeContainer.setBackground(DIAGRAMM_LINE_COLOR);
 		add(catchBloeckeContainer, CC.xy(1, 3));
 		layoutInitialisieren();
 

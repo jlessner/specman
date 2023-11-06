@@ -57,4 +57,8 @@ public interface EditArea extends InteractiveStepFragment {
   List<String> findStepnumberLinkIDs();
 
   public Shape getShape();
+
+  void setEditBackground(Color bg);
+
+  void setEditDecorationIndentions(Indentions indentions);
 }

@@ -9,6 +9,7 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
+import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -21,6 +22,8 @@ import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.util.List;
+
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 public class CatchSchrittView extends AbstractSchrittView {
 	public static final int TEXTEINRUECKUNG = SubsequenzSchrittView.TEXTEINRUECKUNG;
@@ -36,7 +39,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, SchrittSequenzModel_V001 handlingModel) {
 		super(editor, parent, initialerText, id, aenderungsart);
 		schrittPanel = new JPanel();
-		schrittPanel.setBackground(Color.black);
+		schrittPanel.setBackground(DIAGRAMM_LINE_COLOR);
 		layout = new FormLayout(
 				umgehungLayout() + ", 10dlu:grow",
 				(LINIENBREITE * 2) + "px, " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", pref:grow, 0px");
@@ -47,7 +50,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 
 		JPanel doppellinie = new JPanel();
 		doppellinie.setBackground(Specman.schrittHintergrund());
-		doppellinie.setBorder(new MatteBorder(0, 0, LINIENBREITE, 0, Color.black));
+		doppellinie.setBorder(new MatteBorder(0, 0, LINIENBREITE, 0, DIAGRAMM_LINE_COLOR));
 		schrittPanel.add(doppellinie, CC.xyw(1, 1, 2));
 
 		fussPanel = new JPanel();
@@ -268,7 +271,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 
 		private void rahmenAnzeigen(boolean anzeigen) {
 			schrittnummerSichtbarkeitSetzen(anzeigen);
-			Color hintergrundfarbe = (anzeigen && !klappen.isSelected()) ? Color.black : Specman.schrittHintergrund();
+			Color hintergrundfarbe = (anzeigen && !klappen.isSelected()) ? DIAGRAMM_LINE_COLOR : Specman.schrittHintergrund();
 			schrittPanel.setBackground(hintergrundfarbe);
 			String fusszeilenTrennerLayout = (anzeigen && hatNachfolger && !klappen.isSelected()) ? FORMLAYOUT_GAP : ZEILENLAYOUT_INHALT_VERBORGEN;
 			layout.setRowSpec(5, RowSpec.decode(fusszeilenTrennerLayout));

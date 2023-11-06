@@ -6,6 +6,7 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.Specman;
+import specman.editarea.TextStyles;
 import specman.model.v001.EditorContentModel_V001;
 import specman.pdf.Shape;
 
@@ -14,6 +15,8 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
+
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 /** Basisklasse für If, If/Else und Case */
 abstract public class VerzweigungSchrittView extends AbstractSchrittView implements SpaltenContainerI {
@@ -33,7 +36,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 			}
 		};
 
-		panel.setBackground(Color.black);
+		panel.setBackground(DIAGRAMM_LINE_COLOR);
 		panel.setLayout(panelLayout);
 		panel.addComponentListener(this);
 		panel.setEnabled(false);
@@ -81,10 +84,6 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	@Override
 	public void componentResized(ComponentEvent e) {
 		super.componentResized(e);
-		double textEinrueckung = texteinrueckungNeuberechnen();
-		editContainer.setLeftInset((int)textEinrueckung);
-		editContainer.setRightInset((int)textEinrueckung);
-		panel.repaint(); // Sorgt dafür, dass das umplatzierte Textfeld und alles andere auf dem Panel sofort neu gezeichnet wird
 		klappen.updateLocation(editContainer.getStepNumberBounds());
 	}
 
@@ -125,7 +124,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 
 		//outer black diamond, not filled
 		g.setStroke(new BasicStroke(LINIENBREITE));
-		g.setColor(Color.BLACK);
+		g.setColor(DIAGRAMM_LINE_COLOR);
 		g.drawPolygon(polygonX, polygonY, polygonX.length);
 	}
 

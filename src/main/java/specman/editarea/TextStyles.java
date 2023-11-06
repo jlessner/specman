@@ -57,6 +57,7 @@ public class TextStyles {
     public static final Color Hintergrundfarbe_Schrittnummer = Color.LIGHT_GRAY;
     public static final Color Hintergrundfarbe_Geloescht = Color.BLACK;
     public static final Color Schriftfarbe_Standard = Color.BLACK;
+    public static final Color DIAGRAMM_LINE_COLOR = Color.black;
     public static final Color Hintergrundfarbe_Standard = new Color(255, 255, 255, 0);
     public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
     public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);

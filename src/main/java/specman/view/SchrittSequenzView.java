@@ -9,6 +9,7 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
+import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static specman.Specman.initialtext;
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.pdf.Shape.GAP_COLOR;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RelativeStepPosition.Before;
@@ -63,8 +65,7 @@ public class SchrittSequenzView {
 		panel.setBackground(Specman.schrittHintergrund());
 		this.sequenzBasisId = sequenzBasisId;
 		sequenzBereich = new JPanel();
-		sequenzBereich.setBackground(Color.black);
-		//sequenzBereich.setBackground(Color.white); // Nur um zu schauen, wie dekorierte Schritte ohne Trennlinien aussehen
+		sequenzBereich.setBackground(DIAGRAMM_LINE_COLOR);
 		sequenzbereichLayout = new FormLayout("10px:grow");
 		sequenzBereich.setLayout(sequenzbereichLayout);
 		panel.add(sequenzBereich, CC.xy(1, 1));

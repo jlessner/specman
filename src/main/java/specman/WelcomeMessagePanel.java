@@ -1,5 +1,6 @@
 package specman;
 
+import specman.editarea.TextStyles;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
@@ -7,6 +8,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 public class WelcomeMessagePanel extends JLabel {
   public WelcomeMessagePanel() {
@@ -24,7 +27,7 @@ public class WelcomeMessagePanel extends JLabel {
     setForeground(Color.gray);
     setBackground(new Color(230, 230, 240));
     setBorder(new CompoundBorder(
-        new LineBorder(Color.BLACK, AbstractSchrittView.LINIENBREITE),
+        new LineBorder(DIAGRAMM_LINE_COLOR, AbstractSchrittView.LINIENBREITE),
         new EmptyBorder(15, 15, 15, 15)));
   }
 }
