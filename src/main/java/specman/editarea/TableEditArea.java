@@ -173,10 +173,6 @@ public class TableEditArea extends JPanel implements EditArea {
     return 0;
   }
 
-  @Override public void setQuellStil() {
-
-  }
-
   @Override
   public void setStandardStil() {
     aenderungsart = Aenderungsart.Untracked;
@@ -197,6 +193,11 @@ public class TableEditArea extends JPanel implements EditArea {
 
   @Override
   public boolean enthaeltAenderungsmarkierungen() {
+    for (List<EditContainer> row: cells) {
+      if (row.stream().anyMatch(cell -> cell.enthaeltAenderungsmarkierungen())) {
+        return true;
+      };
+    }
     return false;
   }
 
@@ -214,6 +215,7 @@ public class TableEditArea extends JPanel implements EditArea {
     return null;
   }
 
+  @Override public void setQuellStil() { /* Not required for tables - source steps only contain an empty text area */ }
   @Override public void pack(int availableWidth) { /* Nothing to do */ }
   @Override public void addSchrittnummer(SchrittNummerLabel schrittNummer) { add(schrittNummer); }
   @Override public Component asComponent() { return this; }

@@ -375,13 +375,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         return changesReverted;
     }
 
-    private boolean elementHatDurchgestrichenenText() {
-        StyledEditorKit k = (StyledEditorKit) getEditorKit();
-        MutableAttributeSet inputAttributes = k.getInputAttributes();
-        Object currentTextDecoration = inputAttributes.getAttribute(CSS.Attribute.TEXT_DECORATION);
-        return currentTextDecoration != null && currentTextDecoration.toString().equals(INDIKATOR_GELOESCHT_MARKIERT);
-    }
-
     private boolean elementHatDurchgestrichenenText(Element e) {
         AttributeSet attr = e.getAttributes();
         return StyleConstants.isStrikeThrough(attr);
