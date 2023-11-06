@@ -62,7 +62,7 @@ public class TextStyles {
     public static final Color BACKGROUND_COLOR_STANDARD = Color.white;
     public static final Color AENDERUNGSMARKIERUNG_FARBE = Color.yellow;
     public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
-    public static final Color SCHRITTNUMMER_VORDERGRUNDFARBE = TEXT_BACKGROUND_COLOR_STANDARD;
+    public static final Color SCHRITTNUMMER_VORDERGRUNDFARBE = BACKGROUND_COLOR_STANDARD;
     public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
     public static final Color stepnumberLinkStyleColor = new Color(188, 188, 188);
     public static final Color changedStepnumberLinkColor = combineColors(stepnumberLinkStyleColor, AENDERUNGSMARKIERUNG_FARBE);

@@ -196,6 +196,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public void setStandardStil() {
+    aenderungsart = Aenderungsart.Untracked;
     // Nothing to do for images - job is completely done in aenderungenVerwerfen/Uebernehmen
   }
 

@@ -46,6 +46,7 @@ import static specman.editarea.HTMLTags.BODY_OUTRO;
 import static specman.editarea.HTMLTags.HTML_INTRO;
 import static specman.editarea.HTMLTags.HTML_OUTRO;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.FONTSIZE;
 import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.INDIKATOR_GELB;
@@ -174,12 +175,12 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     @Override
     public void setStandardStil() {
         if (!hasStandardStyle()) {
-            setStyle(standardStil, TEXT_BACKGROUND_COLOR_STANDARD, true);
+            setStyle(standardStil, BACKGROUND_COLOR_STANDARD, true);
         }
     }
 
     private boolean hasStandardStyle() {
-        return hasStyle(standardStil, TEXT_BACKGROUND_COLOR_STANDARD, true);
+        return hasStyle(standardStil, BACKGROUND_COLOR_STANDARD, true);
     }
 
     @Override

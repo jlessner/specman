@@ -38,7 +38,7 @@ public class TableEditArea extends JPanel implements EditArea {
   public TableEditArea(int columns, int rows, Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
     setBackground(DIAGRAMM_LINE_COLOR);
-    initBorder();
+    setBorderByChangetype();
     createLayout(columns, rows);
     addInitialCells(columns, rows);
   }
@@ -53,7 +53,7 @@ public class TableEditArea extends JPanel implements EditArea {
     setEditBackground(null);
   }
 
-  private void initBorder() {
+  private void setBorderByChangetype() {
     Color borderColor = aenderungsart.toBackgroundColor();
     int borderThickness = (int)((float)BORDER_THICKNESS * (float)Specman.instance().getZoomFactor() / 100f);
     setBorder(new LineBorder(borderColor, borderThickness));
@@ -64,7 +64,7 @@ public class TableEditArea extends JPanel implements EditArea {
     for (List<EditContainer> row: cells) {
       row.forEach(cell -> cell.setBackground(aenderungsart.toBackgroundColor()));
     }
-    initBorder();
+    setBorderByChangetype();
   }
 
   @Override
@@ -160,7 +160,7 @@ public class TableEditArea extends JPanel implements EditArea {
       .stream()
       .forEach(row -> row.stream()
         .forEach(cell -> cell.skalieren(prozentNeu, prozentAktuell)));
-    initBorder();
+    setBorderByChangetype();
   }
 
   @Override
@@ -179,7 +179,10 @@ public class TableEditArea extends JPanel implements EditArea {
 
   @Override
   public void setStandardStil() {
-
+    aenderungsart = Aenderungsart.Untracked;
+    for (List<EditContainer> row: cells) {
+      row.forEach(cell -> cell.aenderungsmarkierungenEntfernen(null));
+    }
   }
 
   @Override

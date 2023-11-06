@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 
 import static specman.Specman.schrittHintergrund;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.SCHRITTNR_FONTSIZE;
 import static specman.editarea.TextStyles.labelFont;
@@ -159,7 +160,7 @@ public class EditContainer extends JPanel {
 
 	public void aenderungsmarkierungenEntfernen(SchrittID id) {
 		editAreas.forEach(EditArea::setStandardStil);
-		setBackground(TEXT_BACKGROUND_COLOR_STANDARD);
+		setBackground(BACKGROUND_COLOR_STANDARD);
 		if (schrittNummer != null) {
 			schrittNummer.setStandardStil(id);
 		}
