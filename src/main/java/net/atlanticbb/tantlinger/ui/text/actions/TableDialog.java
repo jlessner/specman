@@ -23,14 +23,14 @@ import java.io.Serial;
 import java.util.List;
 
 public class TableDialog extends JDialog {
-    private static final I18n i18n = I18n.getInstance("net.atlanticbb.tantlinger.ui.text.dialogs");
+    private static final I18n i18n = I18n.getInstance("net.atlanticbb.tantlinger.ui");
     private static final Icon icon = UIUtils.getIcon("resources/images/x32/", "table.png");
     private static final String title = "Insert table...";
     private static final String desc = "Insert a table";
     private JTextComponent editor;
     private JTextField columns = new JTextField("3");
     private JTextField rows = new JTextField("2");
-    private JButton ok = new JButton(i18n.str("OK"));
+    private JButton ok = new JButton(i18n.str("ok"));
     private JButton cancel = new JButton(i18n.str("cancel"));
 
     public TableDialog(Frame parent, JTextComponent ed) {
@@ -48,7 +48,7 @@ public class TableDialog extends JDialog {
     private void init() {
         FormLayout layout = new FormLayout(
           "10px, 150px, 10px, 150px, 10px",
-          "50px, 20px, 20px, 20px, 30px, 10px");
+          "50px, 20px, 20px, 20px, 10px, 30px, 10px");
         Container contentPane = this.getContentPane();
         contentPane.setLayout(layout);
         JPanel headerPanel = new HeaderPanel(title, desc, icon);
@@ -58,8 +58,8 @@ public class TableDialog extends JDialog {
         contentPane.add(columns, CC.xywh(4, 3, 1, 1));
         contentPane.add(new JLabel("Zeilenanzahl"), CC.xywh(2, 4, 1, 1));
         contentPane.add(rows, CC.xywh(4, 4, 1, 1));
-        contentPane.add(ok, CC.xywh(2, 5, 1, 1));
-        contentPane.add(cancel, CC.xywh(4, 5, 1, 1));
+        contentPane.add(ok, CC.xywh(2, 6, 1, 1));
+        contentPane.add(cancel, CC.xywh(4, 6, 1, 1));
         cancel.addActionListener(e -> cancel());
         ok.addActionListener(e -> ok());
         this.getRootPane().setDefaultButton(cancel);
@@ -74,7 +74,7 @@ public class TableDialog extends JDialog {
     private void ok() {
         int numColumns = Integer.parseInt(columns.getText());
         int numRows = Integer.parseInt(rows.getText());
-        if (numColumns >= 0 && numRows >= 0) {
+        if (numColumns > 0 && numColumns < 21 && numRows > 0 && numRows < 21) {
             Specman.instance().addTable(numColumns, numRows);
             setVisible(false);
         }
