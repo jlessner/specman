@@ -9,7 +9,6 @@ Abschluss für Go-Live
   - Noch zu implementieren:
     - UndoableTableRemoved
     - UndoableTableRemovedMarkiert
-    - TableEditArea#findStepnumberLinkIDs
 
 - PDF-Export
   - Nicht essenziell aber wäre schöner: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts

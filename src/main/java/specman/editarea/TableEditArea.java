@@ -8,7 +8,7 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.pdf.Shape;
-import specman.view.AbstractSchrittView;
+import specman.pdf.ShapeImage;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -19,73 +19,85 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
+import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
 
+/** The edit area itself is a surrounding panel which contains the actual table panel
+ * with a little space in between to all sides. This space is for interactions to remove
+ * and add table columns and rows, and to remove the whole table and other things like
+ * that. The table panel follows the same approach as step views do concerning basic layout:
+ * the panel itself is black and the table cells are placed as children with a little
+ * gap between them. This causes the black panel background to shine through the gaps,
+ * creating the impression of lines. */
 public class TableEditArea extends JPanel implements EditArea {
   private static final int BORDER_THICKNESS = 5;
   private static final String TABLELINE_GAP = FORMLAYOUT_GAP;
-  private static final String TABLELAYOUT_ROWSPEC = AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
+  private static final String TABLELAYOUT_ROWSPEC = ZEILENLAYOUT_INHALT_SICHTBAR;
   private static final String TABLELAYOUT_COLSPEC = "pref:grow";
 
   private List<List<EditContainer>> cells = new ArrayList<>();
-  private FormLayout tableLayout;
   private Aenderungsart aenderungsart;
   private final List<FocusListener> editAreasFocusListeners = new ArrayList<>();
   private final List<ComponentListener> editAreasComponentListeners = new ArrayList<>();
+  private FormLayout tablePanelLayout;
+  private JPanel tablePanel;
 
   public TableEditArea(int columns, int rows, Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
-    setBackground(DIAGRAMM_LINE_COLOR);
-    setBorderByChangetype();
-    createLayout(columns, rows);
+    initPanels(columns, rows);
     addInitialCells(columns, rows);
   }
 
   public TableEditArea(TableEditAreaModel_V001 model) {
     this.aenderungsart = model.aenderungsart;
-    setBackground(DIAGRAMM_LINE_COLOR);
+    setBackground(aenderungsart.toBackgroundColor());
     int rows = model.cells.size();
     int columns = model.cells.get(0).size();
-    createLayout(columns, rows);
+    createTablePanelLayout(columns, rows);
     addCells(model.cells);
     setEditBackground(null);
   }
 
+  private Stream<EditContainer> cellstream() { return cells.stream().flatMap(l -> l.stream()); }
+
+  private void initPanels(int columns, int rows) {
+    tablePanel = new JPanel();
+    tablePanel.setBackground(DIAGRAMM_LINE_COLOR);
+    createTablePanelLayout(columns, rows);
+    setBorderByChangetype();
+  }
+
   private void setBorderByChangetype() {
-    Color borderColor = aenderungsart.toBackgroundColor();
     int borderThickness = (int)((float)BORDER_THICKNESS * (float)Specman.instance().getZoomFactor() / 100f);
-    setBorder(new LineBorder(borderColor, borderThickness));
+    String outerColumnAndRowSpec = borderThickness + "px," + ZEILENLAYOUT_INHALT_SICHTBAR + "," + borderThickness + "px";
+    FormLayout areaLayout = new FormLayout(outerColumnAndRowSpec, outerColumnAndRowSpec);
+    setLayout(areaLayout);
+    setBackground(aenderungsart.toBackgroundColor());
+    // Removing and re-associating the tablePanel child is required to ensure propper
+    // re-layouting after changing the layout in the lines above
+    remove(tablePanel);
+    add(tablePanel, CC.xy(2, 2));
   }
 
   @Override
   public void setEditBackground(Color bg) {
-    for (List<EditContainer> row: cells) {
-      row.forEach(cell -> cell.setBackground(aenderungsart.toBackgroundColor()));
-    }
+    cellstream().forEach(cell -> cell.setBackground(aenderungsart.toBackgroundColor()));
     setBorderByChangetype();
   }
 
   @Override
   public synchronized void addFocusListener(FocusListener l) {
     editAreasFocusListeners.add(l);
-    for (List<EditContainer> row: cells) {
-      row.forEach(cell -> cell.addEditAreasFocusListener(l));
-    }
+    cellstream().forEach(cell -> cell.addEditAreasFocusListener(l));
   }
 
   @Override
   public synchronized void addComponentListener(ComponentListener l) {
     editAreasComponentListeners.add(l);
-    for (List<EditContainer> row: cells) {
-      row.forEach(cell -> cell.addEditComponentListener(l));
-    }
-  }
-
-  @Override
-  public void setEditDecorationIndentions(Indentions indentions) {
-
+    cellstream().forEach(cell -> cell.addEditComponentListener(l));
   }
 
   private void addCells(List<List<EditorContentModel_V001>> model) {
@@ -116,14 +128,14 @@ public class TableEditArea extends JPanel implements EditArea {
     List<EditContainer> row = cells.get(rowIndex);
     int columnIndex = row.size();
     row.add(cell);
-    add(cell, CC.xy(2 + columnIndex * 2, 2 + rowIndex * 2));
+    tablePanel.add(cell, CC.xy(2 + columnIndex * 2, 2 + rowIndex * 2));
   }
 
   private void addCell(int rowIndex, String content) {
     addCell(rowIndex, new EditContainer(Specman.instance(), content, null));
   }
 
-  private void createLayout(int columns, int rows) {
+  private void createTablePanelLayout(int columns, int rows) {
     String columnSpecs = TABLELINE_GAP;
     for (int i = 0; i < columns; i++) {
       columnSpecs += "," + TABLELAYOUT_COLSPEC + "," + TABLELINE_GAP;
@@ -132,8 +144,8 @@ public class TableEditArea extends JPanel implements EditArea {
     for (int i = 0; i < columns; i++) {
       rowSpecs += "," + TABLELAYOUT_ROWSPEC + "," + TABLELINE_GAP;
     }
-    tableLayout = new FormLayout(rowSpecs, columnSpecs);
-    setLayout(tableLayout);
+    tablePanelLayout = new FormLayout(rowSpecs, columnSpecs);
+    tablePanel.setLayout(tablePanelLayout);
   }
 
   @Override
@@ -156,63 +168,46 @@ public class TableEditArea extends JPanel implements EditArea {
 
   @Override
   public void skalieren(int prozentNeu, int prozentAktuell) {
-    cells
-      .stream()
-      .forEach(row -> row.stream()
-        .forEach(cell -> cell.skalieren(prozentNeu, prozentAktuell)));
+    cellstream().forEach(cell -> skalieren(prozentNeu, prozentAktuell));
     setBorderByChangetype();
   }
 
   @Override
   public int aenderungsmarkierungenUebernehmen() {
-    return 0;
+    return cellstream().mapToInt(cell -> cell.aenderungsmarkierungenUebernehmen()).sum();
   }
 
   @Override
   public int aenderungsmarkierungenVerwerfen() {
-    return 0;
+    return cellstream().mapToInt(cell -> cell.aenderungsmarkierungenVerwerfen()).sum();
   }
 
   @Override
   public void setStandardStil() {
     aenderungsart = Aenderungsart.Untracked;
-    for (List<EditContainer> row: cells) {
-      row.forEach(cell -> cell.aenderungsmarkierungenEntfernen(null));
-    }
+    cellstream().forEach(cell -> cell.aenderungsmarkierungenEntfernen(null));
   }
 
   @Override
   public boolean enthaelt(InteractiveStepFragment fragment) {
-    for (List<EditContainer> row: cells) {
-      if (row.stream().anyMatch(cell -> cell.enthaelt(fragment))) {
-        return true;
-      };
-    }
-    return false;
+    return cellstream().anyMatch(cell -> cell.enthaelt(fragment));
   }
 
   @Override
   public boolean enthaeltAenderungsmarkierungen() {
-    for (List<EditContainer> row: cells) {
-      if (row.stream().anyMatch(cell -> cell.enthaeltAenderungsmarkierungen())) {
-        return true;
-      };
-    }
-    return false;
+    return cellstream().anyMatch(cell -> cell.enthaeltAenderungsmarkierungen());
   }
 
   @Override
   public void findStepnumberLinkIDs(HashMap<TextEditArea, List<String>> stepnumberLinkMap) {
-    for (List<EditContainer> row: cells) {
-      for (EditContainer cell: row) {
-        cell.findStepnumberLinkIDs(stepnumberLinkMap);
-      }
-    }
+    cellstream().forEach(cell -> cell.findStepnumberLinkIDs(stepnumberLinkMap));
   }
 
   @Override
   public Shape getShape() {
-    return null;
+    Shape tablePanelShape = new Shape(tablePanel);
+    cellstream().forEach(cell -> tablePanelShape.add(cell.getShape()));
+    return new Shape(this).add(tablePanelShape);
   }
 
   @Override public void setQuellStil() { /* Not required for tables - source steps only contain an empty text area */ }
@@ -224,5 +219,6 @@ public class TableEditArea extends JPanel implements EditArea {
   @Override public boolean isTextArea() { return false; }
   @Override public ImageEditArea asImageArea() { return null; }
   @Override public String getText() { return "table"; }
+  @Override public void setEditDecorationIndentions(Indentions indentions) { /* Nothing to do */ }
 
 }
