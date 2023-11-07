@@ -37,7 +37,9 @@ public class SpaltenResizer extends JPanel {
 			@Override public void mouseReleased(MouseEvent e) {
 				if (dragX != null) {
 					int ermoeglichteVeraenderung = container.spaltenbreitenAnpassenNachMausDragging(e.getX(), spalte);
-					editor.addEdit(new UndoableSpaltenbreiteAngepasst(container, ermoeglichteVeraenderung, spalte));
+					if (ermoeglichteVeraenderung != 0) {
+						editor.addEdit(new UndoableSpaltenbreiteAngepasst(container, ermoeglichteVeraenderung, spalte));
+					}
 					dragX = null;
 					editor.vertikalLinieSetzen(0, null);
 				}

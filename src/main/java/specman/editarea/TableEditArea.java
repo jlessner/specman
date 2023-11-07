@@ -3,6 +3,8 @@ package specman.editarea;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
+import specman.SpaltenContainerI;
+import specman.SpaltenResizer;
 import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -32,7 +34,7 @@ import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
  * the panel itself is black and the table cells are placed as children with a little
  * gap between them. This causes the black panel background to shine through the gaps,
  * creating the impression of lines. */
-public class TableEditArea extends JPanel implements EditArea {
+public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI {
   private static final int BORDER_THICKNESS = 5;
   private static final String TABLELINE_GAP = FORMLAYOUT_GAP;
   private static final String TABLELAYOUT_ROWSPEC = ZEILENLAYOUT_INHALT_SICHTBAR;
@@ -44,9 +46,11 @@ public class TableEditArea extends JPanel implements EditArea {
   private final List<ComponentListener> editAreasComponentListeners = new ArrayList<>();
   private FormLayout tablePanelLayout;
   private JPanel tablePanel;
+  private int tableWidthPercent;
 
   public TableEditArea(int columns, int rows, Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
+    this.tableWidthPercent = 100;
     initPanels(columns, rows);
     addInitialCells(columns, rows);
   }
@@ -70,9 +74,16 @@ public class TableEditArea extends JPanel implements EditArea {
     setBorderByChangetype();
   }
 
+  private int minimumBorderSize() {
+    return (int)((float)BORDER_THICKNESS * (float)Specman.instance().getZoomFactor() / 100f);
+  }
+
   private void setBorderByChangetype() {
-    int borderThickness = (int)((float)BORDER_THICKNESS * (float)Specman.instance().getZoomFactor() / 100f);
-    String outerColumnAndRowSpec = borderThickness + "px," + ZEILENLAYOUT_INHALT_SICHTBAR + "," + borderThickness + "px";
+    int borderThickness = minimumBorderSize();
+    float tableWidthFraction = (float)tableWidthPercent / 100;
+    String tableColSpec = "pref:grow(" + tableWidthFraction + ")";
+    String rightGapColSpec = borderThickness + "px:grow(" + (1 - tableWidthFraction) + ")";
+    String outerColumnAndRowSpec = borderThickness + "px," + tableColSpec + "," + rightGapColSpec;
     FormLayout areaLayout = new FormLayout(outerColumnAndRowSpec, outerColumnAndRowSpec);
     setLayout(areaLayout);
     setBackground(aenderungsart.toBackgroundColor());
@@ -137,6 +148,7 @@ public class TableEditArea extends JPanel implements EditArea {
 
   private void createTablePanelLayout(int columns, int rows) {
     String columnSpecs = TABLELINE_GAP;
+    //columnSpecs += ",pref:grow(0.2)," + TABLELINE_GAP;
     for (int c = 0; c < columns; c++) {
       columnSpecs += "," + TABLELAYOUT_COLSPEC + "," + TABLELINE_GAP;
     }
@@ -146,6 +158,7 @@ public class TableEditArea extends JPanel implements EditArea {
     }
     tablePanelLayout = new FormLayout(columnSpecs, rowSpecs);
     tablePanel.setLayout(tablePanelLayout);
+    tablePanel.add(new SpaltenResizer(this, Specman.instance()), CC.xywh(1 + columns * 2, 1, 1, rows * 2));
   }
 
   @Override
@@ -163,7 +176,7 @@ public class TableEditArea extends JPanel implements EditArea {
         .collect(Collectors.toList());
       cellsModel.add(rowModel);
     }
-    return new TableEditAreaModel_V001(cellsModel, aenderungsart);
+    return new TableEditAreaModel_V001(cellsModel, tableWidthPercent, aenderungsart);
   }
 
   @Override
@@ -221,4 +234,32 @@ public class TableEditArea extends JPanel implements EditArea {
   @Override public String getText() { return "table"; }
   @Override public void setEditDecorationIndentions(Indentions indentions) { /* Nothing to do */ }
 
+  @Override
+  public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
+    if (spalte == 0) {
+      return updateTableWidthPercentage(vergroesserung);
+    }
+    return 0;
+  }
+
+  private int updateTableWidthPercentage(int vergroesserung) {
+    if (vergroesserung != 0) {
+      int currentTablePanelWidth = tablePanel.getWidth();
+      int maximumTablePanelWidth = getWidth() - 2 * minimumBorderSize();
+      if (currentTablePanelWidth + vergroesserung < 0) {
+        // Dragging too far to the left is ignored
+        return 0;
+      }
+      if (currentTablePanelWidth + vergroesserung > maximumTablePanelWidth) {
+        // Dragging to the right exceeding the maximum available space is
+        // interpreted as: bring the table back to 100% width
+        vergroesserung = maximumTablePanelWidth - currentTablePanelWidth;
+      }
+      float newTablePanelWidth = currentTablePanelWidth + vergroesserung;
+      tableWidthPercent = (int)(newTablePanelWidth / maximumTablePanelWidth * 100);
+      setBorderByChangetype();
+      revalidate();
+    }
+    return vergroesserung;
+  }
 }
