@@ -3,6 +3,7 @@ package specman.editarea;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
+import specman.EditorI;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +39,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   private static final String TABLELINE_GAP = FORMLAYOUT_GAP;
   private static final String TABLELAYOUT_ROWSPEC = ZEILENLAYOUT_INHALT_SICHTBAR;
   private static final String TABLELAYOUT_COLSPEC = "pref:grow";
+  private static final int WHOLETABLE_COLUMN_INDICATOR = -1;
 
   private List<List<EditContainer>> cells = new ArrayList<>();
   private Aenderungsart aenderungsart;
@@ -45,6 +48,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   private FormLayout tablePanelLayout;
   private JPanel tablePanel;
   private int tableWidthPercent;
+  private List<Integer> columnsWidthPercent;
 
   public TableEditArea(int columns, int rows, Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
@@ -56,6 +60,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   public TableEditArea(TableEditAreaModel_V001 model) {
     this.aenderungsart = model.aenderungsart;
     this.tableWidthPercent = model.tableWidthPercent;
+    this.columnsWidthPercent = model.columnsWidthPercent;
     int rows = model.cells.size();
     int columns = model.cells.get(0).size();
     initPanels(columns, rows);
@@ -69,7 +74,20 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     tablePanel = new JPanel();
     tablePanel.setBackground(DIAGRAMM_LINE_COLOR);
     createTablePanelLayout(columns, rows);
+    createColumnResizers(columns, rows);
     refreshBorderSpaceGeometricsAndColor();
+  }
+
+  private void createColumnResizers(int columns, int rows) {
+    EditorI editor = Specman.instance();
+    int resizerHeight = rows * 2;
+    // Resizer for the whole table
+    tablePanel.add(new SpaltenResizer(this, WHOLETABLE_COLUMN_INDICATOR, editor), CC.xywh(1 + columns * 2, 1, 1, resizerHeight));
+
+    // Resizers for all columns except the last one
+    for (int c = 0; c < columns-1; c++) {
+      tablePanel.add(new SpaltenResizer(this, c, editor), CC.xywh(3 + c * 2, 1, 1, resizerHeight));
+    }
   }
 
   private int minimumBorderSize() {
@@ -148,7 +166,10 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     String columnSpecs = TABLELINE_GAP;
     //columnSpecs += ",pref:grow(0.2)," + TABLELINE_GAP;
     for (int c = 0; c < columns; c++) {
-      columnSpecs += "," + TABLELAYOUT_COLSPEC + "," + TABLELINE_GAP;
+      String colspec = columnsWidthPercent != null
+        ? "pref:grow(" + (float)columnsWidthPercent.get(c) / 100 + ")"
+        : TABLELAYOUT_COLSPEC;
+      columnSpecs += "," + colspec + "," + TABLELINE_GAP;
     }
     String rowSpecs = TABLELINE_GAP;
     for (int r = 0; r < rows; r++) {
@@ -156,7 +177,6 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     }
     tablePanelLayout = new FormLayout(columnSpecs, rowSpecs);
     tablePanel.setLayout(tablePanelLayout);
-    tablePanel.add(new SpaltenResizer(this, Specman.instance()), CC.xywh(1 + columns * 2, 1, 1, rows * 2));
   }
 
   @Override
@@ -174,7 +194,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
         .collect(Collectors.toList());
       cellsModel.add(rowModel);
     }
-    return new TableEditAreaModel_V001(cellsModel, tableWidthPercent, aenderungsart);
+    return new TableEditAreaModel_V001(cellsModel, tableWidthPercent, columnsWidthPercent, aenderungsart);
   }
 
   @Override
@@ -234,30 +254,78 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   @Override
   public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
-    if (spalte == 0) {
-      return updateTableWidthPercentage(vergroesserung);
+    if (vergroesserung != 0) {
+      return spalte == WHOLETABLE_COLUMN_INDICATOR
+        ? updateTableWidthPercentage(vergroesserung)
+        : updateColumnsWidthPercentage(vergroesserung, spalte);
     }
-    return 0;
+    return vergroesserung;
+  }
+
+  /** Widens the column of intrest by the number of passed pixels (respectively
+   * shrink it by a negative value. The number of pixels is translated to a difference
+   * in column width percentages, so that the resulting ratio remains the same if the
+   * edit area or the table width is resized later on.
+   * <p>
+   * The behaviour is the same as it is known from MS Word: the overall width of the
+   * table remains the same and the amount of groth for the column of interest is
+   * taken from the following column. We can be shure that there is a following column
+   * as the resizer at the right edge of the table is used to change the whole table
+   * width. */
+  private int updateColumnsWidthPercentage(int vergroesserung, int spalte) {
+    Integer[] columnWidths = cells.get(0)
+      .stream()
+      .map(editContainer -> editContainer.getWidth())
+      .toArray(Integer[]::new);
+    if (columnWidths[spalte] + vergroesserung < 0) {
+      // Dragging too far to the left is ignored
+      return 0;
+    }
+    if (vergroesserung > columnWidths[spalte+1]) {
+      // Dragging to the right exceeding the following column's width is ignored
+      return 0;
+    }
+    columnWidths[spalte] += vergroesserung;
+    columnWidths[spalte+1] -= vergroesserung;
+    int columnsWidthSum = Arrays.stream(columnWidths).mapToInt(cw -> cw).sum();
+    columnsWidthPercent = Arrays.stream(columnWidths)
+      .map(cw -> (int)((float)cw / columnsWidthSum * 100))
+      .collect(Collectors.toList());
+    System.out.println(columnsWidthPercent);
+    createTablePanelLayout(columnWidths.length, cells.size());
+    reassignCellsAndResizers(columnWidths.length, cells.size());
+    revalidate();
+    return vergroesserung;
+  }
+
+  private void reassignCellsAndResizers(int columns, int rows) {
+    tablePanel.removeAll();
+    createColumnResizers(columns, rows);
+    for (int r = 0; r < rows; r++) {
+      List<EditContainer> row = cells.get(r);
+      for (int c = 0; c < columns; c++) {
+        EditContainer cell = row.get(c);
+        tablePanel.add(cell, CC.xy(2 + c * 2, 2 + r * 2));
+      }
+    }
   }
 
   private int updateTableWidthPercentage(int vergroesserung) {
-    if (vergroesserung != 0) {
-      int currentTablePanelWidth = tablePanel.getWidth();
-      int maximumTablePanelWidth = getWidth() - 2 * minimumBorderSize();
-      if (currentTablePanelWidth + vergroesserung < 0) {
-        // Dragging too far to the left is ignored
-        return 0;
-      }
-      if (currentTablePanelWidth + vergroesserung > maximumTablePanelWidth) {
-        // Dragging to the right exceeding the maximum available space is
-        // interpreted as: bring the table back to 100% width
-        vergroesserung = maximumTablePanelWidth - currentTablePanelWidth;
-      }
-      float newTablePanelWidth = currentTablePanelWidth + vergroesserung;
-      tableWidthPercent = (int)(newTablePanelWidth / maximumTablePanelWidth * 100);
-      refreshBorderSpaceGeometricsAndColor();
-      revalidate();
+    int currentTablePanelWidth = tablePanel.getWidth();
+    int maximumTablePanelWidth = getWidth() - 2 * minimumBorderSize();
+    if (currentTablePanelWidth + vergroesserung < 0) {
+      // Dragging too far to the left is ignored
+      return 0;
     }
+    if (currentTablePanelWidth + vergroesserung > maximumTablePanelWidth) {
+      // Dragging to the right exceeding the maximum available space is
+      // interpreted as: bring the table back to 100% width
+      vergroesserung = maximumTablePanelWidth - currentTablePanelWidth;
+    }
+    float newTablePanelWidth = currentTablePanelWidth + vergroesserung;
+    tableWidthPercent = (int)(newTablePanelWidth / maximumTablePanelWidth * 100);
+    refreshBorderSpaceGeometricsAndColor();
+    revalidate();
     return vergroesserung;
   }
 }
