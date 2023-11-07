@@ -55,10 +55,10 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   public TableEditArea(TableEditAreaModel_V001 model) {
     this.aenderungsart = model.aenderungsart;
-    setBackground(aenderungsart.toBackgroundColor());
+    this.tableWidthPercent = model.tableWidthPercent;
     int rows = model.cells.size();
     int columns = model.cells.get(0).size();
-    createTablePanelLayout(columns, rows);
+    initPanels(columns, rows);
     addCells(model.cells);
     setEditBackground(null);
   }
