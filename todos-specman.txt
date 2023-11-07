@@ -1,6 +1,5 @@
 Abschluss für Go-Live
 - Tabellen als separate Elemente analog Bilder
-  - Anpassung von Spaltenbreiten
   - Springen in die nächste Zelle durch drücken von TAB
   - Hinzufügen von Zeilen
     - Durch Drücken von TAB in der letzten Zelle?
@@ -11,6 +10,7 @@ Abschluss für Go-Live
   - Noch zu implementieren:
     - UndoableTableRemoved
     - UndoableTableRemovedMarkiert
+  x Anpassung von Spaltenbreiten
 
 - PDF-Export
   - Nicht essenziell aber wäre schöner: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts

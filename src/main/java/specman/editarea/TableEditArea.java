@@ -291,7 +291,6 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     columnsWidthPercent = Arrays.stream(columnWidths)
       .map(cw -> (int)((float)cw / columnsWidthSum * 100))
       .collect(Collectors.toList());
-    System.out.println(columnsWidthPercent);
     createTablePanelLayout(columnWidths.length, cells.size());
     reassignCellsAndResizers(columnWidths.length, cells.size());
     revalidate();
