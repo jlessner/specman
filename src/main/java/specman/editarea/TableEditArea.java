@@ -69,14 +69,14 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     tablePanel = new JPanel();
     tablePanel.setBackground(DIAGRAMM_LINE_COLOR);
     createTablePanelLayout(columns, rows);
-    refreshBorderGeometricsAndColor();
+    refreshBorderSpaceGeometricsAndColor();
   }
 
   private int minimumBorderSize() {
     return (int)((float)BORDER_THICKNESS * (float)Specman.instance().getZoomFactor() / 100f);
   }
 
-  private void refreshBorderGeometricsAndColor() {
+  private void refreshBorderSpaceGeometricsAndColor() {
     int borderThickness = minimumBorderSize();
     float tableWidthFraction = (float)tableWidthPercent / 100;
     String tableColSpec = "pref:grow(" + tableWidthFraction + ")";
@@ -94,7 +94,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   @Override
   public void setEditBackground(Color bg) {
     cellstream().forEach(cell -> cell.setBackground(aenderungsart.toBackgroundColor()));
-    refreshBorderGeometricsAndColor();
+    refreshBorderSpaceGeometricsAndColor();
   }
 
   @Override
@@ -180,7 +180,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   @Override
   public void skalieren(int prozentNeu, int prozentAktuell) {
     cellstream().forEach(cell -> cell.skalieren(prozentNeu, prozentAktuell));
-    refreshBorderGeometricsAndColor();
+    refreshBorderSpaceGeometricsAndColor();
   }
 
   @Override
@@ -255,7 +255,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       }
       float newTablePanelWidth = currentTablePanelWidth + vergroesserung;
       tableWidthPercent = (int)(newTablePanelWidth / maximumTablePanelWidth * 100);
-      refreshBorderGeometricsAndColor();
+      refreshBorderSpaceGeometricsAndColor();
       revalidate();
     }
     return vergroesserung;
