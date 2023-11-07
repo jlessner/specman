@@ -27,21 +27,18 @@ public class TableDialog extends JDialog {
     private static final Icon icon = UIUtils.getIcon("resources/images/x32/", "table.png");
     private static final String title = "Insert table...";
     private static final String desc = "Insert a table";
-    private JTextComponent editor;
     private JTextField columns = new JTextField("3");
     private JTextField rows = new JTextField("2");
     private JButton ok = new JButton(i18n.str("ok"));
     private JButton cancel = new JButton(i18n.str("cancel"));
 
-    public TableDialog(Frame parent, JTextComponent ed) {
+    public TableDialog(Frame parent) {
         super(parent, title);
-        this.editor = ed;
         this.init();
     }
 
-    public TableDialog(Dialog parent, JTextComponent ed) {
+    public TableDialog(Dialog parent) {
         super(parent, title);
-        this.editor = ed;
         this.init();
     }
 

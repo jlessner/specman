@@ -22,10 +22,10 @@ public class TableAction extends BasicEditAction {
     protected void doEdit(ActionEvent actionEvent, JEditorPane ed) {
         Component c = SwingUtilities.getWindowAncestor(ed);
         if (c instanceof Frame) {
-            this.dialog = new TableDialog((Frame) c, ed);
+            this.dialog = new TableDialog((Frame) c);
         }
         else if (c instanceof Dialog) {
-            this.dialog = new TableDialog((Dialog) c, ed);
+            this.dialog = new TableDialog((Dialog) c);
         }
         else {
             return;
