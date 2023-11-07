@@ -1,4 +1,4 @@
-package net.atlanticbb.tantlinger.ui.text.dialogs;
+package net.atlanticbb.tantlinger.ui.text.actions;
 
 import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.HeaderPanel;

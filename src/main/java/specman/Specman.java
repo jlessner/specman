@@ -680,9 +680,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		}
 	}
 
-	public void addTable() {
+	public void addTable(int columns, int rows) {
 		if (lastFocusedTextArea != null) {
-			lastFocusedTextArea.addTable(3, 3, initialArt());
+			lastFocusedTextArea.addTable(columns, rows, initialArt());
 			diagrammAktualisieren(null);
 		}
 	}

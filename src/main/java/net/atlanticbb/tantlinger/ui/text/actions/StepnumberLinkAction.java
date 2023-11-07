@@ -1,7 +1,6 @@
 package net.atlanticbb.tantlinger.ui.text.actions;
 
 import net.atlanticbb.tantlinger.ui.UIUtils;
-import net.atlanticbb.tantlinger.ui.text.dialogs.StepnumberLinkDialog;
 
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;

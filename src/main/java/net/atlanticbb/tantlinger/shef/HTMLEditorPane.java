@@ -18,7 +18,6 @@ import net.atlanticbb.tantlinger.ui.text.actions.HTMLHorizontalRuleAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLInlineAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLLineBreakAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLLinkAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLTableAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLTextEditAction;
 import net.atlanticbb.tantlinger.ui.text.actions.ImageAction;
 import net.atlanticbb.tantlinger.ui.text.actions.SpecialCharAction;

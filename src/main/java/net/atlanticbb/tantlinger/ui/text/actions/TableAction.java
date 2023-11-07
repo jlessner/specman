@@ -1,15 +1,16 @@
 package net.atlanticbb.tantlinger.ui.text.actions;
 
 import net.atlanticbb.tantlinger.ui.UIUtils;
+import net.atlanticbb.tantlinger.ui.text.actions.BasicEditAction;
 import specman.Specman;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.Serial;
 
 public class TableAction extends BasicEditAction {
-    @Serial
-    private static final long serialVersionUID = 1L;
+    private TableDialog dialog;
 
     public TableAction() {
         super(i18n.str("table_"));
@@ -18,7 +19,25 @@ public class TableAction extends BasicEditAction {
     }
 
     @Override
-    protected void doEdit(ActionEvent actionEvent, JEditorPane jEditorPane) {
-        Specman.instance().addTable();
+    protected void doEdit(ActionEvent actionEvent, JEditorPane ed) {
+        Component c = SwingUtilities.getWindowAncestor(ed);
+        if (c instanceof Frame) {
+            this.dialog = new TableDialog((Frame) c, ed);
+        }
+        else if (c instanceof Dialog) {
+            this.dialog = new TableDialog((Dialog) c, ed);
+        }
+        else {
+            return;
+        }
+
+        if (!this.dialog.isVisible()) {
+            this.dialog.setLocationRelativeTo(c);
+            this.dialog.setVisible(true);
+        }
+
     }
+
+
+    //Specman.instance().addTable();
 }

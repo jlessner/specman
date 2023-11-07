@@ -137,14 +137,14 @@ public class TableEditArea extends JPanel implements EditArea {
 
   private void createTablePanelLayout(int columns, int rows) {
     String columnSpecs = TABLELINE_GAP;
-    for (int i = 0; i < columns; i++) {
+    for (int c = 0; c < columns; c++) {
       columnSpecs += "," + TABLELAYOUT_COLSPEC + "," + TABLELINE_GAP;
     }
     String rowSpecs = TABLELINE_GAP;
-    for (int i = 0; i < columns; i++) {
+    for (int r = 0; r < rows; r++) {
       rowSpecs += "," + TABLELAYOUT_ROWSPEC + "," + TABLELINE_GAP;
     }
-    tablePanelLayout = new FormLayout(rowSpecs, columnSpecs);
+    tablePanelLayout = new FormLayout(columnSpecs, rowSpecs);
     tablePanel.setLayout(tablePanelLayout);
   }
 
