@@ -10,10 +10,8 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.pdf.Shape;
-import specman.pdf.ShapeImage;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
@@ -71,14 +69,14 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     tablePanel = new JPanel();
     tablePanel.setBackground(DIAGRAMM_LINE_COLOR);
     createTablePanelLayout(columns, rows);
-    setBorderByChangetype();
+    refreshBorderGeometricsAndColor();
   }
 
   private int minimumBorderSize() {
     return (int)((float)BORDER_THICKNESS * (float)Specman.instance().getZoomFactor() / 100f);
   }
 
-  private void setBorderByChangetype() {
+  private void refreshBorderGeometricsAndColor() {
     int borderThickness = minimumBorderSize();
     float tableWidthFraction = (float)tableWidthPercent / 100;
     String tableColSpec = "pref:grow(" + tableWidthFraction + ")";
@@ -96,7 +94,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   @Override
   public void setEditBackground(Color bg) {
     cellstream().forEach(cell -> cell.setBackground(aenderungsart.toBackgroundColor()));
-    setBorderByChangetype();
+    refreshBorderGeometricsAndColor();
   }
 
   @Override
@@ -181,8 +179,8 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   @Override
   public void skalieren(int prozentNeu, int prozentAktuell) {
-    cellstream().forEach(cell -> skalieren(prozentNeu, prozentAktuell));
-    setBorderByChangetype();
+    cellstream().forEach(cell -> cell.skalieren(prozentNeu, prozentAktuell));
+    refreshBorderGeometricsAndColor();
   }
 
   @Override
@@ -257,7 +255,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       }
       float newTablePanelWidth = currentTablePanelWidth + vergroesserung;
       tableWidthPercent = (int)(newTablePanelWidth / maximumTablePanelWidth * 100);
-      setBorderByChangetype();
+      refreshBorderGeometricsAndColor();
       revalidate();
     }
     return vergroesserung;
