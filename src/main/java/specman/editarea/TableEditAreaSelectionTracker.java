@@ -31,11 +31,14 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
     editArea.addMouseMotionListener(this);
   }
 
-  @Override public void mouseClicked(MouseEvent e) {}
   @Override public void mousePressed(MouseEvent e) {}
   @Override public void mouseReleased(MouseEvent e) {}
   @Override public void mouseEntered(MouseEvent e) {}
   @Override public void mouseDragged(MouseEvent e) {}
+
+  @Override public void mouseClicked(MouseEvent e) {
+    System.out.println(selectionOperation + " " + selectionIndex);
+  }
 
   @Override
   public void mouseExited(MouseEvent e) {
@@ -75,55 +78,61 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
   }
 
   private Rectangle xToTableColumnGapSelection(Point mousePos) {
-    final int x = mousePos.x - tablePanel.getX();
-    List<EditContainer> leadingRow = editArea.cells.get(0);
-    EditContainer columnLeader = null;
-    for (int c = 0; c < leadingRow.size(); c++) {
-      columnLeader = leadingRow.get(c);
-      Rectangle selection = xToTableColumnGapSelection(x, columnLeader.getX() - LINIENBREITE, columnLeader);
-      if (selection != null) {
-        selectionIndex = c;
-        return selection;
+    if (mousePos.y < tablePanel.getY()) {
+      final int x = mousePos.x - tablePanel.getX();
+      List<EditContainer> leadingRow = editArea.cells.get(0);
+      EditContainer columnLeader = null;
+      for (int c = 0; c < leadingRow.size(); c++) {
+        columnLeader = leadingRow.get(c);
+        Rectangle selection = xToTableColumnGapSelection(x, columnLeader.getX() - LINIENBREITE, columnLeader);
+        if (selection != null) {
+          selectionIndex = c;
+          return selection;
+        }
       }
-    }
 
-    Rectangle selection = xToTableColumnGapSelection(x, columnLeader.getX() + columnLeader.getWidth(), columnLeader);
-    if (selection != null) {
-      selectionIndex = leadingRow.size();
+      Rectangle selection = xToTableColumnGapSelection(x, columnLeader.getX() + columnLeader.getWidth(), columnLeader);
+      if (selection != null) {
+        selectionIndex = leadingRow.size();
+      }
+      return selection;
     }
-    return selection;
+    return null;
   }
 
   private Rectangle xToTableColumnGapSelection(int x, int xGapLeft, EditContainer cell) {
     if (x >= xGapLeft && x <= xGapLeft + SELEECTION_GAP_SIZE) {
-      selectionOperation = Operation.DeleteColumn;
+      selectionOperation = Operation.AddColumn;
       return new Rectangle(xGapLeft + tablePanel.getX(), tablePanel.getY(), SELEECTION_GAP_SIZE, tablePanel.getHeight());
     }
     return null;
   }
 
   private Rectangle yToTableRowGabSelection(Point mousePos) {
-    final int y = mousePos.y - tablePanel.getY();
-    EditContainer rowLeader = null;
-    for (int r = 0; r < editArea.cells.size(); r++) {
-      rowLeader = editArea.cells.get(r).get(0);
-      Rectangle selection = yToTableRowGapSelection(y, rowLeader.getY() - LINIENBREITE, rowLeader);
-      if (selection != null) {
-        selectionIndex = r;
-        return selection;
+    if (mousePos.x < tablePanel.getX()) {
+      final int y = mousePos.y - tablePanel.getY();
+      EditContainer rowLeader = null;
+      for (int r = 0; r < editArea.cells.size(); r++) {
+        rowLeader = editArea.cells.get(r).get(0);
+        Rectangle selection = yToTableRowGapSelection(y, rowLeader.getY() - LINIENBREITE, rowLeader);
+        if (selection != null) {
+          selectionIndex = r;
+          return selection;
+        }
       }
-    }
 
-    Rectangle selection = yToTableRowGapSelection(y, rowLeader.getY() + rowLeader.getHeight(), rowLeader);
-    if (selection != null) {
-      selectionIndex = editArea.cells.size();
+      Rectangle selection = yToTableRowGapSelection(y, rowLeader.getY() + rowLeader.getHeight(), rowLeader);
+      if (selection != null) {
+        selectionIndex = editArea.cells.size();
+      }
+      return selection;
     }
-    return selection;
+    return null;
   }
 
   private Rectangle yToTableRowGapSelection(int y, int yGapTop, EditContainer rowLeader) {
     if (y >= yGapTop && y <= yGapTop + SELEECTION_GAP_SIZE) {
-      selectionOperation = Operation.DeleteRow;
+      selectionOperation = Operation.AddRow;
       return new Rectangle(tablePanel.getX(), yGapTop + tablePanel.getY(), tablePanel.getWidth(), SELEECTION_GAP_SIZE);
     }
     return null;
