@@ -22,17 +22,11 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
     editArea.addMouseMotionListener(this);
   }
 
-  @Override
-  public void mouseClicked(MouseEvent e) {}
-
-  @Override
-  public void mousePressed(MouseEvent e) {}
-
-  @Override
-  public void mouseReleased(MouseEvent e) {}
-
-  @Override
-  public void mouseEntered(MouseEvent e) {}
+  @Override public void mouseClicked(MouseEvent e) {}
+  @Override public void mousePressed(MouseEvent e) {}
+  @Override public void mouseReleased(MouseEvent e) {}
+  @Override public void mouseEntered(MouseEvent e) {}
+  @Override public void mouseDragged(MouseEvent e) {}
 
   @Override
   public void mouseExited(MouseEvent e) {
@@ -41,26 +35,11 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
   }
 
   @Override
-  public void mouseDragged(MouseEvent e) {}
-
-  @Override
   public void mouseMoved(MouseEvent e) {
     Rectangle selectionUpdate = null;
-    EditContainer rowLeader = yToTableRow(e.getPoint());
-    if (rowLeader != null) {
-      selectionUpdate = new Rectangle(
-        tablePanel.getX(),
-        tablePanel.getY() + rowLeader.getY(),
-        tablePanel.getWidth(),
-        rowLeader.getHeight());
-    }
-    EditContainer columnLeader = xToTableColumn(e.getPoint());
-    if (columnLeader != null) {
-      selectionUpdate = new Rectangle(
-        tablePanel.getX() + columnLeader.getX(),
-        tablePanel.getY(),
-        columnLeader.getWidth(),
-        tablePanel.getHeight());
+    selectionUpdate = yToTableRowSelection(e.getPoint());
+    if (selectionUpdate == null) {
+      selectionUpdate = xToTableColumnSelection(e.getPoint());
     }
     if (!Objects.equals(selectionHighlight, selectionUpdate)) {
       selectionHighlight = selectionUpdate;
@@ -68,33 +47,47 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
     }
   }
 
-  private EditContainer xToTableColumn(Point mousePos) {
-    if (mousePos.y >= tablePanel.getY()) {
-      return null;
+  private Rectangle xToTableColumnSelection(Point mousePos) {
+    if (mousePos.y < tablePanel.getY()) {
+      final int x = mousePos.x - tablePanel.getX();
+      EditContainer columnLeader = editArea.cells.get(0)
+        .stream()
+        .filter(cell -> isAtXPosition(x, cell))
+        .findFirst()
+        .orElse(null);
+      if (columnLeader != null) {
+        return new Rectangle(
+          tablePanel.getX() + columnLeader.getX(),
+          tablePanel.getY(),
+          columnLeader.getWidth(),
+          tablePanel.getHeight());
+      }
     }
-    final int x = mousePos.x - tablePanel.getX();
-    return editArea.cells.get(0)
-      .stream()
-      .filter(cell -> isAtXPosition(x, cell))
-      .findFirst()
-      .orElse(null);
+    return null;
   }
 
   private boolean isAtXPosition(int x, EditContainer cell) {
     return cell.getX() <= x && cell.getX() + cell.getWidth() >= x;
   }
 
-  private EditContainer yToTableRow(Point mousePos) {
-    if (mousePos.x >= tablePanel.getX()) {
-      return null;
+  private Rectangle yToTableRowSelection(Point mousePos) {
+    if (mousePos.x < tablePanel.getX()) {
+      final int y = mousePos.y - tablePanel.getY();
+      EditContainer rowLeader = editArea.cells
+        .stream()
+        .filter(row -> isAtYPosition(y, row))
+        .map(row -> row.get(0))
+        .findFirst()
+        .orElse(null);
+      if (rowLeader != null) {
+        return new Rectangle(
+          tablePanel.getX(),
+          tablePanel.getY() + rowLeader.getY(),
+          tablePanel.getWidth(),
+          rowLeader.getHeight());
+      }
     }
-    final int y = mousePos.y - tablePanel.getY();
-    return editArea.cells
-      .stream()
-      .filter(row -> isAtYPosition(y, row))
-      .map(row -> row.get(0))
-      .findFirst()
-      .orElse(null);
+    return null;
   }
 
   private boolean isAtYPosition(int y, List<EditContainer> row) {
