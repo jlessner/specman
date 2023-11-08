@@ -35,7 +35,7 @@ import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
  * gap between them. This causes the black panel background to shine through the gaps,
  * creating the impression of lines. */
 public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI {
-  private static final int BORDER_THICKNESS = 5;
+  private static final int BORDER_THICKNESS = 7;
   private static final String TABLELINE_GAP = FORMLAYOUT_GAP;
   private static final String TABLELAYOUT_ROWSPEC = ZEILENLAYOUT_INHALT_SICHTBAR;
   private static final String TABLELAYOUT_COLSPEC = "pref:grow";
