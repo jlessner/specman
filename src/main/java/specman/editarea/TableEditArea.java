@@ -41,14 +41,15 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   private static final String TABLELAYOUT_COLSPEC = "pref:grow";
   private static final int WHOLETABLE_COLUMN_INDICATOR = -1;
 
-  private List<List<EditContainer>> cells = new ArrayList<>();
   private Aenderungsart aenderungsart;
   private final List<FocusListener> editAreasFocusListeners = new ArrayList<>();
   private final List<ComponentListener> editAreasComponentListeners = new ArrayList<>();
   private FormLayout tablePanelLayout;
-  private JPanel tablePanel;
   private int tableWidthPercent;
   private List<Integer> columnsWidthPercent;
+  private TableEditAreaSelectionTracker selectionTracker;
+  JPanel tablePanel;
+  List<List<EditContainer>> cells = new ArrayList<>();
 
   public TableEditArea(int columns, int rows, Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
@@ -76,6 +77,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     createTablePanelLayout(columns, rows);
     createColumnResizers(columns, rows);
     refreshBorderSpaceGeometricsAndColor();
+    selectionTracker = new TableEditAreaSelectionTracker(this);
   }
 
   private void createColumnResizers(int columns, int rows) {
@@ -326,5 +328,11 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     refreshBorderSpaceGeometricsAndColor();
     revalidate();
     return vergroesserung;
+  }
+
+  @Override
+  public void paint(Graphics g) {
+    super.paint(g);
+    selectionTracker.paintSelection(g);
   }
 }

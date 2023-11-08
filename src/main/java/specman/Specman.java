@@ -166,7 +166,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		};
 
 		hauptlayout = new FormLayout(
-				"10px, " + INITIAL_DIAGRAMM_WIDTH + "px, " + AbstractSchrittView.FORMLAYOUT_GAP,
+				"20px, " + INITIAL_DIAGRAMM_WIDTH + "px, " + AbstractSchrittView.FORMLAYOUT_GAP,
 				"10px, fill:pref, fill:default, fill:pref");
 		arbeitsbereich.setLayout(hauptlayout);
 		arbeitsbereich.setBackground(new Color(247, 247, 253));
