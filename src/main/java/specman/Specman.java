@@ -113,6 +113,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	TextEditArea lastFocusedTextArea;
 	public SchrittSequenzView hauptSequenz;
+	JPanel contentPane;
 	JPanel arbeitsbereich;
 	JPanel hauptSequenzContainer;
 	SpaltenResizer breitenAnpasser;
@@ -149,7 +150,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		scrollPane = new JScrollPane();
 		//TODO
 		scrollPane.addMouseWheelListener(new DragMouseAdapter(this));
-		getContentPane().add(scrollPane, CC.xy(2, 3));
+		contentPane.add(scrollPane, CC.xy(2, 3));
 		// ToDo Sidebar change from getContentPane().add(scrollPane, CC.xy(1, 3));
 
 		arbeitsbereich = new JPanel() {
@@ -190,7 +191,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		// Falls jemand nicht aufgepasst hat und beim Initialisieren irgendwelche Funktionen verwendet hat,
 		// die schon etwas im Undo-Manager hinterlassen.
 		undoManager.discardAllEdits();
-		this.setGlassPane(new GlassPane((SwingUtilities.convertPoint(this.getContentPane(), 0, 0,this).y)-getJMenuBar().getHeight()));
+		this.setGlassPane(new GlassPane((SwingUtilities.convertPoint(contentPane, 0, 0,this).y)-getJMenuBar().getHeight()));
 
 		configureKeyboardManager();
 		setupQuestionDialogWhenClosingWithoutSaving();
@@ -917,7 +918,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		exitMenuItem = new JMenuItem("Beenden");
 		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK + KeyEvent.SHIFT_DOWN_MASK));
 		//======== this ========
-		Container contentPane = getContentPane();
+		contentPane = new JPanel();
+		setContentPane(contentPane);
 		contentPane.setLayout(new FormLayout("pref, default:grow", "default, default, fill:10px:grow")); //ToDo Sidebar added "pref"
 
 		//======== toolBar ========
@@ -1014,7 +1016,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		menuBar.add(shefEditorPane.getInsertMenu());
 
 		setJMenuBar(menuBar);
-		getContentPane().add(shefEditorPane.getFormatToolBar(), CC.xywh(1, 2, 2, 1));
+		contentPane.add(shefEditorPane.getFormatToolBar(), CC.xywh(1, 2, 2, 1));
 
 	}
 
