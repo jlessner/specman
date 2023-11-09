@@ -28,5 +28,6 @@ public class UndoableEditAreaRemoved extends AbstractUndoableInteraction {
   @Override
   protected void redoEdit() throws EditException {
     editContainer.removeEditAreaByUndoRedo(editArea, trailingTextArea);
+    Specman.instance().diagrammAktualisieren(null);
   }
 }

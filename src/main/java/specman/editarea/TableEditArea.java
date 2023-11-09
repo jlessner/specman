@@ -331,8 +331,16 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   @Override
+  public EditContainer getParent() { return (EditContainer) super.getParent(); }
+
+  @Override
   public void paint(Graphics g) {
     super.paint(g);
     selectionTracker.paintSelection(g);
+  }
+
+  public void remove() {
+    getParent().removeEditArea(this);
+    Specman.instance().diagrammAktualisieren(null);
   }
 }

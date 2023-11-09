@@ -55,6 +55,12 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
 
   @Override public void mouseClicked(MouseEvent e) {
     System.out.println(selectionOperation + " " + selectionIndex);
+    if (selectionOperation != null) {
+      mouseExited(null);
+      switch(selectionOperation) {
+        case RemoveTable -> editArea.remove();
+      }
+    }
   }
 
   @Override

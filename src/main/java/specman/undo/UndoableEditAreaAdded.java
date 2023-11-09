@@ -2,31 +2,32 @@ package specman.undo;
 
 import specman.EditException;
 import specman.Specman;
-import specman.editarea.ImageEditArea;
-import specman.editarea.TextEditArea;
+import specman.editarea.EditArea;
 import specman.editarea.EditContainer;
+import specman.editarea.TableEditArea;
+import specman.editarea.TextEditArea;
 
-public class UndoableImageAdded extends AbstractUndoableInteraction {
+public class UndoableEditAreaAdded extends AbstractUndoableInteraction {
   private final EditContainer editContainer;
-  private final ImageEditArea imageArea;
+  private final EditArea editArea;
   private final TextEditArea initiatingTextArea, cutOffTextArea;
 
-  public UndoableImageAdded(EditContainer editContainer, TextEditArea initiatingTextArea, ImageEditArea imageArea, TextEditArea cutOffTextArea) {
+  public UndoableEditAreaAdded(EditContainer editContainer, TextEditArea initiatingTextArea, EditArea editArea, TextEditArea cutOffTextArea) {
     this.editContainer = editContainer;
-    this.imageArea = imageArea;
+    this.editArea = editArea;
     this.initiatingTextArea = initiatingTextArea;
     this.cutOffTextArea = cutOffTextArea;
   }
 
   @Override
   protected void undoEdit() throws EditException {
-    editContainer.removeEditAreaByUndoRedo(imageArea, cutOffTextArea);
+    editContainer.removeEditAreaByUndoRedo(editArea, cutOffTextArea);
     Specman.instance().diagrammAktualisieren(null);
   }
 
   @Override
   protected void redoEdit() throws EditException {
-    editContainer.addEditAreaByUndoRedo(initiatingTextArea, imageArea, cutOffTextArea);
+    editContainer.addEditAreaByUndoRedo(initiatingTextArea, editArea, cutOffTextArea);
     Specman.instance().diagrammAktualisieren(null);
   }
 }

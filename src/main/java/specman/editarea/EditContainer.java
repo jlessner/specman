@@ -14,9 +14,8 @@ import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.pdf.Shape;
-import specman.undo.UndoableImageAdded;
 import specman.undo.UndoableEditAreaRemoved;
-import specman.undo.UndoableTableAdded;
+import specman.undo.UndoableEditAreaAdded;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.JPanel;
@@ -345,7 +344,7 @@ public class EditContainer extends JPanel {
 			if (cutOffTextArea != null) {
 				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
 			}
-			editor.addEdit(new UndoableTableAdded(this, initiatingTextArea, tableEditArea, cutOffTextArea));
+			editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, tableEditArea, cutOffTextArea));
 		}
 		updateBounds();
 	}
@@ -361,7 +360,7 @@ public class EditContainer extends JPanel {
 			if (cutOffTextArea != null) {
 				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
 			}
-			editor.addEdit(new UndoableImageAdded(this, initiatingTextArea, imageEditArea, cutOffTextArea));
+			editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, imageEditArea, cutOffTextArea));
 		}
 		updateBounds();
 	}
@@ -391,18 +390,18 @@ public class EditContainer extends JPanel {
 		layout.appendRow(RowSpec.decode("0px"));
 	}
 
-	public void removeImage(EditArea editarea) {
+	public void removeEditArea(EditArea editarea) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
 			TextEditArea leadingTextArea = null;
 			TextEditArea trailingTextArea = null;
-			int imageIndex = removeEditArea(editarea);
+			int imageIndex = removeEditAreaComponent(editarea);
 			if (imageIndex > 0) {
 				leadingTextArea = editAreas.get(imageIndex-1).asTextArea();
 				if (editAreas.size() > imageIndex) {
 					trailingTextArea = editAreas.get(imageIndex).asTextArea();
 					if (leadingTextArea != null && trailingTextArea != null) {
-						removeEditArea(trailingTextArea);
+						removeEditAreaComponent(trailingTextArea);
 						leadingTextArea.appendText(trailingTextArea.getText());
 						leadingTextArea.requestFocus();
 					}
@@ -415,15 +414,15 @@ public class EditContainer extends JPanel {
 
 	public void removeEditAreaByUndoRedo(EditArea editArea, TextEditArea cutOffTextArea) {
 		try (UndoRecording ur = Specman.instance().pauseUndo()) {
-			removeEditArea(editArea);
+			removeEditAreaComponent(editArea);
 			if (cutOffTextArea != null) {
-				removeEditArea(cutOffTextArea);
+				removeEditAreaComponent(cutOffTextArea);
 			}
 		}
 		updateBounds();
 	}
 
-	private int removeEditArea(EditArea area) {
+	private int removeEditAreaComponent(EditArea area) {
 		int index = editAreas.indexOf(area);
 		editAreas.remove(area);
 		remove(area.asComponent());

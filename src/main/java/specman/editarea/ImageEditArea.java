@@ -35,7 +35,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -119,7 +118,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
         markAsDeleted();
       }
       else {
-        getParent().removeImage(ImageEditArea.this);
+        getParent().removeEditArea(ImageEditArea.this);
         Specman.instance().diagrammAktualisieren(null);
       }
       e.consume();
@@ -209,7 +208,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
       focusGlass.toDeleted();
     }
     else if (aenderungsart == Aenderungsart.Hinzugefuegt) {
-      getParent().removeImage(this); // Includes recording of required undos
+      getParent().removeEditArea(this); // Includes recording of required undos
     }
   }
 
@@ -259,7 +258,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     if (aenderungsart != null) {
       switch (aenderungsart) {
         case Hinzugefuegt -> updateChangetypeAndDependentStyling(null);
-        case Geloescht -> getParent().removeImage(this);
+        case Geloescht -> getParent().removeEditArea(this);
       }
       changesMade++;
     }
@@ -271,7 +270,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     int changesReverted = 0;
     if (aenderungsart != null) {
       switch(aenderungsart) {
-        case Hinzugefuegt -> getParent().removeImage(this);
+        case Hinzugefuegt -> getParent().removeEditArea(this);
         case Geloescht -> updateChangetypeAndDependentStyling(null);
       }
       changesReverted++;
