@@ -51,6 +51,10 @@ Abschluss für Go-Live
 
 
 Bugs fixen
+- Undo/Redo-Problem in Tabellen
+    Vorbereitung: Tabelle hinzufügen, Zeile hinzufügen, darin Text eintippen, Tabelle löschen
+    Den gesamten Vorgang über Undos zurücknehmen - klappt alles
+    Den gesamten Vorgang über Redos wieder herstellen - die Wiederherstellung des Texts klappt nicht
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
