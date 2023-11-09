@@ -59,6 +59,8 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
       mouseExited(null);
       switch(selectionOperation) {
         case RemoveTable -> editArea.remove();
+        case AddRow -> editArea.addRow(selectionIndex);
+        case RemoveRow -> editArea.removeRow(selectionIndex);
       }
     }
   }

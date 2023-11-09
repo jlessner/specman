@@ -11,6 +11,10 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.pdf.Shape;
+import specman.undo.UndoableEditAreaAdded;
+import specman.undo.UndoableRowAdded;
+import specman.undo.UndoableRowRemoved;
+import specman.undo.manager.UndoRecording;
 
 import javax.swing.*;
 import java.awt.*;
@@ -293,14 +297,20 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     columnsWidthPercent = Arrays.stream(columnWidths)
       .map(cw -> (int)((float)cw / columnsWidthSum * 100))
       .collect(Collectors.toList());
-    createTablePanelLayout(columnWidths.length, cells.size());
-    reassignCellsAndResizers(columnWidths.length, cells.size());
-    revalidate();
+    recomputeLayout();
     return vergroesserung;
   }
 
-  private void reassignCellsAndResizers(int columns, int rows) {
+  private void recomputeLayout() {
+    createTablePanelLayout(numColumns(), numRows());
+    reassignCellsAndResizers();
+    revalidate();
+  }
+
+  private void reassignCellsAndResizers() {
     tablePanel.removeAll();
+    int columns = numColumns();
+    int rows = numRows();
     createColumnResizers(columns, rows);
     for (int r = 0; r < rows; r++) {
       List<EditContainer> row = cells.get(r);
@@ -339,8 +349,49 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     selectionTracker.paintSelection(g);
   }
 
+  int numColumns() { return cells.get(0).size(); }
+  int numRows() { return cells.size(); }
+
   public void remove() {
-    getParent().removeEditArea(this);
+    getParent().removeEditArea(this); // Already includes undo recording
     Specman.instance().diagrammAktualisieren(null);
+  }
+
+  public void addRow(int rowIndex) {
+    addEmptyRowWithoutUndoRecording(rowIndex);
+    Specman.instance().addEdit(new UndoableRowAdded(this, rowIndex));
+  }
+
+  public void addEmptyRowWithoutUndoRecording(int rowIndex) {
+    EditorI editor = Specman.instance();
+    try (UndoRecording ur = editor.pauseUndo()) {
+      List<EditContainer> row = new ArrayList<>();
+      for (int c = 0; c < numColumns(); c++) {
+        row.add(new EditContainer(editor));
+      }
+      cells.add(rowIndex, row);
+      recomputeLayout();
+    }
+  }
+
+  public void removeRow(int rowIndex) {
+    if (numRows() > 1) {
+      List<EditContainer> row = cells.get(rowIndex);
+      removeRowByUndoRedo(rowIndex);
+      Specman.instance().addEdit(new UndoableRowRemoved(this, rowIndex, row));
+    }
+    else {
+      remove();
+    }
+  }
+
+  public void removeRowByUndoRedo(int rowIndex) {
+    cells.remove(rowIndex);
+    recomputeLayout();
+  }
+
+  public void addRow(int rowIndex, List<EditContainer> row) {
+    cells.add(rowIndex, row);
+    recomputeLayout();
   }
 }

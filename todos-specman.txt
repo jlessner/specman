@@ -1,16 +1,18 @@
 Abschluss für Go-Live
 - Tabellen als separate Elemente analog Bilder
-  - Springen in die nächste Zelle durch drücken von TAB
+  - Undo für Löschen von Zeilen
   - Hinzufügen von Zeilen
-    - Durch Drücken von TAB in der letzten Zelle?
-  - Löschen einer Tabelle
+  - Undo für Hinzufügen von Zeilen
   - Löschen von Spalten (Löschen der letzten Spalte = Löschen der Tabelle)
-  - Löschen von Zeilen (Löschen der letzten Zeile = Löschen der Tabelle)
-  - Codeduplikationen in EditContainer#addImage und #addTable aufräumen
+  - Berücksichtigen von Änderungsmodus beim Hinzufügen von Zeilen
+  - Berücksichtigen von Änderungsmodus beim Löschen einer Tabelle
   - Noch zu implementieren:
-    - UndoableTableRemoved
     - UndoableTableRemovedMarkiert
+  - Nice to have: Springen in die nächste Zelle durch drücken von TAB
+  - Nice to have: Hinzufügen von Zeilen durch Drücken von TAB in der letzten Zelle?
+  x Löschen von Zeilen (Löschen der letzten Zeile = Löschen der Tabelle)
   x Anpassung von Spaltenbreiten
+  x Hinzufügen von Zeilen
 
 - PDF-Export
   - Nicht essenziell aber wäre schöner: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
