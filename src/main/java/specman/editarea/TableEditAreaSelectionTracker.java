@@ -8,14 +8,31 @@ import java.awt.event.MouseMotionListener;
 import java.util.List;
 import java.util.Objects;
 
+import static specman.CursorFactory.HotspotPlacement.Bottom;
+import static specman.CursorFactory.HotspotPlacement.BottomRight;
+import static specman.CursorFactory.HotspotPlacement.Right;
+import static specman.CursorFactory.createCursor;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class TableEditAreaSelectionTracker implements MouseListener, MouseMotionListener {
   private static final Color SELECTION_COLOR = new Color(200, 200, 200, 150);
   private static final int SELEECTION_GAP_SIZE = 4 * LINIENBREITE;
+  public static final Cursor ADD_COLUMN_CURSOR = createCursor("add-column-cursor", Bottom);
+  public static final Cursor REMOVE_COLUMN_CURSOR = createCursor("remove-column-cursor", Bottom);
+  public static final Cursor ADD_ROW_CURSOR = createCursor("add-row-cursor", Right);
+  public static final Cursor REMOVE_ROW_CURSOR = createCursor("remove-row-cursor", Right);
+  public static final Cursor REMOVE_TABLE_CURSOR = createCursor("remove-table-cursor", BottomRight);
 
   public enum Operation {
-    AddColumn, AddRow, DeleteColumn, DeleteRow, DeleteTable;
+    AddColumn(ADD_COLUMN_CURSOR),
+    AddRow(ADD_ROW_CURSOR),
+    RemoveColumn(REMOVE_COLUMN_CURSOR),
+    RemoveRow(REMOVE_ROW_CURSOR),
+    RemoveTable(REMOVE_TABLE_CURSOR);
+
+    private Cursor cursor;
+    Operation(Cursor cursor) { this.cursor = cursor; }
+    Cursor toCursor() { return cursor; }
   }
 
   private final TableEditArea editArea;
@@ -43,7 +60,15 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
   @Override
   public void mouseExited(MouseEvent e) {
     selectionHighlight = null;
+    setEditAreaCursor(null);
     editArea.repaint();
+  }
+
+  /** Found this little trick at https://coderanch.com/t/710608/java/set-cursor-JButton
+   * Setting the cursor of the editArea itself doesn't do the job. Setting it on the
+   * root pane instead works well */
+  private void setEditAreaCursor(Cursor cursor) {
+    editArea.getRootPane().setCursor(cursor);
   }
 
   @Override
@@ -65,13 +90,14 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
     }
     if (!Objects.equals(selectionHighlight, selectionUpdate)) {
       selectionHighlight = selectionUpdate;
+      setEditAreaCursor(selectionHighlight != null ? selectionOperation.toCursor() : null);
       editArea.repaint();
     }
   }
 
   private Rectangle wholeTableSelected(Point mousePos) {
     if (mousePos.y < tablePanel.getY() && mousePos.x < tablePanel.getX()) {
-      selectionOperation = Operation.DeleteTable;
+      selectionOperation = Operation.RemoveTable;
       return tablePanel.getBounds();
     }
     return null;
@@ -146,7 +172,7 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
         EditContainer columnLeader = leadingRow.get(c);
         if (isAtXPosition(x, columnLeader)) {
           selectionIndex = c;
-          selectionOperation = Operation.DeleteColumn;
+          selectionOperation = Operation.RemoveColumn;
           return new Rectangle(
             tablePanel.getX() + columnLeader.getX(),
             tablePanel.getY(),
@@ -170,7 +196,7 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
         EditContainer rowLeader = editArea.cells.get(r).get(0);
         if (isAtYPosition(y, rowLeader)) {
           selectionIndex = r;
-          selectionOperation = Operation.DeleteRow;
+          selectionOperation = Operation.RemoveRow;
           return new Rectangle(
             tablePanel.getX(),
             tablePanel.getY() + rowLeader.getY(),

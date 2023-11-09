@@ -15,7 +15,7 @@ import specman.model.v001.TableEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.pdf.Shape;
 import specman.undo.UndoableImageAdded;
-import specman.undo.UndoableImageRemoved;
+import specman.undo.UndoableEditAreaRemoved;
 import specman.undo.UndoableTableAdded;
 import specman.undo.manager.UndoRecording;
 
@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 import static specman.Specman.schrittHintergrund;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
-import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.SCHRITTNR_FONTSIZE;
 import static specman.editarea.TextStyles.labelFont;
 
@@ -392,12 +391,12 @@ public class EditContainer extends JPanel {
 		layout.appendRow(RowSpec.decode("0px"));
 	}
 
-	public void removeImage(ImageEditArea image) {
+	public void removeImage(EditArea editarea) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
 			TextEditArea leadingTextArea = null;
 			TextEditArea trailingTextArea = null;
-			int imageIndex = removeEditArea(image);
+			int imageIndex = removeEditArea(editarea);
 			if (imageIndex > 0) {
 				leadingTextArea = editAreas.get(imageIndex-1).asTextArea();
 				if (editAreas.size() > imageIndex) {
@@ -409,7 +408,7 @@ public class EditContainer extends JPanel {
 					}
 				}
 			}
-			editor.addEdit(new UndoableImageRemoved(this, leadingTextArea, image, trailingTextArea));
+			editor.addEdit(new UndoableEditAreaRemoved(this, leadingTextArea, editarea, trailingTextArea));
 		}
 		updateBounds();
 	}
