@@ -1,8 +1,5 @@
 Abschluss für Go-Live
 - Tabellen als separate Elemente analog Bilder
-  - Undo für Löschen von Zeilen
-  - Hinzufügen von Zeilen
-  - Undo für Hinzufügen von Zeilen
   - Löschen von Spalten (Löschen der letzten Spalte = Löschen der Tabelle)
   - Berücksichtigen von Änderungsmodus beim Hinzufügen von Zeilen
   - Berücksichtigen von Änderungsmodus beim Löschen einer Tabelle
@@ -10,6 +7,9 @@ Abschluss für Go-Live
     - UndoableTableRemovedMarkiert
   - Nice to have: Springen in die nächste Zelle durch drücken von TAB
   - Nice to have: Hinzufügen von Zeilen durch Drücken von TAB in der letzten Zelle?
+  x Undo / Redo für Löschen von Zeilen
+  x Hinzufügen von Zeilen
+  x Undo / Redo für Hinzufügen von Zeilen
   x Löschen von Zeilen (Löschen der letzten Zeile = Löschen der Tabelle)
   x Anpassung von Spaltenbreiten
   x Hinzufügen von Zeilen
