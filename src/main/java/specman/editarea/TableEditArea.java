@@ -11,9 +11,10 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.pdf.Shape;
-import specman.undo.UndoableEditAreaAdded;
-import specman.undo.UndoableRowAdded;
-import specman.undo.UndoableRowRemoved;
+import specman.undo.UndoableTableColumnAdded;
+import specman.undo.UndoableTableColumnRemoved;
+import specman.undo.UndoableTableRowAdded;
+import specman.undo.UndoableTableRowRemoved;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.*;
@@ -359,7 +360,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   public void addRow(int rowIndex) {
     addEmptyRowWithoutUndoRecording(rowIndex);
-    Specman.instance().addEdit(new UndoableRowAdded(this, rowIndex));
+    Specman.instance().addEdit(new UndoableTableRowAdded(this, rowIndex));
   }
 
   public void addEmptyRowWithoutUndoRecording(int rowIndex) {
@@ -377,21 +378,104 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   public void removeRow(int rowIndex) {
     if (numRows() > 1) {
       List<EditContainer> row = cells.get(rowIndex);
-      removeRowByUndoRedo(rowIndex);
-      Specman.instance().addEdit(new UndoableRowRemoved(this, rowIndex, row));
+      removeRowWithoutUndoRecording(rowIndex);
+      Specman.instance().addEdit(new UndoableTableRowRemoved(this, rowIndex, row));
     }
     else {
       remove();
     }
   }
 
-  public void removeRowByUndoRedo(int rowIndex) {
+  public void removeRowWithoutUndoRecording(int rowIndex) {
     cells.remove(rowIndex);
     recomputeLayout();
   }
 
-  public void addRow(int rowIndex, List<EditContainer> row) {
+  public void addRowWithoutUndoRecording(int rowIndex, List<EditContainer> row) {
     cells.add(rowIndex, row);
+    recomputeLayout();
+  }
+
+  /** Adding a column does not change the table width. If the column widths have not
+   * yet explicitly been set, all columns will have the same width after adding a new
+   * one. Otherwise, the new column will steal half of the width of the preceeding column
+   * (respectively half of the <i>last</i> column when the new one is appended). */
+  public void addColumn(int colIndex) {
+    EditorI editor = Specman.instance();
+    List<Integer> originalColumnsWidthPercent = addEmptyColumnWithoutUndoRecording(colIndex);
+    editor.addEdit(new UndoableTableColumnAdded(this, colIndex, originalColumnsWidthPercent));
+  }
+
+  public List<Integer> addEmptyColumnWithoutUndoRecording(int colIndex) {
+    EditorI editor = Specman.instance();
+    List<Integer> originalColumnsWidthPercent = copyOf(columnsWidthPercent);
+    try (UndoRecording ur = editor.pauseUndo()) {
+      if (columnsWidthPercent != null) {
+        int stealFromColumn = colIndex > numColumns() ? numColumns() - 1 : colIndex;
+        int fromColumnWidth = columnsWidthPercent.get(stealFromColumn);
+        int newColumnWidth = fromColumnWidth / 2;
+        columnsWidthPercent.set(stealFromColumn, newColumnWidth);
+        columnsWidthPercent.add(colIndex, newColumnWidth);
+      }
+      for (List<EditContainer> row : cells) {
+        row.add(colIndex, new EditContainer(editor));
+      }
+      recomputeLayout();
+    }
+    return originalColumnsWidthPercent;
+  }
+
+  public void removeColumnWithoutUndoRecording(int colIndex, List<Integer> columnsWidthPercent) {
+    this.columnsWidthPercent = copyOf(columnsWidthPercent);
+    this.cells.forEach(row -> row.remove(colIndex));
+    recomputeLayout();
+  }
+
+  private static List<Integer> copyOf(List<Integer> l) {
+    return l != null ? new ArrayList<>(l) : l;
+  }
+
+  /** Removing a column does not change the table width. If the column widths have not
+   * yet explicitly been set, all columns will have the same width after removing one.
+   * Otherwise, the removed column's width is added to the preceeding column's width
+   * (respectively to the new <i>last</i> column's width when removing the last one). */
+  public void removeColumn(int colIndex) {
+    if (numColumns() > 1) {
+      EditorI editor = Specman.instance();
+      List<EditContainer> column = removeColumnWithoutUndoRecording(colIndex);
+      List<Integer> originalColumnsWidthPercent = copyOf(columnsWidthPercent);
+      editor.addEdit(new UndoableTableColumnRemoved(this, colIndex, column, originalColumnsWidthPercent));
+    }
+    else {
+      remove();
+    }
+  }
+
+  public List<EditContainer> removeColumnWithoutUndoRecording(int colIndex) {
+    List<EditContainer> column = new ArrayList<>();
+    EditorI editor = Specman.instance();
+    try (UndoRecording ur = editor.pauseUndo()) {
+      if (columnsWidthPercent != null) {
+        int widthEaterColumn = colIndex == numColumns() - 1 ? colIndex - 1 : colIndex + 1;
+        int fromColumnWidth = columnsWidthPercent.get(colIndex);
+        int eaterWidth = columnsWidthPercent.get(widthEaterColumn);
+        columnsWidthPercent.set(widthEaterColumn, eaterWidth + fromColumnWidth);
+        columnsWidthPercent.remove(colIndex);
+      }
+      for (List<EditContainer> row : cells) {
+        column.add(row.remove(colIndex));
+      }
+      recomputeLayout();
+    }
+    return column;
+  }
+
+  public void addColumnWitoutUndoRecording(int colIndex, List<EditContainer> column, List<Integer> originalColumnsWidthPercent) {
+    for (int r = 0; r < numRows(); r++) {
+      List<EditContainer> row = cells.get(r);
+      row.add(colIndex, column.get(r));
+    }
+    columnsWidthPercent = originalColumnsWidthPercent;
     recomputeLayout();
   }
 }

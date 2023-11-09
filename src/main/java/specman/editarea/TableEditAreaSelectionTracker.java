@@ -56,27 +56,39 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
   @Override public void mouseClicked(MouseEvent e) {
     System.out.println(selectionOperation + " " + selectionIndex);
     if (selectionOperation != null) {
-      mouseExited(null);
+      setEditAreaCursor(null);
       switch(selectionOperation) {
         case RemoveTable -> editArea.remove();
         case AddRow -> editArea.addRow(selectionIndex);
         case RemoveRow -> editArea.removeRow(selectionIndex);
+        case AddColumn -> editArea.addColumn(selectionIndex);
+        case RemoveColumn -> editArea.removeColumn(selectionIndex);
       }
+      resetSelection();
     }
   }
 
   @Override
   public void mouseExited(MouseEvent e) {
-    selectionHighlight = null;
-    setEditAreaCursor(null);
+    resetSelection();
     editArea.repaint();
+  }
+
+  private void resetSelection() {
+    selectionHighlight = null;
+    selectionOperation = null;
+    setEditAreaCursor(null);
   }
 
   /** Found this little trick at https://coderanch.com/t/710608/java/set-cursor-JButton
    * Setting the cursor of the editArea itself doesn't do the job. Setting it on the
-   * root pane instead works well */
+   * root pane instead works well. Root pane must be null-checked for the case the
+   * users requested deletion of the table which will cause the edit area to be detached
+   * from its {@link EditContainer}. */
   private void setEditAreaCursor(Cursor cursor) {
-    editArea.getRootPane().setCursor(cursor);
+    if (editArea.getRootPane() != null) {
+      editArea.getRootPane().setCursor(cursor);
+    }
   }
 
   @Override
