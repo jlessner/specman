@@ -499,8 +499,8 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		return panelFall1;
 	}
 
-	@Override protected int textAenderungenUebernehmen() {
-		int changesMade = super.textAenderungenUebernehmen();
+	@Override protected int editAenderungenUebernehmen() {
+		int changesMade = super.editAenderungenUebernehmen();
 		changesMade += sonstSequenz.ueberschriftAenderungenUebernehmen();
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			changesMade += caseSequenz.ueberschriftAenderungenUebernehmen();
@@ -526,8 +526,8 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		return changesMade;
 	}
 
-	@Override protected int aenderungsmarkierungenVerwerfen() {
-		int changesReverted = super.aenderungsmarkierungenVerwerfen();
+	@Override protected int editAenderungenVerwerfen() {
+		int changesReverted = super.editAenderungenVerwerfen();
 		changesReverted += sonstSequenz.ueberschriftAenderungenVerwerfen();
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			changesReverted += caseSequenz.ueberschriftAenderungenVerwerfen();

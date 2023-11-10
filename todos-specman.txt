@@ -57,6 +57,8 @@ Bugs fixen
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
+- speziell vergebene Textvordergrundfarbe geht verloren, wenn man den betreffenden Schritt löscht (Text wird grau und durchgestrichen)
+    und anschließend die Änderung zurücknimmt. Mögliche (simple) Lösung: nur schwarzer Text wird grau, alles andere behält seine Farbe
 - Ändern des Paragraphtypen lässt sich nicht zurücknehmen
 - Letzter Zeilenumbruch in einem Schritt kann nicht entfernt werden
     - Problem ist, dass der Umbruch nicht entfernt werden kann, da der Offset angeblich größer als das Dokumentenende ist:

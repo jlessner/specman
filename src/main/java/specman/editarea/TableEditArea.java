@@ -210,14 +210,50 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     refreshBorderSpaceGeometricsAndColor();
   }
 
+//  @Override
+//  public int aenderungsmarkierungenUebernehmen() {
+//    int changesMade = 0;
+//    if (aenderungsart != null) {
+//      switch (aenderungsart) {
+//        case Hinzugefuegt -> updateChangetypeAndDependentStyling(null);
+//        case Geloescht -> getParent().removeEditArea(this);
+//      }
+//      changesMade++;
+//    }
+//    return changesMade;
+//  }
+//
+//  @Override
+//  public int aenderungsmarkierungenVerwerfen() {
+//    int changesReverted = 0;
+//    if (aenderungsart != null) {
+//      switch(aenderungsart) {
+//        case Hinzugefuegt -> getParent().removeEditArea(this);
+//        case Geloescht -> updateChangetypeAndDependentStyling(null);
+//      }
+//      changesReverted++;
+//    }
+//    return changesReverted;
+//  }
+
   @Override
-  public int aenderungsmarkierungenUebernehmen() {
-    return cellstream().mapToInt(cell -> cell.aenderungsmarkierungenUebernehmen()).sum();
+  public int aenderungenUebernehmen() {
+    if (aenderungsart == Aenderungsart.Geloescht) {
+      getParent().removeEditArea(this);
+      return 1;
+    }
+    int changedMade = cellstream().mapToInt(cell -> cell.aenderungenUebernehmen()).sum();
+    if (aenderungsart == Aenderungsart.Hinzugefuegt) {
+      changedMade++;
+    }
+    aenderungsart = Aenderungsart.Untracked;
+    setBackground(aenderungsart.toBackgroundColor());
+    return changedMade;
   }
 
   @Override
-  public int aenderungsmarkierungenVerwerfen() {
-    return cellstream().mapToInt(cell -> cell.aenderungsmarkierungenVerwerfen()).sum();
+  public int aenderungenVerwerfen() {
+    return cellstream().mapToInt(cell -> cell.editAenderungenVerwerfen()).sum();
   }
 
   @Override
