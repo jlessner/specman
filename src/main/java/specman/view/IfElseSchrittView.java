@@ -283,8 +283,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.aenderungsmarkierungenEntfernen();
 	}
 
-	@Override protected int editAenderungenUebernehmen() {
-		int changesMade = super.editAenderungenUebernehmen();
+	@Override protected int textAenderungenUebernehmen() {
+		int changesMade = super.textAenderungenUebernehmen();
 		changesMade += elseSequenz.ueberschriftAenderungenUebernehmen();
 		changesMade += ifSequenz.ueberschriftAenderungenUebernehmen();
 		return changesMade;
@@ -297,8 +297,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		return changesMade;
 	}
 
-	@Override protected int editAenderungenVerwerfen() {
-		int changesReverted = super.editAenderungenVerwerfen();
+	@Override protected int aenderungsmarkierungenVerwerfen() {
+		int changesReverted = super.aenderungsmarkierungenVerwerfen();
 		changesReverted += elseSequenz.ueberschriftAenderungenVerwerfen();
 		changesReverted += ifSequenz.ueberschriftAenderungenVerwerfen();
 		return changesReverted;

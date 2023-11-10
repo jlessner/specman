@@ -11,7 +11,6 @@ import specman.view.SchrittSequenzView;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
-import static specman.Aenderungsart.Untracked;
 import static specman.view.RelativeStepPosition.Before;
 
 public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben {
@@ -35,7 +34,7 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
         quellschritt.getParent().schrittEntfernen(quellschritt);
         step.setQuellschritt(null);
         step.setStandardStil();
-        step.setAenderungsart(Untracked);
+        step.setAenderungsart(null);
       }
     }
     else {

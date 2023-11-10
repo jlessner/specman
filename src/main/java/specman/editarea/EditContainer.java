@@ -318,12 +318,12 @@ public class EditContainer extends JPanel {
 	 * to be removed from the list. */
 	private List<EditArea> modifyableEditAreas() { return new ArrayList<>(editAreas); }
 
-	public int aenderungenUebernehmen() {
-     return modifyableEditAreas().stream().mapToInt(EditArea::aenderungenUebernehmen).sum();
+	public int aenderungsmarkierungenUebernehmen() {
+        return modifyableEditAreas().stream().mapToInt(EditArea::aenderungsmarkierungenUebernehmen).sum();
 	}
 
-	public int editAenderungenVerwerfen() {
-		return modifyableEditAreas().stream().mapToInt(EditArea::aenderungenVerwerfen).sum();
+	public int aenderungsmarkierungenVerwerfen() {
+		return modifyableEditAreas().stream().mapToInt(EditArea::aenderungsmarkierungenVerwerfen).sum();
 	}
 
 	public boolean enthaelt(InteractiveStepFragment fragment) {

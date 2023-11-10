@@ -95,11 +95,11 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	}
 
 	public int ueberschriftAenderungenUebernehmen() {
-		return ueberschrift.aenderungenUebernehmen();
+		return ueberschrift.aenderungsmarkierungenUebernehmen();
 	}
 
 	public int ueberschriftAenderungenVerwerfen() {
-		return ueberschrift.editAenderungenVerwerfen();
+		return ueberschrift.aenderungsmarkierungenVerwerfen();
 	}
 
 }

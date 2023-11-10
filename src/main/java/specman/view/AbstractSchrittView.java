@@ -39,9 +39,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
+import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
@@ -199,6 +199,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	public void setStandardStil() {
 		setBackground(BACKGROUND_COLOR_STANDARD);
 		editContainer.aenderungsmarkierungenEntfernen(id);
+		setAenderungsart(null);
 	}
 
 	public void setGeloeschtMarkiertStil() {
@@ -405,10 +406,12 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void viewsNachinitialisieren() {
-		switch (aenderungsart) {
-			case Geloescht -> setGeloeschtMarkiertStil();
-			case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
-			case Zielschritt -> setZielschrittStil();
+		if (aenderungsart != null) {
+            switch (aenderungsart) {
+                case Geloescht -> setGeloeschtMarkiertStil();
+                case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
+                case Zielschritt -> setZielschrittStil();
+            }
 		}
 		registerAllExistingStepnumbers();
 	}
@@ -458,59 +461,61 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public int aenderungenUebernehmen(EditorI editor) throws EditException {
-		int changesMade = editAenderungenUebernehmen() + 1;
-		switch (aenderungsart) {
-			case Hinzugefuegt:
-				aenderungsmarkierungenEntfernen();
-				break;
-			case Geloescht:
-			case Quellschritt:
-				markStepnumberLinksAsDefect();
-				getParent().schrittEntfernen(this);
-				break;
-			case Zielschritt:
-				setQuellschritt(null);
-				setStandardStil();
-			case Untracked:
-				changesMade--;
+		int changesMade = textAenderungenUebernehmen();
+		if (aenderungsart != null) {
+			switch (aenderungsart) {
+				case Hinzugefuegt:
+					aenderungsmarkierungenEntfernen();
+					break;
+				case Geloescht:
+				case Quellschritt:
+					markStepnumberLinksAsDefect();
+					getParent().schrittEntfernen(this);
+					break;
+				case Zielschritt:
+					setQuellschritt(null);
+					setStandardStil();
+			}
+			setAenderungsart(null);
+			changesMade++;
 		}
-		setAenderungsart(Untracked);
 		return changesMade;
 	}
 
-	protected int editAenderungenUebernehmen() {
-		return editContainer.aenderungenUebernehmen();
+	protected int textAenderungenUebernehmen() {
+		return editContainer.aenderungsmarkierungenUebernehmen();
 	}
 
 	public int aenderungenVerwerfen(EditorI editor) throws EditException {
-		int changesReverted = editAenderungenVerwerfen() + 1;
-		switch (aenderungsart) {
-			case Hinzugefuegt:
-				markStepnumberLinksAsDefect();
-				getParent().schrittEntfernen(this);
-				break;
-			case Geloescht:
-				aenderungsmarkierungenEntfernen();
-				break;
-			case Quellschritt:
-				break;
-			case Zielschritt:
-				getParent().schrittEntfernen(this);
-				setId(getQuellschritt().newStepIDInSameSequence(After));
-				setParent(getQuellschritt().getParent());
-				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
-				getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
-				setQuellschritt(null);
-				this.setStandardStil();
-			case Untracked:
-				changesReverted--;
+		int changesReverted = aenderungsmarkierungenVerwerfen();
+		if (aenderungsart != null) {
+			switch (aenderungsart) {
+				case Hinzugefuegt:
+                    markStepnumberLinksAsDefect();
+					getParent().schrittEntfernen(this);
+					break;
+				case Geloescht:
+					aenderungsmarkierungenEntfernen();
+					break;
+				case Quellschritt:
+					break;
+				case Zielschritt:
+					getParent().schrittEntfernen(this);
+					setId(getQuellschritt().newStepIDInSameSequence(After));
+					setParent(getQuellschritt().getParent());
+					getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
+					getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
+					setQuellschritt(null);
+					this.setStandardStil();
+			}
+			setAenderungsart(null);
+			changesReverted++;
 		}
-		setAenderungsart(Untracked);
 		return changesReverted;
 	}
 
-	protected int editAenderungenVerwerfen() {
-		return editContainer.editAenderungenVerwerfen();
+	protected int  aenderungsmarkierungenVerwerfen() {
+		return editContainer.aenderungsmarkierungenVerwerfen();
 	}
 
 	public void registerStepnumberLink(TextEditArea textEditArea) {

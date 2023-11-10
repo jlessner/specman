@@ -64,8 +64,8 @@ public class TextStyles {
     public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
     public static final Color SCHRITTNUMMER_VORDERGRUNDFARBE = BACKGROUND_COLOR_STANDARD;
     public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
-    public static final Color STEPNUMBERLINK_BACKGROUND_COLOR_STANDARD = new Color(188, 188, 188);
-    public static final Color STEPNUMBERLINK_BACKGROUND_COLOR_CHANGED = combineColors(STEPNUMBERLINK_BACKGROUND_COLOR_STANDARD, AENDERUNGSMARKIERUNG_FARBE);
+    public static final Color stepnumberLinkStyleColor = new Color(188, 188, 188);
+    public static final Color changedStepnumberLinkColor = combineColors(stepnumberLinkStyleColor, AENDERUNGSMARKIERUNG_FARBE);
     public static final String INDIKATOR_GELB = toHTMLColor(AENDERUNGSMARKIERUNG_FARBE);
     public static final String INDIKATOR_GELOESCHT_MARKIERT = "line-through";
 
@@ -73,8 +73,8 @@ public class TextStyles {
 
     public static final String INDIKATOR_GRAU = toHTMLColor(Hintergrundfarbe_Schrittenummer);
     public static final String INDIKATOR_SCHWARZ = toHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE2);
-    public static final String stepnumberLinkStyleHTMLColor = toHTMLColor(STEPNUMBERLINK_BACKGROUND_COLOR_STANDARD);
-    public static final String changedStepnumberLinkHTMLColor = toHTMLColor(STEPNUMBERLINK_BACKGROUND_COLOR_CHANGED);
+    public static final String stepnumberLinkStyleHTMLColor = toHTMLColor(stepnumberLinkStyleColor);
+    public static final String changedStepnumberLinkHTMLColor = toHTMLColor(changedStepnumberLinkColor);
 
     static {
         // Das hier ist ein bisschen tricky:
@@ -122,13 +122,13 @@ public class TextStyles {
 
         htmlHintergrundStyleStepnumber.addAttribute(HTML.Attribute.STYLE, htmlStyleStepnumber);
         stepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleStepnumber);
-        StyleConstants.setBackground(stepnumberLinkStyle, STEPNUMBERLINK_BACKGROUND_COLOR_STANDARD);
+        StyleConstants.setBackground(stepnumberLinkStyle, stepnumberLinkStyleColor);
 
         changedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
-        StyleConstants.setBackground(changedStepnumberLinkStyle, STEPNUMBERLINK_BACKGROUND_COLOR_CHANGED);
+        StyleConstants.setBackground(changedStepnumberLinkStyle, changedStepnumberLinkColor);
 
         deletedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
-        StyleConstants.setBackground(deletedStepnumberLinkStyle, STEPNUMBERLINK_BACKGROUND_COLOR_CHANGED);
+        StyleConstants.setBackground(deletedStepnumberLinkStyle, changedStepnumberLinkColor);
         StyleConstants.setStrikeThrough(deletedStepnumberLinkStyle, true);
     }
 
