@@ -24,7 +24,8 @@
             }, {
               "von" : 11,
               "bis" : 18
-            } ] ]
+            } ] ],
+			"aenderungsart" : "Untracked"
           } ] ] ]
         },
         "farbe" : -1,
@@ -41,7 +42,8 @@
             "aenderungen" : [ "java.util.ArrayList", [ {
               "von" : 7,
               "bis" : 16
-            } ] ]
+            } ] ],
+			"aenderungsart" : "Untracked"
           } ] ] ]
         },
         "farbe" : -1,
@@ -61,7 +63,8 @@
             }, {
               "von" : 9,
               "bis" : 11
-            } ] ]
+            } ] ],
+			"aenderungsart" : "Untracked"
           } ] ] ]
         },
         "farbe" : -1,
@@ -76,13 +79,15 @@
     "intro" : {
       "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
         "text" : "<html>  <head>      </head>  <body>  </body></html>",
-        "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        "aenderungen" : [ "java.util.ArrayList", [ ] ],
+		"aenderungsart" : "Untracked"
       } ] ] ]
     },
     "outro" : {
       "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
         "text" : "<html>  <head>      </head>  <body>  </body></html>",
-        "aenderungen" : [ "java.util.ArrayList", [ ] ]
+        "aenderungen" : [ "java.util.ArrayList", [ ] ],
+		"aenderungsart" : "Untracked"
       } ] ] ]
     }
   }

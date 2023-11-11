@@ -13,4 +13,8 @@ public enum Aenderungsart {
 			? AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE
 			: BACKGROUND_COLOR_STANDARD;
 	}
+
+	public boolean istAenderung() { return this != Untracked; }
+
+	public int asNumChanges() { return istAenderung() ? 1 : 0; }
 }

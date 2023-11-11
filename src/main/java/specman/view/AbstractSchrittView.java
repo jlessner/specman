@@ -472,11 +472,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public int aenderungenUebernehmen(EditorI editor) throws EditException {
-		int changesMade = editAenderungenUebernehmen() + 1;
+		int changesMade = editAenderungenUebernehmen() + aenderungsart.asNumChanges();
 		switch (aenderungsart) {
-			case Hinzugefuegt:
-				aenderungsmarkierungenEntfernen();
-				break;
 			case Geloescht:
 			case Quellschritt:
 				markStepnumberLinksAsDefect();
@@ -484,11 +481,9 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 				break;
 			case Zielschritt:
 				setQuellschritt(null);
-				aenderungsmarkierungenEntfernen();
 				break;
-			case Untracked:
-				changesMade--;
 		}
+		aenderungsmarkierungenEntfernen();
 		setAenderungsart(Untracked);
 		return changesMade;
 	}
@@ -498,16 +493,11 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public int aenderungenVerwerfen(EditorI editor) throws EditException {
-		int changesReverted = editAenderungenVerwerfen() + 1;
+		int changesReverted = editAenderungenVerwerfen() + aenderungsart.asNumChanges();
 		switch (aenderungsart) {
 			case Hinzugefuegt:
 				markStepnumberLinksAsDefect();
 				getParent().schrittEntfernen(this);
-				break;
-			case Geloescht:
-				aenderungsmarkierungenEntfernen();
-				break;
-			case Quellschritt:
 				break;
 			case Zielschritt:
 				getParent().schrittEntfernen(this);
@@ -516,11 +506,9 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
 				getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
 				setQuellschritt(null);
-				aenderungsmarkierungenEntfernen();
 				break;
-			case Untracked:
-				changesReverted--;
 		}
+		aenderungsmarkierungenEntfernen();
 		setAenderungsart(Untracked);
 		return changesReverted;
 	}

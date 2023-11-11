@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
+import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
 
 public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener {
@@ -195,7 +196,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public void aenderungsmarkierungenEntfernen() {
-    aenderungsart = Aenderungsart.Untracked;
+    aenderungsart = Untracked;
     // Nothing to do for images - job is completely done in aenderungenVerwerfen/Uebernehmen
   }
 
@@ -254,27 +255,23 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public int aenderungenUebernehmen() {
-    int changesMade = 0;
-    if (aenderungsart != null) {
-      switch (aenderungsart) {
-        case Hinzugefuegt -> updateChangetypeAndDependentStyling(null);
-        case Geloescht -> getParent().removeEditArea(this);
-      }
-      changesMade++;
+    int changesMade = aenderungsart.asNumChanges();
+    switch (aenderungsart) {
+      case Hinzugefuegt -> updateChangetypeAndDependentStyling(null);
+      case Geloescht -> getParent().removeEditArea(this);
     }
+    aenderungsart = Untracked;
     return changesMade;
   }
 
   @Override
   public int aenderungenVerwerfen() {
-    int changesReverted = 0;
-    if (aenderungsart != null) {
-      switch(aenderungsart) {
-        case Hinzugefuegt -> getParent().removeEditArea(this);
-        case Geloescht -> updateChangetypeAndDependentStyling(null);
-      }
-      changesReverted++;
+    int changesReverted = aenderungsart.asNumChanges();
+    switch(aenderungsart) {
+      case Hinzugefuegt -> getParent().removeEditArea(this);
+      case Geloescht -> updateChangetypeAndDependentStyling(null);
     }
+    aenderungsart = Untracked;
     return changesReverted;
   }
 

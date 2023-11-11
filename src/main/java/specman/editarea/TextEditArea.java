@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static specman.Aenderungsart.Untracked;
 import static specman.editarea.HTMLTags.BODY_INTRO;
 import static specman.editarea.HTMLTags.BODY_OUTRO;
 import static specman.editarea.HTMLTags.HTML_INTRO;
@@ -278,7 +279,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     public int aenderungenUebernehmen() {
         EditorI editor = Specman.instance();
         StyledDocument doc = (StyledDocument) getDocument();
-        int changesMade = 0;
+        int changesMade = aenderungsart.asNumChanges();
 
         List<GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
         for (Element e : doc.getRootElements()) {
@@ -301,7 +302,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     public int aenderungenVerwerfen() {
         EditorI editor = Specman.instance();
         StyledDocument doc = (StyledDocument) getDocument();
-        int changesReverted = 0;
+        int changesReverted = aenderungsart.asNumChanges();
 
         List<GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
         for (Element e : doc.getRootElements()) {
@@ -316,14 +317,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 e.printStackTrace();
             }
         }
-
+        aenderungsart = Untracked;
         return changesReverted;
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
     private int aenderungsmarkierungenUebernehmen(
-            Element e,
-            List<GeloeschtMarkierung_V001> loeschungen) {
+            Element e, List<GeloeschtMarkierung_V001> loeschungen) {
         int changesMade = 0;
 
         StyledDocument doc = (StyledDocument) e.getDocument();
@@ -345,6 +345,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             changesMade += aenderungsmarkierungenUebernehmen(e.getElement(i), loeschungen);
         }
 
+        aenderungsart = Untracked;
         return changesMade;
     }
 
@@ -817,7 +818,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public boolean enthaeltAenderungsmarkierungen() {
-        return !findeAenderungsmarkierungen(true).isEmpty();
+        return aenderungsart.istAenderung()
+          || !findeAenderungsmarkierungen(true).isEmpty();
     }
 
     private void scrollToStepnumber() {
