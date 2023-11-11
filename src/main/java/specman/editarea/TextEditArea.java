@@ -173,7 +173,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     @Override
-    public void setStandardStil() {
+    public void aenderungsmarkierungenEntfernen() {
         if (!hasStandardStyle()) {
             setStyle(standardStil, BACKGROUND_COLOR_STANDARD, true);
         }

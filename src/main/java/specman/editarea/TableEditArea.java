@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
 import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
@@ -212,17 +213,18 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   @Override
   public int aenderungenUebernehmen() {
+    aenderungsart = Untracked;
     return cellstream().mapToInt(cell -> cell.aenderungenUebernehmen()).sum();
   }
 
   @Override
   public int aenderungenVerwerfen() {
+    aenderungsart = Untracked;
     return cellstream().mapToInt(cell -> cell.aenderungenVerwerfen()).sum();
   }
 
   @Override
-  public void setStandardStil() {
-    aenderungsart = Aenderungsart.Untracked;
+  public void aenderungsmarkierungenEntfernen() {
     cellstream().forEach(cell -> cell.aenderungsmarkierungenEntfernen(null));
   }
 

@@ -215,6 +215,20 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return new UndoableSchrittEntferntMarkiert(this, editor);
 	}
 
+	/** Entfernt im Rahmen der Übernahme oder Rücknahme von Änderungen alle Einfärbungen,
+	 * die bis dahin im Änderungsmodus entstanden sind.
+	 * <ul>
+	 *   <li>Im Änderungsmodus hinzugefügte oder verschobene Schritte haben einen hellgelben
+	 *   Hintergrund, der im Falle der Übernahme von Änderungen wieder auf weis geändert
+	 *   werden muss</li>
+	 *   <li>In allen {@link EditContainer}n eines gelöschten Schritts wurde die Schrift
+	 *   im Änderungsmodus auf grau mit schwarzem Hintergrund gesetzt, was im Falle einer
+	 *   Rücknahme der Löschung wieder geändert werden muss.
+	 *   </li>
+	 * </ul>
+	 * Einfärbungen für <i>inhaltliche</i> Änderungen von {@link EditContainer}n spielen
+	 * hier keine Rolle. Diese werden bereits <i>vor</i> dem Aufruf der Methode hier über
+	 * {@link #editAenderungenUebernehmen} bzw. {@link #editAenderungenVerwerfen()} entfernt. */
 	public void aenderungsmarkierungenEntfernen() {
 		setBackground(BACKGROUND_COLOR_STANDARD);
 		editContainer.aenderungsmarkierungenEntfernen(id);
@@ -475,6 +489,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 			case Untracked:
 				changesMade--;
 		}
+		setAenderungsart(Untracked);
 		return changesMade;
 	}
 
@@ -506,6 +521,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 			case Untracked:
 				changesReverted--;
 		}
+		setAenderungsart(Untracked);
 		return changesReverted;
 	}
 

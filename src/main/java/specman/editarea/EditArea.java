@@ -51,7 +51,7 @@ public interface EditArea extends InteractiveStepFragment {
 
   void setQuellStil();
 
-  void setStandardStil();
+  void aenderungsmarkierungenEntfernen();
 
   boolean enthaeltAenderungsmarkierungen();
 

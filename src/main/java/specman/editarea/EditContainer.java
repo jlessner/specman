@@ -156,8 +156,23 @@ public class EditContainer extends JPanel {
 		this(editor, new EditorContentModel_V001(""), null);
 	}
 
+	/** Entfernt im Rahmen der Übernahme oder Rücknahme von Änderungen alle Einfärbungen,
+	 * die im Änderungsmodus entstanden und nicht <i>inhaltlicher</i> Natur sind.
+	 * <ul>
+	 *   <li>Wurde ein Edit Container im Änderungsmodus hinzugefügt, verschoben oder gelöscht,
+	 *   hat er einen hellgelben Hintergrund bekommen, der jetzt wieder auf weis geändert werden
+	 *   muss</li>
+	 *   <li>In einem {@link EditContainer} eines gelöschten Schritts wurde die Schrift
+	 *   im Änderungsmodus auf grau mit schwarzem Hintergrund gesetzt, was im Falle einer
+	 *   Rücknahme der Löschung wieder geändert werden muss.</li>
+	 *   <li>Letzteres gilt auch für eine etwaige, Im {@link EditContainer} enthaltene
+	 *   Schrittnummer.</li>
+	 * </ul>
+	 * Einfärbungen für <i>inhaltliche</i> Änderungen spielen hier keine Rolle. Diese werden
+	 * bereits <i>vor</i> dem Aufruf der Methode hier über {@link #aenderungenUebernehmen}
+	 * bzw. {@link #aenderungenVerwerfen()} behandelt. */
 	public void aenderungsmarkierungenEntfernen(SchrittID id) {
-		editAreas.forEach(EditArea::setStandardStil);
+		editAreas.forEach(EditArea::aenderungsmarkierungenEntfernen);
 		setBackground(BACKGROUND_COLOR_STANDARD);
 		if (schrittNummer != null) {
 			schrittNummer.setStandardStil(id);
