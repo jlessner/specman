@@ -1,4 +1,8 @@
 Abschluss für Go-Live
+- Refactoring TextEditArea
+  - OK?	public TextEditAreaModel_V001(String text) { this(text, new ArrayList<>(), Specman.initialArt()); }
+  - alten Konstruktor entfernen
+
 - Tabellen als separate Elemente analog Bilder
   - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
   - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Spalten

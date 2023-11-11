@@ -39,8 +39,8 @@ public class CursorFactory {
     Center, Bottom, Right, BottomRight;
 
     public Point toPoint(int iconWidth, int iconHeight) {
-      int x = this == Right || this == BottomRight ? iconWidth : iconWidth / 2;
-      int y = this == Bottom || this == BottomRight ? iconHeight : iconHeight / 2;
+      int x = this == Right || this == BottomRight ? iconWidth - 1 : iconWidth / 2;
+      int y = this == Bottom || this == BottomRight ? iconHeight - 1 : iconHeight / 2;
       return new Point(x, y);
     }
   }

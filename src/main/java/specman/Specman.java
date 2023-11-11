@@ -134,6 +134,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public static final String SPECMAN_TITLE = "Specman";
 
 	public Specman() throws Exception {
+		instance = this;
 		setApplicationIcon();
 		setTitle(SPECMAN_TITLE);
 
@@ -1077,7 +1078,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public static void main(String[] args) throws Exception {
-		instance = new Specman();
+		new Specman();
 	}
 
 	public StruktogrammModel_V001 generiereStruktogrammModel(boolean formatierterText) {

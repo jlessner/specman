@@ -64,18 +64,20 @@ import static specman.editarea.TextStyles.standardStil;
 import static specman.editarea.TextStyles.stepnumberLinkStyleColor;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
-    private boolean isMousePressed = false;
-    private boolean alreadyScrolledDuringCurrentMouseclick = false;
-    private Element hoveredElement = null;
+    private boolean isMousePressed;
+    private boolean alreadyScrolledDuringCurrentMouseclick;
+    private Element hoveredElement;
+    private Aenderungsart aenderungsart;
 
-    public TextEditArea(EditorI editor, String initialerText, Color initialBackground, Font font) {
-        editor.instrumentWysEditor(this, initialerText, 0);
+    public TextEditArea(TextEditAreaModel_V001 model, Font font) {
+        this.aenderungsart = model.aenderungsart;
+        Specman.instance().instrumentWysEditor(this, model.text, 0);
         putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         setFont(font);
         addKeyListener(this);
         addMouseListener();
         addMouseMotionListener();
-        setBackground(initialBackground);
+        setBackground(aenderungsart.toBackgroundColor());
         registerToolTipManager();
     }
 
@@ -240,7 +242,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         } else {
             text = getPlainText().replace("\n", " ").trim();
         }
-        return new TextEditAreaModel_V001(text, aenderungen);
+        return new TextEditAreaModel_V001(text, aenderungen, aenderungsart);
     }
 
     public java.util.List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen(boolean nurErste) {
@@ -271,7 +273,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             }
         }
     }
-
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
     public int aenderungenUebernehmen() {
@@ -686,7 +687,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         try {
             int textLength = getDocument().getLength();
             if (textLength > textPosition) {
-                TextEditArea splittedArea = new TextEditArea(Specman.instance(), getText(), this.getBackground(), this.getFont());
+                TextEditAreaModel_V001 splittedModel = new TextEditAreaModel_V001(getText(), new ArrayList<>(), aenderungsart);
+                TextEditArea splittedArea = new TextEditArea(splittedModel, this.getFont());
                 getDocument().remove(textPosition, textLength - textPosition);
                 splittedArea.getDocument().remove(0, textPosition);
                 return splittedArea;
