@@ -188,8 +188,9 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   @Override
-  public void markAsDeleted() {
-
+  public void setGeloeschtMarkiertStil() {
+    setBackground(TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+    cellstream().forEach(cell -> cell.setGeloeschtMarkiertStil(null));
   }
 
   @Override
@@ -355,7 +356,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   int numColumns() { return cells.get(0).size(); }
   int numRows() { return cells.size(); }
 
-  public void remove() {
+  public void removeTable() {
     getParent().removeEditArea(this); // Already includes undo recording
     Specman.instance().diagrammAktualisieren(null);
   }
@@ -384,7 +385,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       Specman.instance().addEdit(new UndoableTableRowRemoved(this, rowIndex, row));
     }
     else {
-      remove();
+      removeTable();
     }
   }
 
@@ -449,7 +450,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       editor.addEdit(new UndoableTableColumnRemoved(this, colIndex, column, originalColumnsWidthPercent));
     }
     else {
-      remove();
+      removeTable();
     }
   }
 

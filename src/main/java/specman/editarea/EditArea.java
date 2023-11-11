@@ -17,7 +17,7 @@ public interface EditArea extends InteractiveStepFragment {
 
   void pack(int availableWidth);
 
-  void markAsDeleted();
+  void setGeloeschtMarkiertStil();
 
   Component asComponent();
 

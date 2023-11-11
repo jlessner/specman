@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static specman.Specman.schrittHintergrund;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.SCHRITTNR_FONTSIZE;
@@ -192,7 +191,7 @@ public class EditContainer extends JPanel {
 
 	public void setGeloeschtMarkiertStil(SchrittID id) {
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		modifyableEditAreas().forEach(ea -> ea.markAsDeleted());
+		modifyableEditAreas().forEach(ea -> ea.setGeloeschtMarkiertStil());
 		if (schrittNummer != null) {
 			schrittNummer.setGeloeschtStil(id);
 		}

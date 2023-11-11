@@ -23,7 +23,7 @@ public class UndoableImageRemovedMarkiert extends AbstractUndoableInteraction {
 
     @Override
     public void redoEdit() throws CannotRedoException {
-        imageEditArea.markAsDeleted();
+        imageEditArea.setGeloeschtMarkiertStil();
     }
 
 }

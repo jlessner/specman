@@ -187,7 +187,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     @Override
-    public void markAsDeleted() {
+    public void setGeloeschtMarkiertStil() {
         aenderungenVerwerfen();
         setStyle(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
     }
