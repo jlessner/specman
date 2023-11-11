@@ -13,6 +13,8 @@ import specman.editarea.InteractiveStepFragment;
 
 import java.awt.Color;
 
+import static specman.Aenderungsart.Untracked;
+
 /**
  * SchrittSequenzView, die einen Zweig in einer Verweigung durch If, If/Else oder Case
  * repräsentiert. Über die normale Schritt-Sequenz hinaus hat ein Zweig einen
@@ -90,8 +92,8 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	}
 
 	public void aenderungsmarkierungenEntfernen() {
-		setAenderungsart(null);
 		ueberschrift.aenderungsmarkierungenEntfernen(null);
+		setAenderungsart(Untracked);
 	}
 
 	public int ueberschriftAenderungenUebernehmen() {

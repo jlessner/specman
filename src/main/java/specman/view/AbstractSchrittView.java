@@ -1,5 +1,6 @@
 package specman.view;
 
+import org.jetbrains.annotations.NotNull;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
@@ -39,6 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static specman.Aenderungsart.Geloescht;
+import static specman.Aenderungsart.Untracked;
+import static specman.Aenderungsart.Zielschritt;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.view.RelativeStepPosition.After;
@@ -57,7 +61,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	protected final EditContainer editContainer;
 	protected SchrittID id;
-	protected Aenderungsart aenderungsart;
+	@NotNull protected Aenderungsart aenderungsart;
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	protected QuellSchrittView quellschritt;
@@ -195,21 +199,15 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return null;
 	}
 
-	public void setStandardStil() {
-		setBackground(BACKGROUND_COLOR_STANDARD);
-		editContainer.aenderungsmarkierungenEntfernen(id);
-		setAenderungsart(null);
-	}
-
 	public void setGeloeschtMarkiertStil() {
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		editContainer.setGeloeschtMarkiertStil(id);
-		setAenderungsart(Aenderungsart.Geloescht);
+		setAenderungsart(Geloescht);
 	}
 
 	public void setZielschrittStil() {
 		editContainer.setZielschrittStil(getQuellschritt().getId());
-		setAenderungsart(Aenderungsart.Zielschritt);
+		setAenderungsart(Zielschritt);
 	}
 
 	public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
@@ -218,17 +216,17 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void aenderungsmarkierungenEntfernen() {
-		setStandardStil();
+		setBackground(BACKGROUND_COLOR_STANDARD);
+		editContainer.aenderungsmarkierungenEntfernen(id);
 	}
 
 	public boolean enthaeltAenderungsmarkierungen() {
-		if (editContainer.enthaeltAenderungsmarkierungen())
+		if (editContainer.enthaeltAenderungsmarkierungen()) {
 			return true;
-		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
-			if (unterSequenz.enthaeltAenderungsmarkierungen())
-				return true;
 		}
-		return false;
+		return unterSequenzen()
+			.stream()
+			.anyMatch(untersequenz -> untersequenz.enthaeltAenderungsmarkierungen());
 	}
 
 	public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
@@ -393,13 +391,13 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void resyncSchrittnummerStil() {
-		if (getAenderungsart() == Aenderungsart.Geloescht) {
+		if (getAenderungsart() == Geloescht) {
 			editContainer.wrapSchrittnummerAsDeleted();
 		}
 		if (getAenderungsart() == Aenderungsart.Quellschritt) {
 			editContainer.wrapSchrittnummerAsQuelle(((QuellSchrittView)this).getZielschrittID());
 		}
-		if (getAenderungsart() == Aenderungsart.Zielschritt) {
+		if (getAenderungsart() == Zielschritt) {
 			editContainer.wrapSchrittnummerAsZiel(getQuellschritt().getId());
 		}
 	}
@@ -460,23 +458,22 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public int aenderungenUebernehmen(EditorI editor) throws EditException {
-		int changesMade = editAenderungenUebernehmen();
-		if (aenderungsart != null) {
-			switch (aenderungsart) {
-				case Hinzugefuegt:
-					aenderungsmarkierungenEntfernen();
-					break;
-				case Geloescht:
-				case Quellschritt:
-					markStepnumberLinksAsDefect();
-					getParent().schrittEntfernen(this);
-					break;
-				case Zielschritt:
-					setQuellschritt(null);
-					setStandardStil();
-			}
-			setAenderungsart(null);
-			changesMade++;
+		int changesMade = editAenderungenUebernehmen() + 1;
+		switch (aenderungsart) {
+			case Hinzugefuegt:
+				aenderungsmarkierungenEntfernen();
+				break;
+			case Geloescht:
+			case Quellschritt:
+				markStepnumberLinksAsDefect();
+				getParent().schrittEntfernen(this);
+				break;
+			case Zielschritt:
+				setQuellschritt(null);
+				aenderungsmarkierungenEntfernen();
+				break;
+			case Untracked:
+				changesMade--;
 		}
 		return changesMade;
 	}
@@ -486,29 +483,28 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public int aenderungenVerwerfen(EditorI editor) throws EditException {
-		int changesReverted = editAenderungenVerwerfen();
-		if (aenderungsart != null) {
-			switch (aenderungsart) {
-				case Hinzugefuegt:
-          markStepnumberLinksAsDefect();
-					getParent().schrittEntfernen(this);
-					break;
-				case Geloescht:
-					aenderungsmarkierungenEntfernen();
-					break;
-				case Quellschritt:
-					break;
-				case Zielschritt:
-					getParent().schrittEntfernen(this);
-					setId(getQuellschritt().newStepIDInSameSequence(After));
-					setParent(getQuellschritt().getParent());
-					getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
-					getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
-					setQuellschritt(null);
-					this.setStandardStil();
-			}
-			setAenderungsart(null);
-			changesReverted++;
+		int changesReverted = editAenderungenVerwerfen() + 1;
+		switch (aenderungsart) {
+			case Hinzugefuegt:
+				markStepnumberLinksAsDefect();
+				getParent().schrittEntfernen(this);
+				break;
+			case Geloescht:
+				aenderungsmarkierungenEntfernen();
+				break;
+			case Quellschritt:
+				break;
+			case Zielschritt:
+				getParent().schrittEntfernen(this);
+				setId(getQuellschritt().newStepIDInSameSequence(After));
+				setParent(getQuellschritt().getParent());
+				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
+				getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
+				setQuellschritt(null);
+				aenderungsmarkierungenEntfernen();
+				break;
+			case Untracked:
+				changesReverted--;
 		}
 		return changesReverted;
 	}

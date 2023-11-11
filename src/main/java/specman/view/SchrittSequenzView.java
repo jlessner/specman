@@ -4,6 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import org.jetbrains.annotations.NotNull;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
@@ -25,6 +26,7 @@ import java.awt.Component;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static specman.Aenderungsart.Untracked;
 import static specman.Specman.initialtext;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.pdf.Shape.GAP_COLOR;
@@ -41,7 +43,7 @@ public class SchrittSequenzView {
 	public static final String ZEILENLAYOUT_CATCHBEREICH = "pref";
 
 	SchrittID sequenzBasisId;
-	Aenderungsart aenderungsart;
+	@NotNull Aenderungsart aenderungsart;
 	final JPanel sequenzBereich;
 	final CatchBereich catchBereich;
 	final JPanel panel;
@@ -506,7 +508,7 @@ public class SchrittSequenzView {
 		for (AbstractSchrittView schritt: schritte) {
 			changesMade += schritt.aenderungenUebernehmen(editor);
 		}
-		setAenderungsart(null);
+		setAenderungsart(Untracked);
 		return changesMade;
 	}
 
@@ -515,7 +517,7 @@ public class SchrittSequenzView {
 		for (AbstractSchrittView schritt: schritte) {
 			changesReverted += schritt.aenderungenVerwerfen(editor);
 		}
-		setAenderungsart(null);
+		setAenderungsart(Untracked);
 		return changesReverted;
 	}
 
