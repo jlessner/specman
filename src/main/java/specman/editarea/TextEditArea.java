@@ -185,7 +185,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void markAsDeleted() {
-        aenderungsmarkierungenVerwerfen();
+        aenderungenVerwerfen();
         setStyle(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
     }
 
@@ -274,7 +274,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
-    public int aenderungsmarkierungenUebernehmen() {
+    public int aenderungenUebernehmen() {
         EditorI editor = Specman.instance();
         StyledDocument doc = (StyledDocument) getDocument();
         int changesMade = 0;
@@ -297,7 +297,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
-    public int aenderungsmarkierungenVerwerfen() {
+    public int aenderungenVerwerfen() {
         EditorI editor = Specman.instance();
         StyledDocument doc = (StyledDocument) getDocument();
         int changesReverted = 0;

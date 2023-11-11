@@ -41,7 +41,6 @@ import java.util.Map;
 
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
-import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
@@ -461,7 +460,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public int aenderungenUebernehmen(EditorI editor) throws EditException {
-		int changesMade = textAenderungenUebernehmen();
+		int changesMade = editAenderungenUebernehmen();
 		if (aenderungsart != null) {
 			switch (aenderungsart) {
 				case Hinzugefuegt:
@@ -482,16 +481,16 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return changesMade;
 	}
 
-	protected int textAenderungenUebernehmen() {
-		return editContainer.aenderungsmarkierungenUebernehmen();
+	protected int editAenderungenUebernehmen() {
+		return editContainer.aenderungenUebernehmen();
 	}
 
 	public int aenderungenVerwerfen(EditorI editor) throws EditException {
-		int changesReverted = aenderungsmarkierungenVerwerfen();
+		int changesReverted = editAenderungenVerwerfen();
 		if (aenderungsart != null) {
 			switch (aenderungsart) {
 				case Hinzugefuegt:
-                    markStepnumberLinksAsDefect();
+          markStepnumberLinksAsDefect();
 					getParent().schrittEntfernen(this);
 					break;
 				case Geloescht:
@@ -514,8 +513,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return changesReverted;
 	}
 
-	protected int  aenderungsmarkierungenVerwerfen() {
-		return editContainer.aenderungsmarkierungenVerwerfen();
+	protected int editAenderungenVerwerfen() {
+		return editContainer.aenderungenVerwerfen();
 	}
 
 	public void registerStepnumberLink(TextEditArea textEditArea) {

@@ -253,7 +253,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   @Override
-  public int aenderungsmarkierungenUebernehmen() {
+  public int aenderungenUebernehmen() {
     int changesMade = 0;
     if (aenderungsart != null) {
       switch (aenderungsart) {
@@ -266,7 +266,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   @Override
-  public int aenderungsmarkierungenVerwerfen() {
+  public int aenderungenVerwerfen() {
     int changesReverted = 0;
     if (aenderungsart != null) {
       switch(aenderungsart) {

@@ -211,13 +211,13 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   @Override
-  public int aenderungsmarkierungenUebernehmen() {
-    return cellstream().mapToInt(cell -> cell.aenderungsmarkierungenUebernehmen()).sum();
+  public int aenderungenUebernehmen() {
+    return cellstream().mapToInt(cell -> cell.aenderungenUebernehmen()).sum();
   }
 
   @Override
-  public int aenderungsmarkierungenVerwerfen() {
-    return cellstream().mapToInt(cell -> cell.aenderungsmarkierungenVerwerfen()).sum();
+  public int aenderungenVerwerfen() {
+    return cellstream().mapToInt(cell -> cell.aenderungenVerwerfen()).sum();
   }
 
   @Override
