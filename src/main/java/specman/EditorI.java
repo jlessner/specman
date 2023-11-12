@@ -30,4 +30,6 @@ public interface EditorI extends FocusListener {
 	AbstractSchrittView findStepByStepID(String stepnumberLinkID);
 	boolean isKeyPressed(int keyCode);
 	void setCursor(Cursor cursorToUse);
+
+  boolean aenderungenVerfolgen();
 }

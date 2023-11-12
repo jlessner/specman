@@ -13,6 +13,7 @@ import specman.model.v001.TableEditAreaModel_V001;
 import specman.pdf.Shape;
 import specman.undo.UndoableTableColumnAdded;
 import specman.undo.UndoableTableColumnRemoved;
+import specman.undo.UndoableTableRemovedMarked;
 import specman.undo.UndoableTableRowAdded;
 import specman.undo.UndoableTableRowRemoved;
 import specman.undo.manager.UndoRecording;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
@@ -356,9 +358,19 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   int numColumns() { return cells.get(0).size(); }
   int numRows() { return cells.size(); }
 
-  public void removeTable() {
-    getParent().removeEditArea(this); // Already includes undo recording
-    Specman.instance().diagrammAktualisieren(null);
+  public void removeTableOrMarkAsDeleted() {
+    EditorI editor = Specman.instance();
+    if (editor.aenderungenVerfolgen() && aenderungsart == Untracked) {
+      try (UndoRecording ur = editor.composeUndo()) {
+        setGeloeschtMarkiertStil();
+        aenderungsart = Geloescht;
+        editor.addEdit(new UndoableTableRemovedMarked(this));
+      }
+    }
+    else {
+      getParent().removeEditArea(this); // Already includes undo recording
+      Specman.instance().diagrammAktualisieren(null);
+    }
   }
 
   public void addRow(int rowIndex) {
@@ -385,7 +397,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       Specman.instance().addEdit(new UndoableTableRowRemoved(this, rowIndex, row));
     }
     else {
-      removeTable();
+      removeTableOrMarkAsDeleted();
     }
   }
 
@@ -450,7 +462,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       editor.addEdit(new UndoableTableColumnRemoved(this, colIndex, column, originalColumnsWidthPercent));
     }
     else {
-      removeTable();
+      removeTableOrMarkAsDeleted();
     }
   }
 
@@ -480,5 +492,14 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     }
     columnsWidthPercent = originalColumnsWidthPercent;
     recomputeLayout();
+  }
+
+  public void undoGeloeschtMarkiertStil() {
+    try (UndoRecording ur = Specman.instance().pauseUndo()) {
+      aenderungenVerwerfen();
+      aenderungsmarkierungenEntfernen();
+      aenderungsart = Untracked;
+      setEditBackground(null);
+    }
   }
 }
