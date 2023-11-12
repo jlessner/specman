@@ -1,20 +1,23 @@
 package specman;
 
 import specman.editarea.InteractiveStepFragment;
+import specman.editarea.TextEditArea;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
+import specman.view.BreakSchrittView;
+import specman.view.CatchSchrittView;
 
 import javax.swing.JEditorPane;
 import javax.swing.undo.UndoableEdit;
 import java.awt.Cursor;
 import java.awt.event.FocusListener;
 import java.io.File;
+import java.util.List;
 
-/**
- * This interface represents the current struktogramm editor and is supposed to
- * substitute the older direct access by {@link Specman#instance()}. This will
- * e.g. allow to run multiple editors windows within a single editor application.
- */
+/** This interface represents the current actogramm editor and is supposed to
+ * substitute the older direct access of the {@link Specman} class. This may
+ * later e.g. allow to run multiple editors windows within a single editor
+ * application. */
 public interface EditorI extends FocusListener {
 	void schrittFuerNachinitialisierungRegistrieren(AbstractSchrittView schritt);
 	void vertikalLinieSetzen(int x, SpaltenResizer spaltenResizer);
@@ -30,6 +33,11 @@ public interface EditorI extends FocusListener {
 	AbstractSchrittView findStepByStepID(String stepnumberLinkID);
 	boolean isKeyPressed(int keyCode);
 	void setCursor(Cursor cursorToUse);
-
   boolean aenderungenVerfolgen();
+	AbstractSchrittView findeSchritt(TextEditArea textEditArea);
+	BreakSchrittView findeBreakSchritt(CatchSchrittView catchSchrittView);
+	double scale(double length);
+	void addImageViaFileChooser();
+	List<AbstractSchrittView> getAllSteps();
+	void addTable(int numColumns, int numRows);
 }

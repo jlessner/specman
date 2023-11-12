@@ -130,8 +130,8 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
     if (newPercentage != currentPercentage) {
 
       // Get width & height by scaling the initial Icon length
-      int targetWidth = (int) Specman.instance().getScaledLength(initialIcon.getIconWidth());
-      int targetHeight = (int) Specman.instance().getScaledLength(initialIcon.getIconHeight());
+      int targetWidth = (int) Specman.instance().scale(initialIcon.getIconWidth());
+      int targetHeight = (int) Specman.instance().scale(initialIcon.getIconHeight());
 
       // Use the initial icon to prevent bad image quality through upscaling (e.g. 50% -> 100%)
       // Also no need for scaling when returning to the initial Icon
@@ -168,7 +168,7 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
 
   public void updateLocation(int remainingWidth) {
     if (remainingWidth > 0) {
-      int desiredSize = (int) Specman.instance().getScaledLength(MINIMUM_ICON_LENGTH);
+      int desiredSize = (int) Specman.instance().scale(MINIMUM_ICON_LENGTH);
       setBounds(remainingWidth - desiredSize, 0, desiredSize, desiredSize);
 
       int borderSize = (int) Math.round(desiredSize * 0.1);

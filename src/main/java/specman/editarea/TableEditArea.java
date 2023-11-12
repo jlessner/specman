@@ -17,6 +17,7 @@ import specman.undo.UndoableTableRemovedMarked;
 import specman.undo.UndoableTableRowAdded;
 import specman.undo.UndoableTableRowRemoved;
 import specman.undo.manager.UndoRecording;
+import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -215,15 +216,31 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   @Override
+  /** The logic in here has similarities to {@link AbstractSchrittView#aenderungenUebernehmen(EditorI)}
+   * as it is a similar situation of a container having multiple
+   */
   public int aenderungenUebernehmen() {
+    int changesMade = aenderungsart.asNumChanges();
+    switch(aenderungsart) {
+      case Geloescht -> getParent().removeEditArea(this);
+    }
+    changesMade += cellstream().mapToInt(cell -> cell.aenderungenUebernehmen()).sum();
+    aenderungsmarkierungenEntfernen();
     aenderungsart = Untracked;
-    return cellstream().mapToInt(cell -> cell.aenderungenUebernehmen()).sum();
+    return changesMade;
   }
 
   @Override
   public int aenderungenVerwerfen() {
+    int changesReverted = aenderungsart.asNumChanges();
+    switch(aenderungsart) {
+      case Hinzugefuegt -> getParent().removeEditArea(this);
+    }
+    changesReverted += cellstream().mapToInt(cell -> cell.aenderungenVerwerfen()).sum();
+    aenderungsmarkierungenEntfernen();
     aenderungsart = Untracked;
-    return cellstream().mapToInt(cell -> cell.aenderungenVerwerfen()).sum();
+    return changesReverted;
+
   }
 
   @Override
@@ -497,7 +514,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     recomputeLayout();
   }
 
-  /** This works a bit like a tiny version of {@link specman.view.AbstractSchrittView#aenderungenVerwerfen(EditorI)}. */
+  /** This works a bit like a tiny version of {@link AbstractSchrittView#aenderungenVerwerfen(EditorI)}. */
   public void undoGeloeschtMarkiertStil() {
     try (UndoRecording ur = Specman.instance().pauseUndo()) {
       aenderungenVerwerfen();

@@ -125,8 +125,7 @@ public class StepnumberLinkDialog extends JDialog {
                 StepnumberLinkDialog.this.editor.requestFocusInWindow();
             }
 
-
-            TextEditArea lastFocusedTextArea = Specman.instance().getLastFocusedTextArea();
+            TextEditArea lastFocusedTextArea = (TextEditArea)Specman.instance().getLastFocusedTextArea();
             if (lastFocusedTextArea != null) {
                 AbstractSchrittView selectedStep = ((JList<AbstractSchrittView>) e.getSource()).getSelectedValue();
 

@@ -1069,9 +1069,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	private static Specman instance;
 
-	@Deprecated
-	/** Use the {@link EditorI} interface instead. */
-	public static Specman instance() { return instance; }
+	public static EditorI instance() { return instance; }
 
 	public boolean aenderungenVerfolgen() {
 		return aenderungenVerfolgen.isSelected();
@@ -1256,7 +1254,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		fehler(ex.getMessage());
 	}
 
-	public double getScaledLength(double length) {
+	public double scale(double length) {
 		return length * getZoomFactor() * 0.01;
 	}
 
@@ -1326,5 +1324,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	public boolean isKeyPressed(int keyCode) {
 		return pressedKeys.contains(keyCode);
+	}
+
+	@Override
+	public AbstractSchrittView findeSchritt(TextEditArea textEditArea) {
+		return hauptSequenz.findeSchritt(textEditArea);
 	}
 }

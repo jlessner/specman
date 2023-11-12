@@ -103,8 +103,8 @@ public class RoundedBorderDecorator extends JPanel {
   private void drawNumberStepBackground(Graphics2D g2d, Shape innerShape) {
     g2d.setColor(TextStyles.Hintergrundfarbe_Schrittnummer);
 
-    double x = (innerShape.getBounds().getWidth() + Specman.instance().getScaledLength(INNER_BORDERLINE_WIDTH * 2));
-    double y = (innerShape.getBounds().getY() + Specman.instance().getScaledLength(1.5));
+    double x = (innerShape.getBounds().getWidth() + Specman.instance().scale(INNER_BORDERLINE_WIDTH * 2));
+    double y = (innerShape.getBounds().getY() + Specman.instance().scale(1.5));
     Rectangle2D.Double background = new Rectangle2D.Double(x, y, STEPNUMBER_BACKGROUND_WIDTH, stepnumberTextheight);
     g2d.fill(background);
   }

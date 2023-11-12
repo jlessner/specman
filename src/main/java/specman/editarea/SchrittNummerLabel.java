@@ -39,7 +39,7 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
     setForeground(Color.WHITE);
     setOpaque(true);
 
-    DragMouseAdapter ada = new DragMouseAdapter(Specman.instance());
+    DragMouseAdapter ada = new DragMouseAdapter((Specman)Specman.instance());
     addMouseListener(ada);
     addMouseMotionListener(ada);
   }

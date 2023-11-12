@@ -634,7 +634,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         if (!Specman.instance().aenderungenVerfolgen()) {
             return;
         }
-        AbstractSchrittView textOwner = Specman.instance().hauptSequenz.findeSchritt(this);
+        AbstractSchrittView textOwner = Specman.instance().findeSchritt(this);
         if (textOwner != null && isEditable()) {
             int selectionStart = getSelectionStart();
             int selectionEnd = getSelectionEnd();

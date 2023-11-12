@@ -314,7 +314,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	static String umgehungLayout() {
-		return umgehungLayout(SPALTENLAYOUT_UMGEHUNG_GROESSE * Specman.instance().zoomFaktor() / 100);
+		return umgehungLayout(SPALTENLAYOUT_UMGEHUNG_GROESSE * Specman.instance().getZoomFactor() / 100);
 	}
 
 	static String umgehungLayout(int groesse) {
