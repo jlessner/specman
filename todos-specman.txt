@@ -1,16 +1,12 @@
 Abschluss für Go-Live
-- Refactoring TextEditArea
-  - OK?	public TextEditAreaModel_V001(String text) { this(text, new ArrayList<>(), Specman.initialArt()); }
-  - alten Konstruktor entfernen
-
 - Tabellen als separate Elemente analog Bilder
   - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
   - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Spalten
-  - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen einer Tabelle
-  - Noch zu implementieren:
-    - UndoableTableRemovedMarkiert
   - Nice to have: Springen in die nächste Zelle durch Drücken von TAB
   - Nice to have: Hinzufügen von Zeilen durch Drücken von TAB in der letzten Zelle?
+  x Gelöscht markierte Tabelle darf kein Löschen / Hinzufügen von Zeilen / Spalten mehr erlauben
+  x UndoableTableRemovedMarked
+  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen einer Tabelle
   x Hinzufügen / Löschen von Spalten (Löschen der letzten Spalte = Löschen der Tabelle)
   x Undo / Redo für Hinzufügen / Löschen von Zeilen
   x Hinzufügen / Löschen von Zeilen (Löschen der letzten Zeile = Löschen der Tabelle)

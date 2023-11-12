@@ -502,4 +502,6 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       setEditBackground(null);
     }
   }
+
+  public boolean isMarkedAsDeleted() { return aenderungsart == Geloescht; }
 }

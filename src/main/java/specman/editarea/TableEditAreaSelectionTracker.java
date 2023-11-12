@@ -93,6 +93,10 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
 
   @Override
   public void mouseMoved(MouseEvent e) {
+    if (editArea.isMarkedAsDeleted()) {
+      // Tables being marked as deleted do not support changes in row and column layout
+      return;
+    }
     Point mousePos = e.getPoint();
     Rectangle selectionUpdate = null;
     selectionUpdate = wholeTableSelected(mousePos);
