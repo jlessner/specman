@@ -494,6 +494,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     recomputeLayout();
   }
 
+  /** This works a bit like a tiny version of {@link specman.view.AbstractSchrittView#aenderungenVerwerfen(EditorI)}. */
   public void undoGeloeschtMarkiertStil() {
     try (UndoRecording ur = Specman.instance().pauseUndo()) {
       aenderungenVerwerfen();
