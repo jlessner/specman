@@ -424,8 +424,8 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 					UDBL.setBackgroundUDBL(panelFall1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 					UDBL.repaint(panel);
 				}
-				return;
 			}
+			return;
 		}
 
 		sonstSequenz.alsGeloeschtMarkierenUDBL(editor);
