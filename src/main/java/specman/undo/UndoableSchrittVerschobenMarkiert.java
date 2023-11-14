@@ -8,9 +8,6 @@ import specman.view.AbstractSchrittView;
 import specman.view.QuellSchrittView;
 import specman.view.SchrittSequenzView;
 
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-
 import static specman.Aenderungsart.Untracked;
 import static specman.view.RelativeStepPosition.Before;
 
@@ -52,7 +49,7 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
       originalParent.schrittZwischenschieben(quellschritt, Before, step, editor);
       step.setQuellschritt(quellschritt);
       quellschritt.setZielschritt(step);
-      step.setZielschrittStil();
+      step.setZielschrittStilUDBL();
       step.setAenderungsart(Aenderungsart.Zielschritt);
     }
     togglePosition();

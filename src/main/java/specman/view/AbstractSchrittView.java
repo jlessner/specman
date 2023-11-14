@@ -208,9 +208,9 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		setAenderungsartUDBL(Geloescht);
 	}
 
-	public void setZielschrittStil() {
-		editContainer.setZielschrittStil(getQuellschritt().getId());
-		setAenderungsart(Zielschritt);
+	public void setZielschrittStilUDBL() {
+		editContainer.setZielschrittStilUDBL(getQuellschritt().getId());
+		setAenderungsartUDBL(Zielschritt);
 	}
 
 	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
@@ -423,7 +423,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 			switch (aenderungsart) {
 				case Geloescht -> setGeloeschtMarkiertStilUDBL();
 				case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
-				case Zielschritt -> setZielschrittStil();
+				case Zielschritt -> setZielschrittStilUDBL();
 			}
 		}
 		registerAllExistingStepnumbers();

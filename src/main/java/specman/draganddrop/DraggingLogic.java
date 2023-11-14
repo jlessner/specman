@@ -429,106 +429,102 @@ public class DraggingLogic implements Serializable {
     }
 
     //Neuen Schritt zwischenschieben abhängig vom Button
-    private void addNeuerSchritt(RelativeStepPosition insertionPosition, AbstractSchrittView schritt, MouseEvent e) throws EditException {
-        SchrittSequenzView sequenz = schritt.getParent();
-        //List<Aenderungsmarkierung_V001> markierungen = null;
+    private void addNeuerSchritt(RelativeStepPosition insertionPosition, AbstractSchrittView referenceStep, MouseEvent e) throws EditException {
+        SchrittSequenzView sequenz = referenceStep.getParent();
 
-        //ToDo Löschen und hinzufügen beim verschieben
         if (e.getSource() instanceof SchrittNummerLabel) {
             SchrittNummerLabel label = (SchrittNummerLabel) e.getSource();
-            AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(label);
-            if(specman.aenderungenVerfolgen() && step.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
-                //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
-                //if(schritt.getAenderungsart()== Aenderungsart.Geloescht || schritt.getAenderungsart() == Aenderungsart.Quellschritt)
+            AbstractSchrittView movingStep = specman.getHauptSequenz().findeSchritt(label);
+            if(specman.aenderungenVerfolgen() && movingStep.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
                 QuellSchrittView quellschritt;
-                sequenz = step.getParent();
-                if(step.getQuellschritt() == null) {
+                sequenz = movingStep.getParent();
+                if(movingStep.getQuellschritt() == null) {
                     try(UndoRecording ur = specman.pauseUndo()) {
-                        quellschritt = new QuellSchrittView(specman, sequenz, step.getId());
-                        sequenz.schrittZwischenschieben(quellschritt, Before, step, specman);
+                        quellschritt = new QuellSchrittView(specman, sequenz, movingStep.getId());
+                        sequenz.schrittZwischenschieben(quellschritt, Before, movingStep, specman);
                     }
                 }
                 else {
-                  quellschritt = step.getQuellschritt();
+                  quellschritt = movingStep.getQuellschritt();
                 }
-                if (step != schritt) {
-                    SchrittSequenzView originalParent = step.getParent();
-                    int originalIndex = originalParent.schrittEntfernen(step);
-                    step.setId(schritt.newStepIDInSameSequence(insertionPosition));
-                    step.setParent(schritt.getParent());
-                    sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
-                    specman.addEdit(new UndoableSchrittVerschobenMarkiert(step, originalParent, originalIndex, quellschritt, specman));
-                    step.setQuellschritt(quellschritt);
+                if (movingStep != referenceStep) {
+                    SchrittSequenzView originalParent = movingStep.getParent();
+                    int originalIndex = originalParent.schrittEntfernen(movingStep);
+                    movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
+                    movingStep.setParent(referenceStep.getParent());
+                    sequenz.schrittZwischenschieben(movingStep, insertionPosition, referenceStep, specman);
+                    specman.addEdit(new UndoableSchrittVerschobenMarkiert(movingStep, originalParent, originalIndex, quellschritt, specman));
+                    movingStep.setQuellschritt(quellschritt);
                     try(UndoRecording ur = specman.pauseUndo()) {
-                        step.setZielschrittStil();
+                        movingStep.setZielschrittStilUDBL();
                     }
                 }
-                quellschritt.setZielschritt(step);
+                quellschritt.setZielschritt(movingStep);
                 specman.hauptSequenz.resyncSchrittnummerStil();
             }
             else {
                 //Abfrage da der Schritt nicht vor oder nach sich selbst eingefügt werden kann
-                if (step != schritt) {
-                    SchrittSequenzView originalParent = step.getParent();
-                    int originalIndex = originalParent.schrittEntfernen(step);
-                    step.setId(schritt.newStepIDInSameSequence(insertionPosition));
-                    step.setParent(schritt.getParent());
-                    sequenz.schrittZwischenschieben(step, insertionPosition, schritt, specman);
-                    specman.addEdit(new UndoableSchrittVerschoben(step, originalParent, originalIndex));
+                if (movingStep != referenceStep) {
+                    SchrittSequenzView originalParent = movingStep.getParent();
+                    int originalIndex = originalParent.schrittEntfernen(movingStep);
+                    movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
+                    movingStep.setParent(referenceStep.getParent());
+                    sequenz.schrittZwischenschieben(movingStep, insertionPosition, referenceStep, specman);
+                    specman.addEdit(new UndoableSchrittVerschoben(movingStep, originalParent, originalIndex));
                 }
             }
         }
 
-        if (e.getSource().equals(specman.getSchrittAnhaengen())) {
-            schritt = sequenz.einfachenSchrittZwischenschieben(insertionPosition, schritt, specman);
-            specman.newStepPostInit(schritt);
+        if (e.getSource().equals(specman.getEinfachenSchrittAnhaengen())) {
+            referenceStep = sequenz.einfachenSchrittZwischenschieben(insertionPosition, referenceStep, specman);
+            specman.newStepPostInit(referenceStep);
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
         else if (e.getSource().equals(specman.getWhileSchrittAnhaengen())) {
-            schritt = sequenz.whileSchrittZwischenschieben(insertionPosition, schritt, specman);
-            specman.newStepPostInit(schritt);
+            referenceStep = sequenz.whileSchrittZwischenschieben(insertionPosition, referenceStep, specman);
+            specman.newStepPostInit(referenceStep);
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
         else if (e.getSource().equals(specman.getWhileWhileSchrittAnhaengen())) {
-            schritt = sequenz.whileWhileSchrittZwischenschieben(insertionPosition, schritt, specman);
-            specman.newStepPostInit(schritt);
+            referenceStep = sequenz.whileWhileSchrittZwischenschieben(insertionPosition, referenceStep, specman);
+            specman.newStepPostInit(referenceStep);
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
         else if (e.getSource().equals(specman.getIfElseSchrittAnhaengen())) {
-            schritt = sequenz.ifElseSchrittZwischenschieben(insertionPosition, schritt, specman);
-            specman.newStepPostInit(schritt);
+            referenceStep = sequenz.ifElseSchrittZwischenschieben(insertionPosition, referenceStep, specman);
+            specman.newStepPostInit(referenceStep);
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
         else if (e.getSource().equals(specman.getIfSchrittAnhaengen())) {
-            schritt = sequenz.ifSchrittZwischenschieben(insertionPosition, schritt, specman);
-            specman.newStepPostInit(schritt);
+            referenceStep = sequenz.ifSchrittZwischenschieben(insertionPosition, referenceStep, specman);
+            specman.newStepPostInit(referenceStep);
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
         else if (e.getSource().equals(specman.getCaseSchrittAnhaengen())) {
-            schritt = sequenz.caseSchrittZwischenschieben(insertionPosition, schritt, specman);
-            specman.newStepPostInit(schritt);
+            referenceStep = sequenz.caseSchrittZwischenschieben(insertionPosition, referenceStep, specman);
+            specman.newStepPostInit(referenceStep);
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
         else if (e.getSource().equals(specman.getSubsequenzSchrittAnhaengen())) {
-            schritt = sequenz.subsequenzSchrittZwischenschieben(insertionPosition, schritt, specman);
-            specman.newStepPostInit(schritt);
+            referenceStep = sequenz.subsequenzSchrittZwischenschieben(insertionPosition, referenceStep, specman);
+            specman.newStepPostInit(referenceStep);
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
         else if (e.getSource().equals(specman.getBreakSchrittAnhaengen())) {
-            schritt = sequenz.breakSchrittZwischenschieben(insertionPosition, schritt, specman);
-            specman.newStepPostInit(schritt);
+            referenceStep = sequenz.breakSchrittZwischenschieben(insertionPosition, referenceStep, specman);
+            specman.newStepPostInit(referenceStep);
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
         else if (e.getSource().equals(specman.getCatchSchrittAnhaengen())) {
-            schritt = sequenz.catchSchrittZwischenschieben(insertionPosition, schritt, specman);
-            specman.newStepPostInit(schritt);
+            referenceStep = sequenz.catchSchrittZwischenschieben(insertionPosition, referenceStep, specman);
+            specman.newStepPostInit(referenceStep);
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
     }
 
     //Neuen Schritt anhängen abhängig vom Button
     private void addNeuerSchritt(MouseEvent e, SchrittSequenzView sequenz) {
-        if (e.getSource().equals(specman.getSchrittAnhaengen())) {
+        if (e.getSource().equals(specman.getEinfachenSchrittAnhaengen())) {
             sequenz.einfachenSchrittAnhaengen(specman);
         } else if (e.getSource().equals(specman.getWhileSchrittAnhaengen())) {
             sequenz.whileSchrittAnhaengen(specman);

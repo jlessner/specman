@@ -878,7 +878,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                     CompoundUndoManager.endCompoundEdit(doc);
                     return true;
                 }
-            } catch (BadLocationException ex) {
+            }
+            catch (BadLocationException ex) {
                 throw new RuntimeException(ex);
             }
         }

@@ -337,7 +337,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	private void actionListenerHinzufuegen() {
-		schrittAnhaengen.addActionListener(new ActionListener() {
+		einfachenSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
@@ -888,7 +888,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolBar.setFloatable(false); //ToDo Sidebar added
 		buttonBar = new JToolBar(JToolBar.VERTICAL); //ToDo Sidebar added
 
-		schrittAnhaengen = new JButton();
+		einfachenSchrittAnhaengen = new JButton();
 		whileSchrittAnhaengen = new JButton();
 		whileWhileSchrittAnhaengen = new JButton();
 		ifElseSchrittAnhaengen = new JButton();
@@ -928,7 +928,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		contentPane.setLayout(new FormLayout("pref, default:grow", "default, default, fill:10px:grow")); //ToDo Sidebar added "pref"
 
 		//======== toolBar ========
-		toolbarButtonHinzufuegen(schrittAnhaengen, "einfacher-schritt", "Einfachen Schritt anhängen", buttonBar);
+		toolbarButtonHinzufuegen(einfachenSchrittAnhaengen, "einfacher-schritt", "Einfachen Schritt anhängen", buttonBar);
 		toolbarButtonHinzufuegen(whileSchrittAnhaengen, "while-schritt", "While-Schritt anhängen", buttonBar);
 		toolbarButtonHinzufuegen(whileWhileSchrittAnhaengen, "whilewhile-schritt", "While-While-Schritt anhängen", buttonBar);
 		toolbarButtonHinzufuegen(ifElseSchrittAnhaengen, "ifelse-schritt", "If-Else-Schritt anhängen", buttonBar);
@@ -961,7 +961,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 		//TODO
 		DragMouseAdapter dragButtonAdapter = new DragMouseAdapter(this);
-		addDragAdapter(schrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(einfachenSchrittAnhaengen,dragButtonAdapter);
 		addDragAdapter(whileSchrittAnhaengen,dragButtonAdapter);
 		addDragAdapter(whileWhileSchrittAnhaengen,dragButtonAdapter);
 		addDragAdapter(ifElseSchrittAnhaengen,dragButtonAdapter);
@@ -1044,7 +1044,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JToolBar toolBar;
 	private JToolBar buttonBar; // Sidebar ergänzt
-	private JButton schrittAnhaengen;
+	private JButton einfachenSchrittAnhaengen;
 	private JButton whileSchrittAnhaengen;
 	private JButton whileWhileSchrittAnhaengen;
 	private JButton ifElseSchrittAnhaengen;
@@ -1190,8 +1190,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return undoManager;
 	}
 
-	public JButton getSchrittAnhaengen() {
-		return schrittAnhaengen;
+	public JButton getEinfachenSchrittAnhaengen() {
+		return einfachenSchrittAnhaengen;
 	}
 
 	public JButton getWhileSchrittAnhaengen() {

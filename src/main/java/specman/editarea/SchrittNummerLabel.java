@@ -52,15 +52,15 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
     setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
   }
 
-  public void setZielschrittStil(SchrittID quellschrittId) {
-    wrapAsZiel(quellschrittId);
-    setBorder(CHANGED_BORDER);
-    setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-    setForeground(Hintergrundfarbe_Geloescht);
+  public void setZielschrittStilUDBL(SchrittID quellschrittId) {
+    wrapAsZielUDBL(quellschrittId);
+    setBorderUDBL(CHANGED_BORDER);
+    setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+    setForegroundUDBL(Hintergrundfarbe_Geloescht);
   }
 
   public void setQuellschrittStil(SchrittID zielschrittID) {
-    wrapAsQuelle(zielschrittID);
+    wrapAsQuelleUDBL(zielschrittID);
     setBorder(DELETED_BORDER);
     setBackground(Hintergrundfarbe_Geloescht);
     setForeground(Schriftfarbe_Geloescht);
@@ -73,21 +73,21 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
     setWrappedTextUDBL(SPAN_GELOESCHT_MARKIERT, id, SPAN_OUTRO);
   }
 
-  public void wrap(String intro, String outro) {
+  public void wrapUDBL(String intro, String outro) {
     setWrappedTextUDBL(intro, getText(), outro);
   }
 
-  public void wrapAsZiel(SchrittID quellschrittId) {
-    wrap(SPAN_INTRO,
+  public void wrapAsZielUDBL(SchrittID quellschrittId) {
+    wrapUDBL(SPAN_INTRO,
       SPAN_OUTRO + SPAN_INTRO + "&lArr" + SPAN_OUTRO + SPAN_GELOESCHT_MARKIERT + quellschrittId + SPAN_OUTRO);
   }
 
-  public void wrapAsQuelle(SchrittID zielschrittID) {
-    wrap(SPAN_GELOESCHT_MARKIERT,
+  public void wrapAsQuelleUDBL(SchrittID zielschrittID) {
+    wrapUDBL(SPAN_GELOESCHT_MARKIERT,
       SPAN_OUTRO + SPAN_INTRO + "&rArr" + SPAN_OUTRO + SPAN_INTRO + zielschrittID + SPAN_OUTRO);
   }
 
-  public void wrapAsDeleted() { wrap(SPAN_GELOESCHT_MARKIERT, SPAN_OUTRO); }
+  public void wrapAsDeletedUDBL() { wrapUDBL(SPAN_GELOESCHT_MARKIERT, SPAN_OUTRO); }
 
   public void setWrappedTextUDBL(String intro, SchrittID schrittID, String outro) {
     setWrappedTextUDBL(intro, schrittID.toString(), outro);

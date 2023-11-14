@@ -179,8 +179,8 @@ public class EditContainer extends JPanel {
 		}
 	}
 
-	public void setZielschrittStil(SchrittID quellschrittId) {
-		schrittNummer.setZielschrittStil(quellschrittId);
+	public void setZielschrittStilUDBL(SchrittID quellschrittId) {
+		schrittNummer.setZielschrittStilUDBL(quellschrittId);
 	}
 
 	public void setQuellStil(SchrittID zielschrittID) {
@@ -323,9 +323,9 @@ public class EditContainer extends JPanel {
 
 	public Rectangle getStepNumberBounds() { return schrittNummer.getBounds(); }
 
-	public void wrapSchrittnummerAsDeleted() { schrittNummer.wrapAsDeleted(); }
-	public void wrapSchrittnummerAsZiel(SchrittID quellschrittId) { schrittNummer.wrapAsZiel(quellschrittId); }
-	public void wrapSchrittnummerAsQuelle(SchrittID zielschrittID) { schrittNummer.wrapAsQuelle(zielschrittID); }
+	public void wrapSchrittnummerAsDeleted() { schrittNummer.wrapAsDeletedUDBL(); }
+	public void wrapSchrittnummerAsZiel(SchrittID quellschrittId) { schrittNummer.wrapAsZielUDBL(quellschrittId); }
+	public void wrapSchrittnummerAsQuelle(SchrittID zielschrittID) { schrittNummer.wrapAsQuelleUDBL(zielschrittID); }
 
 	/** Required for iterations that may modify the list of edit areas. Working directly on the
 	 * list whould cause concurrent operation exceptions in these cases. The usage of this method
