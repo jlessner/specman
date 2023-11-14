@@ -13,6 +13,7 @@ import specman.pdf.Shape;
 import specman.undo.UndoableStepnumberLinkAdded;
 import specman.undo.UndoableStepnumberLinkRemoved;
 import specman.undo.manager.UndoRecording;
+import specman.undo.props.UDBL;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.JEditorPane;
@@ -157,12 +158,15 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     public void pack(int availableWidth) {
     }
 
-    private void setStyleUndoable(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
+    private void setStyleUDBL(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
         StyledDocument doc = (StyledDocument) getDocument();
         doc.setCharacterAttributes(0, getPlainText().length(), attr, false);
-        setEditable(editable);
-        setBackground(backgroundColor);
+        setEditableUDBL(editable);
+        setBackgroundUDBL(backgroundColor);
     }
+
+    private void setBackgroundUDBL(Color backgroundColor) { UDBL.setBackgroundUDBL(this, backgroundColor); }
+    private void setEditableUDBL(boolean editable) { UDBL.setEditable(this, editable); }
 
     private boolean hasStyle(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
         StyledDocument doc = (StyledDocument) getDocument();
@@ -172,13 +176,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void setQuellStil() {
-        setStyleUndoable(quellschrittStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
+        setStyleUDBL(quellschrittStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
     }
 
     @Override
     public void aenderungsmarkierungenEntfernen() {
         if (!hasStandardStyle()) {
-            setStyleUndoable(standardStil, BACKGROUND_COLOR_STANDARD, true);
+            setStyleUDBL(standardStil, BACKGROUND_COLOR_STANDARD, true);
         }
     }
 
@@ -189,7 +193,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     @Override
     public void setGeloeschtMarkiertStilUDBL() {
         aenderungenVerwerfen();
-        setStyleUndoable(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
+        setStyleUDBL(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
     }
 
     @Override

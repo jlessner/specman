@@ -2,11 +2,13 @@ package specman.undo.props;
 
 import specman.Aenderungsart;
 import specman.Specman;
+import specman.editarea.TextEditArea;
 import specman.undo.AbstractUndoableInteraction;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 
 /** Wrapper class to perform typical property changes in an undoable way
@@ -50,8 +52,15 @@ public class UDBL {
     addEdit(new UndoableSetAenderungsart(abstractSchrittView, undoAenderungsart));
   }
 
+  public static void setEditable(JTextComponent component, boolean editable) {
+    boolean undoEditable = component.isEditable();
+    component.setEditable(editable);
+    addEdit(new UndoableSetEditable(component, undoEditable));
+  }
+
   public static void repaint(Component component) {
     component.repaint();
     addEdit(new UndoableRepaint(component));
   }
+
 }
