@@ -431,6 +431,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			caseSequenz.alsGeloeschtMarkierenUDBL(editor);
 		}
+		super.alsGeloeschtMarkierenUDBL(editor);
 	}
 
 	@Override public void aenderungsmarkierungenEntfernen() {
