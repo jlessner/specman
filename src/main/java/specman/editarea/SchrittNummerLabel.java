@@ -3,7 +3,7 @@ package specman.editarea;
 import specman.SchrittID;
 import specman.Specman;
 import specman.draganddrop.DragMouseAdapter;
-import specman.undo.SetPropertyUDBLWrapper;
+import specman.undo.props.UDBL;
 import specman.pdf.LabelShapeText;
 import specman.pdf.Shape;
 
@@ -101,9 +101,9 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
     return new Shape(this).withText(new LabelShapeText(getText(), getInsets(), getForeground(), getFont()));
   }
 
-  public void setTextUDBL(String text) { SetPropertyUDBLWrapper.setTextUDBL(this, text); }
-  public void setForegroundUDBL(Color fg) { SetPropertyUDBLWrapper.setForegroundUDBL(this, fg); }
-  public void setBackgroundUDBL(Color fg) { SetPropertyUDBLWrapper.setBackgroundUDBL(this, fg); }
-  private void setBorderUDBL(Border border) { SetPropertyUDBLWrapper.setBorderUDBL(this, border); }
+  public void setTextUDBL(String text) { UDBL.setTextUDBL(this, text); }
+  public void setForegroundUDBL(Color fg) { UDBL.setForegroundUDBL(this, fg); }
+  public void setBackgroundUDBL(Color fg) { UDBL.setBackgroundUDBL(this, fg); }
+  private void setBorderUDBL(Border border) { UDBL.setBorderUDBL(this, border); }
 
 }

@@ -16,7 +16,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.pdf.Shape;
 import specman.editarea.Indentions;
-import specman.undo.AbstractUndoableInteraction;
+import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -123,9 +123,10 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	@Override
 	public void setBackgroundUDBL(Color bg) {
 		super.setBackgroundUDBL(bg);
-		linkerBalken.setBackground(bg);
-		if (untererBalken != null)
-			untererBalken.setBackground(bg);
+		UDBL.setBackgroundUDBL(linkerBalken, bg);
+		if (untererBalken != null) {
+			UDBL.setBackgroundUDBL(untererBalken, bg);
+		}
 	}
 
 	@Override
@@ -222,9 +223,9 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		return changesReverted;
 	}
 
-	@Override public AbstractUndoableInteraction alsGeloeschtMarkierenUDBL(EditorI editor) {
-		wiederholSequenz.alsGeloeschtMarkieren(editor);
-		return super.alsGeloeschtMarkierenUDBL(editor);
+	@Override public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+		wiederholSequenz.alsGeloeschtMarkierenUDBL(editor);
+		super.alsGeloeschtMarkierenUDBL(editor);
 	}
 
 	@Override

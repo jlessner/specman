@@ -13,7 +13,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
-import specman.undo.SetPropertyUDBLWrapper;
+import specman.undo.props.UDBL;
 import specman.pdf.Shape;
 import specman.undo.UndoableEditAreaRemoved;
 import specman.undo.UndoableEditAreaAdded;
@@ -491,6 +491,6 @@ public class EditContainer extends JPanel {
 	}
 
 	public void setBackgroundUDBL(Color bg) {
-		SetPropertyUDBLWrapper.setBackgroundUDBL(this, bg);
+		UDBL.setBackgroundUDBL(this, bg);
 	}
 }

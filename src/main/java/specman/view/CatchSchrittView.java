@@ -14,6 +14,7 @@ import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.editarea.InteractiveStepFragment;
+import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -107,10 +108,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 	@Override
 	public void setBackgroundUDBL(Color bg) {
 		super.setBackgroundUDBL(bg);
-		schrittPanel.setBackground(bg);
-		editContainer.setBackground(bg);
-//		dreiecksPanel.setBackground(bg);
-		fussPanel.setBackground(bg);
+		UDBL.setBackgroundUDBL(schrittPanel, bg);
+		UDBL.setBackgroundUDBL(fussPanel, bg);
 	}
 
 	public void hatNachfolger(boolean hatNachfolger) {

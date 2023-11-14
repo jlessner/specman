@@ -80,8 +80,8 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}
 
-	public void alsGeloeschtMarkieren(EditorI editor) {
-		super.alsGeloeschtMarkieren(editor);
+	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+		super.alsGeloeschtMarkierenUDBL(editor);
 		ueberschrift.setGeloeschtMarkiertStilUDBL(null);
 	}
 

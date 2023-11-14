@@ -11,6 +11,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.IfSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.editarea.EditContainer;
+import specman.undo.props.UDBL;
 
 import java.awt.*;
 
@@ -112,11 +113,10 @@ public class IfSchrittView extends IfElseSchrittView {
 		return model;
 	}
 	
-	//TODO Die Backgroundcolor in IfSchrittViews anpassen
 	public void setBackgroundUDBL(Color bg) {
 		super.setBackgroundUDBL(bg);
-		ifSequenz.sequenzBereich.setBackground(bg);
-		panel.repaint(); // Damit die Linien nachgezeichnet werden
+		UDBL.setBackgroundUDBL(ifSequenz.sequenzBereich, bg);
+		UDBL.repaint(panel); // Damit die Linien nachgezeichnet werden
 	}
 	
 }

@@ -81,6 +81,10 @@ public class SchrittSequenzView {
 		this.aenderungsart = aenderungsart;
 	}
 
+	public void setAenderungsartUDBL(Aenderungsart aenderungsart) {
+		this.aenderungsart = aenderungsart;
+	}
+
 	public List<AbstractSchrittView> getSchritte(){
 		return schritte;
 	}
@@ -519,7 +523,7 @@ public class SchrittSequenzView {
 		return changesReverted;
 	}
 
-	public void alsGeloeschtMarkieren(EditorI editor) {
+	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
 		for (AbstractSchrittView schritt: schritte) {
 			schritt.alsGeloeschtMarkierenUDBL(editor);
 		}

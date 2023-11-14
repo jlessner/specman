@@ -1,4 +1,4 @@
-package specman.undo;
+package specman.undo.props;
 
 import javax.swing.*;
 

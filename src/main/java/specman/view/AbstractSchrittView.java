@@ -25,9 +25,7 @@ import specman.editarea.Indentions;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.StepnumberLink;
 import specman.editarea.TextEditArea;
-import specman.undo.AbstractUndoableInteraction;
-import specman.undo.UndoableSchrittEntferntMarkiert;
-import specman.undo.UndoableSetAenderungsart;
+import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
 import java.awt.Color;
@@ -88,9 +86,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void setAenderungsartUDBL(Aenderungsart aenderungsart) {
-		Aenderungsart undoAenderungsart = aenderungsart;
-		this.aenderungsart = aenderungsart;
-		Specman.instance().addEdit(new UndoableSetAenderungsart(this, undoAenderungsart));
+		UDBL.setAenderungsart(this, aenderungsart);
 	}
 
 	public void setId(SchrittID id) {
@@ -217,9 +213,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		setAenderungsart(Zielschritt);
 	}
 
-	public AbstractUndoableInteraction alsGeloeschtMarkierenUDBL(EditorI editor) {
+	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
 		setGeloeschtMarkiertStilUDBL();
-		return new UndoableSchrittEntferntMarkiert(this, editor);
 	}
 
 	/** Entfernt im Rahmen der Übernahme oder Rücknahme von Änderungen alle Einfärbungen,

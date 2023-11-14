@@ -13,6 +13,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.pdf.LineShape;
 import specman.pdf.Shape;
+import specman.undo.props.UDBL;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +72,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	@Override
 	public void setBackgroundUDBL(Color bg) {
 		super.setBackgroundUDBL(bg);
-		panel.setBackground(bg);
+		UDBL.setBackgroundUDBL(panel, bg);
 	}
 
 	@Override

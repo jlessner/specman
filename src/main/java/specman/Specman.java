@@ -697,7 +697,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
 		if (isStepDeletionAllowed(schritt)) {
             try (UndoRecording ur = composeUndo()) {
-                addEdit(schritt.alsGeloeschtMarkierenUDBL(this));
+                schritt.alsGeloeschtMarkierenUDBL(this);
             }
         }
 

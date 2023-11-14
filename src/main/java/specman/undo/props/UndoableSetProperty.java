@@ -1,6 +1,7 @@
-package specman.undo;
+package specman.undo.props;
 
 import specman.EditException;
+import specman.undo.AbstractUndoableInteraction;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
