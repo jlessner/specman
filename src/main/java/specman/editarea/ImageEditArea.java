@@ -202,7 +202,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public void setGeloeschtMarkiertStil() {
-    if (aenderungsart == null) {
+    if (aenderungsart == Untracked) {
       Specman.instance().addEdit(new UndoableImageRemovedMarkiert(this, aenderungsart));
       updateChangetypeAndDependentStyling(Aenderungsart.Geloescht);
       addGlassPanel();
