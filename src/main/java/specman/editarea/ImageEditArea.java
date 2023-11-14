@@ -116,7 +116,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override public void keyPressed(KeyEvent e) {
     if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
       if (aenderungsart == null && Specman.instance().aenderungenVerfolgen()) {
-        setGeloeschtMarkiertStil();
+        setGeloeschtMarkiertStilUDBL();
       }
       else {
         getParent().removeEditArea(ImageEditArea.this);
@@ -201,7 +201,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   @Override
-  public void setGeloeschtMarkiertStil() {
+  public void setGeloeschtMarkiertStilUDBL() {
     if (aenderungsart == null) {
       Specman.instance().addEdit(new UndoableImageRemovedMarkiert(this, aenderungsart));
       updateChangetypeAndDependentStyling(Aenderungsart.Geloescht);

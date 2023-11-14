@@ -40,7 +40,7 @@ public class IfSchrittView extends IfElseSchrittView {
 		super(editor, parent, model.inhalt, model.id, model.aenderungsart, false);
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), aenderungsart, new EditorContentModel_V001("")));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
-		setBackground(new Color(model.farbe));
+		this.setBackgroundUDBL(new Color(model.farbe));
 		ifBreiteSetzen(model.leerBreite);
 		klappen.init(model.zugeklappt);;
 	}
@@ -113,8 +113,8 @@ public class IfSchrittView extends IfElseSchrittView {
 	}
 	
 	//TODO Die Backgroundcolor in IfSchrittViews anpassen
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
+	public void setBackgroundUDBL(Color bg) {
+		super.setBackgroundUDBL(bg);
 		ifSequenz.sequenzBereich.setBackground(bg);
 		panel.repaint(); // Damit die Linien nachgezeichnet werden
 	}

@@ -157,7 +157,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     public void pack(int availableWidth) {
     }
 
-    private void setStyle(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
+    private void setStyleUndoable(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
         StyledDocument doc = (StyledDocument) getDocument();
         doc.setCharacterAttributes(0, getPlainText().length(), attr, false);
         setEditable(editable);
@@ -172,13 +172,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void setQuellStil() {
-        setStyle(quellschrittStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
+        setStyleUndoable(quellschrittStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
     }
 
     @Override
     public void aenderungsmarkierungenEntfernen() {
         if (!hasStandardStyle()) {
-            setStyle(standardStil, BACKGROUND_COLOR_STANDARD, true);
+            setStyleUndoable(standardStil, BACKGROUND_COLOR_STANDARD, true);
         }
     }
 
@@ -187,9 +187,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     @Override
-    public void setGeloeschtMarkiertStil() {
+    public void setGeloeschtMarkiertStilUDBL() {
         aenderungenVerwerfen();
-        setStyle(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
+        setStyleUndoable(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
     }
 
     @Override

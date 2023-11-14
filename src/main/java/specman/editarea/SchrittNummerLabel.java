@@ -3,6 +3,7 @@ package specman.editarea;
 import specman.SchrittID;
 import specman.Specman;
 import specman.draganddrop.DragMouseAdapter;
+import specman.undo.SetPropertyUDBLWrapper;
 import specman.pdf.LabelShapeText;
 import specman.pdf.Shape;
 
@@ -65,15 +66,15 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
     setForeground(Schriftfarbe_Geloescht);
   }
 
-  public void setGeloeschtStil(SchrittID id) {
-    setBorder(DELETED_BORDER);
-    setBackground(Hintergrundfarbe_Geloescht);
-    setForeground(Schriftfarbe_Geloescht);
-    setWrappedText(SPAN_GELOESCHT_MARKIERT, id, SPAN_OUTRO);
+  public void setGeloeschtStilUDBL(SchrittID id) {
+    setBorderUDBL(DELETED_BORDER);
+    setBackgroundUDBL(Hintergrundfarbe_Geloescht);
+    setForegroundUDBL(Schriftfarbe_Geloescht);
+    setWrappedTextUDBL(SPAN_GELOESCHT_MARKIERT, id, SPAN_OUTRO);
   }
 
   public void wrap(String intro, String outro) {
-    setWrappedText(intro, getText(), outro);
+    setWrappedTextUDBL(intro, getText(), outro);
   }
 
   public void wrapAsZiel(SchrittID quellschrittId) {
@@ -88,15 +89,21 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
 
   public void wrapAsDeleted() { wrap(SPAN_GELOESCHT_MARKIERT, SPAN_OUTRO); }
 
-  public void setWrappedText(String intro, SchrittID schrittID, String outro) {
-    setWrappedText(intro, schrittID.toString(), outro);
+  public void setWrappedTextUDBL(String intro, SchrittID schrittID, String outro) {
+    setWrappedTextUDBL(intro, schrittID.toString(), outro);
   }
 
-  public void setWrappedText(String intro, String schrittNummerText, String outro) {
-    setText(HTML_INTRO + BODY_INTRO + intro + schrittNummerText + outro + BODY_OUTRO + HTML_OUTRO);
+  public void setWrappedTextUDBL(String intro, String schrittNummerText, String outro) {
+    setTextUDBL(HTML_INTRO + BODY_INTRO + intro + schrittNummerText + outro + BODY_OUTRO + HTML_OUTRO);
   }
 
   public Shape getShape() {
     return new Shape(this).withText(new LabelShapeText(getText(), getInsets(), getForeground(), getFont()));
   }
+
+  public void setTextUDBL(String text) { SetPropertyUDBLWrapper.setTextUDBL(this, text); }
+  public void setForegroundUDBL(Color fg) { SetPropertyUDBLWrapper.setForegroundUDBL(this, fg); }
+  public void setBackgroundUDBL(Color fg) { SetPropertyUDBLWrapper.setBackgroundUDBL(this, fg); }
+  private void setBorderUDBL(Border border) { SetPropertyUDBLWrapper.setBorderUDBL(this, border); }
+
 }

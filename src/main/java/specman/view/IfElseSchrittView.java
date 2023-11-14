@@ -66,7 +66,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panel.add(new SpaltenResizer(this, editor), CC.xywh(2, 1, 1, 5));
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.elseSequenz));
-		setBackground(new Color(model.farbe));
+		setBackgroundUDBL(new Color(model.farbe));
 		ifBreitenanteilSetzen(model.ifBreitenanteil);
 		klappen.init(model.zugeklappt);
 	}
@@ -154,8 +154,8 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 
 	@Override
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
+	public void setBackgroundUDBL(Color bg) {
+		super.setBackgroundUDBL(bg);
 		ifSequenz.ueberschrift.setBackground(bg);
 		elseSequenz.ueberschrift.setBackground(bg);
 		panelIf.setBackground(bg);
@@ -271,10 +271,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.viewsNachinitialisieren();
 	}
 
-	@Override public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
+	@Override public AbstractUndoableInteraction alsGeloeschtMarkierenUDBL(EditorI editor) {
 		elseSequenz.alsGeloeschtMarkieren(editor);
 		ifSequenz.alsGeloeschtMarkieren(editor);
-		return super.alsGeloeschtMarkieren(editor);
+		return super.alsGeloeschtMarkierenUDBL(editor);
 	}
 
 	@Override public void aenderungsmarkierungenEntfernen() {

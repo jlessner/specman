@@ -11,7 +11,6 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -35,7 +34,6 @@ import static specman.Specman.initialtext;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.pdf.Shape.GAP_COLOR;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 
 
 public class CaseSchrittView extends VerzweigungSchrittView {
@@ -104,7 +102,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 				editor,
 				new ZweigSchrittSequenzView(editor, this, model.sonstSequenz),
 				caseSequenzenAufbauen(editor, model.caseSequenzen));
-		setBackground(new Color(model.farbe));
+		setBackgroundUDBL(new Color(model.farbe));
 		spaltenbreitenAnteileSetzen(model.spaltenbreitenAnteile);
 		klappen.init(model.zugeklappt);
 	}
@@ -248,8 +246,8 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 	}
 
 	@Override
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
+	public void setBackgroundUDBL(Color bg) {
+		super.setBackgroundUDBL(bg);
 		sonstSequenz.ueberschrift.setBackground(bg);
 		lueckenFueller.setBackground(bg); //neu
 		panelCase.setBackground(bg); //neu
@@ -403,7 +401,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		}
 	}
 
-	@Override public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
+	@Override public AbstractUndoableInteraction alsGeloeschtMarkierenUDBL(EditorI editor) {
 		ZweigSchrittSequenzView zweig = istZweigUeberschrift(editor.getLastFocusedTextArea());
 		if (zweig != null) {
 			if (zweig.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
@@ -436,7 +434,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
 			caseSequenz.alsGeloeschtMarkieren(editor);
 		}
-		return super.alsGeloeschtMarkieren(editor);
+		return super.alsGeloeschtMarkierenUDBL(editor);
 	}
 
 	@Override public void aenderungsmarkierungenEntfernen() {
@@ -512,7 +510,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 
 	@Override public int aenderungenUebernehmen(EditorI editor) throws EditException {
 		panelFall1.setBackground(BACKGROUND_COLOR_STANDARD);
-		setBackground(BACKGROUND_COLOR_STANDARD);
+		setBackgroundUDBL(BACKGROUND_COLOR_STANDARD);
 		int changesMade = sonstSequenz.aenderungenUebernehmen(editor);
 		List<ZweigSchrittSequenzView> caseSequenzen = new CopyOnWriteArrayList<ZweigSchrittSequenzView>(this.caseSequenzen);
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {

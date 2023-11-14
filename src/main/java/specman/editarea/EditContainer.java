@@ -13,6 +13,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
+import specman.undo.SetPropertyUDBLWrapper;
 import specman.pdf.Shape;
 import specman.undo.UndoableEditAreaRemoved;
 import specman.undo.UndoableEditAreaAdded;
@@ -189,11 +190,11 @@ public class EditContainer extends JPanel {
 		schrittNummer.setQuellschrittStil(zielschrittID);
 	}
 
-	public void setGeloeschtMarkiertStil(SchrittID id) {
-		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		modifyableEditAreas().forEach(ea -> ea.setGeloeschtMarkiertStil());
+	public void setGeloeschtMarkiertStilUDBL(SchrittID id) {
+		setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		modifyableEditAreas().forEach(ea -> ea.setGeloeschtMarkiertStilUDBL());
 		if (schrittNummer != null) {
-			schrittNummer.setGeloeschtStil(id);
+			schrittNummer.setGeloeschtStilUDBL(id);
 		}
 	}
 
@@ -489,4 +490,7 @@ public class EditContainer extends JPanel {
 		}
 	}
 
+	public void setBackgroundUDBL(Color bg) {
+		SetPropertyUDBLWrapper.setBackgroundUDBL(this, bg);
+	}
 }

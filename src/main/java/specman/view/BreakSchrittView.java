@@ -46,7 +46,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 
 	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, BreakSchrittModel_V001 model) {
 		this(editor, parent, model.inhalt, model.id, model.aenderungsart);
-		setBackground(new Color(model.farbe));
+		setBackgroundUDBL(new Color(model.farbe));
 	}
 
 	private void dreieckZeichnen(Graphics2D g) {
@@ -69,8 +69,8 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
+	public void setBackgroundUDBL(Color bg) {
+		super.setBackgroundUDBL(bg);
 		panel.setBackground(bg);
 	}
 

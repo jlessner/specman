@@ -191,9 +191,9 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   @Override
-  public void setGeloeschtMarkiertStil() {
+  public void setGeloeschtMarkiertStilUDBL() {
     setBackground(TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-    cellstream().forEach(cell -> cell.setGeloeschtMarkiertStil(null));
+    cellstream().forEach(cell -> cell.setGeloeschtMarkiertStilUDBL(null));
   }
 
   @Override
@@ -382,7 +382,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     // If the table is already marked as removed, the method here should not have been called
     if (editor.aenderungenVerfolgen() && aenderungsart == Untracked) {
       try (UndoRecording ur = editor.composeUndo()) {
-        setGeloeschtMarkiertStil();
+        setGeloeschtMarkiertStilUDBL();
         aenderungsart = Geloescht;
         editor.addEdit(new UndoableTableRemovedMarked(this));
       }

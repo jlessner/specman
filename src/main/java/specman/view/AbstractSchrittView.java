@@ -27,6 +27,7 @@ import specman.editarea.StepnumberLink;
 import specman.editarea.TextEditArea;
 import specman.undo.AbstractUndoableInteraction;
 import specman.undo.UndoableSchrittEntferntMarkiert;
+import specman.undo.UndoableSetAenderungsart;
 
 import javax.swing.JComponent;
 import java.awt.Color;
@@ -86,6 +87,12 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		this.aenderungsart = aenderungsart;
 	}
 
+	public void setAenderungsartUDBL(Aenderungsart aenderungsart) {
+		Aenderungsart undoAenderungsart = aenderungsart;
+		this.aenderungsart = aenderungsart;
+		Specman.instance().addEdit(new UndoableSetAenderungsart(this, undoAenderungsart));
+	}
+
 	public void setId(SchrittID id) {
 		SchrittID oldStepID = this.id;
 
@@ -111,8 +118,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return editContainer.editorContent2Model(formatierterText);
 	}
 
-	public void setBackground(Color bg) {
-		editContainer.setBackground(bg);
+	public void setBackgroundUDBL(Color bg) {
+		editContainer.setBackgroundUDBL(bg);
 	}
 
 	public Color getBackground() {
@@ -199,10 +206,10 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return null;
 	}
 
-	public void setGeloeschtMarkiertStil() {
-		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		editContainer.setGeloeschtMarkiertStil(id);
-		setAenderungsart(Geloescht);
+	public void setGeloeschtMarkiertStilUDBL() {
+		setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		editContainer.setGeloeschtMarkiertStilUDBL(id);
+		setAenderungsartUDBL(Geloescht);
 	}
 
 	public void setZielschrittStil() {
@@ -210,8 +217,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		setAenderungsart(Zielschritt);
 	}
 
-	public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
-		setGeloeschtMarkiertStil();
+	public AbstractUndoableInteraction alsGeloeschtMarkierenUDBL(EditorI editor) {
+		setGeloeschtMarkiertStilUDBL();
 		return new UndoableSchrittEntferntMarkiert(this, editor);
 	}
 
@@ -230,7 +237,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	 * hier keine Rolle. Diese werden bereits <i>vor</i> dem Aufruf der Methode hier über
 	 * {@link #editAenderungenUebernehmen} bzw. {@link #editAenderungenVerwerfen()} entfernt. */
 	public void aenderungsmarkierungenEntfernen() {
-		setBackground(BACKGROUND_COLOR_STANDARD);
+		setBackgroundUDBL(BACKGROUND_COLOR_STANDARD);
 		editContainer.aenderungsmarkierungenEntfernen(id);
 	}
 
@@ -418,11 +425,11 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void viewsNachinitialisieren() {
 		if (aenderungsart != null) {
-            switch (aenderungsart) {
-                case Geloescht -> setGeloeschtMarkiertStil();
-                case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
-                case Zielschritt -> setZielschrittStil();
-            }
+			switch (aenderungsart) {
+				case Geloescht -> setGeloeschtMarkiertStilUDBL();
+				case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
+				case Zielschritt -> setZielschrittStil();
+			}
 		}
 		registerAllExistingStepnumbers();
 	}

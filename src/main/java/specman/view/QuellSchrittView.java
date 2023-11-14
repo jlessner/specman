@@ -20,8 +20,8 @@ public class QuellSchrittView extends AbstractSchrittView{
         //Die Höhe des Schrittnummer-Labels sollte die Höhe bestimmen.
         super(editor, parent, new EditorContentModel_V001("."), id, Aenderungsart.Quellschritt);
         setQuellStil();
-        setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-        alsGeloeschtMarkieren(editor);
+        setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+        alsGeloeschtMarkierenUDBL(editor);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class QuellSchrittView extends AbstractSchrittView{
 
     public QuellSchrittView(EditorI editor, SchrittSequenzView parent, QuellSchrittModel_V001 model) {
         super(editor, parent, model.inhalt, model.id, model.aenderungsart);
-        setBackground(new Color(model.farbe));
+        setBackgroundUDBL(new Color(model.farbe));
     }
 
     @Override

@@ -10,7 +10,6 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
@@ -21,7 +20,6 @@ import specman.editarea.InteractiveStepFragment;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -523,7 +521,7 @@ public class SchrittSequenzView {
 
 	public void alsGeloeschtMarkieren(EditorI editor) {
 		for (AbstractSchrittView schritt: schritte) {
-			schritt.alsGeloeschtMarkieren(editor);
+			schritt.alsGeloeschtMarkierenUDBL(editor);
 		}
 		setAenderungsart(Aenderungsart.Geloescht);
 	}

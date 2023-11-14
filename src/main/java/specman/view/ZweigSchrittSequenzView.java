@@ -82,7 +82,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	public void alsGeloeschtMarkieren(EditorI editor) {
 		super.alsGeloeschtMarkieren(editor);
-		ueberschrift.setGeloeschtMarkiertStil(null);
+		ueberschrift.setGeloeschtMarkiertStilUDBL(null);
 	}
 
 	public int aenderungenVerwerfen(EditorI editor) throws EditException {
