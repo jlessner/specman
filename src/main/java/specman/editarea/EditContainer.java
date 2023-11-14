@@ -110,7 +110,6 @@ public class EditContainer extends JPanel {
 
 		initLayoutAndEditAreas(editor, initialContent);
 		updateDecorationIndentions(new Indentions());
-		//setBackground(schrittHintergrund());
 
     skalieren(editor.getZoomFactor(), 0);
   }
@@ -305,7 +304,7 @@ public class EditContainer extends JPanel {
 	public void setBackground(Color bg) {
 		super.setBackground(bg);
 		if (editAreas != null) {
-			editAreas.forEach(ea -> ea.setEditBackground(bg));
+			editAreas.forEach(ea -> ea.setEditBackgroundUDBL(bg));
 		}
 	}
 
@@ -492,5 +491,8 @@ public class EditContainer extends JPanel {
 
 	public void setBackgroundUDBL(Color bg) {
 		UDBL.setBackgroundUDBL(this, bg);
+		if (editAreas != null) {
+			editAreas.forEach(ea -> ea.setEditBackgroundUDBL(bg));
+		}
 	}
 }

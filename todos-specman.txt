@@ -6,6 +6,8 @@ Abschluss für Go-Live
     führen würde, dann würde das ja in der eigentlichen Undo-Komposition fehlen.
   - Prüfen, ob das entfernen von Zeigen noch korrekt funktioniert. Hier wurde ein anderes Undoable
     zurückgeliefert (UndoableZweigEntferntMarkiert oder ggf. UndoableZweigEntfernt wenn der Zweig neu war)
+  - Undo/Redo beim Skalieren
+  - Undo/Redo beim Verschieben von Schritten
 
 - Tabellen als separate Elemente analog Bilder
   - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen

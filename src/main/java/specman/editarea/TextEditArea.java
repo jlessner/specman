@@ -935,7 +935,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
     }
 
-    @Override public void setEditBackground(Color bg) { setBackground(bg); }
+    @Override public void setEditBackgroundUDBL(Color bg) {
+        setBackgroundUDBL(bg);
+    }
 
     @Override
     public void setEditDecorationIndentions(Indentions indentions) {

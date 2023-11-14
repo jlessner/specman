@@ -59,7 +59,7 @@ public interface EditArea extends InteractiveStepFragment {
 
   Shape getShape();
 
-  void setEditBackground(Color bg);
+  void setEditBackgroundUDBL(Color bg);
 
   void setEditDecorationIndentions(Indentions indentions);
 
