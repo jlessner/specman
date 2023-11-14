@@ -4,10 +4,12 @@ Abschluss für Go-Live
     wird das wirklich gebraucht? Muss im Moment mit pauseUndo gewrapped werden. Aber eigentlich
     dürfte das nicht nötig sein, denn wenn die Methode zu einer Änderung des Schrittnummer-Stils
     führen würde, dann würde das ja in der eigentlichen Undo-Komposition fehlen.
-  - Prüfen, ob das entfernen von Zeigen noch korrekt funktioniert. Hier wurde ein anderes Undoable
+  - Prüfen, ob das Entfernen von Zeigen noch korrekt funktioniert. Hier wurde ein anderes Undoable
     zurückgeliefert (UndoableZweigEntferntMarkiert oder ggf. UndoableZweigEntfernt wenn der Zweig neu war)
   - Undo/Redo beim Skalieren
   - Undo/Redo beim Verschieben von Schritten
+  - Hinzufügen von Bildern / Tabellen dürfte in der TextEdiArea noch zu viele Undo-Operationen produzieren
+    Vielleicht kann man dort intern pausieren. Aber geht das während einer Undo-Komposition??
 
 - Tabellen als separate Elemente analog Bilder
   - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
