@@ -1,11 +1,11 @@
 Abschluss für Go-Live
 - Tabellen als separate Elemente analog Bilder
-  - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
-  - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Spalten
-  - Nice to have: Springen in die nächste Zelle durch Drücken von TAB
-  - Nice to have: Hinzufügen von Zeilen durch Drücken von TAB in der letzten Zelle?
   - Löschen neu hinzugefügter Zeilen und Spalten muss direkt Wirkung zeigen
   - Zurücknehmen hinzugefügter Zeilen und Spalten
+  - Nice to have: Springen in die nächste Zelle durch Drücken von TAB
+  - Nice to have: Hinzufügen von Zeilen durch Drücken von TAB in der letzten Zelle?
+  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
+  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Spalten
   x Gelöscht markierte Zeilen und Spalten dürfen keine Löschung mehr erlauben
   x Gelöscht markierte Tabelle darf kein Löschen / Hinzufügen von Zeilen / Spalten mehr erlauben
   x UndoableTableRemovedMarked
