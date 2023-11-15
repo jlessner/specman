@@ -9,12 +9,12 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.editarea.InteractiveStepFragment;
+import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -87,7 +87,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 
 	public CatchSchrittView(EditorI editor, SchrittSequenzView parent, CatchSchrittModel_V001 model) {
 		this(editor, parent, model.inhalt, model.id, model.aenderungsart, model.handlingSequenz);
-		setBackground(new Color(model.farbe));
+		setBackgroundUDBL(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
 		breakAngekoppelt = model.breakAngekoppelt;
 		schrittnummerSichtbarkeitSetzen(breakAngekoppelt);
@@ -106,12 +106,10 @@ public class CatchSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
-		schrittPanel.setBackground(bg);
-		editContainer.setBackground(bg);
-//		dreiecksPanel.setBackground(bg);
-		fussPanel.setBackground(bg);
+	public void setBackgroundUDBL(Color bg) {
+		super.setBackgroundUDBL(bg);
+		UDBL.setBackgroundUDBL(schrittPanel, bg);
+		UDBL.setBackgroundUDBL(fussPanel, bg);
 	}
 
 	public void hatNachfolger(boolean hatNachfolger) {
@@ -238,8 +236,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 			return ergebnis;
 		}
 
-		@Override public AbstractSchrittView schrittZwischenschieben(AbstractSchrittView schritt, RelativeStepPosition insertionPosition, AbstractSchrittView vorgaengerSchritt, EditorI editor) {
-			AbstractSchrittView ergebnis = super.schrittZwischenschieben(schritt, insertionPosition, vorgaengerSchritt, editor);
+		@Override public AbstractSchrittView schrittZwischenschieben(AbstractSchrittView schritt, RelativeStepPosition insertionPosition, AbstractSchrittView vorgaengerSchritt) {
+			AbstractSchrittView ergebnis = super.schrittZwischenschieben(schritt, insertionPosition, vorgaengerSchritt);
 			rahmenanzeigeAnpassen();
 			return ergebnis;
 		}

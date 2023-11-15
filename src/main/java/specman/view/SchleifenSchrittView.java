@@ -11,13 +11,12 @@ import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.WhileSchrittModel_V001;
 import specman.pdf.Shape;
 import specman.editarea.Indentions;
-import specman.undo.AbstractUndoableInteraction;
+import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -86,7 +85,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 
 	protected void initWiederholsequenzFromModel(EditorI editor, WhileSchrittModel_V001 model) {
 		initWiederholsequenz(new SchrittSequenzView(editor, this, model.wiederholSequenz));
-		setBackground(new Color(model.farbe));
+		setBackgroundUDBL(new Color(model.farbe));
 		balkenbreiteSetzen(model.balkenbreite);
 		klappen.init(model.zugeklappt);
 	}
@@ -122,11 +121,12 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	}
 
 	@Override
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
-		linkerBalken.setBackground(bg);
-		if (untererBalken != null)
-			untererBalken.setBackground(bg);
+	public void setBackgroundUDBL(Color bg) {
+		super.setBackgroundUDBL(bg);
+		UDBL.setBackgroundUDBL(linkerBalken, bg);
+		if (untererBalken != null) {
+			UDBL.setBackgroundUDBL(untererBalken, bg);
+		}
 	}
 
 	@Override
@@ -223,9 +223,9 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		return changesReverted;
 	}
 
-	@Override public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
-		wiederholSequenz.alsGeloeschtMarkieren(editor);
-		return super.alsGeloeschtMarkieren(editor);
+	@Override public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+		wiederholSequenz.alsGeloeschtMarkierenUDBL(editor);
+		super.alsGeloeschtMarkierenUDBL(editor);
 	}
 
 	@Override

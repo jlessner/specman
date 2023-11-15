@@ -13,6 +13,7 @@ import specman.pdf.Shape;
 import specman.undo.UndoableStepnumberLinkAdded;
 import specman.undo.UndoableStepnumberLinkRemoved;
 import specman.undo.manager.UndoRecording;
+import specman.undo.props.UDBL;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.JEditorPane;
@@ -157,12 +158,15 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     public void pack(int availableWidth) {
     }
 
-    private void setStyle(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
+    private void setStyleUDBL(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
         StyledDocument doc = (StyledDocument) getDocument();
         doc.setCharacterAttributes(0, getPlainText().length(), attr, false);
-        setEditable(editable);
-        setBackground(backgroundColor);
+        setEditableUDBL(editable);
+        setBackgroundUDBL(backgroundColor);
     }
+
+    private void setBackgroundUDBL(Color backgroundColor) { UDBL.setBackgroundUDBL(this, backgroundColor); }
+    private void setEditableUDBL(boolean editable) { UDBL.setEditable(this, editable); }
 
     private boolean hasStyle(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
         StyledDocument doc = (StyledDocument) getDocument();
@@ -172,13 +176,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void setQuellStil() {
-        setStyle(quellschrittStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
+        setStyleUDBL(quellschrittStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
     }
 
     @Override
     public void aenderungsmarkierungenEntfernen() {
         if (!hasStandardStyle()) {
-            setStyle(standardStil, BACKGROUND_COLOR_STANDARD, true);
+            setStyleUDBL(standardStil, BACKGROUND_COLOR_STANDARD, true);
         }
     }
 
@@ -187,9 +191,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     @Override
-    public void setGeloeschtMarkiertStil() {
+    public void setGeloeschtMarkiertStilUDBL() {
         aenderungenVerwerfen();
-        setStyle(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
+        setStyleUDBL(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
     }
 
     @Override
@@ -322,8 +326,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
-    private int aenderungsmarkierungenUebernehmen(
-            Element e, List<GeloeschtMarkierung_V001> loeschungen) {
+    private int aenderungsmarkierungenUebernehmen(Element e, List<GeloeschtMarkierung_V001> loeschungen) {
         int changesMade = 0;
 
         StyledDocument doc = (StyledDocument) e.getDocument();
@@ -874,7 +877,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                     CompoundUndoManager.endCompoundEdit(doc);
                     return true;
                 }
-            } catch (BadLocationException ex) {
+            }
+            catch (BadLocationException ex) {
                 throw new RuntimeException(ex);
             }
         }
@@ -931,7 +935,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
     }
 
-    @Override public void setEditBackground(Color bg) { setBackground(bg); }
+    @Override public void setEditBackgroundUDBL(Color bg) {
+        setBackgroundUDBL(bg);
+    }
 
     @Override
     public void setEditDecorationIndentions(Indentions indentions) {
@@ -945,6 +951,12 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public boolean enthaelt(InteractiveStepFragment fragment) { return this == fragment; }
+
+    @Override
+    public Aenderungsart getAenderungsart() { return aenderungsart; }
+
+    @Override
+    public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
 
     public Shape getShape() {
         return new Shape(this).withText(new FormattedShapeText(this));

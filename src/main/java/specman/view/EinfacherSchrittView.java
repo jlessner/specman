@@ -5,8 +5,6 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.EinfacherSchrittModel_V001;
-import specman.pdf.RoundedBorderShape;
-import specman.pdf.Shape;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +17,7 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 
 	public EinfacherSchrittView(EditorI editor, SchrittSequenzView parent, EinfacherSchrittModel_V001 model) {
 		super(editor, parent, model.inhalt, model.id, model.aenderungsart);
-		setBackground(new Color(model.farbe));
+		setBackgroundUDBL(new Color(model.farbe));
 	}
 
 	@Override

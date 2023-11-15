@@ -25,8 +25,7 @@ import specman.editarea.Indentions;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.StepnumberLink;
 import specman.editarea.TextEditArea;
-import specman.undo.AbstractUndoableInteraction;
-import specman.undo.UndoableSchrittEntferntMarkiert;
+import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
 import java.awt.Color;
@@ -86,6 +85,10 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		this.aenderungsart = aenderungsart;
 	}
 
+	public void setAenderungsartUDBL(Aenderungsart aenderungsart) {
+		UDBL.setAenderungsart(this, aenderungsart);
+	}
+
 	public void setId(SchrittID id) {
 		SchrittID oldStepID = this.id;
 
@@ -111,8 +114,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return editContainer.editorContent2Model(formatierterText);
 	}
 
-	public void setBackground(Color bg) {
-		editContainer.setBackground(bg);
+	public void setBackgroundUDBL(Color bg) {
+		editContainer.setBackgroundUDBL(bg);
 	}
 
 	public Color getBackground() {
@@ -199,20 +202,19 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return null;
 	}
 
-	public void setGeloeschtMarkiertStil() {
-		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		editContainer.setGeloeschtMarkiertStil(id);
-		setAenderungsart(Geloescht);
+	public void setGeloeschtMarkiertStilUDBL() {
+		setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		editContainer.setGeloeschtMarkiertStilUDBL(id);
+		setAenderungsartUDBL(Geloescht);
 	}
 
-	public void setZielschrittStil() {
-		editContainer.setZielschrittStil(getQuellschritt().getId());
-		setAenderungsart(Zielschritt);
+	public void setZielschrittStilUDBL() {
+		editContainer.setZielschrittStilUDBL(getQuellschritt().getId());
+		setAenderungsartUDBL(Zielschritt);
 	}
 
-	public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
-		setGeloeschtMarkiertStil();
-		return new UndoableSchrittEntferntMarkiert(this, editor);
+	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+		setGeloeschtMarkiertStilUDBL();
 	}
 
 	/** Entfernt im Rahmen der Übernahme oder Rücknahme von Änderungen alle Einfärbungen,
@@ -230,7 +232,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	 * hier keine Rolle. Diese werden bereits <i>vor</i> dem Aufruf der Methode hier über
 	 * {@link #editAenderungenUebernehmen} bzw. {@link #editAenderungenVerwerfen()} entfernt. */
 	public void aenderungsmarkierungenEntfernen() {
-		setBackground(BACKGROUND_COLOR_STANDARD);
+		setBackgroundUDBL(BACKGROUND_COLOR_STANDARD);
 		editContainer.aenderungsmarkierungenEntfernen(id);
 	}
 
@@ -392,13 +394,15 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public abstract JComponent getPanel();
 
-	public void setQuellschritt(QuellSchrittView quellschritt){
-		this.quellschritt=quellschritt;
+	public void setQuellschrittUDBL(QuellSchrittView quellschritt){
+		UDBL.setQuellschrittUDBL(this, quellschritt);
 	}
 
 	public QuellSchrittView getQuellschritt(){
 		return quellschritt;
 	}
+
+	public void setQuellschritt(QuellSchrittView quellschritt) { this.quellschritt = quellschritt; }
 
 	public SchrittID getQuellschrittID(){
 		return quellschritt!=null?quellschritt.getId():null;
@@ -418,11 +422,11 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void viewsNachinitialisieren() {
 		if (aenderungsart != null) {
-            switch (aenderungsart) {
-                case Geloescht -> setGeloeschtMarkiertStil();
-                case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
-                case Zielschritt -> setZielschrittStil();
-            }
+			switch (aenderungsart) {
+				case Geloescht -> setGeloeschtMarkiertStilUDBL();
+				case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
+				case Zielschritt -> setZielschrittStilUDBL();
+			}
 		}
 		registerAllExistingStepnumbers();
 	}
@@ -480,7 +484,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 				getParent().schrittEntfernen(this);
 				break;
 			case Zielschritt:
-				setQuellschritt(null);
+				setQuellschrittUDBL(null);
 				break;
 		}
 		aenderungsmarkierungenEntfernen();
@@ -503,9 +507,9 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 				getParent().schrittEntfernen(this);
 				setId(getQuellschritt().newStepIDInSameSequence(After));
 				setParent(getQuellschritt().getParent());
-				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
+				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt());
 				getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
-				setQuellschritt(null);
+				setQuellschrittUDBL(null);
 				break;
 		}
 		aenderungsmarkierungenEntfernen();

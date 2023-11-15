@@ -13,6 +13,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
+import specman.undo.props.UDBL;
 import specman.pdf.Shape;
 import specman.undo.UndoableEditAreaRemoved;
 import specman.undo.UndoableEditAreaAdded;
@@ -109,7 +110,6 @@ public class EditContainer extends JPanel {
 
 		initLayoutAndEditAreas(editor, initialContent);
 		updateDecorationIndentions(new Indentions());
-		//setBackground(schrittHintergrund());
 
     skalieren(editor.getZoomFactor(), 0);
   }
@@ -179,8 +179,8 @@ public class EditContainer extends JPanel {
 		}
 	}
 
-	public void setZielschrittStil(SchrittID quellschrittId) {
-		schrittNummer.setZielschrittStil(quellschrittId);
+	public void setZielschrittStilUDBL(SchrittID quellschrittId) {
+		schrittNummer.setZielschrittStilUDBL(quellschrittId);
 	}
 
 	public void setQuellStil(SchrittID zielschrittID) {
@@ -189,11 +189,11 @@ public class EditContainer extends JPanel {
 		schrittNummer.setQuellschrittStil(zielschrittID);
 	}
 
-	public void setGeloeschtMarkiertStil(SchrittID id) {
-		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		modifyableEditAreas().forEach(ea -> ea.setGeloeschtMarkiertStil());
+	public void setGeloeschtMarkiertStilUDBL(SchrittID id) {
+		setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+		modifyableEditAreas().forEach(ea -> ea.setGeloeschtMarkiertStilUDBL());
 		if (schrittNummer != null) {
-			schrittNummer.setGeloeschtStil(id);
+			schrittNummer.setGeloeschtStilUDBL(id);
 		}
 	}
 
@@ -304,7 +304,7 @@ public class EditContainer extends JPanel {
 	public void setBackground(Color bg) {
 		super.setBackground(bg);
 		if (editAreas != null) {
-			editAreas.forEach(ea -> ea.setEditBackground(bg));
+			editAreas.forEach(ea -> ea.setEditBackgroundUDBL(bg));
 		}
 	}
 
@@ -323,9 +323,9 @@ public class EditContainer extends JPanel {
 
 	public Rectangle getStepNumberBounds() { return schrittNummer.getBounds(); }
 
-	public void wrapSchrittnummerAsDeleted() { schrittNummer.wrapAsDeleted(); }
-	public void wrapSchrittnummerAsZiel(SchrittID quellschrittId) { schrittNummer.wrapAsZiel(quellschrittId); }
-	public void wrapSchrittnummerAsQuelle(SchrittID zielschrittID) { schrittNummer.wrapAsQuelle(zielschrittID); }
+	public void wrapSchrittnummerAsDeleted() { schrittNummer.wrapAsDeletedUDBL(); }
+	public void wrapSchrittnummerAsZiel(SchrittID quellschrittId) { schrittNummer.wrapAsZielUDBL(quellschrittId); }
+	public void wrapSchrittnummerAsQuelle(SchrittID zielschrittID) { schrittNummer.wrapAsQuelleUDBL(zielschrittID); }
 
 	/** Required for iterations that may modify the list of edit areas. Working directly on the
 	 * list whould cause concurrent operation exceptions in these cases. The usage of this method
@@ -489,4 +489,10 @@ public class EditContainer extends JPanel {
 		}
 	}
 
+	public void setBackgroundUDBL(Color bg) {
+		UDBL.setBackgroundUDBL(this, bg);
+		if (editAreas != null) {
+			editAreas.forEach(ea -> ea.setEditBackgroundUDBL(bg));
+		}
+	}
 }

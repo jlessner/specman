@@ -1,4 +1,15 @@
 Abschluss für Go-Live
+- Refactoring Undo/Redo
+  - AbstractSchrittView#resyncSchrittnummerStil / SchrittSequenzView#resyncSchrittnummerStil
+    wird das wirklich gebraucht? Muss im Moment mit pauseUndo gewrapped werden. Aber eigentlich
+    dürfte das nicht nötig sein, denn wenn die Methode zu einer Änderung des Schrittnummer-Stils
+    führen würde, dann würde das ja in der eigentlichen Undo-Komposition fehlen.
+  - Undo/Redo für Verschieben von Schritten - mit Änderungsmodus
+  x Undo/Redo für Verschieben von Schritten - ohne Änderungsmodus
+  x Undo/Redo für Hinzufügen / Entfernen von Tabellen
+  x Undo/Redo beim Skalieren
+  x Prüfen, ob das Entfernen von Zeigen noch korrekt funktioniert.
+
 - Tabellen als separate Elemente analog Bilder
   - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
   - Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Spalten

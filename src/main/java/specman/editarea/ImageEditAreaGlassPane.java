@@ -28,9 +28,7 @@ public class ImageEditAreaGlassPane extends JPanel {
   }
 
   public void toDeleted() {
-    while (getComponentCount() > 0) {
-      remove(getComponent(0));
-    }
+    removeAll();
     new ImageDeletedMarker();
     revalidate();
   }

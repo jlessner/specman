@@ -17,7 +17,7 @@ import specman.pdf.Shape;
 import specman.editarea.EditContainer;
 import specman.editarea.Indentions;
 import specman.editarea.InteractiveStepFragment;
-import specman.undo.AbstractUndoableInteraction;
+import specman.undo.props.UDBL;
 
 import javax.swing.JPanel;
 import java.awt.Color;
@@ -66,7 +66,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		panel.add(new SpaltenResizer(this, editor), CC.xywh(2, 1, 1, 5));
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.elseSequenz));
-		setBackground(new Color(model.farbe));
+		setBackgroundUDBL(new Color(model.farbe));
 		ifBreitenanteilSetzen(model.ifBreitenanteil);
 		klappen.init(model.zugeklappt);
 	}
@@ -154,15 +154,18 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 
 	@Override
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
-		ifSequenz.ueberschrift.setBackground(bg);
-		elseSequenz.ueberschrift.setBackground(bg);
-		panelIf.setBackground(bg);
-		panelElse.setBackground(bg);
-		leeresFeld.setBackground(bg);
-		panelBedingung.setBackground(bg);
-		panel.repaint(); // Damit die Raute nachgezeichnet wird
+	public void setBackgroundUDBL(Color bg) {
+		super.setBackgroundUDBL(bg);
+
+		ifSequenz.ueberschrift.setBackgroundUDBL(bg);
+		elseSequenz.ueberschrift.setBackgroundUDBL(bg);
+
+		UDBL.setBackgroundUDBL(panelIf, bg);
+		UDBL.setBackgroundUDBL(panelElse, bg);
+		UDBL.setBackgroundUDBL(leeresFeld, bg);
+		UDBL.setBackgroundUDBL(panelBedingung, bg);
+
+		UDBL.repaint(panel); // Damit die Raute nachgezeichnet wird
 	}
 
 	@Override
@@ -271,10 +274,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.viewsNachinitialisieren();
 	}
 
-	@Override public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
-		elseSequenz.alsGeloeschtMarkieren(editor);
-		ifSequenz.alsGeloeschtMarkieren(editor);
-		return super.alsGeloeschtMarkieren(editor);
+	@Override public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+		elseSequenz.alsGeloeschtMarkierenUDBL(editor);
+		ifSequenz.alsGeloeschtMarkierenUDBL(editor);
+		super.alsGeloeschtMarkierenUDBL(editor);
 	}
 
 	@Override public void aenderungsmarkierungenEntfernen() {

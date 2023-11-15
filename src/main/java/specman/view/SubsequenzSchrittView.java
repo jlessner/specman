@@ -6,7 +6,6 @@ import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
-import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
@@ -59,7 +58,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, SubsequenzSchrittModel_V001 model) {
 		this(editor, parent, model.inhalt, model.id, model.aenderungsart, false);
 		initSubsequenz(new SchrittSequenzView(editor, this, model.subsequenz));
-		setBackground(new Color(model.farbe));
+		setBackgroundUDBL(new Color(model.farbe));
 		klappen.init(model.zugeklappt);
 	}
 
@@ -157,9 +156,9 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return changesReverted;
 	}
 
-	@Override public AbstractUndoableInteraction alsGeloeschtMarkieren(EditorI editor) {
-		subsequenz.alsGeloeschtMarkieren(editor);
-		return super.alsGeloeschtMarkieren(editor);
+	@Override public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+		subsequenz.alsGeloeschtMarkierenUDBL(editor);
+		super.alsGeloeschtMarkierenUDBL(editor);
 	}
 
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {

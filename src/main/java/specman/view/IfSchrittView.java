@@ -11,6 +11,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.IfSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.editarea.EditContainer;
+import specman.undo.props.UDBL;
 
 import java.awt.*;
 
@@ -40,7 +41,7 @@ public class IfSchrittView extends IfElseSchrittView {
 		super(editor, parent, model.inhalt, model.id, model.aenderungsart, false);
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), aenderungsart, new EditorContentModel_V001("")));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
-		setBackground(new Color(model.farbe));
+		this.setBackgroundUDBL(new Color(model.farbe));
 		ifBreiteSetzen(model.leerBreite);
 		klappen.init(model.zugeklappt);;
 	}
@@ -112,11 +113,10 @@ public class IfSchrittView extends IfElseSchrittView {
 		return model;
 	}
 	
-	//TODO Die Backgroundcolor in IfSchrittViews anpassen
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
-		ifSequenz.sequenzBereich.setBackground(bg);
-		panel.repaint(); // Damit die Linien nachgezeichnet werden
+	public void setBackgroundUDBL(Color bg) {
+		super.setBackgroundUDBL(bg);
+		UDBL.setBackgroundUDBL(ifSequenz.sequenzBereich, bg);
+		UDBL.repaint(panel); // Damit die Linien nachgezeichnet werden
 	}
 	
 }

@@ -17,6 +17,7 @@ import specman.undo.UndoableTableRemovedMarked;
 import specman.undo.UndoableTableRowAdded;
 import specman.undo.UndoableTableRowRemoved;
 import specman.undo.manager.UndoRecording;
+import specman.undo.props.UDBL;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
@@ -75,7 +76,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     int columns = model.cells.get(0).size();
     initPanels(columns, rows);
     addCells(model.cells);
-    setEditBackground(null);
+    setEditBackgroundUDBL(null);
   }
 
   private Stream<EditContainer> cellstream() { return cells.stream().flatMap(l -> l.stream()); }
@@ -121,9 +122,13 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   @Override
-  public void setEditBackground(Color bg) {
-    cellstream().forEach(cell -> cell.setBackground(aenderungsart.toBackgroundColor()));
-    refreshBorderSpaceGeometricsAndColor();
+  public void setEditBackgroundUDBL(Color bg) {
+    cellstream().forEach(cell -> cell.setBackgroundUDBL(aenderungsart.toBackgroundColor()));
+    setBackgroundUDBL(bg);
+  }
+
+  private void setBackgroundUDBL(Color bg) {
+    UDBL.setBackgroundUDBL(this, bg);
   }
 
   @Override
@@ -191,9 +196,9 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   @Override
-  public void setGeloeschtMarkiertStil() {
+  public void setGeloeschtMarkiertStilUDBL() {
     setBackground(TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-    cellstream().forEach(cell -> cell.setGeloeschtMarkiertStil(null));
+    cellstream().forEach(cell -> cell.setGeloeschtMarkiertStilUDBL(null));
   }
 
   @Override
@@ -382,7 +387,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     // If the table is already marked as removed, the method here should not have been called
     if (editor.aenderungenVerfolgen() && aenderungsart == Untracked) {
       try (UndoRecording ur = editor.composeUndo()) {
-        setGeloeschtMarkiertStil();
+        setGeloeschtMarkiertStilUDBL();
         aenderungsart = Geloescht;
         editor.addEdit(new UndoableTableRemovedMarked(this));
       }
@@ -520,9 +525,15 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       aenderungenVerwerfen();
       aenderungsmarkierungenEntfernen();
       aenderungsart = Untracked;
-      setEditBackground(null);
+      setEditBackgroundUDBL(null);
     }
   }
+
+  @Override
+  public Aenderungsart getAenderungsart() { return aenderungsart; }
+
+  @Override
+  public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
 
   public boolean isMarkedAsDeleted() { return aenderungsart == Geloescht; }
 }

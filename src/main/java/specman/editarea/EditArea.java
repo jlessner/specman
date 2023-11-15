@@ -1,5 +1,6 @@
 package specman.editarea;
 
+import specman.Aenderungsart;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.pdf.Shape;
 
@@ -17,7 +18,7 @@ public interface EditArea extends InteractiveStepFragment {
 
   void pack(int availableWidth);
 
-  void setGeloeschtMarkiertStil();
+  void setGeloeschtMarkiertStilUDBL();
 
   Component asComponent();
 
@@ -59,9 +60,13 @@ public interface EditArea extends InteractiveStepFragment {
 
   Shape getShape();
 
-  void setEditBackground(Color bg);
+  void setEditBackgroundUDBL(Color bg);
 
   void setEditDecorationIndentions(Indentions indentions);
 
   boolean enthaelt(InteractiveStepFragment fragment);
+
+  void setAenderungsart(Aenderungsart aenderungsart);
+
+  Aenderungsart getAenderungsart();
 }

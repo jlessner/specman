@@ -2,7 +2,6 @@ package specman.undo;
 
 import specman.EditException;
 import specman.EditorI;
-import specman.undo.manager.UndoRecording;
 import specman.view.CaseSchrittView;
 import specman.view.ZweigSchrittSequenzView;
 
@@ -25,6 +24,6 @@ public class UndoableZweigEntferntMarkiert extends AbstractUndoableInteraction {
   }
 
   @Override public void redoEdit() throws CannotRedoException {
-    zweig.alsGeloeschtMarkieren(editor);
+    zweig.alsGeloeschtMarkierenUDBL(editor);
   }
 }

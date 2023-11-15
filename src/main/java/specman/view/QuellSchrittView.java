@@ -5,13 +5,14 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.QuellSchrittModel_V001;
+import specman.undo.props.UDBL;
 
 import javax.swing.*;
 import java.awt.*;
 
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 
-public class QuellSchrittView extends AbstractSchrittView{
+public class QuellSchrittView extends AbstractSchrittView {
 
     protected AbstractSchrittView zielschritt;
 
@@ -20,8 +21,8 @@ public class QuellSchrittView extends AbstractSchrittView{
         //Die Höhe des Schrittnummer-Labels sollte die Höhe bestimmen.
         super(editor, parent, new EditorContentModel_V001("."), id, Aenderungsart.Quellschritt);
         setQuellStil();
-        setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-        alsGeloeschtMarkieren(editor);
+        setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+        alsGeloeschtMarkierenUDBL(editor);
     }
 
     @Override
@@ -29,7 +30,7 @@ public class QuellSchrittView extends AbstractSchrittView{
 
     public QuellSchrittView(EditorI editor, SchrittSequenzView parent, QuellSchrittModel_V001 model) {
         super(editor, parent, model.inhalt, model.id, model.aenderungsart);
-        setBackground(new Color(model.farbe));
+        setBackgroundUDBL(new Color(model.farbe));
     }
 
     @Override
@@ -57,9 +58,7 @@ public class QuellSchrittView extends AbstractSchrittView{
         setAenderungsart(Aenderungsart.Quellschritt);
     }
 
-    public void setZielschritt(AbstractSchrittView zielschritt) {
-        if (zielschritt != null) {
-            this.zielschritt = zielschritt;
-        }
-    }
+    public void setZielschrittUDBL(AbstractSchrittView zielschritt) { UDBL.setZielschrittUDBL(this, zielschritt); }
+    public void setZielschritt(AbstractSchrittView zielschritt) { this.zielschritt = zielschritt; }
+    public AbstractSchrittView getZielschritt() { return zielschritt; }
 }

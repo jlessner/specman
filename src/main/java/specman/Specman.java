@@ -10,7 +10,6 @@ import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import org.jetbrains.annotations.Nullable;
 import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
-import specman.editarea.TextStyles;
 import specman.model.ModelEnvelope;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -68,7 +67,6 @@ import javax.swing.undo.UndoableEdit;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -339,7 +337,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	private void actionListenerHinzufuegen() {
-		schrittAnhaengen.addActionListener(new ActionListener() {
+		einfachenSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
@@ -348,7 +346,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -361,7 +359,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -374,7 +372,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -387,7 +385,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -400,7 +398,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.ifSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -413,7 +411,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -426,7 +424,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -439,7 +437,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.breakSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -452,7 +450,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						? referenceStep.getParent().catchSchrittZwischenschieben(After, referenceStep, Specman.this)
 						: hauptSequenz.catchSchrittAnhaengen(Specman.this);
 				newStepPostInit(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -475,7 +473,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
 				schritt.skalieren(zoomFaktor, 100);
 				diagrammAktualisieren(schritt);
-				hauptSequenz.resyncSchrittnummerStil();
+				resyncSchrittnummerStil();
 			}
 		});
 
@@ -489,7 +487,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
                 Color aktuelleHintergrundfarbe = schritt.getBackground();
                 int farbwert = aktuelleHintergrundfarbe.getRed() == 240 ? 255 : 240;
                 Color neueHintergrundfarbe = new Color(farbwert, farbwert, farbwert);
-                schritt.setBackground(neueHintergrundfarbe);
+                schritt.setBackgroundUDBL(neueHintergrundfarbe);
                 addEdit(new UndoableSchrittEingefaerbt(schritt, aktuelleHintergrundfarbe, neueHintergrundfarbe));
             }
         });
@@ -498,22 +496,23 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			if (lastFocusedTextArea == null) {
 				return;
 			}
-            try {
-                AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
-                if (schritt == null) {
-                    // Sollte nur der Fall sein, wenn man den Fokus im Intro oder Outro stehen hat
-                    fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + lastFocusedTextArea.getText());
-                    return;
-                }
+			try {
+				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
+				if (schritt == null) {
+						// Sollte nur der Fall sein, wenn man den Fokus im Intro oder Outro stehen hat
+						fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + lastFocusedTextArea.getText());
+						return;
+				}
 
-                //Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
-                if (instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
-                    //Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
-                    if (schritt.getAenderungsart() != Aenderungsart.Geloescht) {
-                        schrittAlsGeloeschtMarkieren(schritt);
-						hauptSequenz.resyncSchrittnummerStil();
-                    }
-                } else {
+				//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
+				if (instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
+						//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
+						if (schritt.getAenderungsart() != Aenderungsart.Geloescht) {
+								schrittAlsGeloeschtMarkieren(schritt);
+								resyncSchrittnummerStil();
+						}
+				}
+				else {
 					//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
 					try (UndoRecording ur = composeUndo()) {
 						if (schritt instanceof CaseSchrittView) {
@@ -525,21 +524,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							}
 							return;
 						}
-                        if (isStepDeletionAllowed(schritt)) {
+						if (isStepDeletionAllowed(schritt)) {
 							schritt.markStepnumberLinksAsDefect();
-                            SchrittSequenzView sequenz = schritt.getParent();
-                            int schrittIndex = sequenz.schrittEntfernen(schritt);
-                            undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
-							hauptSequenz.resyncSchrittnummerStil();
-                        }
+							SchrittSequenzView sequenz = schritt.getParent();
+							int schrittIndex = sequenz.schrittEntfernen(schritt);
+							undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+							resyncSchrittnummerStil();
+						}
 					}
 				}
-            }
-            catch (EditException ex) {
-                showError(ex);
-            }
-        });
-
+      }
+			catch (EditException ex) {
+				showError(ex);
+			}
+    });
 
 		toggleBorderType.addActionListener(new ActionListener() {
 			@Override
@@ -588,7 +586,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				int prozentAlt = skalieren(prozentNeu);
 				undoManager.addEdit(new UndoableDiagrammSkaliert(Specman.this, prozentAlt));
 			}
-
 		});
 
 		birdsview.addActionListener(e -> {
@@ -664,6 +661,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	}
 
+	private void resyncSchrittnummerStil() {
+		try (UndoRecording ur = pauseUndo()) {
+			hauptSequenz.resyncSchrittnummerStil();
+		}
+	}
+
 	public void addImageViaFileChooser() {
 		if (lastFocusedTextArea != null) {
 			JFileChooser fileChooser = new JFileChooser();
@@ -693,7 +696,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
 		if (isStepDeletionAllowed(schritt)) {
             try (UndoRecording ur = composeUndo()) {
-                addEdit(schritt.alsGeloeschtMarkieren(this));
+                schritt.alsGeloeschtMarkierenUDBL(this);
             }
         }
 
@@ -825,7 +828,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 				else {
 					QuellSchrittView quellSchritt = (QuellSchrittView) hauptSequenz.findeSchrittZuId(modelStep.quellschrittID);
-					zielschritt.setQuellschritt(quellSchritt);
+					zielschritt.setQuellschrittUDBL(quellSchritt);
 					quellSchritt.setZielschritt(zielschritt);
 				}
 			}
@@ -884,7 +887,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolBar.setFloatable(false); //ToDo Sidebar added
 		buttonBar = new JToolBar(JToolBar.VERTICAL); //ToDo Sidebar added
 
-		schrittAnhaengen = new JButton();
+		einfachenSchrittAnhaengen = new JButton();
 		whileSchrittAnhaengen = new JButton();
 		whileWhileSchrittAnhaengen = new JButton();
 		ifElseSchrittAnhaengen = new JButton();
@@ -924,7 +927,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		contentPane.setLayout(new FormLayout("pref, default:grow", "default, default, fill:10px:grow")); //ToDo Sidebar added "pref"
 
 		//======== toolBar ========
-		toolbarButtonHinzufuegen(schrittAnhaengen, "einfacher-schritt", "Einfachen Schritt anhängen", buttonBar);
+		toolbarButtonHinzufuegen(einfachenSchrittAnhaengen, "einfacher-schritt", "Einfachen Schritt anhängen", buttonBar);
 		toolbarButtonHinzufuegen(whileSchrittAnhaengen, "while-schritt", "While-Schritt anhängen", buttonBar);
 		toolbarButtonHinzufuegen(whileWhileSchrittAnhaengen, "whilewhile-schritt", "While-While-Schritt anhängen", buttonBar);
 		toolbarButtonHinzufuegen(ifElseSchrittAnhaengen, "ifelse-schritt", "If-Else-Schritt anhängen", buttonBar);
@@ -957,7 +960,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 		//TODO
 		DragMouseAdapter dragButtonAdapter = new DragMouseAdapter(this);
-		addDragAdapter(schrittAnhaengen,dragButtonAdapter);
+		addDragAdapter(einfachenSchrittAnhaengen,dragButtonAdapter);
 		addDragAdapter(whileSchrittAnhaengen,dragButtonAdapter);
 		addDragAdapter(whileWhileSchrittAnhaengen,dragButtonAdapter);
 		addDragAdapter(ifElseSchrittAnhaengen,dragButtonAdapter);
@@ -1040,7 +1043,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JToolBar toolBar;
 	private JToolBar buttonBar; // Sidebar ergänzt
-	private JButton schrittAnhaengen;
+	private JButton einfachenSchrittAnhaengen;
 	private JButton whileSchrittAnhaengen;
 	private JButton whileWhileSchrittAnhaengen;
 	private JButton ifElseSchrittAnhaengen;
@@ -1186,8 +1189,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return undoManager;
 	}
 
-	public JButton getSchrittAnhaengen() {
-		return schrittAnhaengen;
+	public JButton getEinfachenSchrittAnhaengen() {
+		return einfachenSchrittAnhaengen;
 	}
 
 	public JButton getWhileSchrittAnhaengen() {

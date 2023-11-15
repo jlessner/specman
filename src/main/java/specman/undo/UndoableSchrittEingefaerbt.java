@@ -19,12 +19,12 @@ public class UndoableSchrittEingefaerbt extends AbstractUndoableInteraction {
 
 	@Override
 	public void undoEdit() throws CannotUndoException {
-		schritt.setBackground(alteHintergrundfarbe);
+		schritt.setBackgroundUDBL(alteHintergrundfarbe);
 	}
 
 	@Override
 	public void redoEdit() throws CannotRedoException {
-		schritt.setBackground(neueHintergrundfarbe);
+		schritt.setBackgroundUDBL(neueHintergrundfarbe);
 	}
 
 	

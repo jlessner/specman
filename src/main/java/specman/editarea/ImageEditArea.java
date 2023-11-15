@@ -4,12 +4,14 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import org.apache.commons.io.FilenameUtils;
 import specman.Aenderungsart;
+import specman.EditorI;
 import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.pdf.Shape;
 import specman.pdf.ShapeImage;
-import specman.undo.UndoableImageRemovedMarkiert;
+import specman.undo.manager.UndoRecording;
+import specman.undo.props.UDBL;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -86,11 +88,11 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   private void postInit() {
     setLayout(new FormLayout("pref:grow", "fill:pref:grow"));
-    setBorderByChangetype();
-    setEditBackground(null);
+    setBorderByChangetypeUDBL();
+    setEditBackgroundUDBL(null);
     this.image = new JLabel();
     add(image, CC.xy(1, 1));
-    updateListeners();
+    updateListenersByAenderungsart();
   }
 
   @Override
@@ -98,16 +100,14 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     add(schrittNummer);
   }
 
-  private void updateListeners() {
+  private void updateListenersByAenderungsart() {
+    removeMouseListener(this);
+    removeFocusListener(this);
+    removeKeyListener(this);
     if (aenderungsart != Aenderungsart.Geloescht) {
       addMouseListener(this);
       addFocusListener(this);
       addKeyListener(this);
-    }
-    else {
-      removeMouseListener(this);
-      removeFocusListener(this);
-      removeKeyListener(this);
     }
   }
 
@@ -115,14 +115,21 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override public void keyReleased(KeyEvent e) {}
   @Override public void keyPressed(KeyEvent e) {
     if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
-      if (aenderungsart == null && Specman.instance().aenderungenVerfolgen()) {
-        setGeloeschtMarkiertStil();
+      EditorI editor = Specman.instance();
+      try (UndoRecording ur = editor.pauseUndo()){
+        // Change back to unselected border before starting to record undoable operations
+        setBorderByChangetypeUDBL();
       }
-      else {
-        getParent().removeEditArea(ImageEditArea.this);
-        Specman.instance().diagrammAktualisieren(null);
+      try (UndoRecording ur = editor.composeUndo()){
+        if (aenderungsart == Untracked && editor.aenderungenVerfolgen()) {
+          setGeloeschtMarkiertStilUDBL();
+        }
+        else {
+          getParent().removeEditArea(ImageEditArea.this);
+          editor.diagrammAktualisieren(null);
+        }
+        e.consume();
       }
-      e.consume();
     }
   }
 
@@ -143,7 +150,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override
   public void focusLost(FocusEvent e) {
     if (aenderungsart != Aenderungsart.Geloescht) {
-      setBorderByChangetype();
+      setBorderByChangetypeUDBL();
       removeGlassPanel();
     }
   }
@@ -168,9 +175,11 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     }
   }
 
-  private void setBorderByChangetype() {
-    setBorder(aenderungsart == Aenderungsart.Hinzugefuegt ? UNSELECTED_CHANGED_BORDER : UNSELECTED_BORDER);
+  private void setBorderByChangetypeUDBL() {
+    setBorderUDBL(aenderungsart == Aenderungsart.Hinzugefuegt ? UNSELECTED_CHANGED_BORDER : UNSELECTED_BORDER);
   }
+
+  public void setBorderUDBL(Border border) { UDBL.setBorderUDBL(this, border); }
 
   public void pack(int availableWidth) {
     if (availableWidth > 0) {
@@ -201,11 +210,9 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   @Override
-  public void setGeloeschtMarkiertStil() {
+  public void setGeloeschtMarkiertStilUDBL() {
     if (aenderungsart == Untracked) {
-      Specman.instance().addEdit(new UndoableImageRemovedMarkiert(this, aenderungsart));
-      updateChangetypeAndDependentStyling(Aenderungsart.Geloescht);
-      addGlassPanel();
+      updateChangetypeAndDependentStylingUDBL(Aenderungsart.Geloescht);
       focusGlass.toDeleted();
     }
     else if (aenderungsart == Aenderungsart.Hinzugefuegt) {
@@ -214,20 +221,30 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   public void unmarkAsDeleted(Aenderungsart aenderungsart) {
-    updateChangetypeAndDependentStyling(aenderungsart);
+    updateChangetypeAndDependentStylingUDBL(aenderungsart);
   }
 
-  private void updateChangetypeAndDependentStyling(Aenderungsart aenderungsart) {
+  private void updateChangetypeAndDependentStylingUDBL(Aenderungsart aenderungsart) {
+    setAenderungsartUDBL(aenderungsart);
+    setBorderByChangetypeUDBL();
+    setEditBackgroundUDBL(null);
+  }
+
+  public Aenderungsart getAenderungsart() { return aenderungsart; }
+
+  public void setAenderungsart(Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
-    setBorderByChangetype();
-    setBackground(null);
+    updateListenersByAenderungsart();
     if (aenderungsart == Aenderungsart.Geloescht) {
       addGlassPanel();
     }
     else {
       removeGlassPanel();
     }
-    updateListeners();
+  }
+
+  public void setAenderungsartUDBL(Aenderungsart aenderungsart) {
+    UDBL.setAenderungsart(this, aenderungsart);
   }
 
   @Override
@@ -257,7 +274,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public int aenderungenUebernehmen() {
     int changesMade = aenderungsart.asNumChanges();
     switch (aenderungsart) {
-      case Hinzugefuegt -> updateChangetypeAndDependentStyling(null);
+      case Hinzugefuegt -> updateChangetypeAndDependentStylingUDBL(null);
       case Geloescht -> getParent().removeEditArea(this);
     }
     aenderungsart = Untracked;
@@ -269,7 +286,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     int changesReverted = aenderungsart.asNumChanges();
     switch(aenderungsart) {
       case Hinzugefuegt -> getParent().removeEditArea(this);
-      case Geloescht -> updateChangetypeAndDependentStyling(null);
+      case Geloescht -> updateChangetypeAndDependentStylingUDBL(null);
     }
     aenderungsart = Untracked;
     return changesReverted;
@@ -298,8 +315,12 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   @Override
-  public void setEditBackground(Color bg) {
-    setBackground(aenderungsart.toBackgroundColor());
+  public void setEditBackgroundUDBL(Color bg) {
+    setBackgroundUDBL(aenderungsart.toBackgroundColor());
+  }
+
+  public void setBackgroundUDBL(Color bg) {
+    UDBL.setBackgroundUDBL(this, bg);
   }
 
   @Override
