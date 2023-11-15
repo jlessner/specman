@@ -586,7 +586,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				int prozentAlt = skalieren(prozentNeu);
 				undoManager.addEdit(new UndoableDiagrammSkaliert(Specman.this, prozentAlt));
 			}
-
 		});
 
 		birdsview.addActionListener(e -> {
