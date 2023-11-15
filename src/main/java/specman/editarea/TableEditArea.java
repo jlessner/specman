@@ -228,9 +228,42 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     switch(aenderungsart) {
       case Geloescht -> getParent().removeEditArea(this);
     }
+    if (allCellsMarkedAsDeleted()) {
+      getParent().removeEditArea(this);
+    }
+    changesMade += removeRowsMarkedAsDeleted();
+    changesMade += removeColumnsMarkedAsDeleted();
     changesMade += cellstream().mapToInt(cell -> cell.aenderungenUebernehmen()).sum();
     aenderungsmarkierungenEntfernen();
     aenderungsart = Untracked;
+    return changesMade;
+  }
+
+  private boolean allCellsMarkedAsDeleted() {
+    return cells.stream().allMatch(row -> rowIsMarkedAsDeleted(row));
+  }
+
+  private int removeColumnsMarkedAsDeleted() {
+    int changesMade = 0;
+    for (int c = 0; c < numColumns(); c++) {
+      if (columnIsMarkedAsDeleted(c)) {
+        removeColumnWithoutUndoRecording(c);
+        changesMade++;
+        c--;
+      }
+    }
+    return changesMade;
+  }
+
+  private int removeRowsMarkedAsDeleted() {
+    int changesMade = 0;
+    for (int r = 0; r < numRows(); r++) {
+      if (rowIsMarkedAsDeleted(r)) {
+        removeRowWithoutUndoRecording(r);
+        changesMade++;
+        r--;
+      }
+    }
     return changesMade;
   }
 
@@ -244,7 +277,6 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     aenderungsmarkierungenEntfernen();
     aenderungsart = Untracked;
     return changesReverted;
-
   }
 
   @Override
@@ -535,8 +567,10 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   public boolean isMarkedAsDeleted() { return aenderungsart == Geloescht; }
 
-  public boolean rowIsMarkedAsDeleted(int rowIndex) {
-    return cells.get(rowIndex).stream().allMatch(cell -> cell.isMarkedAsDeleted());
+  public boolean rowIsMarkedAsDeleted(int rowIndex) { return rowIsMarkedAsDeleted(cells.get(rowIndex)); }
+
+  private boolean rowIsMarkedAsDeleted(List<EditContainer> row) {
+    return row.stream().allMatch(cell -> cell.isMarkedAsDeleted());
   }
 
   public boolean columnIsMarkedAsDeleted(int columnIndex) {
