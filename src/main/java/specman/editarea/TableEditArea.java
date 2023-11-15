@@ -529,5 +529,11 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     }
   }
 
+  @Override
+  public Aenderungsart getAenderungsart() { return aenderungsart; }
+
+  @Override
+  public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
+
   public boolean isMarkedAsDeleted() { return aenderungsart == Geloescht; }
 }

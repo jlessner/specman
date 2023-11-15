@@ -2,6 +2,7 @@ package specman.undo.props;
 
 import specman.Aenderungsart;
 import specman.Specman;
+import specman.editarea.EditArea;
 import specman.editarea.TextEditArea;
 import specman.undo.AbstractUndoableInteraction;
 import specman.view.AbstractSchrittView;
@@ -47,9 +48,15 @@ public class UDBL {
   }
 
   public static void setAenderungsart(AbstractSchrittView abstractSchrittView, Aenderungsart aenderungsart) {
-    Aenderungsart undoAenderungsart = aenderungsart;
+    Aenderungsart undoAenderungsart = abstractSchrittView.getAenderungsart();
     abstractSchrittView.setAenderungsart(aenderungsart);
     addEdit(new UndoableSetAenderungsart(abstractSchrittView, undoAenderungsart));
+  }
+
+  public static void setAenderungsart(EditArea editArea, Aenderungsart aenderungsart) {
+    Aenderungsart undoAenderungsart = editArea.getAenderungsart();
+    editArea.setAenderungsart(aenderungsart);
+    addEdit(new UndoableSetAenderungsartEditArea(editArea, undoAenderungsart));
   }
 
   public static void setEditable(JTextComponent component, boolean editable) {

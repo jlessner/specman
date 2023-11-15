@@ -326,8 +326,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
-    private int aenderungsmarkierungenUebernehmen(
-            Element e, List<GeloeschtMarkierung_V001> loeschungen) {
+    private int aenderungsmarkierungenUebernehmen(Element e, List<GeloeschtMarkierung_V001> loeschungen) {
         int changesMade = 0;
 
         StyledDocument doc = (StyledDocument) e.getDocument();
@@ -952,6 +951,12 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public boolean enthaelt(InteractiveStepFragment fragment) { return this == fragment; }
+
+    @Override
+    public Aenderungsart getAenderungsart() { return aenderungsart; }
+
+    @Override
+    public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
 
     public Shape getShape() {
         return new Shape(this).withText(new FormattedShapeText(this));

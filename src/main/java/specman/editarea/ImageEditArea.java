@@ -4,11 +4,13 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import org.apache.commons.io.FilenameUtils;
 import specman.Aenderungsart;
+import specman.EditorI;
 import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.pdf.Shape;
 import specman.pdf.ShapeImage;
+import specman.undo.manager.UndoRecording;
 import specman.undo.props.UDBL;
 
 import javax.imageio.ImageIO;
@@ -90,7 +92,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     setEditBackgroundUDBL(null);
     this.image = new JLabel();
     add(image, CC.xy(1, 1));
-    updateListeners();
+    updateListenersByAenderungsart();
   }
 
   @Override
@@ -98,16 +100,14 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     add(schrittNummer);
   }
 
-  private void updateListeners() {
+  private void updateListenersByAenderungsart() {
+    removeMouseListener(this);
+    removeFocusListener(this);
+    removeKeyListener(this);
     if (aenderungsart != Aenderungsart.Geloescht) {
       addMouseListener(this);
       addFocusListener(this);
       addKeyListener(this);
-    }
-    else {
-      removeMouseListener(this);
-      removeFocusListener(this);
-      removeKeyListener(this);
     }
   }
 
@@ -115,14 +115,21 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override public void keyReleased(KeyEvent e) {}
   @Override public void keyPressed(KeyEvent e) {
     if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
-      if (aenderungsart == null && Specman.instance().aenderungenVerfolgen()) {
-        setGeloeschtMarkiertStilUDBL();
+      EditorI editor = Specman.instance();
+      try (UndoRecording ur = editor.pauseUndo()){
+        // Change back to unselected border before starting to record undoable operations
+        setBorderByChangetypeUDBL();
       }
-      else {
-        getParent().removeEditArea(ImageEditArea.this);
-        Specman.instance().diagrammAktualisieren(null);
+      try (UndoRecording ur = editor.composeUndo()){
+        if (aenderungsart == Untracked && editor.aenderungenVerfolgen()) {
+          setGeloeschtMarkiertStilUDBL();
+        }
+        else {
+          getParent().removeEditArea(ImageEditArea.this);
+          editor.diagrammAktualisieren(null);
+        }
+        e.consume();
       }
-      e.consume();
     }
   }
 
@@ -204,9 +211,8 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   @Override
   public void setGeloeschtMarkiertStilUDBL() {
-    if (aenderungsart == null) {
+    if (aenderungsart == Untracked) {
       updateChangetypeAndDependentStylingUDBL(Aenderungsart.Geloescht);
-      addGlassPanel();
       focusGlass.toDeleted();
     }
     else if (aenderungsart == Aenderungsart.Hinzugefuegt) {
@@ -219,16 +225,26 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   private void updateChangetypeAndDependentStylingUDBL(Aenderungsart aenderungsart) {
-    this.aenderungsart = aenderungsart;
+    setAenderungsartUDBL(aenderungsart);
     setBorderByChangetypeUDBL();
     setEditBackgroundUDBL(null);
+  }
+
+  public Aenderungsart getAenderungsart() { return aenderungsart; }
+
+  public void setAenderungsart(Aenderungsart aenderungsart) {
+    this.aenderungsart = aenderungsart;
+    updateListenersByAenderungsart();
     if (aenderungsart == Aenderungsart.Geloescht) {
       addGlassPanel();
     }
     else {
       removeGlassPanel();
     }
-    updateListeners();
+  }
+
+  public void setAenderungsartUDBL(Aenderungsart aenderungsart) {
+    UDBL.setAenderungsart(this, aenderungsart);
   }
 
   @Override
