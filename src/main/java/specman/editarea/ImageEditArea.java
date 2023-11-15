@@ -220,10 +220,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     }
   }
 
-  public void unmarkAsDeleted(Aenderungsart aenderungsart) {
-    updateChangetypeAndDependentStylingUDBL(aenderungsart);
-  }
-
   private void updateChangetypeAndDependentStylingUDBL(Aenderungsart aenderungsart) {
     setAenderungsartUDBL(aenderungsart);
     setBorderByChangetypeUDBL();

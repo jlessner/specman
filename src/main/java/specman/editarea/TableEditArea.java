@@ -13,7 +13,6 @@ import specman.model.v001.TableEditAreaModel_V001;
 import specman.pdf.Shape;
 import specman.undo.UndoableTableColumnAdded;
 import specman.undo.UndoableTableColumnRemoved;
-import specman.undo.UndoableTableRemovedMarked;
 import specman.undo.UndoableTableRowAdded;
 import specman.undo.UndoableTableRowRemoved;
 import specman.undo.manager.UndoRecording;
@@ -197,7 +196,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   @Override
   public void setGeloeschtMarkiertStilUDBL() {
-    setBackground(TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+    setBackgroundUDBL(TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
     cellstream().forEach(cell -> cell.setGeloeschtMarkiertStilUDBL(null));
   }
 
@@ -380,17 +379,14 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   int numColumns() { return cells.get(0).size(); }
   int numRows() { return cells.size(); }
 
-  public void removeTableOrMarkAsDeleted() {
+  public void removeTableOrMarkAsDeletedUDBL() {
     EditorI editor = Specman.instance();
     // Marking as removed is only required if there is no change tracked yet for the table.
     // If the table is marked as created, it can simply be removed
     // If the table is already marked as removed, the method here should not have been called
-    if (editor.aenderungenVerfolgen() && aenderungsart == Untracked) {
-      try (UndoRecording ur = editor.composeUndo()) {
-        setGeloeschtMarkiertStilUDBL();
-        aenderungsart = Geloescht;
-        editor.addEdit(new UndoableTableRemovedMarked(this));
-      }
+    if (deletionsMustBeMarked()) {
+      setGeloeschtMarkiertStilUDBL();
+      setAenderungsartUDBL(Geloescht);
     }
     else {
       getParent().removeEditArea(this); // Already includes undo recording
@@ -415,14 +411,24 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     }
   }
 
-  public void removeRow(int rowIndex) {
-    if (numRows() > 1) {
-      List<EditContainer> row = cells.get(rowIndex);
-      removeRowWithoutUndoRecording(rowIndex);
-      Specman.instance().addEdit(new UndoableTableRowRemoved(this, rowIndex, row));
+  private boolean deletionsMustBeMarked() {
+    return Specman.instance().aenderungenVerfolgen() && aenderungsart == Untracked;
+  }
+
+  public void removeRowOrMarkAsDeletedUDBL(int rowIndex) {
+    EditorI editor = Specman.instance();
+    if (deletionsMustBeMarked()) {
+      cells.get(rowIndex).forEach(cell -> cell.setGeloeschtMarkiertStilUDBL(null));
     }
     else {
-      removeTableOrMarkAsDeleted();
+      if (numRows() > 1) {
+        List<EditContainer> row = cells.get(rowIndex);
+        removeRowWithoutUndoRecording(rowIndex);
+        editor.addEdit(new UndoableTableRowRemoved(this, rowIndex, row));
+      }
+      else {
+        removeTableOrMarkAsDeletedUDBL();
+      }
     }
   }
 
@@ -479,15 +485,19 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
    * yet explicitly been set, all columns will have the same width after removing one.
    * Otherwise, the removed column's width is added to the preceeding column's width
    * (respectively to the new <i>last</i> column's width when removing the last one). */
-  public void removeColumn(int colIndex) {
-    if (numColumns() > 1) {
-      EditorI editor = Specman.instance();
-      List<EditContainer> column = removeColumnWithoutUndoRecording(colIndex);
-      List<Integer> originalColumnsWidthPercent = copyOf(columnsWidthPercent);
-      editor.addEdit(new UndoableTableColumnRemoved(this, colIndex, column, originalColumnsWidthPercent));
+  public void removeColumnOrMarkAsDeletedUDBL(int colIndex) {
+    if (deletionsMustBeMarked()) {
+      cells.forEach(row -> row.get(colIndex).setGeloeschtMarkiertStilUDBL(null));
     }
     else {
-      removeTableOrMarkAsDeleted();
+      if (numColumns() > 1) {
+        EditorI editor = Specman.instance();
+        List<EditContainer> column = removeColumnWithoutUndoRecording(colIndex);
+        List<Integer> originalColumnsWidthPercent = copyOf(columnsWidthPercent);
+        editor.addEdit(new UndoableTableColumnRemoved(this, colIndex, column, originalColumnsWidthPercent));
+      } else {
+        removeTableOrMarkAsDeletedUDBL();
+      }
     }
   }
 
@@ -519,21 +529,17 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     recomputeLayout();
   }
 
-  /** This works a bit like a tiny version of {@link AbstractSchrittView#aenderungenVerwerfen(EditorI)}. */
-  public void undoGeloeschtMarkiertStil() {
-    try (UndoRecording ur = Specman.instance().pauseUndo()) {
-      aenderungenVerwerfen();
-      aenderungsmarkierungenEntfernen();
-      aenderungsart = Untracked;
-      setEditBackgroundUDBL(null);
-    }
-  }
-
-  @Override
-  public Aenderungsart getAenderungsart() { return aenderungsart; }
-
-  @Override
-  public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
+  @Override public Aenderungsart getAenderungsart() { return aenderungsart; }
+  @Override public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
+  private void setAenderungsartUDBL(Aenderungsart aenderungsart) { UDBL.setAenderungsart(this, aenderungsart); }
 
   public boolean isMarkedAsDeleted() { return aenderungsart == Geloescht; }
+
+  public boolean rowIsMarkedAsDeleted(int rowIndex) {
+    return cells.get(rowIndex).stream().allMatch(cell -> cell.isMarkedAsDeleted());
+  }
+
+  public boolean columnIsMarkedAsDeleted(int columnIndex) {
+    return cells.stream().allMatch(row -> row.get(columnIndex).isMarkedAsDeleted());
+  }
 }

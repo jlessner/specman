@@ -1,5 +1,8 @@
 package specman.editarea;
 
+import specman.Specman;
+import specman.undo.manager.UndoRecording;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -54,17 +57,19 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
   @Override public void mouseDragged(MouseEvent e) {}
 
   @Override public void mouseClicked(MouseEvent e) {
-    System.out.println(selectionOperation + " " + selectionIndex);
-    if (selectionOperation != null) {
-      setEditAreaCursor(null);
-      switch(selectionOperation) {
-        case RemoveTable -> editArea.removeTableOrMarkAsDeleted();
-        case AddRow -> editArea.addRow(selectionIndex);
-        case RemoveRow -> editArea.removeRow(selectionIndex);
-        case AddColumn -> editArea.addColumn(selectionIndex);
-        case RemoveColumn -> editArea.removeColumn(selectionIndex);
+    try(UndoRecording ur = Specman.instance().composeUndo()) {
+      System.out.println(selectionOperation + " " + selectionIndex);
+      if (selectionOperation != null) {
+        setEditAreaCursor(null);
+        switch(selectionOperation) {
+          case RemoveTable -> editArea.removeTableOrMarkAsDeletedUDBL();
+          case AddRow -> editArea.addRow(selectionIndex);
+          case RemoveRow -> editArea.removeRowOrMarkAsDeletedUDBL(selectionIndex);
+          case AddColumn -> editArea.addColumn(selectionIndex);
+          case RemoveColumn -> editArea.removeColumnOrMarkAsDeletedUDBL(selectionIndex);
+        }
+        resetSelection();
       }
-      resetSelection();
     }
   }
 
@@ -194,7 +199,7 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
       List<EditContainer> leadingRow = editArea.cells.get(0);
       for (int c = 0; c < leadingRow.size(); c++) {
         EditContainer columnLeader = leadingRow.get(c);
-        if (isAtXPosition(x, columnLeader)) {
+        if (isAtXPosition(x, columnLeader) && !editArea.columnIsMarkedAsDeleted(c)) {
           selectionIndex = c;
           selectionOperation = Operation.RemoveColumn;
           return new Rectangle(
@@ -218,7 +223,7 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
       final int y = mousePos.y - tablePanel.getY();
       for (int r = 0; r < editArea.cells.size(); r++) {
         EditContainer rowLeader = editArea.cells.get(r).get(0);
-        if (isAtYPosition(y, rowLeader)) {
+        if (isAtYPosition(y, rowLeader) && !editArea.rowIsMarkedAsDeleted(r)) {
           selectionIndex = r;
           selectionOperation = Operation.RemoveRow;
           return new Rectangle(

@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Untracked;
 import static specman.editarea.HTMLTags.BODY_INTRO;
 import static specman.editarea.HTMLTags.BODY_OUTRO;
@@ -194,6 +195,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     public void setGeloeschtMarkiertStilUDBL() {
         aenderungenVerwerfen();
         setStyleUDBL(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
+        setAenderungsartUDBL(Geloescht);
     }
 
     @Override
@@ -952,11 +954,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     @Override
     public boolean enthaelt(InteractiveStepFragment fragment) { return this == fragment; }
 
-    @Override
-    public Aenderungsart getAenderungsart() { return aenderungsart; }
-
-    @Override
-    public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
+    @Override public Aenderungsart getAenderungsart() { return aenderungsart; }
+    @Override public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
+    private void setAenderungsartUDBL(Aenderungsart aenderungsart) { UDBL.setAenderungsart(this, aenderungsart); }
 
     public Shape getShape() {
         return new Shape(this).withText(new FormattedShapeText(this));
