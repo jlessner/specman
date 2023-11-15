@@ -236,8 +236,8 @@ public class CatchSchrittView extends AbstractSchrittView {
 			return ergebnis;
 		}
 
-		@Override public AbstractSchrittView schrittZwischenschieben(AbstractSchrittView schritt, RelativeStepPosition insertionPosition, AbstractSchrittView vorgaengerSchritt, EditorI editor) {
-			AbstractSchrittView ergebnis = super.schrittZwischenschieben(schritt, insertionPosition, vorgaengerSchritt, editor);
+		@Override public AbstractSchrittView schrittZwischenschieben(AbstractSchrittView schritt, RelativeStepPosition insertionPosition, AbstractSchrittView vorgaengerSchritt) {
+			AbstractSchrittView ergebnis = super.schrittZwischenschieben(schritt, insertionPosition, vorgaengerSchritt);
 			rahmenanzeigeAnpassen();
 			return ergebnis;
 		}

@@ -507,7 +507,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 				getParent().schrittEntfernen(this);
 				setId(getQuellschritt().newStepIDInSameSequence(After));
 				setParent(getQuellschritt().getParent());
-				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
+				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt());
 				getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
 				setQuellschrittUDBL(null);
 				break;

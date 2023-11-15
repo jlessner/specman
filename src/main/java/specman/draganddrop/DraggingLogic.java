@@ -498,7 +498,7 @@ public class DraggingLogic implements Serializable {
                 sourceSequence = movingStep.getParent();
                 if(movingStep.getQuellschritt() == null) {
                     quellschritt = new QuellSchrittView(specman, sourceSequence, movingStep.getId());
-                    sourceSequence.schrittZwischenschieben(quellschritt, Before, movingStep, specman);
+                    sourceSequence.schrittZwischenschieben(quellschritt, Before, movingStep);
                 }
                 else {
                     quellschritt = movingStep.getQuellschritt();
@@ -507,8 +507,8 @@ public class DraggingLogic implements Serializable {
                 int originalIndex = originalParent.schrittEntfernen(movingStep);
                 movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
                 movingStep.setParent(referenceStep.getParent());
-                sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep, specman);
-                specman.addEdit(new UndoableSchrittVerschobenMarkiert(movingStep, originalParent, originalIndex, quellschritt, specman));
+                sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);
+                specman.addEdit(new UndoableSchrittVerschobenMarkiert(movingStep, originalParent, originalIndex, quellschritt));
                 movingStep.setQuellschrittUDBL(quellschritt);
                 movingStep.setZielschrittStilUDBL();
                 quellschritt.setZielschrittUDBL(movingStep);
@@ -519,7 +519,7 @@ public class DraggingLogic implements Serializable {
                 int originalIndex = originalParent.schrittEntfernen(movingStep);
                 movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
                 movingStep.setParent(referenceStep.getParent());
-                sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep, specman);
+                sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);
                 specman.addEdit(new UndoableSchrittVerschoben(movingStep, originalParent, originalIndex));
             }
         }

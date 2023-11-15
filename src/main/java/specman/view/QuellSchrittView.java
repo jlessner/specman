@@ -12,7 +12,7 @@ import java.awt.*;
 
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 
-public class QuellSchrittView extends AbstractSchrittView{
+public class QuellSchrittView extends AbstractSchrittView {
 
     protected AbstractSchrittView zielschritt;
 
