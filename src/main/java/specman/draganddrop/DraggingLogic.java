@@ -486,44 +486,42 @@ public class DraggingLogic implements Serializable {
 
     private void moveStep(RelativeStepPosition insertionPosition, AbstractSchrittView referenceStep, SchrittNummerLabel label)
         throws EditException {
-        AbstractSchrittView movingStep = specman.getHauptSequenz().findeSchritt(label);
-        if (movingStep == referenceStep) {
-            // Step must not be placed before or after itself. Should not be possible by the dragging logic anyway.
-            return;
-        }
-        SchrittSequenzView sourceSequence = referenceStep.getParent();
-        if(specman.aenderungenVerfolgen() && movingStep.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
-            QuellSchrittView quellschritt;
-            sourceSequence = movingStep.getParent();
-            if(movingStep.getQuellschritt() == null) {
-                try(UndoRecording ur = specman.pauseUndo()) {
+        try (UndoRecording ur = specman.composeUndo()) {
+            AbstractSchrittView movingStep = specman.getHauptSequenz().findeSchritt(label);
+            if (movingStep == referenceStep) {
+                // Step must not be placed before or after itself. Should not be possible by the dragging logic anyway.
+                return;
+            }
+            SchrittSequenzView sourceSequence = referenceStep.getParent();
+            if(specman.aenderungenVerfolgen() && movingStep.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
+                QuellSchrittView quellschritt;
+                sourceSequence = movingStep.getParent();
+                if(movingStep.getQuellschritt() == null) {
                     quellschritt = new QuellSchrittView(specman, sourceSequence, movingStep.getId());
                     sourceSequence.schrittZwischenschieben(quellschritt, Before, movingStep, specman);
                 }
+                else {
+                    quellschritt = movingStep.getQuellschritt();
+                }
+                SchrittSequenzView originalParent = movingStep.getParent();
+                int originalIndex = originalParent.schrittEntfernen(movingStep);
+                movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
+                movingStep.setParent(referenceStep.getParent());
+                sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep, specman);
+                specman.addEdit(new UndoableSchrittVerschobenMarkiert(movingStep, originalParent, originalIndex, quellschritt, specman));
+                movingStep.setQuellschritt(quellschritt);
+                movingStep.setZielschrittStilUDBL();
+                quellschritt.setZielschritt(movingStep);
+                specman.hauptSequenz.resyncSchrittnummerStil();
             }
             else {
-                quellschritt = movingStep.getQuellschritt();
+                SchrittSequenzView originalParent = movingStep.getParent();
+                int originalIndex = originalParent.schrittEntfernen(movingStep);
+                movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
+                movingStep.setParent(referenceStep.getParent());
+                sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep, specman);
+                specman.addEdit(new UndoableSchrittVerschoben(movingStep, originalParent, originalIndex));
             }
-            SchrittSequenzView originalParent = movingStep.getParent();
-            int originalIndex = originalParent.schrittEntfernen(movingStep);
-            movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
-            movingStep.setParent(referenceStep.getParent());
-            sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep, specman);
-            specman.addEdit(new UndoableSchrittVerschobenMarkiert(movingStep, originalParent, originalIndex, quellschritt, specman));
-            movingStep.setQuellschritt(quellschritt);
-            try(UndoRecording ur = specman.pauseUndo()) {
-                movingStep.setZielschrittStilUDBL();
-            }
-            quellschritt.setZielschritt(movingStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
-        }
-        else {
-            SchrittSequenzView originalParent = movingStep.getParent();
-            int originalIndex = originalParent.schrittEntfernen(movingStep);
-            movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
-            movingStep.setParent(referenceStep.getParent());
-            sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep, specman);
-            specman.addEdit(new UndoableSchrittVerschoben(movingStep, originalParent, originalIndex));
         }
     }
 
