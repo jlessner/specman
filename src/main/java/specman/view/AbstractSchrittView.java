@@ -394,13 +394,15 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public abstract JComponent getPanel();
 
-	public void setQuellschritt(QuellSchrittView quellschritt){
-		this.quellschritt=quellschritt;
+	public void setQuellschrittUDBL(QuellSchrittView quellschritt){
+		UDBL.setQuellschrittUDBL(this, quellschritt);
 	}
 
 	public QuellSchrittView getQuellschritt(){
 		return quellschritt;
 	}
+
+	public void setQuellschritt(QuellSchrittView quellschritt) { this.quellschritt = quellschritt; }
 
 	public SchrittID getQuellschrittID(){
 		return quellschritt!=null?quellschritt.getId():null;
@@ -482,7 +484,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 				getParent().schrittEntfernen(this);
 				break;
 			case Zielschritt:
-				setQuellschritt(null);
+				setQuellschrittUDBL(null);
 				break;
 		}
 		aenderungsmarkierungenEntfernen();
@@ -507,7 +509,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 				setParent(getQuellschritt().getParent());
 				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt(), editor);
 				getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
-				setQuellschritt(null);
+				setQuellschrittUDBL(null);
 				break;
 		}
 		aenderungsmarkierungenEntfernen();

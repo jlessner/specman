@@ -6,6 +6,7 @@ import specman.editarea.EditArea;
 import specman.editarea.TextEditArea;
 import specman.undo.AbstractUndoableInteraction;
 import specman.view.AbstractSchrittView;
+import specman.view.QuellSchrittView;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -63,6 +64,18 @@ public class UDBL {
     boolean undoEditable = component.isEditable();
     component.setEditable(editable);
     addEdit(new UndoableSetEditable(component, undoEditable));
+  }
+
+  public static void setQuellschrittUDBL(AbstractSchrittView abstractSchrittView, QuellSchrittView quellschritt) {
+    QuellSchrittView undoQuellschritt = abstractSchrittView.getQuellschritt();
+    abstractSchrittView.setQuellschritt(quellschritt);
+    addEdit((new UndoableSetQuellschritt(abstractSchrittView, undoQuellschritt)));
+  }
+
+  public static void setZielschrittUDBL(QuellSchrittView quellSchrittView, AbstractSchrittView zielschritt) {
+    AbstractSchrittView undoZielschritt = quellSchrittView.getZielschritt();
+    quellSchrittView.setZielschritt(zielschritt);
+    addEdit((new UndoableSetZielschritt(quellSchrittView, undoZielschritt)));
   }
 
   public static void repaint(Component component) {

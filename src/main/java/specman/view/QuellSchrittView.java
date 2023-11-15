@@ -5,6 +5,7 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.QuellSchrittModel_V001;
+import specman.undo.props.UDBL;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,9 +58,7 @@ public class QuellSchrittView extends AbstractSchrittView{
         setAenderungsart(Aenderungsart.Quellschritt);
     }
 
-    public void setZielschritt(AbstractSchrittView zielschritt) {
-        if (zielschritt != null) {
-            this.zielschritt = zielschritt;
-        }
-    }
+    public void setZielschrittUDBL(AbstractSchrittView zielschritt) { UDBL.setZielschrittUDBL(this, zielschritt); }
+    public void setZielschritt(AbstractSchrittView zielschritt) { this.zielschritt = zielschritt; }
+    public AbstractSchrittView getZielschritt() { return zielschritt; }
 }

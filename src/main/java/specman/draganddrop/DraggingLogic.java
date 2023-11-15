@@ -509,9 +509,9 @@ public class DraggingLogic implements Serializable {
                 movingStep.setParent(referenceStep.getParent());
                 sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep, specman);
                 specman.addEdit(new UndoableSchrittVerschobenMarkiert(movingStep, originalParent, originalIndex, quellschritt, specman));
-                movingStep.setQuellschritt(quellschritt);
+                movingStep.setQuellschrittUDBL(quellschritt);
                 movingStep.setZielschrittStilUDBL();
-                quellschritt.setZielschritt(movingStep);
+                quellschritt.setZielschrittUDBL(movingStep);
                 specman.hauptSequenz.resyncSchrittnummerStil();
             }
             else {

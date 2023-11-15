@@ -28,12 +28,8 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
   @Override public void undoEdit() throws EditException {
     togglePosition();
     if (quellschrittIstNeu) {
-      try(UndoRecording ur = editor.pauseUndo()) {
-        quellschritt.getParent().schrittEntfernen(quellschritt);
-        step.setQuellschritt(null);
-        step.aenderungsmarkierungenEntfernen();
-        step.setAenderungsart(Untracked);
-      }
+      quellschritt.getParent().schrittEntfernen(quellschritt);
+      step.aenderungsmarkierungenEntfernen();
     }
     else {
       // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht
@@ -47,10 +43,6 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
     if (quellschrittIstNeu) {
       quellschritt = new QuellSchrittView(editor, originalParent, step.getId());
       originalParent.schrittZwischenschieben(quellschritt, Before, step, editor);
-      step.setQuellschritt(quellschritt);
-      quellschritt.setZielschritt(step);
-      step.setZielschrittStilUDBL();
-      step.setAenderungsart(Aenderungsart.Zielschritt);
     }
     togglePosition();
     // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht

@@ -828,7 +828,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 				else {
 					QuellSchrittView quellSchritt = (QuellSchrittView) hauptSequenz.findeSchrittZuId(modelStep.quellschrittID);
-					zielschritt.setQuellschritt(quellSchritt);
+					zielschritt.setQuellschrittUDBL(quellSchritt);
 					quellSchritt.setZielschritt(zielschritt);
 				}
 			}
