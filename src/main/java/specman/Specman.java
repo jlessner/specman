@@ -116,6 +116,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	List<AbstractSchrittView> postInitSchritte;
 	RecentFiles recentFiles;
 	private JComponent welcomeMessage;
+	PDFExportChooser pdfExportChooser;
 
 	//TODO window for dragging
 	public final JWindow window = new JWindow();
@@ -772,6 +773,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Nassi Diagramme", "nsd"));
 		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			diagrammLaden(fileChooser.getSelectedFile());
+			pdfExportChooser = null;
 		}
 	}
 
@@ -1101,17 +1103,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		final Image unused = createImage(arbeitsbereich.getWidth(), arbeitsbereich.getHeight());
 		arbeitsbereich.paint(unused.getGraphics());
 
-		final String PDF_EXTENSION = ".pdf";
-
-		PDFExportChooser fileChooser = new PDFExportChooser();
-		fileChooser.setCurrentDirectory(new File("."));
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(PDF_EXTENSION, "pdf"));
-		fileChooser.setAcceptAllFileFilterUsed(true);
-		int result = fileChooser.showSaveDialog(arbeitsbereich);
+		if (pdfExportChooser == null) {
+			pdfExportChooser = new PDFExportChooser();
+		}
+		int result = pdfExportChooser.showSaveDialog(arbeitsbereich);
 		if (result == JFileChooser.APPROVE_OPTION) {
-		  File selectedFile = fileChooser.getSelectedFile();
-			//File selectedFile = new File("sample.pdf");
+			pdfExportChooser.safeUserPreferences();
+		  File selectedFile = pdfExportChooser.getSelectedFile();
 			if (selectedFile != null) {
 				Point scrollPosition = scrollPane.getViewport().getViewPosition();
 				Point workingAreaLocation = arbeitsbereich.getLocation();
@@ -1122,14 +1120,17 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					.add(breitenAnpasser.getShape())
 					.add(outro.getShape());
 				new PDFRenderer(selectedFile.getAbsolutePath(),
-					fileChooser.getSelectedPageSize(),
-					fileChooser.getPaging(), zoomFaktor).render(all);
+					pdfExportChooser.getSelectedPageSize(),
+					pdfExportChooser.isPortrait(),
+					pdfExportChooser.getPaging(), zoomFaktor).render(all);
 				LIRecordingListView.stopRecording();
-				try {
-					Desktop.getDesktop().open(selectedFile);
-				}
-				catch(IOException iox) {
-					iox.printStackTrace();
+				if (pdfExportChooser.displayResult()) {
+					try {
+						Desktop.getDesktop().open(selectedFile);
+					}
+					catch(IOException iox) {
+						iox.printStackTrace();
+					}
 				}
 			}
     }

@@ -40,10 +40,10 @@ public class PDFRenderer {
   int uizoomfactor;
   float swing2pdfScaleFactor;
 
-  public PDFRenderer(String pdfFilename, PageSize pageSize, boolean withPageTiling, int uizoomfactor) {
+  public PDFRenderer(String pdfFilename, PageSize pageSize, boolean portrait, boolean withPageTiling, int uizoomfactor) {
     try {
       this.pdfFilename = pdfFilename;
-      this.pageSize = pageSize;
+      this.pageSize = portrait ? pageSize : pageSize.rotate();
       this.withPageTiling = withPageTiling;
       this.uizoomfactor = uizoomfactor;
       pdfOutputStream = new ByteArrayOutputStream();
@@ -104,7 +104,6 @@ public class PDFRenderer {
       FileOutputStream fos = new FileOutputStream(pdfFilename);
       fos.write(pdfOutputStream.toByteArray());
       fos.close();
-      Desktop.getDesktop().open(new java.io.File(pdfFilename));
     }
     catch(Exception x) {
       x.printStackTrace();
