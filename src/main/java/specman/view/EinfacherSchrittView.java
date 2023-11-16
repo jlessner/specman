@@ -17,7 +17,6 @@ public class EinfacherSchrittView extends AbstractSchrittView {
 
 	public EinfacherSchrittView(EditorI editor, SchrittSequenzView parent, EinfacherSchrittModel_V001 model) {
 		super(editor, parent, model.inhalt, model.id, model.aenderungsart);
-		setBackgroundUDBL(new Color(model.farbe));
 	}
 
 	@Override

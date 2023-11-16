@@ -75,7 +75,6 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     int columns = model.cells.get(0).size();
     initPanels(columns, rows);
     addCells(model.cells);
-    setEditBackgroundUDBL(null);
   }
 
   private Stream<EditContainer> cellstream() { return cells.stream().flatMap(l -> l.stream()); }
