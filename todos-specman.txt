@@ -1,6 +1,6 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
+  - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen und im Modell persistieren
   - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Springen über Schrittreferenzen im PDF

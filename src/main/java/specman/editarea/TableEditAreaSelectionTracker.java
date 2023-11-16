@@ -59,7 +59,6 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
 
   @Override public void mouseClicked(MouseEvent e) {
     try(UndoRecording ur = Specman.instance().composeUndo()) {
-      System.out.println(selectionOperation + " " + selectionIndex);
       if (selectionOperation != null) {
         setEditAreaCursor(null);
         switch(selectionOperation) {

@@ -15,6 +15,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.model.v001.StruktogrammModel_V001;
+import specman.pdf.PDFExportChooser;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
 import specman.editarea.EditContainer;
@@ -64,17 +65,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.undo.UndoableEdit;
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.KeyboardFocusManager;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -631,33 +622,31 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		aenderungenUebernehmen.addActionListener(e -> {
 			try (UndoRecording ur = composeUndo()) {
-				try {
-					int changesMade = hauptSequenz.aenderungenUebernehmen(Specman.this);
-					if (changesMade > 0) {
-						diagrammAktualisieren(null);
-					} else {
-						JOptionPane.showMessageDialog(this, "Das Diagramm enthält keine Änderungen.");
-					}
-				} catch (EditException ex) {
-					showError(ex);
+				int changesMade = hauptSequenz.aenderungenUebernehmen(Specman.this);
+				if (changesMade > 0) {
+					diagrammAktualisieren(null);
+				} else {
+					JOptionPane.showMessageDialog(this, "Das Diagramm enthält keine Änderungen.");
 				}
 			}
-        });
+			catch (EditException ex) {
+				showError(ex);
+			}
+		});
 
 		aenderungenVerwerfen.addActionListener(e -> {
 			try (UndoRecording ur = composeUndo()) {
-				try {
-					int changesReverted = hauptSequenz.aenderungenVerwerfen(Specman.this);
-					if (changesReverted > 0) {
-						diagrammAktualisieren(null);
-					} else {
-						JOptionPane.showMessageDialog(this, "Das Diagramm enthält keine Änderungen.");
-					}
-				} catch (EditException ex) {
-					showError(ex);
+				int changesReverted = hauptSequenz.aenderungenVerwerfen(Specman.this);
+				if (changesReverted > 0) {
+					diagrammAktualisieren(null);
+				} else {
+					JOptionPane.showMessageDialog(this, "Das Diagramm enthält keine Änderungen.");
 				}
 			}
-        });
+			catch (EditException ex) {
+				showError(ex);
+			}
+    });
 
 	}
 
@@ -761,7 +750,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			recentFiles.add(diagrammDatei);
 			undoManager.discardAllEdits();
-		} catch (JsonProcessingException jpx) {
+		}
+		catch (JsonProcessingException jpx) {
 			jpx.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -814,7 +804,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			aenderungenVerfolgen.setSelected(model.changeModeenabled);
 			recentFiles.add(diagramFile);
 			undoManager.discardAllEdits();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -1112,29 +1103,36 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		final String PDF_EXTENSION = ".pdf";
 
-//        JFileChooser fileChooser = new JFileChooser();
-//        fileChooser.setCurrentDirectory(new File("."));
-//        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-//        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(PDF_EXTENSION, "pdf"));
-//        fileChooser.setAcceptAllFileFilterUsed(true);
-//        int result = fileChooser.showSaveDialog(arbeitsbereich);
-//        if (result == JFileChooser.APPROVE_OPTION) {
-//            File selectedFile = fileChooser.getSelectedFile();
-		File selectedFile = new File("sample.pdf");
-		if (selectedFile != null) {
-			Point scrollPosition = scrollPane.getViewport().getViewPosition();
-			Point workingAreaLocation = arbeitsbereich.getLocation();
-			workingAreaLocation.translate(scrollPosition.x, scrollPosition.y);
-			Shape all = new Shape(workingAreaLocation)
-				.add(intro.getShape())
-				.add(hauptSequenz.getShapeSequence())
-				.add(breitenAnpasser.getShape())
-				.add(outro.getShape());
-			new PDFRenderer(selectedFile.getAbsolutePath(), PageSize.A4, true, zoomFaktor).render(all);
-			LIRecordingListView.stopRecording();
-		}
-//        }
-
+		PDFExportChooser fileChooser = new PDFExportChooser();
+		fileChooser.setCurrentDirectory(new File("."));
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(PDF_EXTENSION, "pdf"));
+		fileChooser.setAcceptAllFileFilterUsed(true);
+		int result = fileChooser.showSaveDialog(arbeitsbereich);
+		if (result == JFileChooser.APPROVE_OPTION) {
+		  File selectedFile = fileChooser.getSelectedFile();
+			//File selectedFile = new File("sample.pdf");
+			if (selectedFile != null) {
+				Point scrollPosition = scrollPane.getViewport().getViewPosition();
+				Point workingAreaLocation = arbeitsbereich.getLocation();
+				workingAreaLocation.translate(scrollPosition.x, scrollPosition.y);
+				Shape all = new Shape(workingAreaLocation)
+					.add(intro.getShape())
+					.add(hauptSequenz.getShapeSequence())
+					.add(breitenAnpasser.getShape())
+					.add(outro.getShape());
+				new PDFRenderer(selectedFile.getAbsolutePath(),
+					fileChooser.getSelectedPageSize(),
+					fileChooser.getPaging(), zoomFaktor).render(all);
+				LIRecordingListView.stopRecording();
+				try {
+					Desktop.getDesktop().open(selectedFile);
+				}
+				catch(IOException iox) {
+					iox.printStackTrace();
+				}
+			}
+    }
 	}
 
 	public BreakSchrittView findeBreakSchritt(CatchSchrittView fuerCatchSchritt) {
