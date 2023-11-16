@@ -1,7 +1,7 @@
 Abschluss für Go-Live
 - PDF-Export
-  - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Seitenzahlen bei Tiling
+  - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Springen über Schrittreferenzen im PDF
   x Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen
   x Renderfehler von gutenmorgen.xsd lösen:

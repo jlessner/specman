@@ -20,7 +20,7 @@ public class CursorFactory {
     Dimension bestCursorSize = Toolkit.getDefaultToolkit().getBestCursorSize(0, 0);
     try {
       ImageIcon icon = Specman.readImageIcon(baseImageName);
-      if (icon.getIconWidth() > bestCursorSize.width) {
+      if (icon.getIconWidth() > bestCursorSize.width || icon.getIconHeight() > bestCursorSize.height) {
         icon = Specman.readImageIcon(baseImageName + "-32");
       }
       final BufferedImage bufferedImage = new BufferedImage( bestCursorSize.width, bestCursorSize.height, BufferedImage.TYPE_INT_ARGB );

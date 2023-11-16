@@ -1,5 +1,7 @@
 package specman.pdf;
 
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
@@ -129,11 +131,19 @@ public class PDFRenderer {
     PdfFormXObject overlengthForm = overlengthPage.copyAsFormXObject(tilePdf);
 
     float tileHeight = pageSize.getHeight();
+//    PdfFont pageNumberingFont = AbstractShapeText.createFont("Helvetica");
 
     for (int tileNo = 1; (tileNo-1) * tileHeight < overlengthRect.getHeight(); tileNo++) {
       PdfPage tilePage = tilePdf.addNewPage(pageSize);
       PdfCanvas canvas = new PdfCanvas(tilePage);
-      canvas.addXObject(overlengthForm, 0, -overlengthRect.getHeight() + tileHeight * tileNo);
+      canvas.addXObjectAt(overlengthForm, 0, -overlengthRect.getHeight() + tileHeight * tileNo);
+//      canvas
+//        .beginText()
+//        .setFontAndSize(pageNumberingFont, 10)
+//        .setStrokeColor(ColorConstants.RED)
+//        .moveText(3, 3)
+//        .showText(Integer.toString(tileNo))
+//        .endText();
     }
     tilePdf.close();
     pdfOutputStream.close();
