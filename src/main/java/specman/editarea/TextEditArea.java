@@ -249,7 +249,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         } else {
             text = getPlainText().replace("\n", " ").trim();
         }
-        return new TextEditAreaModel_V001(text, aenderungen, aenderungsart);
+        return new TextEditAreaModel_V001(text, getPlainText(), aenderungen, aenderungsart);
     }
 
     public java.util.List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen(boolean nurErste) {
@@ -693,7 +693,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         try {
             int textLength = getDocument().getLength();
             if (textLength > textPosition) {
-                TextEditAreaModel_V001 splittedModel = new TextEditAreaModel_V001(getText(), new ArrayList<>(), aenderungsart);
+                TextEditAreaModel_V001 splittedModel = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
                 TextEditArea splittedArea = new TextEditArea(splittedModel, this.getFont());
                 getDocument().remove(textPosition, textLength - textPosition);
                 splittedArea.getDocument().remove(0, textPosition);

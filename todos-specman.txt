@@ -25,6 +25,7 @@ Abschluss für Go-Live
   x Bilder und unterstrukturierte EditContainer (aktuell nur 1. TextEditArea)
 - Neben Serif-Font auch Sans Serif und Monospace Font einbauen und alle anderen entfernen
   - Muss auch alles PDF-tauglich sein
+- Suche über ganzes Modell (siehe TextFinderDialog)
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
@@ -35,6 +36,7 @@ Abschluss für Go-Live
 - Beschriftungen internationalisieren
 
 - Tabellen als separate Elemente analog Bilder
+  - Nice to have: Einfärben von Zellen (statt Schritt), wenn Fokus in Tabellenzelle steht
   - Nice to have: Springen in die nächste Zelle durch Drücken von TAB
   - Nice to have: Hinzufügen von Zeilen durch Drücken von TAB in der letzten Zelle?
   x Zurücknehmen hinzugefügter Zeilen und Spalten
