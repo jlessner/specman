@@ -4,7 +4,6 @@ import specman.EditException;
 import specman.editarea.EditContainer;
 import specman.editarea.TableEditArea;
 
-import javax.swing.undo.UndoableEdit;
 import java.util.List;
 
 public class UndoableTableColumnRemoved extends AbstractUndoableInteraction {
@@ -22,11 +21,11 @@ public class UndoableTableColumnRemoved extends AbstractUndoableInteraction {
 
   @Override
   protected void undoEdit() throws EditException {
-    tableEditArea.addColumnWitoutUndoRecording(colIndex, column, originalColumnsWidthPercent);
+    tableEditArea.addColumn(colIndex, column, originalColumnsWidthPercent);
   }
 
   @Override
   protected void redoEdit() throws EditException {
-    tableEditArea.removeColumnWithoutUndoRecording(colIndex);
+    tableEditArea.removeColumn(colIndex);
   }
 }

@@ -15,7 +15,6 @@ import specman.undo.UndoableTableColumnAdded;
 import specman.undo.UndoableTableColumnRemoved;
 import specman.undo.UndoableTableRowAdded;
 import specman.undo.UndoableTableRowRemoved;
-import specman.undo.manager.UndoRecording;
 import specman.undo.props.UDBL;
 import specman.view.AbstractSchrittView;
 
@@ -31,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static specman.Aenderungsart.Geloescht;
+import static specman.Aenderungsart.Hinzugefuegt;
 import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
@@ -225,29 +225,42 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
    */
   public int aenderungenUebernehmen() {
     int changesMade = aenderungsart.asNumChanges();
-    switch(aenderungsart) {
-      case Geloescht -> getParent().removeEditArea(this);
-    }
-    if (allCellsMarkedAsDeleted()) {
+    if (aenderungsart == Geloescht || allCellsMarkedAs(Geloescht)) {
       getParent().removeEditArea(this);
+      changesMade++;
     }
-    changesMade += removeRowsMarkedAsDeleted();
-    changesMade += removeColumnsMarkedAsDeleted();
-    changesMade += cellstream().mapToInt(cell -> cell.aenderungenUebernehmen()).sum();
+    else {
+      changesMade += removeRowsMarkedAs(Geloescht);
+      changesMade += removeColumnsMarkedAs(Geloescht);
+      changesMade += cellstream().mapToInt(cell -> cell.aenderungenUebernehmen()).sum();
+    }
     aenderungsmarkierungenEntfernen();
     aenderungsart = Untracked;
     return changesMade;
   }
 
-  private boolean allCellsMarkedAsDeleted() {
-    return cells.stream().allMatch(row -> rowIsMarkedAsDeleted(row));
+  @Override
+  public int aenderungenVerwerfen() {
+    int changesReverted = aenderungsart.asNumChanges();
+    if (aenderungsart == Hinzugefuegt || allCellsMarkedAs(Hinzugefuegt)) {
+      getParent().removeEditArea(this);
+      changesReverted++;
+    }
+    else {
+      changesReverted += removeRowsMarkedAs(Hinzugefuegt);
+      changesReverted += removeColumnsMarkedAs(Hinzugefuegt);
+      changesReverted += cellstream().mapToInt(cell -> cell.aenderungenVerwerfen()).sum();
+    }
+    aenderungsmarkierungenEntfernen();
+    aenderungsart = Untracked;
+    return changesReverted;
   }
 
-  private int removeColumnsMarkedAsDeleted() {
+  private int removeColumnsMarkedAs(Aenderungsart aenderungsart) {
     int changesMade = 0;
     for (int c = 0; c < numColumns(); c++) {
-      if (columnIsMarkedAsDeleted(c)) {
-        removeColumnWithoutUndoRecording(c);
+      if (columnIsMarkedAs(c, aenderungsart)) {
+        removeColumn(c);
         changesMade++;
         c--;
       }
@@ -255,28 +268,16 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     return changesMade;
   }
 
-  private int removeRowsMarkedAsDeleted() {
+  private int removeRowsMarkedAs(Aenderungsart aenderungsart) {
     int changesMade = 0;
     for (int r = 0; r < numRows(); r++) {
-      if (rowIsMarkedAsDeleted(r)) {
-        removeRowWithoutUndoRecording(r);
+      if (rowIsMarkedAs(r, aenderungsart)) {
+        removeRow(r);
         changesMade++;
         r--;
       }
     }
     return changesMade;
-  }
-
-  @Override
-  public int aenderungenVerwerfen() {
-    int changesReverted = aenderungsart.asNumChanges();
-    switch(aenderungsart) {
-      case Hinzugefuegt -> getParent().removeEditArea(this);
-    }
-    changesReverted += cellstream().mapToInt(cell -> cell.aenderungenVerwerfen()).sum();
-    aenderungsmarkierungenEntfernen();
-    aenderungsart = Untracked;
-    return changesReverted;
   }
 
   @Override
@@ -305,17 +306,6 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     cellstream().forEach(cell -> tablePanelShape.add(cell.getShape()));
     return new Shape(this).add(tablePanelShape);
   }
-
-  @Override public void setQuellStil() { /* Not required for tables - source steps only contain an empty text area */ }
-  @Override public void pack(int availableWidth) { /* Nothing to do */ }
-  @Override public void addSchrittnummer(SchrittNummerLabel schrittNummer) { add(schrittNummer); }
-  @Override public Component asComponent() { return this; }
-  @Override public String getPlainText() { return ""; }
-  @Override public TextEditArea asTextArea() { return null; }
-  @Override public boolean isTextArea() { return false; }
-  @Override public ImageEditArea asImageArea() { return null; }
-  @Override public String getText() { return "table"; }
-  @Override public void setEditDecorationIndentions(Indentions indentions) { /* Nothing to do */ }
 
   @Override
   public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
@@ -412,7 +402,6 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   int numRows() { return cells.size(); }
 
   public void removeTableOrMarkAsDeletedUDBL() {
-    EditorI editor = Specman.instance();
     // Marking as removed is only required if there is no change tracked yet for the table.
     // If the table is marked as created, it can simply be removed
     // If the table is already marked as removed, the method here should not have been called
@@ -426,21 +415,19 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     }
   }
 
-  public void addRow(int rowIndex) {
-    addEmptyRowWithoutUndoRecording(rowIndex);
-    Specman.instance().addEdit(new UndoableTableRowAdded(this, rowIndex));
+  public void addRowUDBL(int rowIndex) {
+    addEmptyRow(rowIndex);
+    Specman.instance().addEdit(new UndoableTableRowAdded(this, rowIndex, cells.get(rowIndex)));
   }
 
-  public void addEmptyRowWithoutUndoRecording(int rowIndex) {
+  public void addEmptyRow(int rowIndex) {
     EditorI editor = Specman.instance();
-    try (UndoRecording ur = editor.pauseUndo()) {
-      List<EditContainer> row = new ArrayList<>();
-      for (int c = 0; c < numColumns(); c++) {
-        row.add(new EditContainer(editor));
-      }
-      cells.add(rowIndex, row);
-      recomputeLayout();
+    List<EditContainer> row = new ArrayList<>();
+    for (int c = 0; c < numColumns(); c++) {
+      row.add(new EditContainer(editor));
     }
+    cells.add(rowIndex, row);
+    recomputeLayout();
   }
 
   private boolean deletionsMustBeMarked() {
@@ -449,27 +436,27 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   public void removeRowOrMarkAsDeletedUDBL(int rowIndex) {
     EditorI editor = Specman.instance();
-    if (deletionsMustBeMarked()) {
-      cells.get(rowIndex).forEach(cell -> cell.setGeloeschtMarkiertStilUDBL(null));
-    }
-    else {
+    if (rowIsMarkedAs(rowIndex, Hinzugefuegt) || !editor.aenderungenVerfolgen()) {
       if (numRows() > 1) {
         List<EditContainer> row = cells.get(rowIndex);
-        removeRowWithoutUndoRecording(rowIndex);
+        removeRow(rowIndex);
         editor.addEdit(new UndoableTableRowRemoved(this, rowIndex, row));
       }
       else {
         removeTableOrMarkAsDeletedUDBL();
       }
     }
+    else {
+      cells.get(rowIndex).forEach(cell -> cell.setGeloeschtMarkiertStilUDBL(null));
+    }
   }
 
-  public void removeRowWithoutUndoRecording(int rowIndex) {
+  public void removeRow(int rowIndex) {
     cells.remove(rowIndex);
     recomputeLayout();
   }
 
-  public void addRowWithoutUndoRecording(int rowIndex, List<EditContainer> row) {
+  public void addRow(int rowIndex, List<EditContainer> row) {
     cells.add(rowIndex, row);
     recomputeLayout();
   }
@@ -478,32 +465,34 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
    * yet explicitly been set, all columns will have the same width after adding a new
    * one. Otherwise, the new column will steal half of the width of the preceeding column
    * (respectively half of the <i>last</i> column when the new one is appended). */
-  public void addColumn(int colIndex) {
+  public void addColumnUDBL(int colIndex) {
     EditorI editor = Specman.instance();
-    List<Integer> originalColumnsWidthPercent = addEmptyColumnWithoutUndoRecording(colIndex);
-    editor.addEdit(new UndoableTableColumnAdded(this, colIndex, originalColumnsWidthPercent));
+    List<Integer> originalColumnsWidthPercent = addEmptyColumn(colIndex);
+    editor.addEdit(new UndoableTableColumnAdded(this, colIndex, toColumn(colIndex), originalColumnsWidthPercent));
   }
 
-  public List<Integer> addEmptyColumnWithoutUndoRecording(int colIndex) {
+  public List<Integer> addEmptyColumn(int colIndex) {
     EditorI editor = Specman.instance();
     List<Integer> originalColumnsWidthPercent = copyOf(columnsWidthPercent);
-    try (UndoRecording ur = editor.pauseUndo()) {
-      if (columnsWidthPercent != null) {
-        int stealFromColumn = colIndex > numColumns() ? numColumns() - 1 : colIndex;
-        int fromColumnWidth = columnsWidthPercent.get(stealFromColumn);
-        int newColumnWidth = fromColumnWidth / 2;
-        columnsWidthPercent.set(stealFromColumn, newColumnWidth);
-        columnsWidthPercent.add(colIndex, newColumnWidth);
-      }
-      for (List<EditContainer> row : cells) {
-        row.add(colIndex, new EditContainer(editor));
-      }
-      recomputeLayout();
+    if (columnsWidthPercent != null) {
+      int stealFromColumn = colIndex > numColumns() ? numColumns() - 1 : colIndex;
+      int fromColumnWidth = columnsWidthPercent.get(stealFromColumn);
+      int newColumnWidth = fromColumnWidth / 2;
+      columnsWidthPercent.set(stealFromColumn, newColumnWidth);
+      columnsWidthPercent.add(colIndex, newColumnWidth);
     }
+    for (List<EditContainer> row : cells) {
+      row.add(colIndex, new EditContainer(editor));
+    }
+    recomputeLayout();
     return originalColumnsWidthPercent;
   }
 
-  public void removeColumnWithoutUndoRecording(int colIndex, List<Integer> columnsWidthPercent) {
+  private List<EditContainer> toColumn(int columnIndex) {
+    return this.cells.stream().map(row -> row.get(columnIndex)).collect(Collectors.toList());
+  }
+
+  public void removeColumn(int colIndex, List<Integer> columnsWidthPercent) {
     this.columnsWidthPercent = copyOf(columnsWidthPercent);
     this.cells.forEach(row -> row.remove(colIndex));
     recomputeLayout();
@@ -518,41 +507,38 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
    * Otherwise, the removed column's width is added to the preceeding column's width
    * (respectively to the new <i>last</i> column's width when removing the last one). */
   public void removeColumnOrMarkAsDeletedUDBL(int colIndex) {
-    if (deletionsMustBeMarked()) {
-      cells.forEach(row -> row.get(colIndex).setGeloeschtMarkiertStilUDBL(null));
-    }
-    else {
+    EditorI editor = Specman.instance();
+    if (columnIsMarkedAs(colIndex, Hinzugefuegt) || !editor.aenderungenVerfolgen()) {
       if (numColumns() > 1) {
-        EditorI editor = Specman.instance();
-        List<EditContainer> column = removeColumnWithoutUndoRecording(colIndex);
+        List<EditContainer> column = removeColumn(colIndex);
         List<Integer> originalColumnsWidthPercent = copyOf(columnsWidthPercent);
         editor.addEdit(new UndoableTableColumnRemoved(this, colIndex, column, originalColumnsWidthPercent));
       } else {
         removeTableOrMarkAsDeletedUDBL();
       }
     }
+    else {
+      cells.forEach(row -> row.get(colIndex).setGeloeschtMarkiertStilUDBL(null));
+    }
   }
 
-  public List<EditContainer> removeColumnWithoutUndoRecording(int colIndex) {
+  public List<EditContainer> removeColumn(int colIndex) {
     List<EditContainer> column = new ArrayList<>();
-    EditorI editor = Specman.instance();
-    try (UndoRecording ur = editor.pauseUndo()) {
-      if (columnsWidthPercent != null) {
-        int widthEaterColumn = colIndex == numColumns() - 1 ? colIndex - 1 : colIndex + 1;
-        int fromColumnWidth = columnsWidthPercent.get(colIndex);
-        int eaterWidth = columnsWidthPercent.get(widthEaterColumn);
-        columnsWidthPercent.set(widthEaterColumn, eaterWidth + fromColumnWidth);
-        columnsWidthPercent.remove(colIndex);
-      }
-      for (List<EditContainer> row : cells) {
-        column.add(row.remove(colIndex));
-      }
-      recomputeLayout();
+    if (columnsWidthPercent != null) {
+      int widthEaterColumn = colIndex == numColumns() - 1 ? colIndex - 1 : colIndex + 1;
+      int fromColumnWidth = columnsWidthPercent.get(colIndex);
+      int eaterWidth = columnsWidthPercent.get(widthEaterColumn);
+      columnsWidthPercent.set(widthEaterColumn, eaterWidth + fromColumnWidth);
+      columnsWidthPercent.remove(colIndex);
     }
+    for (List<EditContainer> row : cells) {
+      column.add(row.remove(colIndex));
+    }
+    recomputeLayout();
     return column;
   }
 
-  public void addColumnWitoutUndoRecording(int colIndex, List<EditContainer> column, List<Integer> originalColumnsWidthPercent) {
+  public void addColumn(int colIndex, List<EditContainer> column, List<Integer> originalColumnsWidthPercent) {
     for (int r = 0; r < numRows(); r++) {
       List<EditContainer> row = cells.get(r);
       row.add(colIndex, column.get(r));
@@ -566,14 +552,28 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   private void setAenderungsartUDBL(Aenderungsart aenderungsart) { UDBL.setAenderungsart(this, aenderungsart); }
 
   public boolean isMarkedAsDeleted() { return aenderungsart == Geloescht; }
-
-  public boolean rowIsMarkedAsDeleted(int rowIndex) { return rowIsMarkedAsDeleted(cells.get(rowIndex)); }
-
-  private boolean rowIsMarkedAsDeleted(List<EditContainer> row) {
-    return row.stream().allMatch(cell -> cell.isMarkedAsDeleted());
+  private boolean allCellsMarkedAs(Aenderungsart aenderungsart) {
+    return cells.stream().allMatch(row -> rowIsMarkedAs(row, aenderungsart));
   }
 
-  public boolean columnIsMarkedAsDeleted(int columnIndex) {
-    return cells.stream().allMatch(row -> row.get(columnIndex).isMarkedAsDeleted());
+  public boolean rowIsMarkedAs(int rowIndex, Aenderungsart aenderungsart) { return rowIsMarkedAs(cells.get(rowIndex), aenderungsart); }
+  private boolean rowIsMarkedAs(List<EditContainer> row, Aenderungsart aenderungsart) {
+    return row.stream().allMatch(cell -> cell.isMarkedAs(aenderungsart));
   }
+
+  public boolean columnIsMarkedAs(int columnIndex, Aenderungsart aenderungsart) {
+    return toColumn(columnIndex).stream().allMatch(cell -> cell.isMarkedAs(aenderungsart));
+  }
+
+  @Override public void setQuellStil() { /* Not required for tables - source steps only contain an empty text area */ }
+  @Override public void pack(int availableWidth) { /* Nothing to do */ }
+  @Override public void addSchrittnummer(SchrittNummerLabel schrittNummer) { add(schrittNummer); }
+  @Override public Component asComponent() { return this; }
+  @Override public String getPlainText() { return ""; }
+  @Override public TextEditArea asTextArea() { return null; }
+  @Override public boolean isTextArea() { return false; }
+  @Override public ImageEditArea asImageArea() { return null; }
+  @Override public String getText() { return "table"; }
+  @Override public void setEditDecorationIndentions(Indentions indentions) { /* Nothing to do */ }
+
 }

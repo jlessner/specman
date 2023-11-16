@@ -1,24 +1,7 @@
 Abschluss für Go-Live
-- Tabellen als separate Elemente analog Bilder
-  - Löschen neu hinzugefügter Zeilen und Spalten muss direkt Wirkung zeigen
-  - Zurücknehmen hinzugefügter Zeilen und Spalten
-  - Nice to have: Springen in die nächste Zelle durch Drücken von TAB
-  - Nice to have: Hinzufügen von Zeilen durch Drücken von TAB in der letzten Zelle?
-  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
-  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Spalten
-  x Gelöscht markierte Zeilen und Spalten dürfen keine Löschung mehr erlauben
-  x Gelöscht markierte Tabelle darf kein Löschen / Hinzufügen von Zeilen / Spalten mehr erlauben
-  x UndoableTableRemovedMarked
-  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen einer Tabelle
-  x Hinzufügen / Löschen von Spalten (Löschen der letzten Spalte = Löschen der Tabelle)
-  x Undo / Redo für Hinzufügen / Löschen von Zeilen
-  x Hinzufügen / Löschen von Zeilen (Löschen der letzten Zeile = Löschen der Tabelle)
-  x Undo / Redo für Hinzufügen / Löschen von Zeilen
-  x Anpassung von Spaltenbreiten
-
 - PDF-Export
-  - Nicht essenziell aber wäre schöner: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen oder im Modell persistieren
+  - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Springen über Schrittreferenzen im PDF
   x Renderfehler von gutenmorgen.xsd lösen:
@@ -51,12 +34,24 @@ Abschluss für Go-Live
 - Doku aktualisieren
 - Beschriftungen internationalisieren
 
+- Tabellen als separate Elemente analog Bilder
+  - Nice to have: Springen in die nächste Zelle durch Drücken von TAB
+  - Nice to have: Hinzufügen von Zeilen durch Drücken von TAB in der letzten Zelle?
+  x Zurücknehmen hinzugefügter Zeilen und Spalten
+  x Löschen neu hinzugefügter Zeilen und Spalten muss direkt Wirkung zeigen
+  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
+  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Spalten
+  x Gelöscht markierte Zeilen und Spalten dürfen keine Löschung mehr erlauben
+  x Gelöscht markierte Tabelle darf kein Löschen / Hinzufügen von Zeilen / Spalten mehr erlauben
+  x UndoableTableRemovedMarked
+  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen einer Tabelle
+  x Hinzufügen / Löschen von Spalten (Löschen der letzten Spalte = Löschen der Tabelle)
+  x Undo / Redo für Hinzufügen / Löschen von Zeilen
+  x Hinzufügen / Löschen von Zeilen (Löschen der letzten Zeile = Löschen der Tabelle)
+  x Undo / Redo für Hinzufügen / Löschen von Zeilen
+  x Anpassung von Spaltenbreiten
 
 Bugs fixen
-- Undo/Redo-Problem in Tabellen
-    Vorbereitung: Tabelle hinzufügen, Zeile hinzufügen, darin Text eintippen, Tabelle löschen
-    Den gesamten Vorgang über Undos zurücknehmen - klappt alles
-    Den gesamten Vorgang über Redos wieder herstellen - die Wiederherstellung des Texts klappt nicht
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
@@ -79,6 +74,11 @@ Bugs fixen
 - Abfangen des Löschens des letzten Zweigs im Case
 - NumberStepBackground in RoundedBorderDecorator schwarz färben wenn Schritt gelöscht ist
 - 'Cannot invoke "specman.SpaltenResizer.getShape()" because "this.breitenAnpasser" is null' in PDF-Export with no diagram
+x Undo/Redo-Problem in Tabellen
+    Vorbereitung: Tabelle hinzufügen, Zeile hinzufügen, darin Text eintippen, Tabelle löschen
+    Den gesamten Vorgang über Undos zurücknehmen - klappt alles
+    Den gesamten Vorgang über Redos wieder herstellen - die Wiederherstellung des Texts klappt nicht
+    Dürfte daran liegen, dass UndoableTableRowAdded im redo eine völlig neue leer Zeile hinzufügt statt die ursprüngliche
 x Schriftfarbe initialer Texte ist beim Anlegen neuer Schritte nicht überall gelb
 x Hellgelber Hintergrund wird beim Laden von Datei nicht überall wieder hergestellt
 x Schrift ohne Änderungsmarkierung hat *weißen* Hintergrund, müsste aber *keinen* haben, damit die Hintergrundfarbe des Feldes durchscheint

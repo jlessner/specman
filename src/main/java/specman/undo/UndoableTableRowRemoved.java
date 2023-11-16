@@ -19,11 +19,11 @@ public class UndoableTableRowRemoved extends AbstractUndoableInteraction {
 
   @Override
   protected void undoEdit() throws EditException {
-    tableEditArea.addRowWithoutUndoRecording(rowIndex, row);
+    tableEditArea.addRow(rowIndex, row);
   }
 
   @Override
   protected void redoEdit() throws EditException {
-    tableEditArea.removeRowWithoutUndoRecording(rowIndex);
+    tableEditArea.removeRow(rowIndex);
   }
 }

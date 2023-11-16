@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.List;
 import java.util.Objects;
 
+import static specman.Aenderungsart.Geloescht;
 import static specman.CursorFactory.HotspotPlacement.Bottom;
 import static specman.CursorFactory.HotspotPlacement.BottomRight;
 import static specman.CursorFactory.HotspotPlacement.Right;
@@ -63,9 +64,9 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
         setEditAreaCursor(null);
         switch(selectionOperation) {
           case RemoveTable -> editArea.removeTableOrMarkAsDeletedUDBL();
-          case AddRow -> editArea.addRow(selectionIndex);
+          case AddRow -> editArea.addRowUDBL(selectionIndex);
           case RemoveRow -> editArea.removeRowOrMarkAsDeletedUDBL(selectionIndex);
-          case AddColumn -> editArea.addColumn(selectionIndex);
+          case AddColumn -> editArea.addColumnUDBL(selectionIndex);
           case RemoveColumn -> editArea.removeColumnOrMarkAsDeletedUDBL(selectionIndex);
         }
         resetSelection();
@@ -199,7 +200,7 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
       List<EditContainer> leadingRow = editArea.cells.get(0);
       for (int c = 0; c < leadingRow.size(); c++) {
         EditContainer columnLeader = leadingRow.get(c);
-        if (isAtXPosition(x, columnLeader) && !editArea.columnIsMarkedAsDeleted(c)) {
+        if (isAtXPosition(x, columnLeader) && !editArea.columnIsMarkedAs(c, Geloescht)) {
           selectionIndex = c;
           selectionOperation = Operation.RemoveColumn;
           return new Rectangle(
@@ -223,7 +224,7 @@ public class TableEditAreaSelectionTracker implements MouseListener, MouseMotion
       final int y = mousePos.y - tablePanel.getY();
       for (int r = 0; r < editArea.cells.size(); r++) {
         EditContainer rowLeader = editArea.cells.get(r).get(0);
-        if (isAtYPosition(y, rowLeader) && !editArea.rowIsMarkedAsDeleted(r)) {
+        if (isAtYPosition(y, rowLeader) && !editArea.rowIsMarkedAs(r, Geloescht)) {
           selectionIndex = r;
           selectionOperation = Operation.RemoveRow;
           return new Rectangle(
