@@ -21,9 +21,6 @@ public class TextStyles {
     public static MutableAttributeSet changedStepnumberLinkStyle = new SimpleAttributeSet();
     public static MutableAttributeSet deletedStepnumberLinkStyle = new SimpleAttributeSet();
 
-    //public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
-    //public static Font font = new Font("Times New Roman", Font.PLAIN, FONTSIZE);
-
     /**
      * The following font is part of the Specman delivery and turned out to be rendered
      * almost identical in both Swing UI and PDF export. This is a crucial aspect as the
@@ -37,8 +34,6 @@ public class TextStyles {
     public static final String SERIF_FONTCOLLECTION_REGULAR = "src/main/resources/fonts/Sitka.ttc";
     public static final int FONT_INDEX = 4;
 
-    //public static final String SERIF_FONT = "C:/Windows/Fonts/times.ttf";
-    //public static final String SERIF_FONT = "C:/Users/jlessner/AppData/Local/Microsoft/Windows/Fonts/TimesNewRomanPSMT.ttf";
     public static Font font;
     static {
         try {
@@ -49,6 +44,8 @@ public class TextStyles {
             x.printStackTrace();
         }
     }
+    //public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
+    //public static Font font = new Font("Times New Roman", Font.PLAIN, FONTSIZE);
 
     public static Font labelFont = new Font(Font.SANS_SERIF, Font.BOLD, SCHRITTNR_FONTSIZE);
 

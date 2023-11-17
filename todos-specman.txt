@@ -1,5 +1,16 @@
 Abschluss für Go-Live
 - PDF-Export
+  - Font-Einschränkung wieder entfernen
+    Das Problem: der Sitka-Font ist nachwievor ein guter Default wegen der guten Renderingeigenschaften für UI *und* PDF.
+      Wenn man in FormattedShapeText aber wieder schreibt DefaultFontProvider(true, true, true) dann ist Sitka nicht mehr
+      der Defaultfont. Es gibt einen Konstruktor mit einem 4. Parameter zur Angabe der Default Font Familiy, den habe ich
+      aber noch nicht zum Fliegen gebracht. Man kommt dann trotz "Sitka" als defaultFontFamily in der Methode
+      FontSelector.bestMatch bei einem der anderen Fonts raus.
+    Und auch im UI ist "Default" etwas anderes als der Font, den man über JEditorPane.setFont einstellt, wenn man später
+      ein Stück Text markiert und explizit über das Menü auf den Default-Font umstellt, so dass im HTML steht
+      <font face=\"Default\">Schritt</font> Evt. muss man hier noch an das Stylesheet von HTMLEditorKit bzw. JEditorPane
+      dran.
+    Beides muss also noch sauber verstanden und verheiratet werden
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Springen über Schrittreferenzen im PDF
