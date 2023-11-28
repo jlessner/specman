@@ -20,6 +20,7 @@ import specman.editarea.InteractiveStepFragment;
 import specman.undo.props.UDBL;
 
 import javax.swing.JPanel;
+import javax.swing.text.JTextComponent;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ComponentListener;
@@ -334,6 +335,14 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
   public ZweigSchrittSequenzView getElseSequenz() {
         return elseSequenz;
     }
+
+	@Override
+	public List<JTextComponent> getTextAreas() {
+		List<JTextComponent> result = super.getTextAreas();
+		result.addAll(ifSequenz.getTextAreas());
+		result.addAll(elseSequenz.getTextAreas());
+		return result;
+	}
 
 	@Override
 	public Shape getShape() {

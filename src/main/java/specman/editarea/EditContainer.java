@@ -20,6 +20,7 @@ import specman.undo.UndoableEditAreaAdded;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.JPanel;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
 import java.awt.Color;
 import java.awt.Container;
@@ -500,5 +501,13 @@ public class EditContainer extends JPanel {
 
 	public boolean isMarkedAs(Aenderungsart aenderungsart) {
 		return editAreas.stream().allMatch(ea -> ea.getAenderungsart() == aenderungsart);
+	}
+
+	public List<JTextComponent> getTextAreas() {
+		return editAreas
+			.stream()
+			.filter(editArea -> editArea.isTextArea())
+			.map(editArea -> editArea.asTextArea())
+			.collect(Collectors.toList());
 	}
 }

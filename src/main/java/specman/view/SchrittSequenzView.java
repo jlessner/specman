@@ -20,7 +20,10 @@ import specman.editarea.InteractiveStepFragment;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.text.JTextComponent;
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -514,7 +517,7 @@ public class SchrittSequenzView {
 		return changesMade;
 	}
 
-	public int  aenderungenVerwerfen(EditorI editor) throws EditException {
+	public int aenderungenVerwerfen(EditorI editor) throws EditException {
 		int changesReverted = 0;
 		for (AbstractSchrittView schritt: schritte) {
 			changesReverted += schritt.aenderungenVerwerfen(editor);
@@ -626,6 +629,14 @@ public class SchrittSequenzView {
 		return Co;
 	}
 
+	public List<JTextComponent> getTextAreas() {
+		List<JTextComponent> result = new ArrayList<>();
+		for (AbstractSchrittView schritt : schritte) {
+			result.addAll(schritt.getTextAreas());
+		}
+		return result;
+	}
+
 	public Shape getShapeSequence() {
 		Shape sequence = new Shape(sequenzBereich);
 		for (AbstractSchrittView schritt : schritte) {
@@ -635,4 +646,5 @@ public class SchrittSequenzView {
 			.withBackgroundColor(GAP_COLOR)
 			.add(sequence);
 	}
+
 }

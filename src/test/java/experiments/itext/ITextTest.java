@@ -175,7 +175,7 @@ public class ITextTest {
   @Test
   void testHTMLParagraph() throws Exception {
     ConverterProperties properties = new ConverterProperties();
-    FontProvider fontProvider = new DefaultFontProvider(false, false, false);
+    FontProvider fontProvider = new DefaultFontProvider(true, false, false);
 
     fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/Sitka.ttc", 4, false));
     fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaB.ttc", 4, false));
@@ -186,8 +186,9 @@ public class ITextTest {
 
     java.util.List<IElement> elements = HtmlConverter.convertToElements(
       "<html><head></head>" +
-        "<link rel=\"stylesheet\" type=\"text/css\" href=\"src/main/resources/stylesheets/specman-pdf.css\">" +
-        "<H1>WWWWWW</H1>WWWWWW<br>God, its <i>Friday</i>!<H1>iiiiiiiiiiiiiii</H1>zero<ul><li>one<br>oneone one<li>two<li>sublist<ul><li>sub 1<li>sub2</ul></ul>three four eins zwei drei vier fünf sechs sieben acht neuen zehn elf zwölf dreizehn vierzehn fünfzehn sechzehn siebzehn achtzehn<br>Neunzehn" +
+       "<link rel=\"stylesheet\" type=\"text/css\" href=\"src/main/resources/stylesheets/specman-pdf.css\">" +
+//        "<H1>WWWWWW</H1>WWWWWW<br>God, its <i>Friday</i>!<H1>iiiiiiiiiiiiiii</H1>zero<ul><li>one<br>oneone one<li>two<li>sublist<ul><li>sub 1<li>sub2</ul></ul>three four eins zwei drei vier fünf sechs sieben acht neuen zehn elf zwölf dreizehn vierzehn fünfzehn sechzehn siebzehn achtzehn<br>Neunzehn 19" +
+        "abcdefg12" +
         "</html>",
       properties);
     System.out.println(elements);

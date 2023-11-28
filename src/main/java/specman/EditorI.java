@@ -8,6 +8,7 @@ import specman.view.BreakSchrittView;
 import specman.view.CatchSchrittView;
 
 import javax.swing.JEditorPane;
+import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoableEdit;
 import java.awt.Cursor;
 import java.awt.event.FocusListener;
@@ -40,4 +41,7 @@ public interface EditorI extends FocusListener {
 	void addImageViaFileChooser();
 	List<AbstractSchrittView> getAllSteps();
 	void addTable(int numColumns, int numRows);
+
+  List<JTextComponent> queryAllTextComponents(JTextComponent tc);
+
 }

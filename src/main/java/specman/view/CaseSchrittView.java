@@ -22,6 +22,7 @@ import specman.undo.UndoableZweigEntfernt;
 import specman.undo.props.UDBL;
 
 import javax.swing.JPanel;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -547,6 +548,14 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		}
 		changesReverted += super.aenderungenVerwerfen(editor);
 		return changesReverted;
+	}
+
+	@Override
+	public List<JTextComponent> getTextAreas() {
+		List<JTextComponent> result = super.getTextAreas();
+		result.addAll(sonstSequenz.getTextAreas());
+		caseSequenzen.forEach(seq -> result.addAll(seq.getTextAreas()));
+		return result;
 	}
 
 	@Override

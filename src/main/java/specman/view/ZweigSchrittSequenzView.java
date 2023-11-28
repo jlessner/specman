@@ -11,7 +11,9 @@ import specman.editarea.EditContainer;
 import specman.editarea.Indentions;
 import specman.editarea.InteractiveStepFragment;
 
+import javax.swing.text.JTextComponent;
 import java.awt.Color;
+import java.util.List;
 
 import static specman.Aenderungsart.Untracked;
 
@@ -104,4 +106,10 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		return ueberschrift.aenderungenVerwerfen();
 	}
 
+	@Override
+	public List<JTextComponent> getTextAreas() {
+		List<JTextComponent> result = ueberschrift.getTextAreas();
+		result.addAll(super.getTextAreas());
+		return result;
+	}
 }

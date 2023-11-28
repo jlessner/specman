@@ -20,6 +20,7 @@ import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.text.JTextComponent;
 import java.awt.Color;
 import java.awt.event.ComponentEvent;
 import java.util.List;
@@ -254,6 +255,13 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	public void componentResized(ComponentEvent e) {
 		super.componentResized(e);
 		klappen.updateLocation(editContainer.getStepNumberBounds());
+	}
+
+	@Override
+	public List<JTextComponent> getTextAreas() {
+		List<JTextComponent> result = super.getTextAreas();
+		result.addAll(wiederholSequenz.getTextAreas());
+		return result;
 	}
 
 	@Override

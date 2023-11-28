@@ -64,6 +64,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.JTextComponent;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -1332,4 +1333,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public AbstractSchrittView findeSchritt(TextEditArea textEditArea) {
 		return hauptSequenz.findeSchritt(textEditArea);
 	}
+
+	@Override
+	public List<JTextComponent> queryAllTextComponents(JTextComponent tc) {
+		List<JTextComponent> result = new ArrayList<>();
+		result.addAll(intro.getTextAreas());
+		result.addAll(hauptSequenz.getTextAreas());
+		result.addAll(outro.getTextAreas());
+		return result;
+	}
+
 }

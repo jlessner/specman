@@ -56,6 +56,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.UndoManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -533,8 +534,16 @@ public class HTMLEditorPane extends JPanel
   }
 
   public void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation) {
-    ed.setEditorKit(new LIRecordingHTMLEditorKit());
+    LIRecordingHTMLEditorKit kit = new LIRecordingHTMLEditorKit();
+    ed.setEditorKit(kit);
+    StyleSheet styleSheet = kit.getStyleSheet();
+    //styleSheet.addRule("body { background-color: #ccc; font-family: Times, serif; }");
+    //styleSheet.addRule("html { background-color: #ccc; font-family: Times, serif; }");
+    //styleSheet.addRule("@font-face { font-family: \"Default\"; src: local(\"Times New Roman\"); }");
+
+    //styleSheet.addRule("h1 {color: blue; font-family:helvetica; }");
     ed.setContentType("text/html");
+
     initialText = this.formatInitialText(initialText, orientation);
     this.insertHTML(ed, initialText, 0);
     ed.addCaretListener(this.caretHandler);

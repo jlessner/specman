@@ -101,33 +101,6 @@ public class FormattedShapeText extends AbstractShapeText {
       x.printStackTrace();
     }
 
-
-//    String htmlContent = injectStylesheet(stylifyTextAlignment(content.getText()));
-//
-//    java.util.List<IElement> elements = HtmlConverter.convertToElements(htmlContent, properties);
-//
-//    float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right - 7) * swing2pdfScaleFactor;
-//    Paragraph superp = new Paragraph()
-//      .setFixedPosition(
-//        (renderOffset.x + insets.left) * swing2pdfScaleFactor,
-//        (renderOffset.y - content.getHeight() + getInsets().bottom) * swing2pdfScaleFactor,
-//        paragraphWidth)
-//      .setMargin(0)
-//      .setMultipliedLeading(-0.0f)
-//      .setFontSize(scaledFontSize);
-//    for (IElement element : elements) {
-//      Paragraph paragraph = new Paragraph()
-//        .setMargin(0)
-//        .setMultipliedLeading(0.0f)
-//        .setCharacterSpacing(-0.1f)
-//        .setFontSize(scaledFontSize)
-//        .setWidth(paragraphWidth); // Setting width for sub paragraph is important for text alignments right, center, ...
-//      paragraph.setProperty(Property.LINE_HEIGHT, LineHeight.createMultipliedValue(1.37f));
-//      paragraph.add((IBlockElement)element);
-//      superp.add(paragraph);
-//      superp.add("\n");
-//    }
-//    document.add(superp);
   }
 
   private String removeLinebreakingElementsFromHtmlLine(String subHtml) {

@@ -1,4 +1,15 @@
 Abschluss für Go-Live
+- Suche über ganzes Modell (siehe TextFinderDialog)
+  - FindReplaceAction.updateContextState korrekt implementieren
+    wird aufgerufen, wenn man bei geöffnetem Dialog den Caret in einem Textfeld ändert
+    ACHTUNG: wird im Moment auch aufgerufen, wenn wir im Suchdialog von einem Feld zum nächsten
+      springen und im neuen Feld die Caretposition auf 0 setzen.
+  - Verlorener Focus Problem: einen einfachen Schritt einfügen, dann wiederholt nach "bla" suchen.
+     Jedes 2. Mal nach der Meldung, dass kein Ergebnis vorliegt, kein Fokus mehr vorhanden und durch Klicken
+     in die Felder auch nicht wieder herstellbar.
+  x Ersetzung ist nicht atomar, sondern besteht aus Löschen des alten Inhalts, und Einsetzen des neuen Inhalts
+     sollten wir für ein schöneres Undo besser machen
+
 - PDF-Export
   - Font-Einschränkung wieder entfernen
     Das Problem: der Sitka-Font ist nachwievor ein guter Default wegen der guten Renderingeigenschaften für UI *und* PDF.
@@ -36,7 +47,6 @@ Abschluss für Go-Live
   x Bilder und unterstrukturierte EditContainer (aktuell nur 1. TextEditArea)
 - Neben Serif-Font auch Sans Serif und Monospace Font einbauen und alle anderen entfernen
   - Muss auch alles PDF-tauglich sein
-- Suche über ganzes Modell (siehe TextFinderDialog)
 - Darstellung von Catch-Bereichen überarbeiten
 - Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
 - Undo/Redo für Catch- und Breakschritte inkl. Verknüpfung
@@ -45,6 +55,7 @@ Abschluss für Go-Live
 - Vielleicht eine kleiner Top-Inset für Schritt-Texte, um die Überschneidung mit den Labels zu verringern?
 - Doku aktualisieren
 - Beschriftungen internationalisieren
+x Zusätzliche Ablage aller Plain Texte im Modell / auf Datei zwecks Durchsuchbarkeit aus IDEs heraus
 
 - Tabellen als separate Elemente analog Bilder
   - Nice to have: Einfärben von Zellen (statt Schritt), wenn Fokus in Tabellenzelle steht
@@ -98,7 +109,6 @@ x Schrift ohne Änderungsmarkierung hat *weißen* Hintergrund, müsste aber *kei
 
 
 Auf längere Sicht - nicht notwendig für ersten Go-Live:
-- Zusätzliche Ablage aller Plain Texte im Modell / auf Datei zwecks Durchsuchbarkeit aus IDEs heraus
 - Schritt-Morphing: If/Else -> Case usw.
 - Zooming aus Undo-Liste entfernen
 - Kommentare

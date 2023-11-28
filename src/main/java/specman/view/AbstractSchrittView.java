@@ -28,6 +28,7 @@ import specman.editarea.TextEditArea;
 import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
+import javax.swing.text.JTextComponent;
 import java.awt.Color;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -35,6 +36,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -568,4 +570,5 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return id + " - " + getTextShef().getPlainText();
 	}
 
+	public List<JTextComponent> getTextAreas() { return editContainer.getTextAreas(); }
 }
