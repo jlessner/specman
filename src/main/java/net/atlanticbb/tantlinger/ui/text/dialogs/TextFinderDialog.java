@@ -41,6 +41,10 @@ import net.atlanticbb.tantlinger.ui.text.TextEditPopupManager;
 import specman.Specman;
 import specman.undo.manager.UndoRecording;
 
+/** This is an adaption of the original TextFinerDialog, extended to work
+ * on a list of text components rather than a single one. Unfortunately the
+ * original dialog class was not flexible enough to implement the extended
+ * functionality as a derivation. */
 public class TextFinderDialog extends JDialog {
 
   private static final long serialVersionUID = 1L;
@@ -193,21 +197,11 @@ public class TextFinderDialog extends JDialog {
     p.add(btReplace);
     ActionListener replaceAllAction = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        int counter = 0;
-
-        while(true) {
-          int result = TextFinderDialog.this.findNext(true, true);
-          if (result < 0) {
-            return;
-          }
-
-          if (result == 0) {
-            JOptionPane.showMessageDialog(TextFinderDialog.this.owner, counter + " " + TextFinderDialog.i18n.str("replacements_prompt"), "Info", 1);
-            return;
-          }
-
-          ++counter;
+        int result = TextFinderDialog.this.findNext(true, true);
+        if (result < 0) {
+          return;
         }
+        JOptionPane.showMessageDialog(TextFinderDialog.this.owner, result + " " + TextFinderDialog.i18n.str("replacements_prompt"), "Info", 1);
       }
     };
     JButton btReplaceAll = new JButton(i18n.str("replace_all"));
@@ -295,22 +289,6 @@ public class TextFinderDialog extends JDialog {
     }
     return sumResult;
   }
-
-//  public int findNext(boolean doReplace, boolean replaceAll) {
-//    int startMonitorIndex = this.monitorIndex;
-//    int startCaretPosition = this.monitor.getCaretPosition();
-//    int sumResult = 0;
-//    do {
-//      int findResult = findNextInCurrentTextComponent(doReplace);
-//      if (findResult != 0) {
-//        return findResult;
-//      }
-//    } while(moveToNextComponent(startMonitorIndex, startCaretPosition));
-//    if (!replaceAll) {
-//      this.warning(i18n.str("text_not_found"));
-//    }
-//    return 0;
-//  }
 
   private boolean moveToNextComponent(int startMonitorIndex, int startCaretPosition) {
     int nextMonitorIndex = (monitorIndex == allTextComponents.size() - 1) ? 0 : monitorIndex+1;
