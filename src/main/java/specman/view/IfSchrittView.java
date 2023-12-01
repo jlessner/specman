@@ -32,14 +32,14 @@ public class IfSchrittView extends IfElseSchrittView {
 	
 	public IfSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerString, SchrittID id, Aenderungsart aenderungsart) {
 		super(editor, parent, initialerString, id, aenderungsart, false);
-		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, new EditorContentModel_V001("")));
-		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, EditContainer.right("Ja")));
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), new EditorContentModel_V001("")));
+		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), EditContainer.right("Ja")));
 		ifBreite = SPALTENLAYOUT_UMGEHUNG_GROESSE + 2; /**@author PVN, Dueck */ 
 	}
 
 	public IfSchrittView(EditorI editor, SchrittSequenzView parent, IfSchrittModel_V001 model) {
 		super(editor, parent, model.inhalt, model.id, model.aenderungsart, false);
-		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), aenderungsart, new EditorContentModel_V001("")));
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), new EditorContentModel_V001("")));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		this.setBackgroundUDBL(new Color(model.farbe));
 		ifBreiteSetzen(model.leerBreite);

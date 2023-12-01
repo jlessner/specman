@@ -478,9 +478,7 @@ public class DraggingLogic implements Serializable {
             specman.hauptSequenz.resyncSchrittnummerStil();
         }
         else if (e.getSource().equals(specman.getCatchSchrittAnhaengen())) {
-            referenceStep = sequenz.catchSchrittZwischenschieben(insertionPosition, referenceStep, specman);
-            specman.newStepPostInit(referenceStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
+            // TODO JL: Catch
         }
     }
 
@@ -544,7 +542,7 @@ public class DraggingLogic implements Serializable {
         } else if (e.getSource().equals(specman.getBreakSchrittAnhaengen())) {
             sequenz.breakSchrittAnhaengen(specman);
         } else if (e.getSource().equals(specman.getCatchSchrittAnhaengen())) {
-            sequenz.catchSchrittAnhaengen(specman);
+            // TODO JL: handle catch
         }
     }
 

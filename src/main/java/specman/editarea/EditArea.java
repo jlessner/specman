@@ -36,8 +36,6 @@ public interface EditArea extends InteractiveStepFragment {
 
   void setOpaque(boolean isOpaque);
 
-  void setBackground(Color bg);
-
   Color getBackground();
 
   int aenderungenUebernehmen();

@@ -226,7 +226,7 @@ public class CatchSchrittView extends AbstractSchrittView {
 		}
 
 		public HandlingSchrittSequenz(AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart) {
-			super(parent, sequenzBasisId, aenderungsart);
+			super(parent, sequenzBasisId);
 		}
 
 		@Override public AbstractSchrittView schrittAnhaengen(AbstractSchrittView schritt, EditorI editor) {

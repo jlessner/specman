@@ -12,7 +12,7 @@ public class WhileSchrittView extends SchleifenSchrittView {
 	protected WhileSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, aenderungsart, false);
 		if (withDefaultContent) {
-			initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene(), aenderungsart));
+			initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
 		}
 	}
 

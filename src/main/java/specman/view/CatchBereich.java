@@ -5,6 +5,8 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import specman.Aenderungsart;
+import specman.EditException;
+import specman.EditorI;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
@@ -20,6 +22,7 @@ import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 public class CatchBereich extends AbstractSchrittView implements KlappbarerBereichI, ComponentListener, SpaltenContainerI {
@@ -97,10 +100,6 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     return index;
   }
 
-  public void catchAnhaengen(CatchSchrittView schritt) {
-
-  }
-
   public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
     for (CatchSchrittSequenzView seq: catchSequences) {
       if (seq.ueberschrift.enthaelt(fragment)) {
@@ -136,12 +135,21 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     bereichLayout.setRowSpec(6, barRowSpec);
   }
 
-  public AbstractSchrittView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
-    CatchSchrittSequenzView catchSequence = new CatchSchrittSequenzView(this, breakStepToLink, Specman.initialArt());
-    catchSequences.add(catchSequence);
+  public CatchSchrittSequenzView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
+    CatchSchrittSequenzView catchSequence = new CatchSchrittSequenzView(this, breakStepToLink);
+    addCatchSequence(catchSequence, null);
+    return catchSequence;
+  }
+
+  public void addCatchSequence(CatchSchrittSequenzView catchSequence, Integer catchIndex) {
+    if (catchIndex == null) {
+      catchSequences.add(catchSequence);
+    }
+    else {
+      catchSequences.add(catchIndex, catchSequence);
+    }
     bereichPanel.setVisible(true);
     recomputeLayout();
-    return catchSequence.getSchritte().get(0);
   }
 
   private void recomputeLayout() {
@@ -184,4 +192,19 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
       .orElse(null);
   }
 
+  public int aenderungenUebernehmen(EditorI editor) throws EditException {
+    int changesCommitted = 0;
+    for (CatchSchrittSequenzView seq: catchSequences) {
+      changesCommitted += seq.aenderungenUebernehmen(editor);
+    }
+    return changesCommitted;
+  }
+
+  @Override
+  public void aenderungsmarkierungenEntfernen() {
+    super.aenderungsmarkierungenEntfernen();
+    for (CatchSchrittSequenzView seq: catchSequences) {
+      seq.aenderungsmarkierungenEntfernen();
+    }
+  }
 }

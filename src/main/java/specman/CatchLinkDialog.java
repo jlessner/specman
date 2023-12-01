@@ -4,7 +4,8 @@ import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.HeaderPanel;
 import net.atlanticbb.tantlinger.ui.UIUtils;
 import org.apache.commons.lang.StringUtils;
-import specman.editarea.TextEditArea;
+import specman.undo.UndoableCatchSequenceAdded;
+import specman.undo.UndoableCatchSequenceRemoved;
 import specman.view.AbstractSchrittView;
 import specman.view.BreakSchrittView;
 import specman.view.CatchSchrittSequenzView;
@@ -99,9 +100,12 @@ public class CatchLinkDialog extends JDialog {
 
     private void listValueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
+            EditorI editor = Specman.instance();
             BreakSchrittView breakStepToLink = ((JList<BreakSchrittView>) e.getSource()).getSelectedValue();
-            AbstractSchrittView firstInSequence = sequenz.catchSequenzAnhaengen(breakStepToLink);
-            Specman.instance().diagrammAktualisieren(firstInSequence);
+            CatchSchrittSequenzView catchSequence = sequenz.catchSequenzAnhaengen(breakStepToLink);
+            AbstractSchrittView firstInCatchSequence = catchSequence.getSchritte().get(0);
+            editor.addEdit(new UndoableCatchSequenceAdded(catchSequence));
+            editor.diagrammAktualisieren(firstInCatchSequence);
             CatchLinkDialog.this.setVisible(false);
         }
     }

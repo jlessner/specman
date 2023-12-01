@@ -20,7 +20,7 @@ import specman.pdf.Shape;
 import specman.editarea.EditContainer;
 import specman.editarea.litrack.LIRecordingListView;
 import specman.editarea.TextEditArea;
-import specman.undo.UndoableCatchEntfernt;
+import specman.undo.UndoableCatchSequenceRemoved;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
@@ -523,7 +523,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							CatchBereich catchBereich = (CatchBereich) schritt;
 							CatchSchrittSequenzView catchSequence = catchBereich.headingToBranch(lastFocusedTextArea);
 							if (catchSequence != null) {
-								catchSequence.entfernen();
+								catchSequence.removeOrMarkAsDeletedUDBL();
 							}
 						}
 						else if (isStepDeletionAllowed(schritt)) {

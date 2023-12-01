@@ -76,7 +76,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 
 	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id, Aenderungsart aenderungsart) {
 		this(editor, parent, null, id, aenderungsart, false);
-		initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene(), aenderungsart));
+		initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
 	}
 
 	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, WhileSchrittModel_V001 model, boolean mitUnteremBalken) {
@@ -109,8 +109,8 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		layout.setColumnSpec(1, ColumnSpec.decode(balkenbreite + "px"));
 	}
 
-	protected SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id, Aenderungsart aenderungsart) {
-		SchrittSequenzView sequenz = new SchrittSequenzView(this, id, aenderungsart);
+	protected SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
+		SchrittSequenzView sequenz = new SchrittSequenzView(this, id);
 		sequenz.einfachenSchrittAnhaengen(editor);
 		return sequenz;
 	}

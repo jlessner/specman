@@ -56,10 +56,10 @@ public class SchrittSequenzView {
 	final AbstractSchrittView parent;
 
 	public SchrittSequenzView() {
-		this(null, new SchrittID(0), null);
+		this(null, new SchrittID(0));
 	}
 
-	public SchrittSequenzView(AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart) {
+	public SchrittSequenzView(AbstractSchrittView parent, SchrittID sequenzBasisId) {
 		this.parent = parent;
 		panel = new JPanel();
 		huellLayout = new FormLayout("10px:grow", ZEILENLAYOUT_LETZTER_SCHRITT + ", " + ZEILENLAYOUT_CATCHBEREICH);
@@ -96,7 +96,7 @@ public class SchrittSequenzView {
 	}
 
 	public SchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittSequenzModel_V001 model) {
-		this(parent, model.id, model.aenderungsart);
+		this(parent, model.id);
 		for (AbstractSchrittModel_V001 schritt : model.schritte) {
 			AbstractSchrittView schrittView = AbstractSchrittView.baueSchrittView(editor, this, schritt);
 			schrittAnhaengen(schrittView, editor);
@@ -106,10 +106,9 @@ public class SchrittSequenzView {
 				toggleBorderType(schrittView);
 			}
 		}
-		for (AbstractSchrittModel_V001 catchSchritt : model.catchBloecke) {
-			CatchSchrittView schrittView = (CatchSchrittView) AbstractSchrittView.baueSchrittView(editor, this, catchSchritt);
-			catchAnhaengen(schrittView, editor);
-		}
+
+		// TODO JL: create catch sequences
+
 		catchBereich.klappen.init(model.catchBloeckeZugeklappt);
 	}
 
@@ -181,12 +180,6 @@ public class SchrittSequenzView {
 		return schrittAnhaengen(schritt, editor);
 	}
 
-	public AbstractSchrittView catchSchrittAnhaengen(EditorI editor) {
-		EditorContentModel_V001 initialerText = initialtext("<b>Catch " + (schritte.size()+1) + "<b>");
-		CatchSchrittView schritt = new CatchSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt(), null);
-		return catchAnhaengen(schritt, editor);
-	}
-
 	private void updateLayoutRowspecsForAllsStepsAndGaps() {
 		for (int i = 0; i < schritte.size(); i++) {
 			sequenzbereichLayout.setRowSpec(i*2 + 1, rowspec4step(i));
@@ -219,11 +212,6 @@ public class SchrittSequenzView {
 		sequenzBereich.add(schritt.getDecoratedComponent(), constraints4step(schritte.size()));
 		schritte.add(schritt);
 		updateLayoutRowspecsForAllsStepsAndGaps();
-		return schritt;
-	}
-
-	private AbstractSchrittView catchAnhaengen(CatchSchrittView schritt, EditorI editor) {
-		catchBereich.catchAnhaengen(schritt);
 		return schritt;
 	}
 
@@ -285,13 +273,6 @@ public class SchrittSequenzView {
 		EditorContentModel_V001 initialerText = initialtext("<b>Exception " + (schritte.size()+1) + "<b>");
 		BreakSchrittView schritt = new BreakSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
 		return schrittZwischenschieben(schritt, insertionPosition, referenceStep);
-	}
-
-	public AbstractSchrittView catchSchrittZwischenschieben(RelativeStepPosition insertionPosition,
-			AbstractSchrittView referenceStep, EditorI editor) {
-		EditorContentModel_V001 initialerText = initialtext("<b>Catch " + (schritte.size()+1) + "<b>");
-		CatchSchrittView schritt = new CatchSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt(), null);
-		return catchAnhaengen(schritt, editor);
 	}
 
 	private int stepIndex(AbstractSchrittView schritt) {
@@ -414,7 +395,7 @@ public class SchrittSequenzView {
 				return subStep;
 			}
 		}
-		return catchBereich.findeSchritt(fragment);
+		return (catchBereich != null) ? catchBereich.findeSchritt(fragment) : null;
 	}
 
 	public SchrittSequenzModel_V001 generiereSchittSequenzModel(boolean formatierterText) {
@@ -518,6 +499,9 @@ public class SchrittSequenzView {
 			changesMade += schritt.aenderungenUebernehmen(editor);
 		}
 		setAenderungsart(Untracked);
+		if (catchBereich != null) {
+			catchBereich.aenderungenUebernehmen(editor);
+		}
 		return changesMade;
 	}
 
@@ -527,6 +511,9 @@ public class SchrittSequenzView {
 			changesReverted += schritt.aenderungenVerwerfen(editor);
 		}
 		setAenderungsart(Untracked);
+		if (catchBereich != null) {
+			catchBereich.aenderungenVerwerfen(editor);
+		}
 		return changesReverted;
 	}
 
@@ -651,7 +638,7 @@ public class SchrittSequenzView {
 			.add(sequence);
 	}
 
-	public AbstractSchrittView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
+	public CatchSchrittSequenzView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
 		return catchBereich.catchSequenzAnhaengen(breakStepToLink);
 	}
 

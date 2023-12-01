@@ -3,7 +3,9 @@ package specman.view;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import specman.SchrittID;
 import specman.editarea.EditContainer;
+import specman.editarea.TextStyles;
 import specman.pdf.LineShape;
 
 import javax.swing.*;
@@ -11,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
+import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
 import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
 import static specman.view.AbstractSchrittView.umgehungLayout;
@@ -54,5 +57,14 @@ public class CatchUeberschrift extends JPanel {
 
   public void skalieren(int prozentNeu, int prozentAktuell) {
     layout.setColumnSpec(1, ColumnSpec.decode(umgehungLayout()));
+  }
+
+  public int aenderungenUebernehmen() {
+    return ueberschrift.aenderungenUebernehmen();
+  }
+
+  public void aenderungsmarkierungenEntfernen(SchrittID id) {
+    ueberschrift.aenderungsmarkierungenEntfernen(id);
+    setBackground(BACKGROUND_COLOR_STANDARD);
   }
 }

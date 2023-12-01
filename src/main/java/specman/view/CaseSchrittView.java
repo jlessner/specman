@@ -84,10 +84,10 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		this(editor, parent, initialerText, id, aenderungsart, 2);
 		initCases(
 				editor,
-				new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), aenderungsart, initialtext("Sonst")),
+				new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), initialtext("Sonst")),
 				new ArrayList<ZweigSchrittSequenzView>(Arrays.asList(
-						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 1")),
-						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), aenderungsart, initialtext("Fall 2")))));
+						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), initialtext("Fall 1")),
+						new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteID().naechsteEbene(), initialtext("Fall 2")))));
 	}
 
 	private List<ZweigSchrittSequenzView> caseSequenzenAufbauen(EditorI editor, List<ZweigSchrittSequenzModel_V001> model) {
@@ -354,7 +354,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 
 	public ZweigSchrittSequenzView neuenZweigHinzufuegen(EditorI editor, ZweigSchrittSequenzView linkerNachbar) {
 		int linkerNachbarIndex = caseSequenzen.indexOf(linkerNachbar);
-		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), aenderungsart, initialtext("Fall " + (linkerNachbarIndex+2)));
+		ZweigSchrittSequenzView neuerZweig = new ZweigSchrittSequenzView(editor, this, linkerNachbar.naechsteNachbarSequenzID(), initialtext("Fall " + (linkerNachbarIndex+2)));
 		neuerZweig.einfachenSchrittAnhaengen(editor);
 		zweigHinzufuegen(editor, neuerZweig, linkerNachbarIndex+2);
 		if (neuerZweig == caseSequenzen.get(0)) {

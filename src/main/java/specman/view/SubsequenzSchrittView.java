@@ -48,7 +48,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		//roundedBorderDecorator = new RoundedBorderDecorator(panel);
 
 		if (withDefaultContent) {
-			initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene(), aenderungsart));
+			initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
 		}
 	}
 
@@ -63,8 +63,8 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		klappen.init(model.zugeklappt);
 	}
 
-	private SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id, Aenderungsart aenderungsart) {
-		SchrittSequenzView sequenz = new SchrittSequenzView(this, id, aenderungsart);
+	private SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
+		SchrittSequenzView sequenz = new SchrittSequenzView(this, id);
 		sequenz.einfachenSchrittAnhaengen(editor);
 		return sequenz;
 	}

@@ -1,23 +1,25 @@
 package specman.view;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
-import specman.undo.UndoableCatchEntfernt;
+import specman.undo.UndoableCatchSequenceRemoved;
 
-import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+
+import static specman.Aenderungsart.Hinzugefuegt;
 
 public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements FocusListener {
   BreakSchrittView linkedBreakStep;
   CatchUeberschrift catchUeberschrift;
 
-  public CatchSchrittSequenzView(CatchBereich catchBereich, BreakSchrittView linkedBreakStep, Aenderungsart aenderungsart) {
-    super(Specman.instance(), catchBereich, linkedBreakStep.id.naechsteEbene(), aenderungsart, linkedBreakStep.getEditorContent(true));
+  public CatchSchrittSequenzView(CatchBereich catchBereich, BreakSchrittView linkedBreakStep) {
+    super(Specman.instance(), catchBereich, linkedBreakStep.id.naechsteEbene(), linkedBreakStep.getEditorContent(true));
     this.linkedBreakStep = linkedBreakStep;
     einfachenSchrittAnhaengen(Specman.instance());
     ueberschrift.setId(linkedBreakStep.id.toString());
@@ -30,8 +32,8 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     super(editor, parent, model);
   }
 
-  public CatchSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart, EditorContentModel_V001 initialerText) {
-    super(editor, parent, sequenzBasisId.naechsteEbene(), aenderungsart, initialerText);
+  public CatchSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, EditorContentModel_V001 initialerText) {
+    super(editor, parent, sequenzBasisId.naechsteEbene(), initialerText);
     ueberschrift.setId(sequenzBasisId.toString());
   }
 
@@ -67,16 +69,32 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     renummerieren();
   }
 
-  public void entfernen() {
-    CatchBereich catchBereich = getParent();
-    int catchIndex = catchBereich.catchEntfernen(this);
-    linkedBreakStep.catchAnkoppeln(null);
-    Specman.instance().addEdit(new UndoableCatchEntfernt(this, catchBereich, catchIndex));
+  public void removeOrMarkAsDeletedUDBL() {
+    EditorI editor = Specman.instance();
+    if (aenderungsart == Hinzugefuegt || !editor.aenderungenVerfolgen()) {
+      CatchBereich catchBereich = getParent();
+      int catchIndex = catchBereich.catchEntfernen(this);
+      linkedBreakStep.catchAnkoppeln(null);
+      Specman.instance().addEdit(new UndoableCatchSequenceRemoved(this, catchIndex));
+    }
+    else {
+      // Als gelöscht markieren
+    }
   }
 
   @Override public void focusGained(FocusEvent e) {}
 
   @Override public void focusLost(FocusEvent e) {
     linkedBreakStep.updateContent(ueberschrift.editorContent2Model(true));
+  }
+
+  @Override
+  public int aenderungenUebernehmen(EditorI editor) throws EditException {
+    return super.aenderungenUebernehmen(editor) + catchUeberschrift.aenderungenUebernehmen();
+  }
+
+  @Override
+  public void aenderungsmarkierungenEntfernen() {
+    catchUeberschrift.aenderungsmarkierungenEntfernen(linkedBreakStep.id);
   }
 }
