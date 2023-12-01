@@ -5,14 +5,18 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
+import specman.editarea.TextStyles;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.undo.UndoableCatchSequenceRemoved;
+import specman.undo.props.UDBL;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Hinzugefuegt;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 
 public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements FocusListener {
   BreakSchrittView linkedBreakStep;
@@ -72,14 +76,30 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public void removeOrMarkAsDeletedUDBL() {
     EditorI editor = Specman.instance();
     if (aenderungsart == Hinzugefuegt || !editor.aenderungenVerfolgen()) {
-      CatchBereich catchBereich = getParent();
-      int catchIndex = catchBereich.catchEntfernen(this);
-      linkedBreakStep.catchAnkoppeln(null);
+      int catchIndex = remove();
       Specman.instance().addEdit(new UndoableCatchSequenceRemoved(this, catchIndex));
     }
     else {
-      // Als gelöscht markieren
+      alsGeloeschtMarkierenUDBL(editor);
     }
+  }
+
+  private int remove() {
+    CatchBereich catchBereich = getParent();
+    int catchIndex = catchBereich.catchEntfernen(this);
+    linkedBreakStep.catchAnkoppeln(null);
+    return catchIndex;
+  }
+
+  @Override
+  public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+    super.alsGeloeschtMarkierenUDBL(editor);
+    UDBL.setBackgroundUDBL(catchUeberschrift, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+  }
+
+  @Override
+  protected void ueberschriftAlsGeloeschtMarkierenUDBL() {
+    ueberschrift.setGeloeschtMarkiertStilUDBL(linkedBreakStep.id);
   }
 
   @Override public void focusGained(FocusEvent e) {}
@@ -90,7 +110,18 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   @Override
   public int aenderungenUebernehmen(EditorI editor) throws EditException {
-    return super.aenderungenUebernehmen(editor) + catchUeberschrift.aenderungenUebernehmen();
+    if (aenderungsart == Geloescht) {
+      remove();
+      return 1;
+    }
+    else {
+      return super.aenderungenUebernehmen(editor) + catchUeberschrift.aenderungenUebernehmen();
+    }
+  }
+
+  @Override
+  public int aenderungenVerwerfen(EditorI editor) throws EditException {
+    return super.aenderungenVerwerfen(editor) + catchUeberschrift.aenderungenVerwerfen();
   }
 
   @Override

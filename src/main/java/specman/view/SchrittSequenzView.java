@@ -500,7 +500,7 @@ public class SchrittSequenzView {
 		}
 		setAenderungsart(Untracked);
 		if (catchBereich != null) {
-			catchBereich.aenderungenUebernehmen(editor);
+			changesMade += catchBereich.aenderungenUebernehmen(editor);
 		}
 		return changesMade;
 	}
@@ -512,7 +512,7 @@ public class SchrittSequenzView {
 		}
 		setAenderungsart(Untracked);
 		if (catchBereich != null) {
-			catchBereich.aenderungenVerwerfen(editor);
+			changesReverted += catchBereich.aenderungenVerwerfen(editor);
 		}
 		return changesReverted;
 	}
@@ -521,7 +521,7 @@ public class SchrittSequenzView {
 		for (AbstractSchrittView schritt: schritte) {
 			schritt.alsGeloeschtMarkierenUDBL(editor);
 		}
-		setAenderungsart(Aenderungsart.Geloescht);
+		setAenderungsartUDBL(Aenderungsart.Geloescht);
 	}
 
 	public void toggleBorderType(AbstractSchrittView schritt) {

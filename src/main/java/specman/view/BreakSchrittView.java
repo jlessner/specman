@@ -125,7 +125,15 @@ public class BreakSchrittView extends AbstractSchrittView {
 			catchSequence.removeOrMarkAsDeletedUDBL();
 		}
 	}
-	
+
+	@Override
+	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+		super.alsGeloeschtMarkierenUDBL(editor);
+		if (catchSequence != null) {
+			catchSequence.removeOrMarkAsDeletedUDBL();
+		}
+	}
+
 	public void skalieren(int prozentNeu, int prozentAktuell) {
 		super.skalieren(prozentNeu, prozentAktuell);
 		layout.setColumnSpec(1, ColumnSpec.decode(umgehungLayout()));

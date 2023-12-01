@@ -501,7 +501,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 
 				//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
-				if (instance != null && instance.aenderungenVerfolgen() && schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
+				if (instance != null
+					&& instance.aenderungenVerfolgen()
+					&& schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt
+					&& !(schritt instanceof CatchBereich)) {
 						//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
 						if (schritt.getAenderungsart() != Aenderungsart.Geloescht) {
 								schrittAlsGeloeschtMarkieren(schritt);
@@ -695,11 +698,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
   private void schrittAlsGeloeschtMarkieren(AbstractSchrittView schritt) throws EditException {
 		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
 		if (isStepDeletionAllowed(schritt)) {
-            try (UndoRecording ur = composeUndo()) {
-                schritt.alsGeloeschtMarkierenUDBL(this);
-            }
-        }
-
+       try (UndoRecording ur = composeUndo()) {
+           schritt.alsGeloeschtMarkierenUDBL(this);
+       }
+    }
 	}
 
 	public int skalieren(int prozent) {

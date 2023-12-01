@@ -67,4 +67,6 @@ public class CatchUeberschrift extends JPanel {
     ueberschrift.aenderungsmarkierungenEntfernen(id);
     setBackground(BACKGROUND_COLOR_STANDARD);
   }
+
+  public int aenderungenVerwerfen() { return ueberschrift.aenderungenVerwerfen(); }
 }

@@ -1,11 +1,11 @@
 Abschluss für Go-Live
 - Darstellung von Catch-Bereichen überarbeiten (siehe Powerpoint)
   - Catch-Sequence im Änderungsmodus entfernen
-     - als gelöscht markieren
-     - Löschung annehmen
-     - Löschung zurücknehmen
      - UndoableCatchEntferntMarkiert
-     - verlinked Break-schritt als gelöscht markieren -> Case-Sequenz ebenfalls als gelöscht markieren
+     x Löschung zurücknehmen
+     x Löschung annehmen
+     x als gelöscht markieren
+     x verlinkten Break-schritt als gelöscht markieren -> Case-Sequenz ebenfalls als gelöscht markieren
   - Wenn der Break-Schritt ohne Änderungsmodus angelegt wurde, die Catch-Sequence aber schon, dann hat die
      Überschrift der Case-Sequenz keine Änderungsmarkierung. Ist das richtig oder falsch?
   - KlappButton ist noch nicht zu sehen

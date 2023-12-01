@@ -83,6 +83,10 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
 		super.alsGeloeschtMarkierenUDBL(editor);
+		ueberschriftAlsGeloeschtMarkierenUDBL();
+	}
+
+	protected void ueberschriftAlsGeloeschtMarkierenUDBL() {
 		ueberschrift.setGeloeschtMarkiertStilUDBL(null);
 	}
 

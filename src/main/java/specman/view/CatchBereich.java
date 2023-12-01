@@ -10,6 +10,8 @@ import specman.EditorI;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
+import specman.editarea.EditArea;
+import specman.editarea.ImageEditArea;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
@@ -194,10 +196,19 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   public int aenderungenUebernehmen(EditorI editor) throws EditException {
     int changesCommitted = 0;
-    for (CatchSchrittSequenzView seq: catchSequences) {
+    for (CatchSchrittSequenzView seq: modifyableCatchSequences()) {
       changesCommitted += seq.aenderungenUebernehmen(editor);
     }
     return changesCommitted;
+  }
+
+  @Override
+  public int aenderungenVerwerfen(EditorI editor) throws EditException {
+    int changesReverted = 0;
+    for (CatchSchrittSequenzView seq: modifyableCatchSequences()) {
+      changesReverted += seq.aenderungenVerwerfen(editor);
+    }
+    return changesReverted;
   }
 
   @Override
@@ -207,4 +218,10 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
       seq.aenderungsmarkierungenEntfernen();
     }
   }
+
+  /** Required for iterations that may modify the list of edit areas.
+   * Working directly on the list whould cause concurrent operation exceptions
+   * in these cases. */
+  private List<CatchSchrittSequenzView> modifyableCatchSequences() { return new ArrayList<>(catchSequences); }
+
 }
