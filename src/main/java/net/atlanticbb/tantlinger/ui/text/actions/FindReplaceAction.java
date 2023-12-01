@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.text.BadLocationException;
+
 import net.atlanticbb.tantlinger.ui.text.dialogs.TextFinderDialog;
 
 public class FindReplaceAction extends BasicEditAction {
@@ -58,8 +60,8 @@ public class FindReplaceAction extends BasicEditAction {
   }
 
   protected void updateContextState(JEditorPane editor) {
-//    if (this.dialog != null) {
-//      this.dialog.setJTextComponent(0);
-//    }
+    if (this.dialog != null) {
+      this.dialog.updateContextState(editor);
+    }
   }
 }

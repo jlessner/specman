@@ -20,7 +20,6 @@ import static specman.editarea.HTMLTags.SPAN_INTRO;
 import static specman.editarea.HTMLTags.SPAN_OUTRO;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.Hintergrundfarbe_Geloescht;
-import static specman.editarea.TextStyles.Hintergrundfarbe_Schrittenummer;
 import static specman.editarea.TextStyles.Hintergrundfarbe_Schrittnummer;
 import static specman.editarea.TextStyles.SCHRITTNUMMER_VORDERGRUNDFARBE;
 import static specman.editarea.TextStyles.SPAN_GELOESCHT_MARKIERT;
@@ -48,7 +47,7 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
   public void setStandardStil(SchrittID id) {
     setText(String.valueOf(id));
     setBorder(STANDARD_BORDER);
-    setBackground(Hintergrundfarbe_Schrittenummer);
+    setBackground(Hintergrundfarbe_Schrittnummer);
     setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
   }
 

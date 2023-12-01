@@ -27,17 +27,17 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, ZweigSchrittSequenzModel_V001 model) {
 		super(editor, parent, model);
-		ueberschriftInitialisieren(editor, model.ueberschrift != null ? model.ueberschrift : null);
+		ueberschriftInitialisieren(editor, model.ueberschrift != null ? model.ueberschrift : null, null);
 	}
 
 	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, Aenderungsart aenderungsart, EditorContentModel_V001 initialerText) {
 		super(parent, sequenzBasisId, aenderungsart);
-		ueberschriftInitialisieren(editor, initialerText);
+		ueberschriftInitialisieren(editor, initialerText, null);
 		this.aenderungsart = Specman.initialArt();
 	}
 
-	private void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText) {
-		ueberschrift = new EditContainer(editor, initialerText, null);
+	protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, String initialeSchrittnummer) {
+		ueberschrift = new EditContainer(editor, initialerText, initialeSchrittnummer);
 		ueberschrift.addEditAreasFocusListener(editor);
 	}
 
@@ -52,7 +52,6 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 				sequenzBasisId,
 				aenderungsart,
 				catchBereich.klappen.isSelected(),
-				catchBereich.umgehungBreite,
 				ueberschrift.editorContent2Model(formatierterText));
 		populateModel(model, formatierterText);
 		return model;

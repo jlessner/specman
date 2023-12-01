@@ -111,21 +111,18 @@ public class EditContainer extends JPanel {
 			schrittNummer = null;
 		}
 
-		initLayoutAndEditAreas(editor, initialContent);
+		initLayoutAndEditAreas(initialContent);
 		updateDecorationIndentions(new Indentions());
 
     skalieren(editor.getZoomFactor(), 0);
   }
 
 	private void initLayout(EditorContentModel_V001 content) {
-		List<RowSpec> rowSpecs = new ArrayList<>();
-		rowSpecs.add(RowSpec.decode("0px"));
-		rowSpecs.add(RowSpec.decode("0px"));
 		layout = new FormLayout("0px,10px:grow,0px", "0px,0px");
 		setLayout(layout);
 	}
 
-	private void initLayoutAndEditAreas(EditorI editor, EditorContentModel_V001 content) {
+	private void initLayoutAndEditAreas(EditorContentModel_V001 content) {
 		editAreas.stream().forEach(ea -> remove(ea.asComponent()));
 		editAreas.clear();
 		initLayout(content);
@@ -134,7 +131,6 @@ public class EditContainer extends JPanel {
 			EditArea editArea;
 			if (editAreaModel instanceof TextEditAreaModel_V001) {
 				TextEditAreaModel_V001 textEditAreaModel = (TextEditAreaModel_V001)editAreaModel;
-				//editArea = new TextEditArea(editor, textEditAreaModel.text, schrittHintergrund(), TextStyles.font);
 				editArea = new TextEditArea(textEditAreaModel, TextStyles.font);
 			}
 			else if (editAreaModel instanceof ImageEditAreaModel_V001) {
@@ -146,13 +142,14 @@ public class EditContainer extends JPanel {
 				editArea = new TableEditArea(tableEditAreaModel);
 			}
 			else {
-				throw new RuntimeException("Noch nicht fertig: " + editAreaModel);
+				throw new RuntimeException("Was soll das denn sein? " + editAreaModel);
 			}
 			addEditArea(editArea, index++);
 		}
 		if (schrittNummer != null) {
 			editAreas.get(0).addSchrittnummer(schrittNummer);
 		}
+		skalieren(Specman.instance().getZoomFactor(), 0);
 	}
 
 	public EditContainer(EditorI editor) {
@@ -214,7 +211,7 @@ public class EditContainer extends JPanel {
 			case StyleConstants.ALIGN_RIGHT -> right(plainText);
 			default -> new EditorContentModel_V001(plainText);
 		};
-		initLayoutAndEditAreas(Specman.instance(), content);
+		initLayoutAndEditAreas(content);
 	}
 
 	public EditorContentModel_V001 editorContent2Model(boolean formatierterText) {
@@ -264,7 +261,9 @@ public class EditContainer extends JPanel {
 		if (schrittNummer != null) {
 			schrittNummer.setFont(labelFont.deriveFont((float) SCHRITTNR_FONTSIZE * prozentNeu / 100));
 		}
-		updateDecorationIndentions(indentions);
+		if (indentions != null) {
+			updateDecorationIndentions(indentions);
+		}
 	}
 
 	public static EditorContentModel_V001 right(String text) {
@@ -452,8 +451,8 @@ public class EditContainer extends JPanel {
 		return index;
 	}
 
-	public void setEditorContent(EditorI editor, EditorContentModel_V001 intro) {
-		initLayoutAndEditAreas(editor, intro);
+	public void setEditorContent(EditorContentModel_V001 intro) {
+		initLayoutAndEditAreas(intro);
 	}
 
 	public void addEditComponentListener(ComponentListener componentListener) {

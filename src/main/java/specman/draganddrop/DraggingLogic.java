@@ -77,7 +77,7 @@ public class DraggingLogic implements Serializable {
         EditContainer ueberschrift = zweigSchrittSequenz.getUeberschrift();
         AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(ueberschrift.asInteractiveFragment());
         CaseSchrittView caseSchritt = (CaseSchrittView) step;
-        ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.istZweigUeberschrift(ueberschrift.asInteractiveFragment());
+        ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.headingToBranch(ueberschrift.asInteractiveFragment());
         ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(specman, ausgewaehlterZweig);
         specman.addEdit(new UndoableZweigHinzugefuegt(specman, neuerZweig, caseSchritt));
         step.skalieren(specman.getZoomFactor() , 100);

@@ -281,10 +281,10 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 	@Override
 	public boolean enthaelt(InteractiveStepFragment fragment) {
 		return super.enthaelt(fragment) ||
-			istZweigUeberschrift(fragment) != null;
+			headingToBranch(fragment) != null;
 	}
 
-	public ZweigSchrittSequenzView istZweigUeberschrift(InteractiveStepFragment fragment) {
+	public ZweigSchrittSequenzView headingToBranch(InteractiveStepFragment fragment) {
 		if (sonstSequenz.hatUeberschrift(fragment))
 			return sonstSequenz;
 		for (ZweigSchrittSequenzView caseSequenz: caseSequenzen) {
@@ -402,7 +402,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 	}
 
 	@Override public void alsGeloeschtMarkierenUDBL(EditorI editor) {
-		ZweigSchrittSequenzView zweig = istZweigUeberschrift(editor.getLastFocusedTextArea());
+		ZweigSchrittSequenzView zweig = headingToBranch(editor.getLastFocusedTextArea());
 		if (zweig != null) {
 			if (zweig.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
 				int zweigIndex = zweigEntfernen(editor, zweig);

@@ -17,19 +17,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.List;
 import java.util.Vector;
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -240,11 +228,19 @@ public class TextFinderDialog extends JDialog {
   }
 
   public void setJTextComponent(int monitorIndex) {
-    this.monitorIndex = monitorIndex;
-    this.monitor = allTextComponents.get(monitorIndex);
-    if (!this.monitor.hasFocus()) {
-      this.monitor.requestFocus();
-      this.monitor.setCaretPosition(0);
+    JTextComponent nextMonitor = allTextComponents.get(monitorIndex);
+    if (nextMonitor != this.monitor) {
+      this.monitorIndex = monitorIndex;
+      this.monitor = nextMonitor;
+    }
+  }
+
+  public static String toString(JTextComponent c) {
+    try {
+      return (c == null) ? "null" : "'" + c.getText(0, c.getDocument().getLength()) + "'";
+    }
+    catch(BadLocationException blx) {
+      throw new RuntimeException(blx);
     }
   }
 
@@ -293,8 +289,16 @@ public class TextFinderDialog extends JDialog {
   private boolean moveToNextComponent(int startMonitorIndex, int startCaretPosition) {
     int nextMonitorIndex = (monitorIndex == allTextComponents.size() - 1) ? 0 : monitorIndex+1;
     this.setSelection(0, 0, false);
+    boolean canMove = nextMonitorIndex != startMonitorIndex;
+    if (canMove) {
+      JTextComponent nextComponent = allTextComponents.get(nextMonitorIndex);
+      nextComponent.requestFocus();
+      if (nextComponent.getCaretPosition() != 0) {
+        nextComponent.setCaretPosition(0);
+      }
+    }
     setJTextComponent(nextMonitorIndex);
-    return nextMonitorIndex != startMonitorIndex;
+    return canMove;
   }
 
   public int findNextInCurrentTextComponent(boolean doReplace) {
@@ -651,4 +655,23 @@ public class TextFinderDialog extends JDialog {
       }
     }
   }
+
+  /** This method is called if the user changes the caret position or the focused edit field while
+   * this search/replace dialog is open. It required a re-initialization of the search cycle.
+   * Unfortunately the method is also triggered by this dialog itself as it traverses the model's
+   * text fields which requires setting focus and caret positions.
+   * <p>
+   * Temporarily removing the corresponsing event handlers is no solution as there are actually
+   * other components which need to be informed. E.g. performing a replace operation requires
+   * the save button to be enabled if it not yet is.
+   * <p>
+   * Switching the dialog in a special mode when changing a carret position and switching it back here
+   * turned out to be too fragile.
+   */
+  public void updateContextState(JEditorPane editor) {
+//    System.out.println("updateContextState " + editor.getCaretPosition());
+//    editor = (JEditorPane)Specman.instance().getLastFocusedTextArea();
+//    initSearchCycle(editor);
+  }
+
 }

@@ -23,7 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -46,7 +45,7 @@ public class SchrittSequenzView {
 	SchrittID sequenzBasisId;
 	@NotNull Aenderungsart aenderungsart;
 	final JPanel sequenzBereich;
-	final CatchBereich catchBereich;
+	CatchBereich catchBereich;
 	final JPanel panel;
 	//CopyOnWriteArrayList Arraylisten ermöglichen das removen von Schritten während man eine Liste durchläuft
 	//wird benötigt um mehre als gelöscht markierte Schritte auf einmal zu löschen
@@ -72,8 +71,12 @@ public class SchrittSequenzView {
 		sequenzbereichLayout = new FormLayout("10px:grow");
 		sequenzBereich.setLayout(sequenzbereichLayout);
 		panel.add(sequenzBereich, CC.xy(1, 1));
-		catchBereich = new CatchBereich();
-		panel.add(catchBereich, CC.xy(1, 2));
+		catchBereichInitialisieren();
+	}
+
+	protected void catchBereichInitialisieren() {
+		catchBereich = new CatchBereich(this);
+		panel.add(catchBereich.getPanel(), CC.xy(1, 2));
 	}
 
 	public Aenderungsart getAenderungsart() {
@@ -107,7 +110,6 @@ public class SchrittSequenzView {
 			CatchSchrittView schrittView = (CatchSchrittView) AbstractSchrittView.baueSchrittView(editor, this, catchSchritt);
 			catchAnhaengen(schrittView, editor);
 		}
-		catchBereich.umgehungBreiteSetzen(model.catchBloeckeUmgehungBreite);
 		catchBereich.klappen.init(model.catchBloeckeZugeklappt);
 	}
 
@@ -415,13 +417,11 @@ public class SchrittSequenzView {
 		return catchBereich.findeSchritt(fragment);
 	}
 
-
 	public SchrittSequenzModel_V001 generiereSchittSequenzModel(boolean formatierterText) {
 		SchrittSequenzModel_V001 model = new SchrittSequenzModel_V001(
 			sequenzBasisId,
 			aenderungsart,
-			catchBereich.klappen.isSelected(),
-			catchBereich.umgehungBreite
+			catchBereich.klappen.isSelected()
 		);
 		populateModel(model, formatierterText);
 		return model;
@@ -483,6 +483,10 @@ public class SchrittSequenzView {
 		for (AbstractSchrittView schritt: schritte) {
 			schritt.skalieren(prozentNeu, prozentAktuell);
 		}
+		catchBereichSkalieren(prozentNeu, prozentAktuell);
+	}
+
+	protected void catchBereichSkalieren(int prozentNeu, int prozentAktuell) {
 		catchBereich.skalieren(prozentNeu, prozentAktuell);
 	}
 
@@ -647,4 +651,15 @@ public class SchrittSequenzView {
 			.add(sequence);
 	}
 
+	public AbstractSchrittView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
+		return catchBereich.catchSequenzAnhaengen(breakStepToLink);
+	}
+
+	public List<BreakSchrittView> queryUnlinkedBreakSteps() {
+		List<BreakSchrittView> result = new ArrayList<>();
+		for (AbstractSchrittView schritt: schritte) {
+			result.addAll(schritt.queryUnlinkedBreakSteps());
+		}
+		return result;
+	}
 }

@@ -27,6 +27,7 @@ public interface EditorI extends FocusListener {
 	void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation);
 	void diagrammAktualisieren(AbstractSchrittView schrittImFokus);
 	InteractiveStepFragment getLastFocusedTextArea();
+	void setLastFocusedTextArea(TextEditArea area);
 	void addEdit(UndoableEdit edit);
 	UndoRecording pauseUndo();
 	UndoRecording composeUndo();
@@ -39,7 +40,7 @@ public interface EditorI extends FocusListener {
 	BreakSchrittView findeBreakSchritt(CatchSchrittView catchSchrittView);
 	double scale(double length);
 	void addImageViaFileChooser();
-	List<AbstractSchrittView> getAllSteps();
+	List<AbstractSchrittView> queryAllSteps();
 	void addTable(int numColumns, int numRows);
 
   List<JTextComponent> queryAllTextComponents(JTextComponent tc);

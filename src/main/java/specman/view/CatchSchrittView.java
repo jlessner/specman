@@ -150,7 +150,6 @@ public class CatchSchrittView extends AbstractSchrittView {
 		if (passenderBreakSchritt != null) {
 			setId(passenderBreakSchritt.id);
 			handlingSequenz.renummerieren(passenderBreakSchritt.id.naechsteEbene());
-			passenderBreakSchritt.zielAnkoppeln(this);
 			breakAngekoppelt = true;
 		}
 		else {

@@ -4,12 +4,17 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import specman.Aenderungsart;
+import specman.SpaltenContainerI;
+import specman.SpaltenResizer;
 import specman.Specman;
 import specman.editarea.InteractiveStepFragment;
+import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
+import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.EditorContentModel_V001;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
@@ -17,223 +22,166 @@ import java.util.List;
 
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
-class CatchBereich extends JPanel implements KlappbarerBereichI, ComponentListener {
-	public static final String ZEILENLAYOUT_TRENNKOPF_SICHTBAR = "fill:10px";
-	public static final String ZEILENLAYOUT_TRENNKOPF_VERBORGEN = AbstractSchrittView.ZEILENLAYOUT_INHALT_VERBORGEN;
+public class CatchBereich extends AbstractSchrittView implements KlappbarerBereichI, ComponentListener, SpaltenContainerI {
+  @Deprecated public CatchSchrittView[] catchBloecke;
+  KlappButton klappen;
+  JPanel bereichPanel = new JPanel();
+  JPanel topBar = new JPanel();
+  JPanel bottomBar = new JPanel();
+  JPanel sequencesPanel = new JPanel();
+  FormLayout bereichLayout;
+  FormLayout catchSequencesLayout;
+  List<CatchSchrittSequenzView> catchSequences = new ArrayList<>();
 
-	JPanel trennkopf;
-	JPanel umgehung;
-	JPanel catchBloeckeContainer;
-	FormLayout layout;
-	FormLayout bereichLayout;
-	KlappButton klappen;
-	final List<CatchSchrittView> catchBloecke = new ArrayList<CatchSchrittView>();
-	final List<JPanel> grundlinienAnschluesse = new ArrayList<JPanel>();
-	int umgehungBreite;
+  public CatchBereich(SchrittSequenzView parent) {
+    super(Specman.instance(), parent, new EditorContentModel_V001(), null, Aenderungsart.Untracked);
+    bereichLayout = new FormLayout("10px:grow",
+      FORMLAYOUT_GAP + ",fill:10px," + FORMLAYOUT_GAP + ",fill:pref," + FORMLAYOUT_GAP + ",fill:10px");
+    bereichPanel.setLayout(bereichLayout);
+    bereichPanel.add(topBar, CC.xy(1, 2));
+    bereichPanel.add(sequencesPanel, CC.xy(1, 4));
+    bereichPanel.add(bottomBar, CC.xy(1, 6));
 
-	public CatchBereich() {
-		setBackground(Specman.schrittHintergrund());
-		umgehungBreite = AbstractSchrittView.SPALTENLAYOUT_UMGEHUNG_GROESSE * 2;
-		bereichLayout = new FormLayout(
-				"10dlu:grow, " + AbstractSchrittView.umgehungLayout(umgehungBreite),
-				"0px, " + ZEILENLAYOUT_TRENNKOPF_VERBORGEN + ", fill:pref");
-		setLayout(bereichLayout);
+    bereichPanel.setBackground(DIAGRAMM_LINE_COLOR);
+    sequencesPanel.setBackground(DIAGRAMM_LINE_COLOR);
+    topBar.setBackground(TextStyles.Hintergrundfarbe_Deviderbar);
+    bottomBar.setBackground(TextStyles.Hintergrundfarbe_Deviderbar);
 
-		trennkopf = new JPanel();
-		trennkopf.setBackground(Specman.schrittHintergrund());
-		trennkopf.setLayout(null);
-		trennkopf.addComponentListener(this);
-		add(trennkopf, CC.xywh(1, 2, 2, 1));
+    klappen = new KlappButton(this, topBar, bereichLayout, 2);
 
-		umgehung = new JPanel();
-		umgehung.setBackground(Specman.schrittHintergrund());
-		umgehung.setLayout(null);
-		umgehung.setVisible(false);
-		add(umgehung, CC.xy(2, 3));
+    bereichPanel.setVisible(false);
+  }
 
-		catchBloeckeContainer = new JPanel();
-		catchBloeckeContainer.setBackground(DIAGRAMM_LINE_COLOR);
-		add(catchBloeckeContainer, CC.xy(1, 3));
-		layoutInitialisieren();
+  @Override
+  public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
+    return null;
+  }
 
-		klappen = new KlappButton(this, trennkopf, bereichLayout, 3);
-	}
+  @Override
+  public JComponent getPanel() {
+    return bereichPanel;
+  }
 
-	private void layoutInitialisieren() {
-		layout = new FormLayout("10px:grow, " + AbstractSchrittView.FORMLAYOUT_GAP);
-		catchBloeckeContainer.setLayout(layout);
-	}
+  private void styleBar(JPanel bar) {
+    bar.setBackground(TextStyles.Hintergrundfarbe_Deviderbar);
+  }
 
-	public void catchAnhaengen(CatchSchrittView schritt) {
-		layout.appendRow(RowSpec.decode(AbstractSchrittView.FORMLAYOUT_GAP));
-		layout.appendRow(RowSpec.decode("pref:grow"));
-		catchBloeckeContainer.add(schritt.getDecoratedComponent(), CC.xy(1, (catchBloecke.size()+1) * 2));
+  @Override public void componentResized(ComponentEvent e) {
+    klappen.updateLocation(bereichPanel.getWidth());
+  }
+  @Override public void componentMoved(ComponentEvent e) {}
+  @Override public void componentShown(ComponentEvent e) {}
+  @Override public void componentHidden(ComponentEvent e) {}
 
-		if (catchBloecke.size() > 0) {
-			alleGrundlinienAnschluesseEntfernen();
-			layout.appendColumn(ColumnSpec.decode(AbstractSchrittView.umgehungLayout()));
-			layout.appendColumn(ColumnSpec.decode(AbstractSchrittView.FORMLAYOUT_GAP));
+  @Override
+  public void geklappt(boolean auf) {
 
-			for (int i = 0; i < catchBloecke.size(); i++) {
-				alsVorgaengerImLayoutEinordnen(catchBloecke.get(i), i, catchBloecke.size() - i);
-			}
-		}
-		else {
-			schritt.hatNachfolger(false);
-		}
-		catchBloecke.add(schritt);
-		trennkopfSichtbarkeitAktualisieren();
-	}
+  }
 
-	/**
-	 * Einen Schritt rausnehmen ist ganz schön kompliziert, zumal es im schlimmsten Fall auch
-	 * auf die Nachbarschritte abstrahlt. Deswegen machen wir es brute-force: Wir schmeißen
-	 * die Anordnung weg und bauen sie - reduziert um den zu entfernenden Schritt - wieder
-	 * ganz von vorn auf.
-	 * @Return Den Index des entferntes Schritts in der Sequenz. Dient der Wiedereingliederung beim Redo
-	 */
-	public int catchEntfernen(CatchSchrittView zuEntfernenderSchritt) {
-		alleSchritteEntfernen();
-		alleGrundlinienAnschluesseEntfernen();
-		layoutInitialisieren();
-		int schrittIndex = catchBloecke.indexOf(zuEntfernenderSchritt);
-		catchBloecke.remove(schrittIndex);
-		List<CatchSchrittView> restlicheSchritte = new ArrayList<CatchSchrittView>(catchBloecke);
-		catchBloecke.clear();
-		for (CatchSchrittView schritt: restlicheSchritte) {
-			catchAnhaengen(schritt);
-		}
-		trennkopfSichtbarkeitAktualisieren();
-		return schrittIndex;
-	}
+  @Override
+  public boolean enthaeltAenderungsmarkierungen() {
+    return false;
+  }
 
-	private void trennkopfSichtbarkeitAktualisieren() {
-		if (catchBloecke.size() > 0) {
-			bereichLayout.setRowSpec(1, RowSpec.decode(AbstractSchrittView.FORMLAYOUT_GAP));
-			//bereichLayout.setRowSpec(2, RowSpec.decode(ZEILENLAYOUT_TRENNKOPF_SICHTBAR));
-			bereichLayout.setRowSpec(2, RowSpec.decode(AbstractSchrittView.umgehungLayout()));
-			umgehung.setVisible(true);
-		}
-		else {
-			bereichLayout.setRowSpec(1, RowSpec.decode(ZEILENLAYOUT_TRENNKOPF_VERBORGEN));
-			bereichLayout.setRowSpec(2, RowSpec.decode(ZEILENLAYOUT_TRENNKOPF_VERBORGEN));
-			umgehung.setVisible(false);
-		}
+  public int catchEntfernen(CatchSchrittView schritt) {
+    return 0;
+  }
+
+  public int catchEntfernen(CatchSchrittSequenzView catchSequence) {
+    int index = catchSequences.indexOf(catchSequence);
+    catchSequences.remove(index);
+    recomputeLayout();
+    if (catchSequences.isEmpty()) {
+      bereichPanel.setVisible(false);
+    }
+    return index;
+  }
+
+  public void catchAnhaengen(CatchSchrittView schritt) {
+
+  }
+
+  public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
+    for (CatchSchrittSequenzView seq: catchSequences) {
+      if (seq.ueberschrift.enthaelt(fragment)) {
+        return this;
+      }
+      AbstractSchrittView result = seq.findeSchritt(fragment);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
+  }
+
+  public void entfernen(SchrittSequenzView schrittSequenzView) {
+
+  }
+
+  public void zusammenklappenFuerReview() {
 
 
-//		String zeilenlayoutTrennkopf = (catchBloecke.size() > 0) ? ZEILENLAYOUT_TRENNKOPF_SICHTBAR : ZEILENLAYOUT_TRENNKOPF_VERBORGEN;
-//		String zeilenlayoutOberlinie = (catchBloecke.size() > 0) ? SchrittView.FORMLAYOUT_GAP : ZEILENLAYOUT_TRENNKOPF_VERBORGEN;
-//		bereichLayout.setRowSpec(1, RowSpec.decode(zeilenlayoutOberlinie));
-//		bereichLayout.setRowSpec(2, RowSpec.decode(zeilenlayoutTrennkopf));
-	}
+  }
 
-	private void alleSchritteEntfernen() {
-		for (CatchSchrittView schritt: catchBloecke) {
-			catchBloeckeContainer.remove(schritt.getDecoratedComponent());
-		}
-	}
+  public BreakSchrittView findeBreakSchritt(String catchText) {
+    // A catch sequence must not have break steps. At least not yet.
+    return null;
+  }
 
-	private void alleGrundlinienAnschluesseEntfernen() {
-		for (JPanel grundlinienAnschluss: grundlinienAnschluesse) {
-			catchBloeckeContainer.remove(grundlinienAnschluss);
-		}
-		grundlinienAnschluesse.clear();
-	}
+  public void skalieren(int prozentNeu, int prozentAktuell) {
+    catchSequences.forEach(seq -> seq.skalieren(prozentNeu, prozentAktuell));
+    int barWidth = 10 * prozentNeu / 100;
+    RowSpec barRowSpec = RowSpec.decode("fill:" + barWidth + "px");
+    bereichLayout.setRowSpec(2, barRowSpec);
+    bereichLayout.setRowSpec(6, barRowSpec);
+  }
 
-	private void alsVorgaengerImLayoutEinordnen(CatchSchrittView catchSchrittView, int index, int anzahlNachfolger) {
-		int spaltenbreite = anzahlNachfolger * 2 + 1;
-		int zeilenposition = (index+1) * 2;
-		//layout.setConstraints(catchSchrittView.getComponent(), CC.xywh(1, 2, 3, 1));
-		layout.setConstraints(catchSchrittView.getDecoratedComponent(), CC.xywh(1, zeilenposition, spaltenbreite, 1));
+  public AbstractSchrittView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
+    CatchSchrittSequenzView catchSequence = new CatchSchrittSequenzView(this, breakStepToLink, Specman.initialArt());
+    catchSequences.add(catchSequence);
+    bereichPanel.setVisible(true);
+    recomputeLayout();
+    return catchSequence.getSchritte().get(0);
+  }
 
-		int spaltenpositionGrundlinienAnschluss = spaltenbreite;
-		int zeilenpositionGrundlinienAnschluss = zeilenposition+1;
-		int zeilenhoeheGrundlinienAnschluss = anzahlNachfolger * 2;
-		JPanel anschlussAnGrundlinie = new JPanel();
-		anschlussAnGrundlinie.setBackground(Specman.schrittHintergrund());
-		catchBloeckeContainer.add(anschlussAnGrundlinie, CC.xywh(spaltenpositionGrundlinienAnschluss, zeilenpositionGrundlinienAnschluss, 1, zeilenhoeheGrundlinienAnschluss));
-		catchSchrittView.hatNachfolger(true);
-		grundlinienAnschluesse.add(anschlussAnGrundlinie);
-	}
+  private void recomputeLayout() {
+    createSequencesPanelLayout();
+    reassignSequencesAndResizers();
+    sequencesPanel.revalidate();
+  }
 
-	public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
-		for (CatchSchrittView catchSchritt: catchBloecke) {
-			if (catchSchritt.enthaelt(fragment)) {
-				return catchSchritt;
-			}
-			AbstractSchrittView schritt = catchSchritt.findeSchritt(fragment);
-			if (schritt != null) {
-				return schritt;
-			}
-		}
-		return null;
-	}
+  private void reassignSequencesAndResizers() {
+    sequencesPanel.removeAll();
+    for (int c = 0; c < catchSequences.size(); c++) {
+      CatchSchrittSequenzView catchSequence = catchSequences.get(c);
+      sequencesPanel.add(catchSequence.getCatchUeberschrift(), CC.xy(c*2 + 1, 1));
+      sequencesPanel.add(catchSequence.sequenzBereich, CC.xy(c*2 + 1, 3));
+    }
+    for (int c = 0; c < catchSequences.size()-1; c++) {
+      sequencesPanel.add(new SpaltenResizer(this, c, Specman.instance()), CC.xywh(c*2 + 2, 1, 1, 3));
+    }
+  }
 
-	public BreakSchrittView findeBreakSchritt(String catchText) {
-		for (CatchSchrittView catchSchritt: catchBloecke) {
-			BreakSchrittView schritt = catchSchritt.findeBreakSchritt(catchText);
-			if (schritt != null)
-				return schritt;
-		}
-		return null;
-	}
+  private void createSequencesPanelLayout() {
+    String columnSpecs = "10px:grow";
+    for (int i = 1; i < catchSequences.size(); i++) {
+      columnSpecs += ", 2px, 10px:grow";
+    }
+    catchSequencesLayout = new FormLayout(columnSpecs, "fill:pref, 2px, fill:pref");
+    sequencesPanel.setLayout(catchSequencesLayout);
+  }
 
-	public void entfernen(SchrittSequenzView container) {
-		for (CatchSchrittView catchSchritt: catchBloecke) {
-			catchSchritt.entfernen(container);
-		}
-	}
+  @Override
+  public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
+    return 0;
+  }
 
-	@Override
-	public boolean enthaeltAenderungsmarkierungen() {
-		for (CatchSchrittView catchSchritt: catchBloecke) {
-			if (catchSchritt.enthaeltAenderungsmarkierungenInklName())
-				return true;
-		}
-		return false;
-	}
+  public CatchSchrittSequenzView headingToBranch(InteractiveStepFragment fragment) {
+    return catchSequences
+      .stream()
+      .filter(seq -> seq.hatUeberschrift(fragment))
+      .findFirst()
+      .orElse(null);
+  }
 
-	@Override
-	public void geklappt(boolean auf) {
-		catchBloeckeContainer.setVisible(auf);
-		umgehung.setVisible(auf);
-	}
-
-	public void zusammenklappenFuerReview() {
-		if (!enthaeltAenderungsmarkierungen()) {
-			klappen.init(true);
-		}
-		for (CatchSchrittView catchSchritt: catchBloecke) {
-			catchSchritt.zusammenklappenFuerReview();
-		}
-	}
-
-	public void skalieren(int prozentNeu, int prozentAktuell) {
-		for (CatchSchrittView catchSchritt: catchBloecke) {
-			catchSchritt.skalieren(prozentNeu, prozentAktuell);
-		}
-		trennkopfSichtbarkeitAktualisieren();
-		int neueUmgehungBreite = AbstractSchrittView.groesseUmrechnen(umgehungBreite, prozentNeu, prozentAktuell);
-		umgehungBreiteSetzen(neueUmgehungBreite);
-		klappen.scale(prozentNeu, prozentAktuell);
-	}
-
-	public void umgehungBreiteSetzen(int angepassteUmgehungBreite) {
-		umgehungBreite = angepassteUmgehungBreite;
-		bereichLayout.setColumnSpec(2, ColumnSpec.decode(AbstractSchrittView.umgehungLayout(umgehungBreite)));
-	}
-
-	@Override
-	public void componentResized(ComponentEvent e) {
-		klappen.updateLocation(getWidth());
-	}
-
-	@Override public void componentMoved(ComponentEvent e) {
-	}
-
-	@Override public void componentShown(ComponentEvent e) {
-	}
-
-	@Override public void componentHidden(ComponentEvent e) {
-	}
 }

@@ -1,69 +1,55 @@
-package net.atlanticbb.tantlinger.ui.text.actions;
+package specman;
 
 import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.HeaderPanel;
 import net.atlanticbb.tantlinger.ui.UIUtils;
 import org.apache.commons.lang.StringUtils;
-import specman.Specman;
 import specman.editarea.TextEditArea;
 import specman.view.AbstractSchrittView;
+import specman.view.BreakSchrittView;
+import specman.view.CatchSchrittSequenzView;
+import specman.view.SchrittSequenzView;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.text.JTextComponent;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.Serial;
 import java.util.List;
 
-public class StepnumberLinkDialog extends JDialog {
+/** This dialog is shown when the user is about to add a catch sequence. Catch sequences
+ * have to be linked to a yet un-linked break steps within the same parent sequence or
+ * any of its child sequences. The system provides an appropriate list here to select from. */
+public class CatchLinkDialog extends JDialog {
     @Serial
     private static final long serialVersionUID = 1L;
     private static final I18n i18n = I18n.getInstance("net.atlanticbb.tantlinger.ui.text.dialogs");
     private static final Icon icon = UIUtils.getIcon("resources/images/x32/", "link3.png");
-    private static final String title = "Link to Stepnumber...";
-    private static final String desc = "Insert a link to a Stepnumber";
+    private static final String title = "Link to break step...";
+    private static final String desc = "Create a catch sequence linked to a break step";
     private static final Color DEFAULT_BACKGROUND = Color.white;
     private static final Color HOVERED_BACKGROUND = Color.lightGray;
     private static final int MAXIMAL_REFERENCE_TEXTLENGTH = 60;
-    private JTextComponent editor;
     private int hoveredIndex = -1;
+    private SchrittSequenzView sequenz;
     private final CustomListCellRenderer customListCellRenderer = new CustomListCellRenderer();
 
-    public StepnumberLinkDialog(Frame parent, JTextComponent ed) {
+    public CatchLinkDialog(Frame parent, SchrittSequenzView sequenz) {
         super(parent, title);
-        this.editor = ed;
+        this.sequenz = sequenz;
         this.init();
-    }
-
-    public StepnumberLinkDialog(Dialog parent, JTextComponent ed) {
-        super(parent, title);
-        this.editor = ed;
-        this.init();
+        setLocationRelativeTo(parent);
+        setVisible(true);
     }
 
     private void init() {
         JPanel headerPanel = new HeaderPanel(title, desc, icon);
 
-        JList<AbstractSchrittView> jlist = new JList<>(getStepnumberList());
+        JList<BreakSchrittView> jlist = new JList<>(getStepnumberList());
         jlist.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
@@ -85,14 +71,14 @@ public class StepnumberLinkDialog extends JDialog {
                 jlist.repaint();
             }
         });
-        jlist.addListSelectionListener(this::ListValueChanged);
+        jlist.addListSelectionListener(this::listValueChanged);
         jlist.setCellRenderer(customListCellRenderer);
 
 
         jlist.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), new MatteBorder(1, 1, 1, 1, Color.black)));
 
         JButton close = new JButton(i18n.str("close"));
-        close.addActionListener(e -> StepnumberLinkDialog.this.setVisible(false));
+        close.addActionListener(e -> CatchLinkDialog.this.setVisible(false));
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(close);
         this.getRootPane().setDefaultButton(close);
@@ -104,36 +90,19 @@ public class StepnumberLinkDialog extends JDialog {
         this.setResizable(false);
     }
 
-    /**
-     * TODO Get steps or step ID + description without making {@link AbstractSchrittView#unterSequenzen()} public
-     */
-    private DefaultListModel<AbstractSchrittView> getStepnumberList() {
-        DefaultListModel<AbstractSchrittView> listModel = new DefaultListModel<>();
-        final List<AbstractSchrittView> steps = Specman.instance().queryAllSteps();
+    private DefaultListModel<BreakSchrittView> getStepnumberList() {
+        DefaultListModel<BreakSchrittView> listModel = new DefaultListModel<>();
+        final List<BreakSchrittView> steps = sequenz.queryUnlinkedBreakSteps();
         listModel.addAll(steps);
-
         return listModel;
     }
 
-    public void setJTextComponent(JTextComponent ed) {
-        this.editor = ed;
-    }
-
-    private void ListValueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting() && StepnumberLinkDialog.this.editor != null) {
-            if (!StepnumberLinkDialog.this.editor.hasFocus()) {
-                StepnumberLinkDialog.this.editor.requestFocusInWindow();
-            }
-
-            TextEditArea lastFocusedTextArea = (TextEditArea)Specman.instance().getLastFocusedTextArea();
-            if (lastFocusedTextArea != null) {
-                AbstractSchrittView selectedStep = ((JList<AbstractSchrittView>) e.getSource()).getSelectedValue();
-
-                lastFocusedTextArea.addStepnumberLink(selectedStep);
-                Specman.instance().diagrammAktualisieren(null);
-            }
-
-            StepnumberLinkDialog.this.setVisible(false);
+    private void listValueChanged(ListSelectionEvent e) {
+        if (e.getValueIsAdjusting()) {
+            BreakSchrittView breakStepToLink = ((JList<BreakSchrittView>) e.getSource()).getSelectedValue();
+            AbstractSchrittView firstInSequence = sequenz.catchSequenzAnhaengen(breakStepToLink);
+            Specman.instance().diagrammAktualisieren(firstInSequence);
+            CatchLinkDialog.this.setVisible(false);
         }
     }
 

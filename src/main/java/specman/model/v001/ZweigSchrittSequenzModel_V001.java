@@ -14,9 +14,8 @@ public class ZweigSchrittSequenzModel_V001 extends SchrittSequenzModel_V001 {
 		SchrittID id,
 		Aenderungsart aenderungsart,
 		boolean catchBloeckeZugeklappt,
-		int catchBloeckeUmgehungBreite,
 		EditorContentModel_V001 ueberschrift) {
-		super(id, aenderungsart, catchBloeckeZugeklappt, catchBloeckeUmgehungBreite);
+		super(id, aenderungsart, catchBloeckeZugeklappt);
 		this.ueberschrift = ueberschrift;
 	}
 }

@@ -2,7 +2,6 @@ package specman;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itextpdf.kernel.geom.PageSize;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -21,6 +20,7 @@ import specman.pdf.Shape;
 import specman.editarea.EditContainer;
 import specman.editarea.litrack.LIRecordingListView;
 import specman.editarea.TextEditArea;
+import specman.undo.UndoableCatchEntfernt;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
@@ -34,6 +34,8 @@ import specman.undo.manager.UndoRecordingMode;
 import specman.view.AbstractSchrittView;
 import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
+import specman.view.CatchBereich;
+import specman.view.CatchSchrittSequenzView;
 import specman.view.CatchSchrittView;
 import specman.view.QuellSchrittView;
 import specman.view.SchrittSequenzView;
@@ -316,8 +318,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	private void setLastFocusedTextArea(FocusEvent e) {
 		if (e.getSource() instanceof TextEditArea) {
-			lastFocusedTextArea = (TextEditArea) e.getSource();
+			setLastFocusedTextArea((TextEditArea) e.getSource());
 		}
+	}
+
+	@Override
+	public void setLastFocusedTextArea(TextEditArea area) {
+		lastFocusedTextArea = area;
 	}
 
 	private void setDiagrammDatei(File diagrammDatei) {
@@ -439,11 +446,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			public void actionPerformed(ActionEvent e) {
 				dropWelcomeMessage();
 				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().catchSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.catchSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt);
-				resyncSchrittnummerStil();
+				new CatchLinkDialog(null, referenceStep.getParent());
 			}
 		});
 
@@ -457,7 +460,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					return;
 				}
 				CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
-				ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.istZweigUeberschrift(lastFocusedTextArea);
+				ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.headingToBranch(lastFocusedTextArea);
 				if (ausgewaehlterZweig == null) {
 					fehler("Kein Zweig ausgewählt");
 					return;
@@ -510,14 +513,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					try (UndoRecording ur = composeUndo()) {
 						if (schritt instanceof CaseSchrittView) {
 							CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-							ZweigSchrittSequenzView zweig = caseSchritt.istZweigUeberschrift(lastFocusedTextArea);
+							ZweigSchrittSequenzView zweig = caseSchritt.headingToBranch(lastFocusedTextArea);
 							if (zweig != null) {
 								int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
 								undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
 							}
-							return;
 						}
-						if (isStepDeletionAllowed(schritt)) {
+						else if (schritt instanceof CatchBereich) {
+							CatchBereich catchBereich = (CatchBereich) schritt;
+							CatchSchrittSequenzView catchSequence = catchBereich.headingToBranch(lastFocusedTextArea);
+							if (catchSequence != null) {
+								catchSequence.entfernen();
+							}
+						}
+						else if (isStepDeletionAllowed(schritt)) {
 							schritt.markStepnumberLinksAsDefect();
 							SchrittSequenzView sequenz = schritt.getParent();
 							int schrittIndex = sequenz.schrittEntfernen(schritt);
@@ -793,10 +802,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			zoomFaktor = model.zoomFaktor;
 			zoomFaktorAnzeigeAktualisieren(zoomFaktor);
 			diagrammbreite = model.breite;
-			intro.setEditorContent(this, model.intro);
-			intro.skalieren(zoomFaktor, 0);
-			outro.setEditorContent(this, model.outro);
-			outro.skalieren(zoomFaktor, 0);
+			intro.setEditorContent(model.intro);
+			outro.setEditorContent(model.outro);
 			setName(model.name);
 			hauptSequenz = new SchrittSequenzView(this, null, model.hauptSequenz);
 
@@ -1269,7 +1276,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return new UndoRecording(this.getUndoManager(), UndoRecordingMode.Composing);
 	}
 
-	public List<AbstractSchrittView> getAllSteps() {
+	public List<AbstractSchrittView> queryAllSteps() {
 		return getSteps(getHauptSequenz().getSchritte());
 	}
 
@@ -1342,5 +1349,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		result.addAll(outro.getTextAreas());
 		return result;
 	}
+
 
 }

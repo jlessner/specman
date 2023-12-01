@@ -19,12 +19,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.util.Arrays;
+import java.util.List;
 
 public class BreakSchrittView extends AbstractSchrittView {
 	
 	final JPanel panel;
 	final FormLayout layout;
-	CatchSchrittView zielSchritt;
+	CatchSchrittSequenzView catchSequence;
 
 	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 content, SchrittID id, Aenderungsart aenderungsart) {
 		super(editor, parent, content, id, aenderungsart);
@@ -98,30 +99,30 @@ public class BreakSchrittView extends AbstractSchrittView {
 		return ersteZeileExtraieren().equals(catchText);
 	}
 
-	public void zielAnkoppeln(CatchSchrittView zielSchritt) {
-		this.zielSchritt = zielSchritt;
+	public void catchAnkoppeln(CatchSchrittSequenzView catchSequence) {
+		this.catchSequence = catchSequence;
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		if (zielSchritt != null) {
-			zielSchritt.catchTextAktualisieren(ersteZeileExtraieren());
+		if (catchSequence != null) {
+			catchSequence.updateHeading(editContainer.editorContent2Model(true));
 		}
 	}
 
 	@Override
 	public void setId(SchrittID id) {
 		super.setId(id);
-		if (zielSchritt != null) {
-			zielSchritt.setId(id);
+		if (catchSequence != null) {
+			catchSequence.setId(id);
 		}
 	}
 
 	@Override
 	public void entfernen(SchrittSequenzView container) {
 		super.entfernen(container);
-		if (zielSchritt != null) {
-			zielSchritt.breakAbkoppeln(this);
+		if (catchSequence != null) {
+			catchSequence.entfernen();
 		}
 	}
 	
@@ -139,4 +140,12 @@ public class BreakSchrittView extends AbstractSchrittView {
 			.add(buildTriangle());
 	}
 
+	@Override
+	public List<BreakSchrittView> queryUnlinkedBreakSteps() {
+		return (catchSequence == null) ? Arrays.asList(this) : Arrays.asList();
+	}
+
+	public void updateContent(EditorContentModel_V001 content) {
+		editContainer.setEditorContent(content);
+	}
 }
