@@ -155,9 +155,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         add(schrittNummer);
     }
 
-    @Override
-    public void pack(int availableWidth) {
-    }
+    /** Nothing to do here in text areas */
+    @Override public void pack(int availableWidth) {}
 
     private void setStyleUDBL(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
         StyledDocument doc = (StyledDocument) getDocument();

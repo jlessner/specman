@@ -1,7 +1,6 @@
 package specman.view;
 
 import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import specman.Aenderungsart;
@@ -10,10 +9,7 @@ import specman.EditorI;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.editarea.EditArea;
-import specman.editarea.ImageEditArea;
 import specman.editarea.InteractiveStepFragment;
-import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -24,7 +20,6 @@ import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 public class CatchBereich extends AbstractSchrittView implements KlappbarerBereichI, ComponentListener, SpaltenContainerI {
@@ -54,6 +49,8 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
     klappen = new KlappButton(this, topBar, bereichLayout, 2);
 
+    bereichPanel.addComponentListener(this);
+
     bereichPanel.setVisible(false);
   }
 
@@ -72,8 +69,11 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   }
 
   @Override public void componentResized(ComponentEvent e) {
+    super.componentResized(e);
     klappen.updateLocation(bereichPanel.getWidth());
+    catchSequences.forEach(seq -> seq.updateHeadingBounds());
   }
+
   @Override public void componentMoved(ComponentEvent e) {}
   @Override public void componentShown(ComponentEvent e) {}
   @Override public void componentHidden(ComponentEvent e) {}

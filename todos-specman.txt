@@ -1,7 +1,5 @@
 Abschluss für Go-Live
 - Darstellung von Catch-Bereichen überarbeiten (siehe Powerpoint)
-  - queryUnlinkedBreakSteps für alle Schritttypen implementieren
-  - Schrittnummer in den Catch-Überschriften wir aus unbekanntem Grund nicht angezeigt
   - KlappButton ist noch nicht zu sehen
   - Wenn der Break-Schritt ohne Änderungsmodus angelegt wurde, die Catch-Sequence aber schon, dann hat die
      Überschrift der Case-Sequenz keine Änderungsmarkierung. Ist das richtig oder falsch?
@@ -18,6 +16,8 @@ Abschluss für Go-Live
      manchmal nur verzögert. Werden die FokusListener sauber an allen Tabellenzellen propagiert? Sieht auf den ersten Blick OK aus
   - Übertragung einer Inhaltsänderung bei FocusLost kommt als separate Aktion in die Undo-Historie. Das ist nicht schön
   - Nice to have: *eine* Catch-Sequenz für *mehrere* Breaks, die Behandlung für verschiedene Fehler innerhalb einer Sequenz oft gleich ist
+  x Schrittnummer in den Catch-Überschriften wird aus unbekanntem Grund nicht angezeigt
+  x queryUnlinkedBreakSteps für alle Schritttypen implementieren
   x Catch-Sequence im Änderungsmodus entfernen
      x UndoableCatchEntferntMarkiert
      x Löschung zurücknehmen

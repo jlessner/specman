@@ -1,22 +1,18 @@
 package specman.view;
 
-import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
-import specman.editarea.TextStyles;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.undo.UndoableCatchSequenceRemoved;
-import specman.undo.props.UDBL;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Hinzugefuegt;
-import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 
 public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements FocusListener {
   BreakSchrittView linkedBreakStep;
@@ -98,7 +94,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   @Override public void focusGained(FocusEvent e) {}
 
   @Override public void focusLost(FocusEvent e) {
-    linkedBreakStep.updateContent(ueberschrift.editorContent2Model(true));
+    //linkedBreakStep.updateContent(ueberschrift.editorContent2Model(true));
   }
 
   @Override
@@ -121,4 +117,6 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public void aenderungsmarkierungenEntfernen() {
     catchUeberschrift.aenderungsmarkierungenEntfernen(linkedBreakStep.id);
   }
+
+  public void updateHeadingBounds() { ueberschrift.updateBounds(); }
 }
