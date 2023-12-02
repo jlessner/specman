@@ -76,30 +76,23 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public void removeOrMarkAsDeletedUDBL() {
     EditorI editor = Specman.instance();
     if (aenderungsart == Hinzugefuegt || !editor.aenderungenVerfolgen()) {
-      int catchIndex = remove();
-      Specman.instance().addEdit(new UndoableCatchSequenceRemoved(this, catchIndex));
+      remove();
     }
     else {
       alsGeloeschtMarkierenUDBL(editor);
     }
   }
 
-  private int remove() {
+  public void remove() {
     CatchBereich catchBereich = getParent();
     int catchIndex = catchBereich.catchEntfernen(this);
     linkedBreakStep.catchAnkoppeln(null);
-    return catchIndex;
-  }
-
-  @Override
-  public void alsGeloeschtMarkierenUDBL(EditorI editor) {
-    super.alsGeloeschtMarkierenUDBL(editor);
-    UDBL.setBackgroundUDBL(catchUeberschrift, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+    Specman.instance().addEdit(new UndoableCatchSequenceRemoved(this, catchIndex));
   }
 
   @Override
   protected void ueberschriftAlsGeloeschtMarkierenUDBL() {
-    ueberschrift.setGeloeschtMarkiertStilUDBL(linkedBreakStep.id);
+    catchUeberschrift.alsGeloeschtMarkierenUDBL(linkedBreakStep.id);
   }
 
   @Override public void focusGained(FocusEvent e) {}

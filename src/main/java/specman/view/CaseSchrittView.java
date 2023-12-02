@@ -558,6 +558,12 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		return result;
 	}
 
+	public List<BreakSchrittView> queryUnlinkedBreakSteps() {
+		List<BreakSchrittView> result = sonstSequenz.queryUnlinkedBreakSteps();
+		caseSequenzen.forEach(seq -> result.addAll(seq.queryUnlinkedBreakSteps()));
+		return result;
+	}
+
 	@Override
 	public Shape getShape() {
 		Shape shape = new Shape(getPanel())

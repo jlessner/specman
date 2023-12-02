@@ -527,6 +527,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 							CatchSchrittSequenzView catchSequence = catchBereich.headingToBranch(lastFocusedTextArea);
 							if (catchSequence != null) {
 								catchSequence.removeOrMarkAsDeletedUDBL();
+								// No undo action required here. The undo composition of low-level changes covers everything
 							}
 						}
 						else if (isStepDeletionAllowed(schritt)) {

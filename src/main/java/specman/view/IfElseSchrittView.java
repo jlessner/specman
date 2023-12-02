@@ -26,6 +26,7 @@ import java.awt.Point;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import static specman.Specman.initialtext;
@@ -341,6 +342,12 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		List<JTextComponent> result = super.getTextAreas();
 		result.addAll(ifSequenz.getTextAreas());
 		result.addAll(elseSequenz.getTextAreas());
+		return result;
+	}
+
+	public List<BreakSchrittView> queryUnlinkedBreakSteps() {
+		List<BreakSchrittView> result = ifSequenz.queryUnlinkedBreakSteps();
+		result.addAll(elseSequenz.queryUnlinkedBreakSteps());
 		return result;
 	}
 

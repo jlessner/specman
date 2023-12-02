@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 import java.awt.Color;
 import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
@@ -262,6 +263,10 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		List<JTextComponent> result = super.getTextAreas();
 		result.addAll(wiederholSequenz.getTextAreas());
 		return result;
+	}
+
+	public List<BreakSchrittView> queryUnlinkedBreakSteps() {
+		return wiederholSequenz.queryUnlinkedBreakSteps();
 	}
 
 	@Override

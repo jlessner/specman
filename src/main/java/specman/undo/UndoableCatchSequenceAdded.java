@@ -12,7 +12,7 @@ public class UndoableCatchSequenceAdded extends AbstractUndoableInteraction {
 
   @Override
   protected void undoEdit() throws EditException {
-    catchSequence.removeOrMarkAsDeletedUDBL();
+    catchSequence.remove();
   }
 
   @Override

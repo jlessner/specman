@@ -5,14 +5,15 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.SchrittID;
 import specman.editarea.EditContainer;
-import specman.editarea.TextStyles;
 import specman.pdf.LineShape;
+import specman.undo.props.UDBL;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.util.Arrays;
 
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
 import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
@@ -69,4 +70,9 @@ public class CatchUeberschrift extends JPanel {
   }
 
   public int aenderungenVerwerfen() { return ueberschrift.aenderungenVerwerfen(); }
+
+  public void alsGeloeschtMarkierenUDBL(SchrittID id) {
+    ueberschrift.setGeloeschtMarkiertStilUDBL(id);
+    UDBL.setBackgroundUDBL(this, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+  }
 }

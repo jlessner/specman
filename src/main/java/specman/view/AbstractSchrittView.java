@@ -572,5 +572,5 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public List<JTextComponent> getTextAreas() { return editContainer.getTextAreas(); }
 
-	public List<? extends BreakSchrittView> queryUnlinkedBreakSteps() { return new ArrayList<>(); }
+	public List<BreakSchrittView> queryUnlinkedBreakSteps() { return new ArrayList<>(); }
 }

@@ -187,6 +187,10 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return result;
 	}
 
+	public List<BreakSchrittView> queryUnlinkedBreakSteps() {
+		return subsequenz.queryUnlinkedBreakSteps();
+	}
+
 	@Override
 	public Shape getShape() {
 		return super.getShape()

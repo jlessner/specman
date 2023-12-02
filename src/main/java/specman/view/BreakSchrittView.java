@@ -122,7 +122,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	public void entfernen(SchrittSequenzView container) {
 		super.entfernen(container);
 		if (catchSequence != null) {
-			catchSequence.removeOrMarkAsDeletedUDBL();
+			catchSequence.remove();
 		}
 	}
 
