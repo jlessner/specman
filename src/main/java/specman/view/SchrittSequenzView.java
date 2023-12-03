@@ -93,21 +93,9 @@ public class SchrittSequenzView {
 				toggleBorderType(schrittView);
 			}
 		}
-
-		populateCatchBereich(model.catchBereich);
-	}
-
-	protected void populateCatchBereich(CatchBereichModel_V001 model) {
 		// Model is null if this sequence is itself a catch sequence which does not support nested catch sequences
-		if (model != null) {
-			EditorI editor = Specman.instance();
-			for (CatchSchrittSequenzModel_V001 seqModel: model.catchSequences) {
-				BreakSchrittView breakSchritt = (BreakSchrittView) findStepByStepID(seqModel.id.toString());
-				CatchSchrittSequenzView view = new CatchSchrittSequenzView(editor, catchBereich, seqModel, breakSchritt);
-				// TODO JL: Verknüpfung zu Break-Schritt herstellen
-				catchBereich.addCatchSequence(view, null);
-			}
-			catchBereich.klappen.init(model.zugeklappt);
+		if (model.catchBereich != null) {
+			catchBereich.populate(model.catchBereich);
 		}
 	}
 

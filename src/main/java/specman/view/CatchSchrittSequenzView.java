@@ -22,7 +22,6 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public CatchSchrittSequenzView(CatchBereich catchBereich, BreakSchrittView linkedBreakStep) {
     super(Specman.instance(), catchBereich, linkedBreakStep.id.naechsteEbene(), linkedBreakStep.getEditorContent(true));
     einfachenSchrittAnhaengen(Specman.instance());
-    ueberschrift.setId(linkedBreakStep.id.toString());
     init(linkedBreakStep);
   }
 
@@ -33,6 +32,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   private void init(BreakSchrittView linkedBreakStep) {
     this.linkedBreakStep = linkedBreakStep;
+    ueberschrift.setId(linkedBreakStep.id.toString());
     linkedBreakStep.catchAnkoppeln(this);
     catchUeberschrift = new CatchUeberschrift(ueberschrift);
     ueberschrift.addEditAreasFocusListener(this);

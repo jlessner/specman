@@ -51,6 +51,7 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
     addMouseListener(this);
     parent.addMouseMotionListener(this);
     parent.add(this);
+    scale(Specman.instance().getZoomFactor(), 100);
   }
 
   public void init(boolean zugeklappt) {
@@ -134,7 +135,6 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
 
   public void scale(int newPercentage, int currentPercentage) {
     if (newPercentage != currentPercentage) {
-
       // Get width & height by scaling the initial Icon length
       int targetWidth = (int) Specman.instance().scale(initialIcon.getIconWidth());
       int targetHeight = (int) Specman.instance().scale(initialIcon.getIconHeight());

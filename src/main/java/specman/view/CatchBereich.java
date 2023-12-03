@@ -13,8 +13,8 @@ import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CatchBereichModel_V001;
+import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.EditorContentModel_V001;
-import specman.model.v001.SchrittSequenzModel_V001;
 
 import javax.swing.*;
 import java.awt.event.ComponentEvent;
@@ -40,7 +40,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   public CatchBereich(SchrittSequenzView parent) {
     super(Specman.instance(), parent, new EditorContentModel_V001(), null, Aenderungsart.Untracked);
-    barRowSpec = "fill:" + KlappButton.MINIMUM_ICON_LENGTH + "px";
+    computeBarRowSpec(Specman.instance().getZoomFactor());
     bereichLayout = new FormLayout("10px:grow",
       FORMLAYOUT_GAP + "," + barRowSpec + "," + FORMLAYOUT_GAP + ",fill:pref," + FORMLAYOUT_GAP + "," + barRowSpec);
     bereichPanel.setLayout(bereichLayout);
@@ -61,6 +61,10 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     bereichPanel.setVisible(false);
   }
 
+  private void computeBarRowSpec(int zoomfactor) {
+    barRowSpec = "fill:" + KlappButton.MINIMUM_ICON_LENGTH * zoomfactor / 100 + "px";
+  }
+
   @Override
   public AbstractSchrittModel_V001 generiereModel(boolean formatierterText) {
     return null;
@@ -69,10 +73,6 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   @Override
   public JComponent getPanel() {
     return bereichPanel;
-  }
-
-  private void styleBar(JPanel bar) {
-    bar.setBackground(TextStyles.Hintergrundfarbe_Deviderbar);
   }
 
   @Override public void componentResized(ComponentEvent e) {
@@ -146,8 +146,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   public void skalieren(int prozentNeu, int prozentAktuell) {
     catchSequences.forEach(seq -> seq.skalieren(prozentNeu, prozentAktuell));
-    int barWidth = KlappButton.MINIMUM_ICON_LENGTH * prozentNeu / 100;
-    barRowSpec = "fill:" + barWidth + "px";
+    computeBarRowSpec(prozentNeu);
     bereichLayout.setRowSpec(TOPBAR_LAYOUTROW, RowSpec.decode(barRowSpec));
     if (!klappen.isSelected()) {
       bereichLayout.setRowSpec(BOTTOMBAR_LAYOUTROW, RowSpec.decode(barRowSpec));
@@ -248,5 +247,15 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
       model.catchSequences.add(seq.generiereModel(formatierterText));
     }
     return model;
+  }
+
+  public void populate(CatchBereichModel_V001 model) {
+    EditorI editor = Specman.instance();
+    for (CatchSchrittSequenzModel_V001 seqModel: model.catchSequences) {
+      BreakSchrittView breakSchritt = (BreakSchrittView) getParent().findStepByStepID(seqModel.id.toString());
+      CatchSchrittSequenzView view = new CatchSchrittSequenzView(editor, this, seqModel, breakSchritt);
+      addCatchSequence(view, null);
+    }
+    klappen.init(model.zugeklappt);
   }
 }
