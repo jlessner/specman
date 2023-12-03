@@ -7,6 +7,7 @@ import specman.editarea.TextEditArea;
 import specman.undo.AbstractUndoableInteraction;
 import specman.view.AbstractSchrittView;
 import specman.view.QuellSchrittView;
+import specman.view.SchrittSequenzView;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -52,6 +53,12 @@ public class UDBL {
     Aenderungsart undoAenderungsart = abstractSchrittView.getAenderungsart();
     abstractSchrittView.setAenderungsart(aenderungsart);
     addEdit(new UndoableSetAenderungsart(abstractSchrittView, undoAenderungsart));
+  }
+
+  public static void setAenderungsart(SchrittSequenzView schrittSequenzView, Aenderungsart aenderungsart) {
+    Aenderungsart undoAenderungsart = schrittSequenzView.getAenderungsart();
+    schrittSequenzView.setAenderungsart(aenderungsart);
+    addEdit(new UndoableSetAenderungsartSchrittSequenzView(schrittSequenzView, undoAenderungsart));
   }
 
   public static void setAenderungsart(EditArea editArea, Aenderungsart aenderungsart) {

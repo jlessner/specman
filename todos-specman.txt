@@ -1,21 +1,25 @@
 Abschluss für Go-Live
 - Darstellung von Catch-Bereichen überarbeiten (siehe Powerpoint)
-  - SchrittSequenzView(SchrittSequenzModel_V001 model): Case-Sequenzen wieder aufbauen
-  - SchrittSequenzView#populateModel: Case-Sequenzen aufnehmen
+  - Resizing der Spalten
   - Wenn der Break-Schritt ohne Änderungsmodus angelegt wurde, die Catch-Sequence aber schon, dann hat die
      Überschrift der Case-Sequenz keine Änderungsmarkierung. Ist das richtig oder falsch?
   - Unterstützen wir angesetzte Darstellung? Wäre nicht schlecht. Aber wie schaltet man um? Der Catchbereich selbst hat keinen Text.
   - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
   - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
-  - Resizing der Spalten
   - Break-Schritte dürfen (noch) nicht in Catch-Sequenzen eingefügt werden. Vielleicht sollten wir insgesamt zunächst nur
      Einfache Schritte zulassen
+  - Wenn eine Catch-Sequenz als gelöscht markiert ist, kann man sie korrekter Weise nicht mehr ändern. Wenn der verlinkte
+      Break-Schritt aber *nicht* als gelöscht markiert ist, kan man dessen Text ändern und ändert damit auch die Überschrift
+      der Catch-Sequenz. Und wegen der Übertragung des Editor-Inhalts per Model, sieht das auch noch doof aus.
+      Erste Idee: nicht mehr synchronisieren, aber dann aktualisieren beim Rücknahme der Löschung
   - Wenn es in der CatchUeberschrift beim Größer- und Kleinerschieben zu Veränderungen der Höhe durch Zeilenumbrüche kommt, geht manchmal
      das Layout zeitweise kaputt. Nach ein paarmal "hinterherschieben" passt es dann wieder.
   - Wenn man in einen Break-Schritt eine Tabelle reinsetzt, funktioniert die Inhaltsübertragung an die jeweils andere Stelle
      manchmal nur verzögert. Werden die FokusListener sauber an allen Tabellenzellen propagiert? Sieht auf den ersten Blick OK aus
   - Übertragung einer Inhaltsänderung bei FocusLost kommt als separate Aktion in die Undo-Historie. Das ist nicht schön
   - Nice to have: *eine* Catch-Sequenz für *mehrere* Breaks, die Behandlung für verschiedene Fehler innerhalb einer Sequenz oft gleich ist
+  x SchrittSequenzView(SchrittSequenzModel_V001 model): Case-Sequenzen wieder aufbauen
+  x SchrittSequenzView#populateModel: Case-Sequenzen aufnehmen
   x KlappButton ist noch nicht zu sehen
   x Schrittnummer in den Catch-Überschriften wird aus unbekanntem Grund nicht angezeigt
   x queryUnlinkedBreakSteps für alle Schritttypen implementieren

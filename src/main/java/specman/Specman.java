@@ -1304,7 +1304,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	 */
 	@Override
 	public AbstractSchrittView findStepByStepID(String stepID) {
-		AbstractSchrittView result = findStepByStepID(getHauptSequenz().getSchritte(), stepID);
+		AbstractSchrittView result = getHauptSequenz().findStepByStepID(stepID);
 		if (result == null) {
 			throw new RuntimeException("Could not find stepnumber '" + stepID + "'."
 					+ " Make sure not to search for an outdated stepnumber.");
@@ -1319,22 +1319,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	 * However, this case shouldn't be called since that means we are searching for a non-existing step which
 	 * currently isn't possible - Except due to a bug, that's why we throw the Exception above.
 	 */
-	private static AbstractSchrittView findStepByStepID(final List<AbstractSchrittView> steps, String stepID) {
-		for (AbstractSchrittView step : steps) {
-			if (stepID.equals(step.getId().toString())) {
-				return step;
-			}
-			for (SchrittSequenzView unterSequenz : step.unterSequenzen()) {
-				List<AbstractSchrittView> schritte = unterSequenz.getSchritte();
-				AbstractSchrittView result = findStepByStepID(schritte, stepID);
-				if (result != null) {
-					return result;
-				}
-			}
-		}
-		return null;
-	}
-
 	public boolean isKeyPressed(int keyCode) {
 		return pressedKeys.contains(keyCode);
 	}

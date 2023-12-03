@@ -4,6 +4,7 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
+import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
 import specman.undo.UndoableCatchSequenceRemoved;
@@ -20,16 +21,21 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   public CatchSchrittSequenzView(CatchBereich catchBereich, BreakSchrittView linkedBreakStep) {
     super(Specman.instance(), catchBereich, linkedBreakStep.id.naechsteEbene(), linkedBreakStep.getEditorContent(true));
-    this.linkedBreakStep = linkedBreakStep;
     einfachenSchrittAnhaengen(Specman.instance());
     ueberschrift.setId(linkedBreakStep.id.toString());
-    catchUeberschrift = new CatchUeberschrift(ueberschrift);
-    linkedBreakStep.catchAnkoppeln(this);
-    ueberschrift.addEditAreasFocusListener(this);
+    init(linkedBreakStep);
   }
 
-  public CatchSchrittSequenzView(EditorI editor, AbstractSchrittView parent, ZweigSchrittSequenzModel_V001 model) {
+  public CatchSchrittSequenzView(EditorI editor, AbstractSchrittView parent, ZweigSchrittSequenzModel_V001 model, BreakSchrittView linkedBreakStep) {
     super(editor, parent, model);
+    init(linkedBreakStep);
+  }
+
+  private void init(BreakSchrittView linkedBreakStep) {
+    this.linkedBreakStep = linkedBreakStep;
+    linkedBreakStep.catchAnkoppeln(this);
+    catchUeberschrift = new CatchUeberschrift(ueberschrift);
+    ueberschrift.addEditAreasFocusListener(this);
   }
 
   public CatchSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, EditorContentModel_V001 initialerText) {
@@ -94,7 +100,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   @Override public void focusGained(FocusEvent e) {}
 
   @Override public void focusLost(FocusEvent e) {
-    //linkedBreakStep.updateContent(ueberschrift.editorContent2Model(true));
+    linkedBreakStep.updateContent(ueberschrift.editorContent2Model(true));
   }
 
   @Override
@@ -119,4 +125,11 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   }
 
   public void updateHeadingBounds() { ueberschrift.updateBounds(); }
+
+  public CatchSchrittSequenzModel_V001 generiereModel(boolean formatierterText) {
+    CatchSchrittSequenzModel_V001 model = new CatchSchrittSequenzModel_V001(
+      linkedBreakStep.id, aenderungsart, ueberschrift.editorContent2Model(formatierterText));
+    populateModel(model, formatierterText);
+    return model;
+  }
 }

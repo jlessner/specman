@@ -51,7 +51,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		ZweigSchrittSequenzModel_V001 model = new ZweigSchrittSequenzModel_V001(
 				sequenzBasisId,
 				aenderungsart,
-				catchBereich.klappen.isSelected(),
+				catchBereich.generiereCatchBereichModel(formatierterText),
 				ueberschrift.editorContent2Model(formatierterText));
 		populateModel(model, formatierterText);
 		return model;

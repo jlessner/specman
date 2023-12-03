@@ -11,12 +11,15 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.CatchBereichModel_V001;
+import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.pdf.Shape;
 import specman.editarea.EditContainer;
 import specman.editarea.Indentions;
 import specman.editarea.InteractiveStepFragment;
+import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -79,22 +82,6 @@ public class SchrittSequenzView {
 		panel.add(catchBereich.getPanel(), CC.xy(1, 2));
 	}
 
-	public Aenderungsart getAenderungsart() {
-		return aenderungsart;
-	}
-
-	public void setAenderungsart(Aenderungsart aenderungsart) {
-		this.aenderungsart = aenderungsart;
-	}
-
-	public void setAenderungsartUDBL(Aenderungsart aenderungsart) {
-		this.aenderungsart = aenderungsart;
-	}
-
-	public List<AbstractSchrittView> getSchritte(){
-		return schritte;
-	}
-
 	public SchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittSequenzModel_V001 model) {
 		this(parent, model.id);
 		for (AbstractSchrittModel_V001 schritt : model.schritte) {
@@ -107,14 +94,34 @@ public class SchrittSequenzView {
 			}
 		}
 
-		// TODO JL: create catch sequences
-
-		catchBereich.klappen.init(model.catchBloeckeZugeklappt);
+		populateCatchBereich(model.catchBereich);
 	}
 
-	public JPanel getContainer() {
-		return panel;
+	protected void populateCatchBereich(CatchBereichModel_V001 model) {
+		// Model is null if this sequence is itself a catch sequence which does not support nested catch sequences
+		if (model != null) {
+			EditorI editor = Specman.instance();
+			for (CatchSchrittSequenzModel_V001 seqModel: model.catchSequences) {
+				BreakSchrittView breakSchritt = (BreakSchrittView) findStepByStepID(seqModel.id.toString());
+				CatchSchrittSequenzView view = new CatchSchrittSequenzView(editor, catchBereich, seqModel, breakSchritt);
+				// TODO JL: Verknüpfung zu Break-Schritt herstellen
+				catchBereich.addCatchSequence(view, null);
+			}
+			catchBereich.klappen.init(model.zugeklappt);
+		}
 	}
+
+	public Aenderungsart getAenderungsart() { return aenderungsart; }
+
+	public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
+
+	public void setAenderungsartUDBL(Aenderungsart aenderungsart) {
+		UDBL.setAenderungsart(this, aenderungsart);
+	}
+
+	public List<AbstractSchrittView> getSchritte() { return schritte; }
+
+	public JPanel getContainer() { return panel; }
 
 	private SchrittID naechsteSchrittID() {
 		if (schritte.size() > 0)
@@ -393,10 +400,8 @@ public class SchrittSequenzView {
 
 	public SchrittSequenzModel_V001 generiereSchittSequenzModel(boolean formatierterText) {
 		SchrittSequenzModel_V001 model = new SchrittSequenzModel_V001(
-			sequenzBasisId,
-			aenderungsart,
-			catchBereich.klappen.isSelected()
-		);
+			sequenzBasisId, aenderungsart,
+			catchBereich.generiereCatchBereichModel(formatierterText));
 		populateModel(model, formatierterText);
 		return model;
 	}
@@ -405,11 +410,6 @@ public class SchrittSequenzView {
 		for (AbstractSchrittView view : schritte) {
 			model.schritte.add(view.generiereModel(formatierterText));
 		}
-		// TODO JL: Case-Sequenzen
-	}
-
-	protected SchrittSequenzModel_V001 newModel() {
-		return new SchrittSequenzModel_V001();
 	}
 
 	public boolean enthaeltAenderungsmarkierungen() {
@@ -640,4 +640,21 @@ public class SchrittSequenzView {
 		}
 		return result;
 	}
+
+	public AbstractSchrittView findStepByStepID(String stepID) {
+		for (AbstractSchrittView step: schritte) {
+			if (stepID.equals(step.getId().toString())) {
+				return step;
+			}
+			for (SchrittSequenzView unterSequenz : step.unterSequenzen()) {
+				AbstractSchrittView result = unterSequenz.findStepByStepID(stepID);
+				if (result != null) {
+					return result;
+				}
+			}
+		}
+		return null;
+	}
+
+
 }

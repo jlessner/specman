@@ -12,7 +12,9 @@ import specman.Specman;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextStyles;
 import specman.model.v001.AbstractSchrittModel_V001;
+import specman.model.v001.CatchBereichModel_V001;
 import specman.model.v001.EditorContentModel_V001;
+import specman.model.v001.SchrittSequenzModel_V001;
 
 import javax.swing.*;
 import java.awt.event.ComponentEvent;
@@ -240,4 +242,11 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
    * in these cases. */
   private List<CatchSchrittSequenzView> modifyableCatchSequences() { return new ArrayList<>(catchSequences); }
 
+  public CatchBereichModel_V001 generiereCatchBereichModel(boolean formatierterText) {
+    CatchBereichModel_V001 model = new CatchBereichModel_V001(klappen.isSelected());
+    for (CatchSchrittSequenzView seq: catchSequences) {
+      model.catchSequences.add(seq.generiereModel(formatierterText));
+    }
+    return model;
+  }
 }
