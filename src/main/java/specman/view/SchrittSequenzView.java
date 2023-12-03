@@ -341,24 +341,17 @@ public class SchrittSequenzView {
 	 * @return Den Index des entfernten Schritts in der Sequenz. Dient der Wiedereingliederung beim Redo
 	 */
 	public int schrittEntfernen(AbstractSchrittView schritt) throws EditException {
-		int schrittIndex;
-		if (schritt instanceof CatchSchrittView) {
-			schrittIndex = catchBereich.catchEntfernen((CatchSchrittView)schritt);
-		}
-		else {
-			checkSchrittEntfernen(schritt);
-			schritt.entfernen(this);
-			sequenzBereich.remove(schritt.getDecoratedComponent());
-			schrittIndex = schritte.indexOf(schritt);
-			int layoutZeilenLoeschIndex = (schrittIndex == 0) ? 1 : schrittIndex*2;
-			sequenzbereichLayout.removeRow(layoutZeilenLoeschIndex);
-			sequenzbereichLayout.removeRow(layoutZeilenLoeschIndex);
-			schritte.remove(schrittIndex);
-			updateFollowingStepDecoration(schrittIndex);
-			updateLayoutRowspecsForAllsStepsAndGaps();
-			renummerieren(sequenzBasisId);
-		}
-		// TODO: schritte.get(schrittIndex-1) funktioniert nicht richtig, wenn man einen Catch-Schritt entfernt
+		checkSchrittEntfernen(schritt);
+		schritt.entfernen(this);
+		sequenzBereich.remove(schritt.getDecoratedComponent());
+		int schrittIndex = schritte.indexOf(schritt);
+		int layoutZeilenLoeschIndex = (schrittIndex == 0) ? 1 : schrittIndex*2;
+		sequenzbereichLayout.removeRow(layoutZeilenLoeschIndex);
+		sequenzbereichLayout.removeRow(layoutZeilenLoeschIndex);
+		schritte.remove(schrittIndex);
+		updateFollowingStepDecoration(schrittIndex);
+		updateLayoutRowspecsForAllsStepsAndGaps();
+		renummerieren(sequenzBasisId);
 		AbstractSchrittView naechsterFokus = schritte.get(schrittIndex == 0 ? schrittIndex : schrittIndex-1);
 		Specman.instance().diagrammAktualisieren(naechsterFokus);
 		return schrittIndex;
@@ -412,9 +405,7 @@ public class SchrittSequenzView {
 		for (AbstractSchrittView view : schritte) {
 			model.schritte.add(view.generiereModel(formatierterText));
 		}
-		for (CatchSchrittView view : catchBereich.catchBloecke) {
-			model.catchBloecke.add(view.generiereModel(formatierterText));
-		}
+		// TODO JL: Case-Sequenzen
 	}
 
 	protected SchrittSequenzModel_V001 newModel() {

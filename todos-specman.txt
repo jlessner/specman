@@ -1,10 +1,10 @@
 Abschluss für Go-Live
 - Darstellung von Catch-Bereichen überarbeiten (siehe Powerpoint)
-  - KlappButton ist noch nicht zu sehen
+  - SchrittSequenzView(SchrittSequenzModel_V001 model): Case-Sequenzen wieder aufbauen
+  - SchrittSequenzView#populateModel: Case-Sequenzen aufnehmen
   - Wenn der Break-Schritt ohne Änderungsmodus angelegt wurde, die Catch-Sequence aber schon, dann hat die
      Überschrift der Case-Sequenz keine Änderungsmarkierung. Ist das richtig oder falsch?
   - Unterstützen wir angesetzte Darstellung? Wäre nicht schlecht. Aber wie schaltet man um? Der Catchbereich selbst hat keinen Text.
-  - SchrittSequenzView(SchrittSequenzModel_V001 model): Case-Sequenzen wieder aufbauen
   - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
   - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
   - Resizing der Spalten
@@ -16,6 +16,7 @@ Abschluss für Go-Live
      manchmal nur verzögert. Werden die FokusListener sauber an allen Tabellenzellen propagiert? Sieht auf den ersten Blick OK aus
   - Übertragung einer Inhaltsänderung bei FocusLost kommt als separate Aktion in die Undo-Historie. Das ist nicht schön
   - Nice to have: *eine* Catch-Sequenz für *mehrere* Breaks, die Behandlung für verschiedene Fehler innerhalb einer Sequenz oft gleich ist
+  x KlappButton ist noch nicht zu sehen
   x Schrittnummer in den Catch-Überschriften wird aus unbekanntem Grund nicht angezeigt
   x queryUnlinkedBreakSteps für alle Schritttypen implementieren
   x Catch-Sequence im Änderungsmodus entfernen

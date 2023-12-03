@@ -23,7 +23,9 @@ import java.util.List;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 public class CatchBereich extends AbstractSchrittView implements KlappbarerBereichI, ComponentListener, SpaltenContainerI {
-  @Deprecated public CatchSchrittView[] catchBloecke;
+  private static final int BOTTOMBAR_LAYOUTROW = 6;
+  private static final int TOPBAR_LAYOUTROW = 2;
+
   KlappButton klappen;
   JPanel bereichPanel = new JPanel();
   JPanel topBar = new JPanel();
@@ -32,22 +34,25 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   FormLayout bereichLayout;
   FormLayout catchSequencesLayout;
   List<CatchSchrittSequenzView> catchSequences = new ArrayList<>();
+  String barRowSpec;
 
   public CatchBereich(SchrittSequenzView parent) {
     super(Specman.instance(), parent, new EditorContentModel_V001(), null, Aenderungsart.Untracked);
+    barRowSpec = "fill:" + KlappButton.MINIMUM_ICON_LENGTH + "px";
     bereichLayout = new FormLayout("10px:grow",
-      FORMLAYOUT_GAP + ",fill:10px," + FORMLAYOUT_GAP + ",fill:pref," + FORMLAYOUT_GAP + ",fill:10px");
+      FORMLAYOUT_GAP + "," + barRowSpec + "," + FORMLAYOUT_GAP + ",fill:pref," + FORMLAYOUT_GAP + "," + barRowSpec);
     bereichPanel.setLayout(bereichLayout);
-    bereichPanel.add(topBar, CC.xy(1, 2));
+    bereichPanel.add(topBar, CC.xy(1, TOPBAR_LAYOUTROW));
     bereichPanel.add(sequencesPanel, CC.xy(1, 4));
-    bereichPanel.add(bottomBar, CC.xy(1, 6));
+    bereichPanel.add(bottomBar, CC.xy(1, BOTTOMBAR_LAYOUTROW));
 
     bereichPanel.setBackground(DIAGRAMM_LINE_COLOR);
     sequencesPanel.setBackground(DIAGRAMM_LINE_COLOR);
-    topBar.setBackground(TextStyles.Hintergrundfarbe_Deviderbar);
     bottomBar.setBackground(TextStyles.Hintergrundfarbe_Deviderbar);
+    topBar.setBackground(TextStyles.Hintergrundfarbe_Deviderbar);
+    topBar.setLayout(null);
 
-    klappen = new KlappButton(this, topBar, bereichLayout, 2);
+    klappen = new KlappButton(this, topBar, bereichLayout, 4);
 
     bereichPanel.addComponentListener(this);
 
@@ -70,7 +75,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   @Override public void componentResized(ComponentEvent e) {
     super.componentResized(e);
-    klappen.updateLocation(bereichPanel.getWidth());
+    klappen.updateLocation(topBar.getWidth());
     catchSequences.forEach(seq -> seq.updateHeadingBounds());
   }
 
@@ -80,16 +85,24 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   @Override
   public void geklappt(boolean auf) {
-
+    sequencesPanel.setVisible(auf);
+    String bottomBarLayout = auf ? barRowSpec : ZEILENLAYOUT_INHALT_VERBORGEN;
+    bereichLayout.setRowSpec(BOTTOMBAR_LAYOUTROW, RowSpec.decode(bottomBarLayout));
+    // As the catch area is always placed at the bottom of a sequence, we also
+    // hide the bottom gap line of the area to avoid *three* gaps to pile up
+    String gapLayout = auf ? FORMLAYOUT_GAP : ZEILENLAYOUT_INHALT_VERBORGEN;
+    bereichLayout.setRowSpec(BOTTOMBAR_LAYOUTROW -1, RowSpec.decode(gapLayout));
+    bottomBar.setVisible(auf);
   }
 
   @Override
   public boolean enthaeltAenderungsmarkierungen() {
+    for (CatchSchrittSequenzView seq: catchSequences) {
+      if (seq.enthaeltAenderungsmarkierungen()) {
+        return true;
+      }
+    }
     return false;
-  }
-
-  public int catchEntfernen(CatchSchrittView schritt) {
-    return 0;
   }
 
   public int catchEntfernen(CatchSchrittSequenzView catchSequence) {
@@ -131,10 +144,13 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   public void skalieren(int prozentNeu, int prozentAktuell) {
     catchSequences.forEach(seq -> seq.skalieren(prozentNeu, prozentAktuell));
-    int barWidth = 10 * prozentNeu / 100;
-    RowSpec barRowSpec = RowSpec.decode("fill:" + barWidth + "px");
-    bereichLayout.setRowSpec(2, barRowSpec);
-    bereichLayout.setRowSpec(6, barRowSpec);
+    int barWidth = KlappButton.MINIMUM_ICON_LENGTH * prozentNeu / 100;
+    barRowSpec = "fill:" + barWidth + "px";
+    bereichLayout.setRowSpec(TOPBAR_LAYOUTROW, RowSpec.decode(barRowSpec));
+    if (!klappen.isSelected()) {
+      bereichLayout.setRowSpec(BOTTOMBAR_LAYOUTROW, RowSpec.decode(barRowSpec));
+    }
+    klappen.scale(prozentNeu, prozentAktuell);
   }
 
   public CatchSchrittSequenzView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
