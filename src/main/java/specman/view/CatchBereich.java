@@ -4,6 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import specman.Aenderungsart;
+import specman.ColumnSpecByPercent;
 import specman.EditException;
 import specman.EditorI;
 import specman.SpaltenContainerI;
@@ -15,6 +16,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CatchBereichModel_V001;
 import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.EditorContentModel_V001;
+import specman.undo.UndoableCatchSequenceAdded;
 
 import javax.swing.*;
 import java.awt.event.ComponentEvent;
@@ -22,6 +24,9 @@ import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static specman.ColumnSpecByPercent.allocPercent;
+import static specman.ColumnSpecByPercent.copyOf;
+import static specman.ColumnSpecByPercent.releasePercent;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 public class CatchBereich extends AbstractSchrittView implements KlappbarerBereichI, ComponentListener, SpaltenContainerI {
@@ -37,6 +42,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   FormLayout catchSequencesLayout;
   List<CatchSchrittSequenzView> catchSequences = new ArrayList<>();
   String barRowSpec;
+  List<Integer> sequencesWidthPercent;
 
   public CatchBereich(SchrittSequenzView parent) {
     super(Specman.instance(), parent, new EditorContentModel_V001(), null, Aenderungsart.Untracked);
@@ -78,7 +84,6 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   @Override public void componentResized(ComponentEvent e) {
     super.componentResized(e);
     klappen.updateLocation(topBar.getWidth());
-    catchSequences.forEach(seq -> seq.updateHeadingBounds());
   }
 
   @Override public void componentMoved(ComponentEvent e) {}
@@ -110,6 +115,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   public int catchEntfernen(CatchSchrittSequenzView catchSequence) {
     int index = catchSequences.indexOf(catchSequence);
     catchSequences.remove(index);
+    sequencesWidthPercent = releasePercent(index, sequencesWidthPercent);
     recomputeLayout();
     if (catchSequences.isEmpty()) {
       bereichPanel.setVisible(false);
@@ -131,12 +137,9 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   }
 
   public void entfernen(SchrittSequenzView schrittSequenzView) {
-
   }
 
   public void zusammenklappenFuerReview() {
-
-
   }
 
   public BreakSchrittView findeBreakSchritt(String catchText) {
@@ -155,19 +158,25 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   }
 
   public CatchSchrittSequenzView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
+    List<Integer> originalSequencesWidthPercents = copyOf(sequencesWidthPercent);
     CatchSchrittSequenzView catchSequence = new CatchSchrittSequenzView(this, breakStepToLink);
-    addCatchSequence(catchSequence, null);
+    addCatchSequence(catchSequence, null, null);
+    Specman.instance().addEdit(new UndoableCatchSequenceAdded(catchSequence, originalSequencesWidthPercents));
     return catchSequence;
   }
 
-  public void addCatchSequence(CatchSchrittSequenzView catchSequence, Integer catchIndex) {
+  public void addCatchSequence(CatchSchrittSequenzView catchSequence, Integer catchIndex, List<Integer> backupSequencesWidthPercent) {
     if (catchIndex == null) {
-      catchSequences.add(catchSequence);
+      catchIndex = catchSequences.size();
+    }
+    catchSequences.add(catchIndex, catchSequence);
+    bereichPanel.setVisible(true);
+    if (backupSequencesWidthPercent != null) {
+      sequencesWidthPercent = backupSequencesWidthPercent;
     }
     else {
-      catchSequences.add(catchIndex, catchSequence);
+      allocPercent(catchIndex, sequencesWidthPercent);
     }
-    bereichPanel.setVisible(true);
     recomputeLayout();
   }
 
@@ -190,16 +199,23 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   }
 
   private void createSequencesPanelLayout() {
-    String columnSpecs = "10px:grow";
-    for (int i = 1; i < catchSequences.size(); i++) {
-      columnSpecs += ", 2px, 10px:grow";
-    }
+    String columnSpecs = ColumnSpecByPercent.percents2specs(catchSequences.size(), sequencesWidthPercent);
     catchSequencesLayout = new FormLayout(columnSpecs, "fill:pref, 2px, fill:pref");
     sequencesPanel.setLayout(catchSequencesLayout);
   }
 
   @Override
   public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
+    Integer[] columnWidths = catchSequences
+      .stream()
+      .map(seq -> seq.catchUeberschrift.getWidth())
+      .toArray(Integer[]::new);
+    List<Integer> recomputed = ColumnSpecByPercent.recomputePercents(columnWidths, vergroesserung, spalte);
+    if (recomputed != null) {
+      sequencesWidthPercent = recomputed;
+      recomputeLayout();
+      return vergroesserung;
+    }
     return 0;
   }
 
@@ -242,7 +258,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   private List<CatchSchrittSequenzView> modifyableCatchSequences() { return new ArrayList<>(catchSequences); }
 
   public CatchBereichModel_V001 generiereCatchBereichModel(boolean formatierterText) {
-    CatchBereichModel_V001 model = new CatchBereichModel_V001(klappen.isSelected());
+    CatchBereichModel_V001 model = new CatchBereichModel_V001(sequencesWidthPercent, klappen.isSelected());
     for (CatchSchrittSequenzView seq: catchSequences) {
       model.catchSequences.add(seq.generiereModel(formatierterText));
     }
@@ -254,7 +270,11 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     for (CatchSchrittSequenzModel_V001 seqModel: model.catchSequences) {
       BreakSchrittView breakSchritt = (BreakSchrittView) getParent().findStepByStepID(seqModel.id.toString());
       CatchSchrittSequenzView view = new CatchSchrittSequenzView(editor, this, seqModel, breakSchritt);
-      addCatchSequence(view, null);
+      addCatchSequence(view, null, null);
+    }
+    if (model.sequencesWidthPercent != null) {
+      sequencesWidthPercent = model.sequencesWidthPercent;
+      recomputeLayout();
     }
     klappen.init(model.zugeklappt);
   }

@@ -3,11 +3,15 @@ package specman.undo;
 import specman.EditException;
 import specman.view.CatchSchrittSequenzView;
 
+import java.util.List;
+
 public class UndoableCatchSequenceAdded extends AbstractUndoableInteraction {
   private final CatchSchrittSequenzView catchSequence;
+  private final List<Integer> originalSequencesWidthPercents;
 
-  public UndoableCatchSequenceAdded(CatchSchrittSequenzView catchSequence) {
+  public UndoableCatchSequenceAdded(CatchSchrittSequenzView catchSequence, List<Integer> originalSequencesWidthPercents) {
     this.catchSequence = catchSequence;
+    this.originalSequencesWidthPercents = originalSequencesWidthPercents;
   }
 
   @Override
@@ -17,6 +21,6 @@ public class UndoableCatchSequenceAdded extends AbstractUndoableInteraction {
 
   @Override
   protected void redoEdit() throws EditException {
-    catchSequence.getParent().addCatchSequence(catchSequence, null);
+    catchSequence.getParent().addCatchSequence(catchSequence, null, null);
   }
 }

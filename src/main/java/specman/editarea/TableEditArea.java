@@ -23,7 +23,6 @@ import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +31,11 @@ import java.util.stream.Stream;
 import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Hinzugefuegt;
 import static specman.Aenderungsart.Untracked;
+import static specman.ColumnSpecByPercent.allocPercent;
+import static specman.ColumnSpecByPercent.copyOf;
+import static specman.ColumnSpecByPercent.percents2specs;
+import static specman.ColumnSpecByPercent.recomputePercents;
+import static specman.ColumnSpecByPercent.releasePercent;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
 import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
@@ -47,7 +51,6 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   private static final int BORDER_THICKNESS = 7;
   private static final String TABLELINE_GAP = FORMLAYOUT_GAP;
   private static final String TABLELAYOUT_ROWSPEC = ZEILENLAYOUT_INHALT_SICHTBAR;
-  private static final String TABLELAYOUT_COLSPEC = "pref:grow";
   private static final int WHOLETABLE_COLUMN_INDICATOR = -1;
 
   private Aenderungsart aenderungsart;
@@ -177,14 +180,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   private void createTablePanelLayout(int columns, int rows) {
-    String columnSpecs = TABLELINE_GAP;
-    //columnSpecs += ",pref:grow(0.2)," + TABLELINE_GAP;
-    for (int c = 0; c < columns; c++) {
-      String colspec = columnsWidthPercent != null
-        ? "pref:grow(" + (float)columnsWidthPercent.get(c) / 100 + ")"
-        : TABLELAYOUT_COLSPEC;
-      columnSpecs += "," + colspec + "," + TABLELINE_GAP;
-    }
+    String columnSpecs = TABLELINE_GAP + "," + percents2specs(columns, columnsWidthPercent) + "," + TABLELINE_GAP;
     String rowSpecs = TABLELINE_GAP;
     for (int r = 0; r < rows; r++) {
       rowSpecs += "," + TABLELAYOUT_ROWSPEC + "," + TABLELINE_GAP;
@@ -331,22 +327,13 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       .stream()
       .map(editContainer -> editContainer.getWidth())
       .toArray(Integer[]::new);
-    if (columnWidths[spalte] + vergroesserung < 0) {
-      // Dragging too far to the left is ignored
-      return 0;
+    List<Integer> recomputed = recomputePercents(columnWidths, vergroesserung, spalte);
+    if (recomputed != null) {
+      columnsWidthPercent = recomputed;
+      recomputeLayout();
+      return vergroesserung;
     }
-    if (vergroesserung > columnWidths[spalte+1]) {
-      // Dragging to the right exceeding the following column's width is ignored
-      return 0;
-    }
-    columnWidths[spalte] += vergroesserung;
-    columnWidths[spalte+1] -= vergroesserung;
-    int columnsWidthSum = Arrays.stream(columnWidths).mapToInt(cw -> cw).sum();
-    columnsWidthPercent = Arrays.stream(columnWidths)
-      .map(cw -> (int)((float)cw / columnsWidthSum * 100))
-      .collect(Collectors.toList());
-    recomputeLayout();
-    return vergroesserung;
+    return 0;
   }
 
   private void recomputeLayout() {
@@ -472,14 +459,8 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   public List<Integer> addEmptyColumn(int colIndex) {
     EditorI editor = Specman.instance();
-    List<Integer> originalColumnsWidthPercent = copyOf(columnsWidthPercent);
-    if (columnsWidthPercent != null) {
-      int stealFromColumn = colIndex > numColumns() ? numColumns() - 1 : colIndex;
-      int fromColumnWidth = columnsWidthPercent.get(stealFromColumn);
-      int newColumnWidth = fromColumnWidth / 2;
-      columnsWidthPercent.set(stealFromColumn, newColumnWidth);
-      columnsWidthPercent.add(colIndex, newColumnWidth);
-    }
+
+    List<Integer> originalColumnsWidthPercent = allocPercent(colIndex, columnsWidthPercent);
     for (List<EditContainer> row : cells) {
       row.add(colIndex, new EditContainer(editor));
     }
@@ -495,10 +476,6 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     this.columnsWidthPercent = copyOf(columnsWidthPercent);
     this.cells.forEach(row -> row.remove(colIndex));
     recomputeLayout();
-  }
-
-  private static List<Integer> copyOf(List<Integer> l) {
-    return l != null ? new ArrayList<>(l) : l;
   }
 
   /** Removing a column does not change the table width. If the column widths have not
@@ -523,13 +500,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
 
   public List<EditContainer> removeColumn(int colIndex) {
     List<EditContainer> column = new ArrayList<>();
-    if (columnsWidthPercent != null) {
-      int widthEaterColumn = colIndex == numColumns() - 1 ? colIndex - 1 : colIndex + 1;
-      int fromColumnWidth = columnsWidthPercent.get(colIndex);
-      int eaterWidth = columnsWidthPercent.get(widthEaterColumn);
-      columnsWidthPercent.set(widthEaterColumn, eaterWidth + fromColumnWidth);
-      columnsWidthPercent.remove(colIndex);
-    }
+    columnsWidthPercent = releasePercent(colIndex, columnsWidthPercent);
     for (List<EditContainer> row : cells) {
       column.add(row.remove(colIndex));
     }

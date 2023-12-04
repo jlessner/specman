@@ -1,5 +1,6 @@
 package specman.view;
 
+import specman.ColumnSpecByPercent;
 import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
@@ -11,9 +12,11 @@ import specman.undo.UndoableCatchSequenceRemoved;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.List;
 
 import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Hinzugefuegt;
+import static specman.ColumnSpecByPercent.copyOf;
 
 public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements FocusListener {
   BreakSchrittView linkedBreakStep;
@@ -36,11 +39,6 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     linkedBreakStep.catchAnkoppeln(this);
     catchUeberschrift = new CatchUeberschrift(ueberschrift);
     ueberschrift.addEditAreasFocusListener(this);
-  }
-
-  public CatchSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, EditorContentModel_V001 initialerText) {
-    super(editor, parent, sequenzBasisId.naechsteEbene(), initialerText);
-    ueberschrift.setId(sequenzBasisId.toString());
   }
 
   @Override
@@ -87,9 +85,10 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   public void remove() {
     CatchBereich catchBereich = getParent();
+    List<Integer> backupSequencesWidthPercent = copyOf(catchBereich.sequencesWidthPercent);
     int catchIndex = catchBereich.catchEntfernen(this);
     linkedBreakStep.catchAnkoppeln(null);
-    Specman.instance().addEdit(new UndoableCatchSequenceRemoved(this, catchIndex));
+    Specman.instance().addEdit(new UndoableCatchSequenceRemoved(this, catchIndex, backupSequencesWidthPercent));
   }
 
   @Override
