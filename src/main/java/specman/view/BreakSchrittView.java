@@ -105,7 +105,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		if (catchSequence != null) {
+		if (catchSequence != null && aenderungsart != Aenderungsart.Geloescht) {
 			catchSequence.updateHeading(editContainer.editorContent2Model(true));
 		}
 	}

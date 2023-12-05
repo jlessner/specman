@@ -1,5 +1,6 @@
 package specman.view;
 
+import specman.Aenderungsart;
 import specman.ColumnSpecByPercent;
 import specman.EditException;
 import specman.EditorI;
@@ -61,7 +62,9 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public CatchUeberschrift getCatchUeberschrift() { return catchUeberschrift; }
 
   public void updateHeading(EditorContentModel_V001 breakStepContent) {
-    ueberschrift.setEditorContent(breakStepContent);
+    if (aenderungsart != Geloescht) {
+      ueberschrift.setEditorContent(breakStepContent);
+    }
   }
 
   @Override
@@ -99,7 +102,9 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   @Override public void focusGained(FocusEvent e) {}
 
   @Override public void focusLost(FocusEvent e) {
-    linkedBreakStep.updateContent(ueberschrift.editorContent2Model(true));
+    if (aenderungsart != Geloescht) {
+      linkedBreakStep.updateContent(ueberschrift.editorContent2Model(true));
+    }
   }
 
   @Override
@@ -115,15 +120,21 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   @Override
   public int aenderungenVerwerfen(EditorI editor) throws EditException {
-    return super.aenderungenVerwerfen(editor) + catchUeberschrift.aenderungenVerwerfen();
+    Aenderungsart lastChangetype = aenderungsart;
+    int changesReverted = super.aenderungenVerwerfen(editor) + catchUeberschrift.aenderungenVerwerfen();
+    if (lastChangetype == Geloescht) {
+      // While the catch sequences was marked as deleted, its heading was not synchronized
+      // with the linked break step's content. So when we have rolled back a deletion, we
+      // might have to resynchronize
+      updateHeading(linkedBreakStep.getEditorContent(true));
+    }
+    return changesReverted;
   }
 
   @Override
   public void aenderungsmarkierungenEntfernen() {
     catchUeberschrift.aenderungsmarkierungenEntfernen(linkedBreakStep.id);
   }
-
-  public void updateHeadingBounds() { ueberschrift.updateBounds(); }
 
   public CatchSchrittSequenzModel_V001 generiereModel(boolean formatierterText) {
     CatchSchrittSequenzModel_V001 model = new CatchSchrittSequenzModel_V001(

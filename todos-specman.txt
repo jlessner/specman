@@ -7,16 +7,13 @@ Abschluss für Go-Live
   - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
   - Break-Schritte dürfen (noch) nicht in Catch-Sequenzen eingefügt werden. Vielleicht sollten wir insgesamt zunächst nur
      Einfache Schritte zulassen
-  - Wenn eine Catch-Sequenz als gelöscht markiert ist, kann man sie korrekter Weise nicht mehr ändern. Wenn der verlinkte
-      Break-Schritt aber *nicht* als gelöscht markiert ist, kan man dessen Text ändern und ändert damit auch die Überschrift
-      der Catch-Sequenz. Und wegen der Übertragung des Editor-Inhalts per Model, sieht das auch noch doof aus.
-      Erste Idee: nicht mehr synchronisieren, aber dann aktualisieren beim Rücknahme der Löschung
   - Wenn es in der CatchUeberschrift beim Größer- und Kleinerschieben zu Veränderungen der Höhe durch Zeilenumbrüche kommt, geht manchmal
      das Layout zeitweise kaputt. Nach ein paarmal "hinterherschieben" passt es dann wieder.
   - Wenn man in einen Break-Schritt eine Tabelle reinsetzt, funktioniert die Inhaltsübertragung an die jeweils andere Stelle
      manchmal nur verzögert. Werden die FokusListener sauber an allen Tabellenzellen propagiert? Sieht auf den ersten Blick OK aus
   - Übertragung einer Inhaltsänderung bei FocusLost kommt als separate Aktion in die Undo-Historie. Das ist nicht schön
   - Nice to have: *eine* Catch-Sequenz für *mehrere* Breaks, die Behandlung für verschiedene Fehler innerhalb einer Sequenz oft gleich ist
+  x Als gelöscht markierte Catch-Sequenz nicht mehr mit Breakschritt synchronisieren. Beim Zurücknehmen der Löschung ggf. resynchronisieren
   x Resizing der Spalten
   x Balken werden initial von Datei nicht skaliert
   x SchrittSequenzView(SchrittSequenzModel_V001 model): Case-Sequenzen wieder aufbauen
