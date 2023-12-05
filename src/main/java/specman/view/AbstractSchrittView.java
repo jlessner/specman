@@ -9,7 +9,6 @@ import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
-import specman.model.v001.CatchSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.EinfacherSchrittModel_V001;
 import specman.model.v001.IfElseSchrittModel_V001;
@@ -179,9 +178,6 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		if (model instanceof BreakSchrittModel_V001) {
 			return new BreakSchrittView(editor, parent, (BreakSchrittModel_V001) model);
 		}
-		if (model instanceof CatchSchrittModel_V001) {
-			return new CatchSchrittView(editor, parent, (CatchSchrittModel_V001) model);
-		}
 		//TODO TEST
 		if (model instanceof QuellSchrittModel_V001){
 			return new QuellSchrittView(editor, parent, (QuellSchrittModel_V001) model);
@@ -254,19 +250,6 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 				return schritt;
 		}
 		return null;
-	}
-
-	public BreakSchrittView findeBreakSchritt(String catchText) {
-		for (SchrittSequenzView unterSequenz: unterSequenzen()) {
-			BreakSchrittView schritt = unterSequenz.findeBreakSchritt(catchText);
-			if (schritt != null)
-				return schritt;
-		}
-		return null;
-	}
-
-	public boolean istBreakSchrittFuer(String catchText) {
-		return false;
 	}
 
 	/** Liefert alle in einem Schritt enthalten Untersequenzen, um damit die verschiedenen

@@ -4,8 +4,6 @@ import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextEditArea;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
-import specman.view.BreakSchrittView;
-import specman.view.CatchSchrittView;
 
 import javax.swing.JEditorPane;
 import javax.swing.text.JTextComponent;
@@ -37,7 +35,6 @@ public interface EditorI extends FocusListener {
 	void setCursor(Cursor cursorToUse);
   boolean aenderungenVerfolgen();
 	AbstractSchrittView findeSchritt(TextEditArea textEditArea);
-	BreakSchrittView findeBreakSchritt(CatchSchrittView catchSchrittView);
 	double scale(double length);
 	void addImageViaFileChooser();
 	List<AbstractSchrittView> queryAllSteps();

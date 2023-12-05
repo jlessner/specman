@@ -325,10 +325,8 @@ public class SchrittSequenzView {
 	}
 
 	public void checkSchrittEntfernen(AbstractSchrittView schritt) throws EditException {
-		if (!(schritt instanceof CatchSchrittView)) {
-			if (schritte.size() == 1) {
-				throw new EditException("Letzten Schritt entfernen is nich!");
-			}
+		if (schritte.size() == 1) {
+			throw new EditException("Letzten Schritt entfernen is nich!");
 		}
 	}
 
@@ -353,22 +351,17 @@ public class SchrittSequenzView {
 	}
 
 	public void schrittHinzufuegen(AbstractSchrittView schritt, int schrittIndex) {
-		if (schritt instanceof CatchSchrittView) {
-			System.err.println("Noch nicht implementiert!");
+		if (schrittIndex == schritte.size()) {
+			schrittAnhaengen(schritt, Specman.instance());
 		}
 		else {
-			if (schrittIndex == schritte.size()) {
-				schrittAnhaengen(schritt, Specman.instance());
+			if (schrittIndex == 0) {
+				AbstractSchrittView ersterSchritt = schritte.get(schrittIndex);
+				schrittZwischenschieben(schritt, Before, ersterSchritt);
 			}
 			else {
-				if (schrittIndex == 0) {
-					AbstractSchrittView ersterSchritt = schritte.get(schrittIndex);
-					schrittZwischenschieben(schritt, Before, ersterSchritt);
-				}
-				else {
-					AbstractSchrittView vorgaengerSchritt = schritte.get(schrittIndex-1);
-					schrittZwischenschieben(schritt, After, vorgaengerSchritt);
-				}
+				AbstractSchrittView vorgaengerSchritt = schritte.get(schrittIndex-1);
+				schrittZwischenschieben(schritt, After, vorgaengerSchritt);
 			}
 		}
 		Specman.instance().diagrammAktualisieren(schritt);
@@ -410,19 +403,6 @@ public class SchrittSequenzView {
 
 	public void setVisible(boolean auf) {
 		sequenzBereich.setVisible(auf);
-	}
-
-	public BreakSchrittView findeBreakSchritt(String catchText) {
-		for (AbstractSchrittView schritt: schritte) {
-			if (schritt.istBreakSchrittFuer(catchText))
-				return (BreakSchrittView)schritt;
-			if (schritt.isStrukturiert()) {
-				BreakSchrittView unterschritt = schritt.findeBreakSchritt(catchText);
-				if (unterschritt != null)
-					return unterschritt;
-			}
-		}
-		return catchBereich.findeBreakSchritt(catchText);
 	}
 
 	public void entfernen(AbstractSchrittView container) {

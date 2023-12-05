@@ -32,11 +32,9 @@ import specman.undo.manager.SpecmanUndoManager;
 import specman.undo.manager.UndoRecording;
 import specman.undo.manager.UndoRecordingMode;
 import specman.view.AbstractSchrittView;
-import specman.view.BreakSchrittView;
 import specman.view.CaseSchrittView;
 import specman.view.CatchBereich;
 import specman.view.CatchSchrittSequenzView;
-import specman.view.CatchSchrittView;
 import specman.view.QuellSchrittView;
 import specman.view.SchrittSequenzView;
 import specman.view.ZweigSchrittSequenzView;
@@ -1145,16 +1143,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 			}
     }
-	}
-
-	public BreakSchrittView findeBreakSchritt(CatchSchrittView fuerCatchSchritt) {
-		SchrittSequenzView sequenzDesCatchSchritts = fuerCatchSchritt.getParent();
-		if (sequenzDesCatchSchritts == null) {
-			System.err.println("Ups, das geht hier noch nicht richtig. Laden von Break-Ankoppungen");
-			return null;
-		}
-		String catchText = fuerCatchSchritt.ersteZeileExtraieren();
-		return sequenzDesCatchSchritts.findeBreakSchritt(catchText);
 	}
 
 	public int zoomFaktor() { return zoomFaktor; }

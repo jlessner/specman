@@ -142,11 +142,6 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   public void zusammenklappenFuerReview() {
   }
 
-  public BreakSchrittView findeBreakSchritt(String catchText) {
-    // A catch sequence must not have break steps. At least not yet.
-    return null;
-  }
-
   public void skalieren(int prozentNeu, int prozentAktuell) {
     catchSequences.forEach(seq -> seq.skalieren(prozentNeu, prozentAktuell));
     computeBarRowSpec(prozentNeu);

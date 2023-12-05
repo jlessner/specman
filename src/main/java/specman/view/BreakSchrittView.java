@@ -94,11 +94,6 @@ public class BreakSchrittView extends AbstractSchrittView {
 		return model;
 	}
 
-	@Override
-	public boolean istBreakSchrittFuer(String catchText) {
-		return ersteZeileExtraieren().equals(catchText);
-	}
-
 	public void catchAnkoppeln(CatchSchrittSequenzView catchSequence) {
 		this.catchSequence = catchSequence;
 	}
