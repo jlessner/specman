@@ -5,6 +5,7 @@ import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.IBlockElement;
@@ -54,6 +55,7 @@ public class FormattedShapeText extends AbstractShapeText {
     try {
       java.util.List<TextlineDimension> lines = scanLineDimensions();
       float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right) * swing2pdfScaleFactor;
+      paragraphWidth = PageSize.A4.getWidth();
       ListItemPromptFactory listItemPromptFactory = new ListItemPromptFactory();
 
       for (TextlineDimension line: lines) {
@@ -105,7 +107,11 @@ public class FormattedShapeText extends AbstractShapeText {
 
   private String removeLinebreakingElementsFromHtmlLine(String subHtml) {
     return subHtml
-      .replace("<li>", "")
+      // List items might be equipped with strange styling information when they were copied over
+      // from MS Word documents, so we need some tolerance in replacement here. The styling has no
+      // effect in a JEditorPane, so it is ok to completely erase it here for PDF export.
+      // See also ListItemPromptFactory#createPrompt
+      .replaceAll("<li[^>]*>", "")
       .replace("</li>", "")
       .replace("<ol>", "")
       .replace("</ol>", "")
