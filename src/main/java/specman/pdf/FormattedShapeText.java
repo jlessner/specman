@@ -55,7 +55,6 @@ public class FormattedShapeText extends AbstractShapeText {
     try {
       java.util.List<TextlineDimension> lines = scanLineDimensions();
       float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right) * swing2pdfScaleFactor;
-      paragraphWidth = PageSize.A4.getWidth();
       ListItemPromptFactory listItemPromptFactory = new ListItemPromptFactory();
 
       for (TextlineDimension line: lines) {
@@ -69,35 +68,39 @@ public class FormattedShapeText extends AbstractShapeText {
         lineHtml = injectStylesheet(lineHtml);
         java.util.List<IElement> elements = HtmlConverter.convertToElements(lineHtml, properties);
 
-        Paragraph p = new Paragraph()
-          .setMargin(0)
-          .setMultipliedLeading(0.0f)
-          .setCharacterSpacing(-0.1f)
-          .setFontSize(scaledFontSize)
-          .setFixedPosition(
-          (renderOffset.x + line.getX()) * swing2pdfScaleFactor,
-          (renderOffset.y - line.getY() - line.getHeight()) * swing2pdfScaleFactor,
-          paragraphWidth);
-        p.add((IBlockElement)elements.get(0));
-
-        document.add(p);
-
-        if (lineItemPrompt != null) {
-          p = new Paragraph()
+        // This turned out to sometimes happen with line items. The reason is not yet really clear.
+        // It is probably concerned with copy/paste from MS Word documents. Up to now, simply ignoring
+        // these cases didn't lead to missing text in PDF exports ;-)
+        if (!elements.isEmpty()) {
+          Paragraph p = new Paragraph()
             .setMargin(0)
             .setMultipliedLeading(0.0f)
             .setCharacterSpacing(-0.1f)
             .setFontSize(scaledFontSize)
             .setFixedPosition(
-              (renderOffset.x + line.getX() - LISTITEM_IDENTION) * swing2pdfScaleFactor,
+              (renderOffset.x + line.getX()) * swing2pdfScaleFactor,
               (renderOffset.y - line.getY() - line.getHeight()) * swing2pdfScaleFactor,
-              (LISTITEM_IDENTION - 5) * swing2pdfScaleFactor);
-          elements = HtmlConverter.convertToElements(lineItemPrompt, properties);
-          p.add((IBlockElement)elements.get(0));
+              paragraphWidth);
+          p.add((IBlockElement) elements.get(0));
+
           document.add(p);
+
+          if (lineItemPrompt != null) {
+            p = new Paragraph()
+              .setMargin(0)
+              .setMultipliedLeading(0.0f)
+              .setCharacterSpacing(-0.1f)
+              .setFontSize(scaledFontSize)
+              .setFixedPosition(
+                (renderOffset.x + line.getX() - LISTITEM_IDENTION) * swing2pdfScaleFactor,
+                (renderOffset.y - line.getY() - line.getHeight()) * swing2pdfScaleFactor,
+                (LISTITEM_IDENTION - 5) * swing2pdfScaleFactor);
+            elements = HtmlConverter.convertToElements(lineItemPrompt, properties);
+            p.add((IBlockElement) elements.get(0));
+            document.add(p);
+          }
         }
       }
-
     }
     catch(Exception x) {
       x.printStackTrace();
