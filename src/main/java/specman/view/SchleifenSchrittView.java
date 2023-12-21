@@ -23,7 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 import java.awt.Color;
 import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
@@ -192,7 +191,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			getBackground().getRGB(),
 			aenderungsart,
 			klappen.isSelected(),
-			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
+			wiederholSequenz.generiereSchrittSequenzModel(formatierterText),
 			0,
 			getQuellschrittID(),
 			getDecorated());

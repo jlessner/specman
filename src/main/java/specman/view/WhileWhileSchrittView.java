@@ -29,7 +29,6 @@ public class WhileWhileSchrittView extends SchleifenSchrittView {
 
 	public WhileWhileSchrittView(EditorI editor, SchrittSequenzView parent, WhileWhileSchrittModel_V001 model) {
 		super(editor, parent, model, true);
-		initWiederholsequenzFromModel(editor, model);
 	}
 
 	@Override
@@ -40,7 +39,7 @@ public class WhileWhileSchrittView extends SchleifenSchrittView {
 			getBackground().getRGB(),
 			aenderungsart,
 			klappen.isSelected(),
-			wiederholSequenz.generiereSchittSequenzModel(formatierterText),
+			wiederholSequenz.generiereSchrittSequenzModel(formatierterText),
 			linkerBalken.getWidth(),
 			getQuellschrittID(),
 			getDecorated());

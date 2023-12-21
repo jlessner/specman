@@ -20,7 +20,6 @@ import specman.pdf.Shape;
 import specman.editarea.EditContainer;
 import specman.editarea.litrack.LIRecordingListView;
 import specman.editarea.TextEditArea;
-import specman.undo.UndoableCatchSequenceRemoved;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
@@ -1090,14 +1089,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			diagrammbreite,
 			zoomFaktor,
 			aenderungenVerfolgen(),
-			hauptSequenz.generiereSchittSequenzModel(formatierterText),
+			hauptSequenz.generiereSchrittSequenzModel(formatierterText),
 			intro.editorContent2Model(formatierterText),
 			outro.editorContent2Model(formatierterText));
 		return model;
 	}
 
 	public void exportAsGraphviz() {
-		SchrittSequenzModel_V001 model = hauptSequenz.generiereSchittSequenzModel(false);
+		SchrittSequenzModel_V001 model = hauptSequenz.generiereSchrittSequenzModel(false);
 		try {
 			new GraphvizExporter("export.gv").export(model);
 		}

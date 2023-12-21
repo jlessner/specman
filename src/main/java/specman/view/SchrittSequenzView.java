@@ -11,8 +11,6 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.CatchBereichModel_V001;
-import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SchrittSequenzModel_V001;
 import specman.pdf.Shape;
@@ -379,7 +377,7 @@ public class SchrittSequenzView {
 		return (catchBereich != null) ? catchBereich.findeSchritt(fragment) : null;
 	}
 
-	public SchrittSequenzModel_V001 generiereSchittSequenzModel(boolean formatierterText) {
+	public SchrittSequenzModel_V001 generiereSchrittSequenzModel(boolean formatierterText) {
 		SchrittSequenzModel_V001 model = new SchrittSequenzModel_V001(
 			sequenzBasisId, aenderungsart,
 			catchBereich.generiereCatchBereichModel(formatierterText));

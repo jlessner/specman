@@ -11,7 +11,6 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.pdf.Shape;
 import specman.editarea.Indentions;
-import specman.undo.AbstractUndoableInteraction;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -125,7 +124,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 			getBackground().getRGB(),
 			aenderungsart,
 			klappen.isSelected(),
-			subsequenz.generiereSchittSequenzModel(formatierterText),
+			subsequenz.generiereSchrittSequenzModel(formatierterText),
 			getQuellschrittID(),
 			getDecorated());
 		return model;
