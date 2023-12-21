@@ -6,6 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.SchrittID;
 import specman.editarea.EditContainer;
 import specman.pdf.LineShape;
+import specman.pdf.Shape;
 import specman.undo.props.UDBL;
 
 import javax.swing.*;
@@ -83,4 +84,10 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
   @Override public void componentMoved(ComponentEvent e) {}
   @Override public void componentShown(ComponentEvent e) {}
   @Override public void componentHidden(ComponentEvent e) {}
+
+  public Shape getShape() {
+    return new Shape(this)
+      .add(ueberschrift.getShape())
+      .add(buildTriangle());
+  }
 }

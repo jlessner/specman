@@ -9,6 +9,7 @@ import specman.Specman;
 import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
+import specman.pdf.Shape;
 import specman.undo.UndoableCatchSequenceRemoved;
 
 import java.awt.event.FocusEvent;
@@ -141,5 +142,10 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
       linkedBreakStep.id, aenderungsart, ueberschrift.editorContent2Model(formatierterText));
     populateModel(model, formatierterText);
     return model;
+  }
+
+  @Override
+  public Shape getShapeSequence() {
+    return super.getShapeSequence();
   }
 }

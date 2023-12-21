@@ -592,8 +592,11 @@ public class SchrittSequenzView {
 		}
 		return new Shape(getContainer(), this)
 			.withBackgroundColor(GAP_COLOR)
-			.add(sequence);
+			.add(sequence)
+			.add(getCatchShape());
 	}
+
+	private Shape getCatchShape() { return (catchBereich != null) ? catchBereich.getShape() : null; }
 
 	public CatchSchrittSequenzView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
 		return catchBereich.catchSequenzAnhaengen(breakStepToLink);

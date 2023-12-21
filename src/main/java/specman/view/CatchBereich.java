@@ -16,6 +16,7 @@ import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CatchBereichModel_V001;
 import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.EditorContentModel_V001;
+import specman.pdf.Shape;
 import specman.undo.UndoableCatchSequenceAdded;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ import static specman.ColumnSpecByPercent.allocPercent;
 import static specman.ColumnSpecByPercent.copyOf;
 import static specman.ColumnSpecByPercent.releasePercent;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
+import static specman.pdf.Shape.GAP_COLOR;
 
 public class CatchBereich extends AbstractSchrittView implements KlappbarerBereichI, ComponentListener, SpaltenContainerI {
   private static final int BOTTOMBAR_LAYOUTROW = 6;
@@ -273,4 +275,23 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     }
     klappen.init(model.zugeklappt);
   }
+
+  @Override
+  public Shape getShape() {
+    if (bereichPanel.isVisible()) {
+      Shape shape = new Shape(getPanel(), this)
+        .withBackgroundColor(GAP_COLOR)
+        .add(new Shape(topBar).withBackgroundColor(topBar.getBackground()))
+        .add(new Shape(bottomBar).withBackgroundColor(bottomBar.getBackground()));
+      Shape sequencesShape = new Shape(sequencesPanel);
+      for (CatchSchrittSequenzView seq: catchSequences) {
+        sequencesShape.add(seq.catchUeberschrift.getShape());
+        sequencesShape.add(seq.getShapeSequence());
+      }
+      shape.add(sequencesShape);
+      return decoratedShape(shape);
+    }
+    return null;
+  }
+
 }
