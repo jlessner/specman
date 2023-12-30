@@ -634,7 +634,12 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		aenderungenUebernehmen.addActionListener(e -> {
 			try (UndoRecording ur = composeUndo()) {
-				int changesMade = hauptSequenz.aenderungenUebernehmen(Specman.this);
+				int changesMade = 0;
+				changesMade += intro.aenderungenUebernehmen();
+				intro.aenderungsmarkierungenEntfernen(null);
+				changesMade += hauptSequenz.aenderungenUebernehmen(Specman.this);
+				changesMade += outro.aenderungenUebernehmen();
+				outro.aenderungsmarkierungenEntfernen(null);
 				if (changesMade > 0) {
 					diagrammAktualisieren(null);
 				} else {

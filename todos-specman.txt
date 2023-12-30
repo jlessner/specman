@@ -115,6 +115,11 @@ x Tabellen als separate Elemente analog Bilder
   x Anpassung von Spaltenbreiten
 
 Bugs fixen
+- Nach dem Annehmen von Änderungen sieht speziell gestylter Text wie z.B. Designanmerkungen (klein, kursiv) im Editor sauber aus,
+    ist aber im PDF u.U. stark zerstört.
+- Neue Texte in Tabellen sind im HTML eingefasst in <p style=\"margin-top: 0\"> TEXT </p>
+    Das führt zu einer verschobenen Darstellung im PDF-Export
+- Der Dialog für Schritt-Links hat keinen Scrollbalken und erlaubt folglich keine Schritte mit höheren Nummern zu adressieren
 - Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
@@ -130,6 +135,9 @@ Bugs fixen
         at java.desktop/javax.swing.text.AbstractDocument.remove(AbstractDocument.java:619)
         at specman.editarea.TextEditArea.removeTextAndUnregisterStepnumberLinks(TextEditArea.java:580)
         ... 44 more
+x Superhohe Break-Schritte sehen übel aus. Entsteht z.B. wenn in einem Case ein Fall nur durch einen einzelnen Breakschritt behandelt wird
+    (siehe BALI UC-715, Unbekannter Nachrichtentyp). Aktueller Workaround: leeren Schritt anhängen
+x Annehmen / Verwerfen von Änderungen schließt Intro und Outro nicht mit ein
 - Komplettes Rewrite von DraggingLogic
 - resyncSchrittnummerStil sollte nur beim Aufbau aus Modell verwendet werden. Ansonsten sollte beim (Neu-)Setzen der ID der Stil immer erhalten bleiben, abhängig von Geloescht und Quellschritt
 - Fokus setzen beim Entfernen des vorletzten Schritts

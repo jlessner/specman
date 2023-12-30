@@ -17,7 +17,9 @@ import specman.undo.props.UDBL;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,11 +41,10 @@ public class BreakSchrittView extends AbstractSchrittView {
 		panel.setBackground(Specman.schrittHintergrund());
 		layout = new FormLayout(
 				umgehungLayout() + ", 10dlu:grow",
-				ZEILENLAYOUT_INHALT_SICHTBAR);
+				"fill:pref, fill:pref:grow");
 		panel.setLayout(layout);
 		
 		panel.add(editContainer, CC.xy(2, 1));
-
 	}
 
 	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, BreakSchrittModel_V001 model) {
@@ -52,7 +53,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	private void dreieckZeichnen(Graphics2D g) {
-		g.setStroke(new BasicStroke(1));
+		g.setStroke(new BasicStroke(1.5f));
 		g.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING, 
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -62,18 +63,33 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	private java.util.List<LineShape> buildTriangle() {
-		int hoehe = panel.getHeight();
+		List<LineShape> triangle = new ArrayList<>();
+		int hoehe = editContainer.getHeight();
 		int dreieckSpitzeY = hoehe / 2;
 		int dreieckBasisX = editContainer.getX() - LINIENBREITE;
-		return Arrays.asList(
-			new LineShape(dreieckBasisX,  0,  0,  dreieckSpitzeY),
-			new LineShape(0,  dreieckSpitzeY, dreieckBasisX, hoehe));
+		triangle.add(new LineShape(dreieckBasisX,  0,  0,  dreieckSpitzeY));
+		triangle.add(new LineShape(0,  dreieckSpitzeY, dreieckBasisX, hoehe));
+		// If the step is higher than the edit container, we add an extra line below the
+		// edit container. This is especially of interest for solitaire break steps in case
+		// or if/else steps making up complete sequence while other sequences need a lot of
+		// space. The line avoids a strange-looking open triangle.
+		if (hoehe < panel.getHeight()) {
+			triangle.add(new LineShape(dreieckBasisX, hoehe, panel.getWidth(), hoehe));
+		}
+		return triangle;
 	}
 
 	@Override
 	public void setBackgroundUDBL(Color bg) {
 		super.setBackgroundUDBL(bg);
 		UDBL.setBackgroundUDBL(panel, bg);
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		super.componentResized(e);
+		// Following call is required to repaint the triangle on size change of the edit container
+		panel.repaint();
 	}
 
 	@Override
