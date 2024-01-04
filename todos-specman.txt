@@ -115,6 +115,10 @@ x Tabellen als separate Elemente analog Bilder
   x Anpassung von Spaltenbreiten
 
 Bugs fixen
+- Nach dem Löschen eines Breakschritts mit verknüpfter Catch-Sequenz wird beim Undo zwar beides wieder hergestellt aber die Verknüpfung nicht
+- Wenn man einen Breaschritt mit angekoppeltem Catch-Schritt verschiebt, verschwinden der Catch-Schritt
+- Falsche Fontgröße für "bar" im PDF-Export bei <font size="3">foo<span>bar</span></font>
+   Vielleicht weil die Styles von span und font[size=3]>span beide passen
 - Nach dem Annehmen von Änderungen sieht speziell gestylter Text wie z.B. Designanmerkungen (klein, kursiv) im Editor sauber aus,
     ist aber im PDF u.U. stark zerstört.
 - Neue Texte in Tabellen sind im HTML eingefasst in <p style=\"margin-top: 0\"> TEXT </p>

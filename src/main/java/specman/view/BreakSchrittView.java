@@ -41,7 +41,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 		panel.setBackground(Specman.schrittHintergrund());
 		layout = new FormLayout(
 				umgehungLayout() + ", 10dlu:grow",
-				"fill:pref, fill:pref:grow");
+				"fill:pref, " + AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
 		
 		panel.add(editContainer, CC.xy(2, 1));
