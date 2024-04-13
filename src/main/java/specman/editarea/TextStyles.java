@@ -1,11 +1,14 @@
 package specman.editarea;
 
+import specman.Specman;
+
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.HTML;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.InputStream;
 import java.util.Locale;
 
 public class TextStyles {
@@ -31,13 +34,15 @@ public class TextStyles {
      * and using "Times New Roman" also for PDF rendering, causes slightly different lengths
      * of the text lines.
      */
-    public static final String SERIF_FONTCOLLECTION_REGULAR = "src/main/resources/fonts/Sitka.ttc";
+    public static final String SERIF_FONTCOLLECTION_REGULAR = "fonts/Sitka.ttc";
     public static final int FONT_INDEX = 4;
 
     public static Font font;
     static {
         try {
-            Font[] fonts = Font.createFonts(new java.io.File(SERIF_FONTCOLLECTION_REGULAR));
+            InputStream fontsStream = Specman.class.getClassLoader().getResourceAsStream(SERIF_FONTCOLLECTION_REGULAR);
+            Font[] fonts = Font.createFonts(fontsStream);
+            //Font[] fonts = Font.createFonts(new java.io.File(SERIF_FONTCOLLECTION_REGULAR));
             font = fonts[FONT_INDEX];
         }
         catch(Exception x) {

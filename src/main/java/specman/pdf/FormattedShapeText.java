@@ -13,6 +13,8 @@ import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.font.FontProvider;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import specman.Specman;
 import specman.editarea.HTMLTags;
 import specman.editarea.litrack.LIRecordingListView;
 import specman.editarea.TextEditArea;
@@ -24,6 +26,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,7 @@ import static specman.pdf.ListItemPromptFactory.LISTITEM_IDENTION;
 import static specman.pdf.PDFRenderer.SWING2PDF_SCALEFACTOR_100PERCENT;
 
 public class FormattedShapeText extends AbstractShapeText {
-  private static final String HTML2PDF_STYLESHEET = "src/main/resources/stylesheets/specman-pdf.css";
+  private static final String HTML2PDF_STYLESHEET = "stylesheets/specman-pdf.css";
   private static final Pattern FONTSIZE_PATTERN = Pattern.compile("(.*font-size:[\\s]*)([\\d\\.]+)(.+)");
 
   private static ConverterProperties properties;
@@ -160,9 +163,9 @@ public class FormattedShapeText extends AbstractShapeText {
       properties = new ConverterProperties();
       FontProvider fontProvider = new DefaultFontProvider(false, false, false);
       fontProvider.addFont(FontProgramFactory.createFont(TextStyles.SERIF_FONTCOLLECTION_REGULAR, TextStyles.FONT_INDEX, false));
-      fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaB.ttc", TextStyles.FONT_INDEX, false));
-      fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaI.ttc", TextStyles.FONT_INDEX, false));
-      fontProvider.addFont(FontProgramFactory.createFont("src/main/resources/fonts/SitkaZ.ttc", TextStyles.FONT_INDEX, false));
+      fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaB.ttc", TextStyles.FONT_INDEX, false));
+      fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaI.ttc", TextStyles.FONT_INDEX, false));
+      fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaZ.ttc", TextStyles.FONT_INDEX, false));
       properties.setFontProvider(fontProvider);
       initHTMLStyles(uizoomfactor, swing2pdfScaleFactor);
     }
@@ -181,7 +184,8 @@ public class FormattedShapeText extends AbstractShapeText {
     float zoomAndScalefactor = fontShrinkingFactor * uiZoomfactor / 100.0f;
     //float zoomAndScalefactor = uiZoomfactor / 100.0f;
     StringBuilder sb = new StringBuilder();
-    java.util.List<String> rawStylesheet = FileUtils.readLines(new File(HTML2PDF_STYLESHEET), StandardCharsets.US_ASCII);
+    InputStream stylesheetStream = Specman.class.getClassLoader().getResourceAsStream(HTML2PDF_STYLESHEET);
+    java.util.List<String> rawStylesheet = IOUtils.readLines(stylesheetStream, StandardCharsets.US_ASCII);
     for (String line: rawStylesheet) {
       if (uiZoomfactor != 100 || swing2pdfScaleFactor != SWING2PDF_SCALEFACTOR_100PERCENT) {
         Matcher matcher = FONTSIZE_PATTERN.matcher(line);
@@ -198,6 +202,7 @@ public class FormattedShapeText extends AbstractShapeText {
       sb.append(line);
       sb.append("\n");
     }
+    stylesheetStream.close();
     htmlStyles = sb.toString();
   }
 
