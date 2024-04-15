@@ -83,14 +83,19 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- *
- * @author Bob Tantlinger
+ * This class was extracted from the SHEF library and modified / extended for Specman.
+ * Unfortunately it was not really design for modification and we didn't find an elegant
+ * object-oriented approach for the following modifications:
+ * <ul>
+ *   <li>Additional toolbar icon for the creation of step links</li>
+ *   <li>Different funtionality for the creation of tables and images</li>
+ *   <li>Injection of {@link LIRecordingHTMLEditorKit} for rendering of list items</li>
+ * </ul>
+ * The SHEF library in the project's local repository does not contain the class any more
+ * to avoid selection of the wrojng implementation in a Specman distribution jar.
  */
 public class HTMLEditorPane extends JPanel
 {
-  /**
-   *
-   */
   @Serial private static final long serialVersionUID = 1L;
 
   private static final I18n i18n = I18n.getInstance("net.atlanticbb.tantlinger.shef");

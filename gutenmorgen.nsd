@@ -17,7 +17,7 @@
         },
         "inhalt" : {
           "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-            "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">Wecker     klingelt</font></span>  </body></html>",
+            "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">Wecker     klingelt</font></span>  </body></html>",
             "plainText" : "\nWecker klingelt",
             "aenderungen" : [ "java.util.ArrayList", [ ] ],
             "aenderungsart" : "Untracked"
@@ -33,7 +33,7 @@
         },
         "inhalt" : {
           "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-            "text" : "<html>  <head>      </head>  <body>    <div align=\"center\">      W<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ochentag       pr&#252;fen</font></span>    </div>  </body></html>",
+            "text" : "<html>  <head>      </head>  <body>    <div align=\"center\">      W<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ochentag       pr&#252;fen</font></span>    </div>  </body></html>",
             "plainText" : "\nWochentag prüfen",
             "aenderungen" : [ "java.util.ArrayList", [ ] ],
             "aenderungsart" : "Untracked"
@@ -48,14 +48,14 @@
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 2, 0 ] ]
           },
-          "aenderungsart" : "Untracked",
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 2, 1 ] ]
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ecker     ausmachen</font></span>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ecker     ausmachen</font></span>  </body></html>",
                 "plainText" : "\nWecker ausmachen",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ],
                 "aenderungsart" : "Untracked"
@@ -71,7 +71,7 @@
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ieder     umdrehen</font></span>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ieder     umdrehen</font></span>  </body></html>",
                 "plainText" : "\nWieder umdrehen",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ],
                 "aenderungsart" : "Untracked"
@@ -87,7 +87,7 @@
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">eiterschlafen</font></span>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">eiterschlafen</font></span>  </body></html>",
                 "plainText" : "\nWeiterschlafen",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ],
                 "aenderungsart" : "Untracked"
@@ -105,7 +105,7 @@
           },
           "ueberschrift" : {
             "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-              "text" : "<html>  <head>      </head>  <body>    S<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">amstag     oder Sonntag</font></span>  </body></html>",
+              "text" : "<html>  <head>      </head>  <body>    S<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">amstag     oder Sonntag</font></span>  </body></html>",
               "plainText" : "\nSamstag oder Sonntag",
               "aenderungen" : [ "java.util.ArrayList", [ ] ],
               "aenderungsart" : "Untracked"
@@ -116,14 +116,14 @@
           "id" : {
             "nummern" : [ "java.util.ArrayList", [ 3, 0 ] ]
           },
-          "aenderungsart" : "Untracked",
+          "aenderungsart" : null,
           "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.WhileSchrittModel_V001", {
             "id" : {
               "nummern" : [ "java.util.ArrayList", [ 3, 1 ] ]
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    S<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">olange     ich noch nicht richtig wach bin und noch wenigstens 5 Minuten Zeit bleiben</font></span>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    S<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">olange     ich noch nicht richtig wach bin und noch wenigstens 5 Minuten Zeit bleiben</font></span>  </body></html>",
                 "plainText" : "\nSolange ich noch nicht richtig wach bin und noch wenigstens 5 Minuten Zeit bleiben",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ],
                 "aenderungsart" : "Untracked"
@@ -145,40 +145,13 @@
                 },
                 "inhalt" : {
                   "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                    "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ecker     </font></span><font color=\"#000000\"><span style=\"background-color:#ffff00\"><strike>ausmachen</strike>     auf &quot;Snooze&quot; stellen</span></font>  </body></html>",
+                    "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ecker     </font></span><font color=\"#000000\"><span style=\"background-color: #ffff00\"><strike>ausmachen</strike>     auf &quot;Snooze&quot; stellen</span></font>  </body></html>",
                     "plainText" : "\nWecker ausmachen auf \"Snooze\" stellen",
                     "aenderungen" : [ "java.util.ArrayList", [ {
                       "von" : 8,
-                      "bis" : 9
-                    }, {
-                      "von" : 9,
-                      "bis" : 10
-                    }, {
-                      "von" : 10,
-                      "bis" : 11
-                    }, {
-                      "von" : 11,
-                      "bis" : 12
-                    }, {
-                      "von" : 12,
-                      "bis" : 13
-                    }, {
-                      "von" : 13,
-                      "bis" : 14
-                    }, {
-                      "von" : 14,
-                      "bis" : 15
-                    }, {
-                      "von" : 15,
-                      "bis" : 16
-                    }, {
-                      "von" : 16,
                       "bis" : 17
                     }, {
                       "von" : 17,
-                      "bis" : 18
-                    }, {
-                      "von" : 18,
                       "bis" : 38
                     } ] ],
                     "aenderungsart" : "Untracked"
@@ -194,8 +167,8 @@
                 },
                 "inhalt" : {
                   "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                    "text" : "<html>  <head>      </head>  <body>    A<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ugen     wider schlie&#223;en</font></span>  </body></html>",
-                    "plainText" : "\nAugen wider schließen",
+                    "text" : "<html>  <head>      </head>  <body>    A<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ugen     wi</font></span><font color=\"#000000\"><span style=\"background-color:rgba(255, 255, 255, 0.0)\">e</span><span style=\"background-color: rgba(255, 255, 255, 0.0)\">der     schlie&#223;en</span></font>  </body></html>",
+                    "plainText" : "\nAugen wieder schließen",
                     "aenderungen" : [ "java.util.ArrayList", [ ] ],
                     "aenderungsart" : "Untracked"
                   } ] ] ]
@@ -218,7 +191,7 @@
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ecker     ausmachen</font></span>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    W<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ecker     ausmachen</font></span>  </body></html>",
                 "plainText" : "\nWecker ausmachen",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ],
                 "aenderungsart" : "Untracked"
@@ -234,7 +207,7 @@
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    A<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ufstehen</font></span>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    A<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ufstehen</font></span>  </body></html>",
                 "plainText" : "\nAufstehen",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ],
                 "aenderungsart" : "Untracked"
@@ -250,7 +223,7 @@
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    <div align=\"center\">      L<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ust       auf Kaffee</font></span>    </div>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    <div align=\"center\">      L<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">ust       auf Kaffee</font></span>    </div>  </body></html>",
                 "plainText" : "\nLust auf Kaffee",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ],
                 "aenderungsart" : "Untracked"
@@ -265,14 +238,14 @@
               "id" : {
                 "nummern" : [ "java.util.ArrayList", [ 3, 4, 0 ] ]
               },
-              "aenderungsart" : "Untracked",
+              "aenderungsart" : null,
               "schritte" : [ "java.util.ArrayList", [ [ "specman.model.v001.EinfacherSchrittModel_V001", {
                 "id" : {
                   "nummern" : [ "java.util.ArrayList", [ 3, 4, 1 ] ]
                 },
                 "inhalt" : {
                   "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                    "text" : "<html>  <head>      </head>  <body>    K<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">affeemaschine     einschalten</font></span>  </body></html>",
+                    "text" : "<html>  <head>      </head>  <body>    K<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">affeemaschine     einschalten</font></span>  </body></html>",
                     "plainText" : "\nKaffeemaschine einschalten",
                     "aenderungen" : [ "java.util.ArrayList", [ ] ],
                     "aenderungsart" : "Untracked"
@@ -304,7 +277,7 @@
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    D<span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">uschen     gehen</font></span>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    D<span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">uschen     gehen</font></span>  </body></html>",
                 "plainText" : "\nDuschen gehen",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ],
                 "aenderungsart" : "Untracked"
@@ -320,7 +293,7 @@
             },
             "inhalt" : {
               "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-                "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color:rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">etc.     etc.</font></span>  </body></html>",
+                "text" : "<html>  <head>      </head>  <body>    <span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">etc.     etc.</font></span>  </body></html>",
                 "plainText" : "\netc. etc.",
                 "aenderungen" : [ "java.util.ArrayList", [ ] ],
                 "aenderungsart" : "Untracked"
@@ -339,13 +312,13 @@
           "ueberschrift" : {
             "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
               "text" : "<html>  <head>      </head>  <body>    <div align=\"right\">      <span style=\"background-color: rgba(255, 255, 255, 0.0)\"><font color=\"#000000\">Werktag</font></span>    </div>  </body></html>",
-              "plainText" : "\nWerktag\n",
+              "plainText" : "\nWerktag",
               "aenderungen" : [ "java.util.ArrayList", [ ] ],
               "aenderungsart" : "Untracked"
             } ] ] ]
           }
         },
-        "ifBreitenanteil" : 0.2931442
+        "ifBreitenanteil" : 0.28368795
       } ] ] ],
       "catchBereich" : {
         "catchSequences" : [ "java.util.ArrayList", [ ] ],
@@ -355,16 +328,16 @@
     },
     "intro" : {
       "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-        "text" : "<html>  <head>  </head>  <body>    <p style=\"margin-top: 0\">          </p>  </body></html>",
-        "plainText" : "",
+        "text" : "<html>  <head>      </head>  <body>  </body></html>",
+        "plainText" : "\n",
         "aenderungen" : [ "java.util.ArrayList", [ ] ],
         "aenderungsart" : "Untracked"
       } ] ] ]
     },
     "outro" : {
       "areas" : [ "java.util.ArrayList", [ [ "specman.model.v001.TextEditAreaModel_V001", {
-        "text" : "<html>  <head>  </head>  <body>    <p style=\"margin-top: 0\">          </p>  </body></html>",
-        "plainText" : "",
+        "text" : "<html>  <head>      </head>  <body>  </body></html>",
+        "plainText" : "\n",
         "aenderungen" : [ "java.util.ArrayList", [ ] ],
         "aenderungsart" : "Untracked"
       } ] ] ]
