@@ -107,7 +107,6 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	@Override
 	public void skalieren(int prozent, int prozentAktuell) {
 		super.skalieren(prozent, prozentAktuell);
-		subsequenz.skalieren(prozent, prozentAktuell);
 		klappen.scale(prozent, prozentAktuell);
 	}
 
