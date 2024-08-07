@@ -4,7 +4,6 @@ Abschluss für Go-Live
      Überschrift der Case-Sequenz keine Änderungsmarkierung. Ist das richtig oder falsch?
   - Unterstützen wir abgesetzte Darstellung? Wäre nicht schlecht. Aber wie schaltet man um? Der Catchbereich selbst hat keinen Text.
   - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
-  - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
   - Break-Schritte dürfen (noch) nicht in Catch-Sequenzen eingefügt werden. Vielleicht sollten wir insgesamt zunächst nur
      Einfache Schritte zulassen
   - Wenn es in der CatchUeberschrift beim Größer- und Kleinerschieben zu Veränderungen der Höhe durch Zeilenumbrüche kommt, geht manchmal
