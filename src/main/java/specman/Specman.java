@@ -89,6 +89,7 @@ import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.editarea.TextStyles.INDIKATOR_GELB;
 import static specman.view.RelativeStepPosition.After;
+import static specman.view.StepRemovalPurpose.Discard;
 
 /**
  * @author User #3
@@ -530,7 +531,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						else if (isStepDeletionAllowed(schritt)) {
 							schritt.markStepnumberLinksAsDefect();
 							SchrittSequenzView sequenz = schritt.getParent();
-							int schrittIndex = sequenz.schrittEntfernen(schritt);
+							int schrittIndex = sequenz.schrittEntfernen(schritt, Discard);
 							undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
 							resyncSchrittnummerStil();
 						}

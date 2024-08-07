@@ -19,6 +19,7 @@ import java.util.List;
 
 import static specman.view.RelativeStepPosition.Before;
 import static specman.view.RelativeStepPosition.After;
+import static specman.view.StepRemovalPurpose.Move;
 
 public class DraggingLogic implements Serializable {
     private final Specman specman;
@@ -502,7 +503,7 @@ public class DraggingLogic implements Serializable {
                     quellschritt = movingStep.getQuellschritt();
                 }
                 SchrittSequenzView originalParent = movingStep.getParent();
-                int originalIndex = originalParent.schrittEntfernen(movingStep);
+                int originalIndex = originalParent.schrittEntfernen(movingStep, Move);
                 movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
                 movingStep.setParent(referenceStep.getParent());
                 sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);
@@ -514,7 +515,7 @@ public class DraggingLogic implements Serializable {
             }
             else {
                 SchrittSequenzView originalParent = movingStep.getParent();
-                int originalIndex = originalParent.schrittEntfernen(movingStep);
+                int originalIndex = originalParent.schrittEntfernen(movingStep, Move);
                 movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
                 movingStep.setParent(referenceStep.getParent());
                 sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);

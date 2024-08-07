@@ -4,6 +4,8 @@ import specman.EditException;
 import specman.view.AbstractSchrittView;
 import specman.view.SchrittSequenzView;
 
+import static specman.view.StepRemovalPurpose.Move;
+
 public class UndoableSchrittVerschoben extends AbstractUndoableInteraction {
   protected final AbstractSchrittView step;
   protected SchrittSequenzView originalParent;
@@ -25,7 +27,7 @@ public class UndoableSchrittVerschoben extends AbstractUndoableInteraction {
 
   protected void togglePosition() throws EditException {
     SchrittSequenzView toggledOriginalParent = step.getParent();
-    int toggledOriginalIndex = toggledOriginalParent.schrittEntfernen(step);
+    int toggledOriginalIndex = toggledOriginalParent.schrittEntfernen(step, Move);
     step.setParent(originalParent);
     originalParent.schrittHinzufuegen(step, originalIndex);
     originalParent.renummerieren();

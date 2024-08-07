@@ -138,7 +138,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     return null;
   }
 
-  public void entfernen(SchrittSequenzView schrittSequenzView) {
+  public void entfernen(SchrittSequenzView schrittSequenzView, StepRemovalPurpose purpose) {
   }
 
   public void zusammenklappenFuerReview() {

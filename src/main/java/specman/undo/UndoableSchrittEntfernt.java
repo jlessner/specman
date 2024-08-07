@@ -6,6 +6,8 @@ import specman.view.AbstractSchrittView;
 
 import javax.swing.undo.CannotUndoException;
 
+import static specman.view.StepRemovalPurpose.Discard;
+
 public class UndoableSchrittEntfernt extends AbstractUndoableInteraction {
 
 	private final AbstractSchrittView schritt;
@@ -25,7 +27,7 @@ public class UndoableSchrittEntfernt extends AbstractUndoableInteraction {
 
 	@Override
 	public void redoEdit() throws EditException {
-		schrittIndex = sequenz.schrittEntfernen(schritt);
+		schrittIndex = sequenz.schrittEntfernen(schritt, Discard);
 	}
 
 	@Override

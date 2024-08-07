@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static specman.view.StepRemovalPurpose.Discard;
+
 public class BreakSchrittView extends AbstractSchrittView {
 	
 	final JPanel panel;
@@ -130,9 +132,9 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public void entfernen(SchrittSequenzView container) {
-		super.entfernen(container);
-		if (catchSequence != null) {
+	public void entfernen(SchrittSequenzView container, StepRemovalPurpose purpose) {
+		super.entfernen(container, purpose);
+		if (purpose == Discard && catchSequence != null) {
 			catchSequence.remove();
 		}
 	}

@@ -1,7 +1,6 @@
 package specman.view;
 
 import specman.Aenderungsart;
-import specman.ColumnSpecByPercent;
 import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;

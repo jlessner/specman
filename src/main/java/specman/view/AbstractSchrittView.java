@@ -35,7 +35,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +48,8 @@ import static specman.view.RelativeStepPosition.After;
 import static specman.view.RoundedBorderDecorationStyle.Co;
 import static specman.view.RoundedBorderDecorationStyle.Full;
 import static specman.view.RoundedBorderDecorationStyle.None;
+import static specman.view.StepRemovalPurpose.Discard;
+import static specman.view.StepRemovalPurpose.Move;
 
 abstract public class AbstractSchrittView implements KlappbarerBereichI, ComponentListener, FocusListener {
 	public static final int LINIENBREITE = 2;
@@ -276,8 +277,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	/** Informiert den Schritt dar�ber, dass er gerade aus seiner Sequenz entfernt wird */
-	public void entfernen(SchrittSequenzView container) {
-		unterSequenzen().forEach(sequenz -> sequenz.entfernen(this));
+	public void entfernen(SchrittSequenzView container, StepRemovalPurpose purpose) {
+		unterSequenzen().forEach(sequenz -> sequenz.entfernen(this, purpose));
 	}
 
 	public void nachinitialisieren() {}
@@ -466,7 +467,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 			case Geloescht:
 			case Quellschritt:
 				markStepnumberLinksAsDefect();
-				getParent().schrittEntfernen(this);
+				getParent().schrittEntfernen(this, Discard);
 				break;
 			case Zielschritt:
 				setQuellschrittUDBL(null);
@@ -486,14 +487,14 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		switch (aenderungsart) {
 			case Hinzugefuegt:
 				markStepnumberLinksAsDefect();
-				getParent().schrittEntfernen(this);
+				getParent().schrittEntfernen(this, Discard);
 				break;
 			case Zielschritt:
-				getParent().schrittEntfernen(this);
+				getParent().schrittEntfernen(this, Move);
 				setId(getQuellschritt().newStepIDInSameSequence(After));
 				setParent(getQuellschritt().getParent());
 				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt());
-				getQuellschritt().getParent().schrittEntfernen(getQuellschritt());
+				getQuellschritt().getParent().schrittEntfernen(getQuellschritt(), Discard);
 				setQuellschrittUDBL(null);
 				break;
 		}

@@ -331,9 +331,9 @@ public class SchrittSequenzView {
 	/**
 	 * @return Den Index des entfernten Schritts in der Sequenz. Dient der Wiedereingliederung beim Redo
 	 */
-	public int schrittEntfernen(AbstractSchrittView schritt) throws EditException {
+	public int schrittEntfernen(AbstractSchrittView schritt, StepRemovalPurpose purpose) throws EditException {
 		checkSchrittEntfernen(schritt);
-		schritt.entfernen(this);
+		schritt.entfernen(this, purpose);
 		sequenzBereich.remove(schritt.getDecoratedComponent());
 		int schrittIndex = schritte.indexOf(schritt);
 		int layoutZeilenLoeschIndex = (schrittIndex == 0) ? 1 : schrittIndex*2;
@@ -403,11 +403,11 @@ public class SchrittSequenzView {
 		sequenzBereich.setVisible(auf);
 	}
 
-	public void entfernen(AbstractSchrittView container) {
+	public void entfernen(AbstractSchrittView container, StepRemovalPurpose purpose) {
 		for (AbstractSchrittView schritt: schritte) {
-			schritt.entfernen(this);
+			schritt.entfernen(this, purpose);
 		}
-		catchBereich.entfernen(this);
+		catchBereich.entfernen(this, purpose);
 	}
 
 	public void zusammenklappenFuerReview() {

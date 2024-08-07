@@ -2,7 +2,7 @@ Abschluss für Go-Live
 - Darstellung von Catch-Bereichen überarbeiten (siehe Powerpoint)
   - Wenn der Break-Schritt ohne Änderungsmodus angelegt wurde, die Catch-Sequence aber schon, dann hat die
      Überschrift der Case-Sequenz keine Änderungsmarkierung. Ist das richtig oder falsch?
-  - Unterstützen wir angesetzte Darstellung? Wäre nicht schlecht. Aber wie schaltet man um? Der Catchbereich selbst hat keinen Text.
+  - Unterstützen wir abgesetzte Darstellung? Wäre nicht schlecht. Aber wie schaltet man um? Der Catchbereich selbst hat keinen Text.
   - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
   - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
   - Break-Schritte dürfen (noch) nicht in Catch-Sequenzen eingefügt werden. Vielleicht sollten wir insgesamt zunächst nur
@@ -116,7 +116,9 @@ x Tabellen als separate Elemente analog Bilder
 
 Bugs fixen
 - Nach dem Löschen eines Breakschritts mit verknüpfter Catch-Sequenz wird beim Undo zwar beides wieder hergestellt aber die Verknüpfung nicht
-- Wenn man einen Breaschritt mit angekoppeltem Catch-Schritt verschiebt, verschwinden der Catch-Schritt
+- Fehler in UndoableSchrittVerschobenMarkiert.undoEdit:
+   Bei neuem Quellschritt erfolgt ein Aufruf von step.aenderungsmarkierungenEntfernen();
+   Dadurch gehen auch Änderungen *vor* der Verschiebung verloren.
 - Falsche Fontgröße für "bar" im PDF-Export bei <font size="3">foo<span>bar</span></font>
    Vielleicht weil die Styles von span und font[size=3]>span beide passen
 - Nach dem Annehmen von Änderungen sieht speziell gestylter Text wie z.B. Designanmerkungen (klein, kursiv) im Editor sauber aus,
@@ -139,6 +141,9 @@ Bugs fixen
         at java.desktop/javax.swing.text.AbstractDocument.remove(AbstractDocument.java:619)
         at specman.editarea.TextEditArea.removeTextAndUnregisterStepnumberLinks(TextEditArea.java:580)
         ... 44 more
+x Beim Undo einer Verschiebung eines BreakSchritts im Änderungsmodus, wird die Schrittnummer im verlinkten Catch-Schritt nicht mehr gerendert
+     Repaint des Diagramms bringt sie wieder zum Vorschein.
+x Wenn man einen Breakschritt mit angekoppeltem Catch-Schritt verschiebt, verschwinden der Catch-Schritt
 x Superhohe Break-Schritte sehen übel aus. Entsteht z.B. wenn in einem Case ein Fall nur durch einen einzelnen Breakschritt behandelt wird
     (siehe BALI UC-715, Unbekannter Nachrichtentyp). Aktueller Workaround: leeren Schritt anhängen
 x Annehmen / Verwerfen von Änderungen schließt Intro und Outro nicht mit ein

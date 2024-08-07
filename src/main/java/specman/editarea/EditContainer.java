@@ -225,18 +225,25 @@ public class EditContainer extends JPanel {
 
 	public void updateBounds() {
 		int maxEditWidth = getMaxEditAreasWidth();
-		if (schrittNummer != null) {
-			if (schrittNummerSichtbar) {
-				Dimension schrittnummerGroesse = schrittNummer.getPreferredSize();
-				schrittNummer.setBounds(maxEditWidth - schrittnummerGroesse.width,
-					0,
-					schrittnummerGroesse.width,
-					schrittnummerGroesse.height - 2);
-			} else {
-				schrittNummer.setBounds(0, 0, 0, 0);
+		// The method may be triggered by component resizing events which in certain
+		// constellations may find all edit areas having size 0. In these situations
+		// we completely omit any size recalculations which otherwize would cause
+		// the containers and/or step number label to disappear. We rely on that there
+		// will follow additional calls with reasonable initialized components sizes.
+		if (maxEditWidth > 0) {
+			if (schrittNummer != null) {
+				if (schrittNummerSichtbar) {
+					Dimension schrittnummerGroesse = schrittNummer.getPreferredSize();
+					schrittNummer.setBounds(maxEditWidth - schrittnummerGroesse.width,
+						0,
+						schrittnummerGroesse.width,
+						schrittnummerGroesse.height - 2);
+				} else {
+					schrittNummer.setBounds(0, 0, 0, 0);
+				}
 			}
+			editAreas.stream().forEach(ea -> ea.pack(maxEditWidth));
 		}
-		editAreas.stream().forEach(ea -> ea.pack(maxEditWidth));
 	}
 
 	private int getMaxEditAreasWidth() {

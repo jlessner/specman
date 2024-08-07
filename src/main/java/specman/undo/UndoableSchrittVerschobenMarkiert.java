@@ -1,16 +1,13 @@
 package specman.undo;
 
-import specman.Aenderungsart;
 import specman.EditException;
-import specman.EditorI;
 import specman.Specman;
-import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 import specman.view.QuellSchrittView;
 import specman.view.SchrittSequenzView;
 
-import static specman.Aenderungsart.Untracked;
 import static specman.view.RelativeStepPosition.Before;
+import static specman.view.StepRemovalPurpose.Discard;
 
 public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben {
   private QuellSchrittView quellschritt;
@@ -27,7 +24,7 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
   @Override public void undoEdit() throws EditException {
     togglePosition();
     if (quellschrittIstNeu) {
-      quellschritt.getParent().schrittEntfernen(quellschritt);
+      quellschritt.getParent().schrittEntfernen(quellschritt, Discard);
       step.aenderungsmarkierungenEntfernen();
     }
     else {
