@@ -57,6 +57,8 @@ public class ITextTest {
     Document document = new Document(pdfDoc);
     document.close();
     System.out.println("PDF Created");
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
   }
 
   @Test
@@ -120,6 +122,8 @@ public class ITextTest {
 
     document.close();
     System.out.println("Paragraph added");
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
   }
 
   @Test

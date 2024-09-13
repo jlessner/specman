@@ -586,6 +586,9 @@ public class SchrittSequenzView {
 	}
 
 	public Shape getShapeSequence() {
+		if (!sequenzBereich.isVisible()) {
+			return null;
+		}
 		Shape sequence = new Shape(sequenzBereich);
 		for (AbstractSchrittView schritt : schritte) {
 			sequence.add(schritt.getShape());

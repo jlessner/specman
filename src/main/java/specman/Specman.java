@@ -576,6 +576,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		exportAsPDFMenuItem.addActionListener(e -> exportAsPDF());
 
+		exportAsGraphvizMenuItem.addActionListener(e -> exportAsGraphviz());
+
 		exitMenuItem.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
 
 		review.addActionListener(new ActionListener() {
@@ -926,6 +928,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		laden.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
 		exportAsPDFMenuItem = new JMenuItem("Als PDF exportieren...");
 		exportAsPDFMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
+		exportAsGraphvizMenuItem = new JMenuItem("Als Graphviz exportieren");
 		exitMenuItem = new JMenuItem("Beenden");
 		exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK + KeyEvent.SHIFT_DOWN_MASK));
 		//======== this ========
@@ -1043,6 +1046,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		dateiMenu.add(speichern);
 		dateiMenu.add(speichernUnter);
 		dateiMenu.add(exportAsPDFMenuItem);
+		dateiMenu.add(exportAsGraphvizMenuItem);
 		dateiMenu.add(exitMenuItem);
 		return dateiMenu;
 	}
@@ -1074,6 +1078,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JMenuItem speichernUnter;
 	private JMenuItem laden;
 	private JMenuItem exportAsPDFMenuItem;
+	private JMenuItem exportAsGraphvizMenuItem;
 	private JMenuItem exitMenuItem;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 

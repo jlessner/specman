@@ -150,17 +150,22 @@ public class GraphvizExporter {
 	}
 
 	private String textFuerAktivitaetsboxAufbereiten(AbstractSchrittModel_V001 schritt ) {
-		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.getFirstAreaAsText().text, "");
+		return textFuerAktivitaetsboxAufbereiten(
+			schritt.inhalt.getFirstAreaAsText().text,
+			schritt.id.toString() + " :",
+			"");
 	}
 
 	private String textFuerBedingungAufbereiten(AbstractSchrittModel_V001 schritt) {
-		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.getFirstAreaAsText().text, "\t\t\t\t\t\t");
+		return textFuerAktivitaetsboxAufbereiten(schritt.inhalt.getFirstAreaAsText().text,
+			schritt.id.toString() + " :",
+			"\t\t\t\t\t\t");
 	}
 
-	private static String textFuerAktivitaetsboxAufbereiten(String rohtext, String zeilenTrailer) {
+	private static String textFuerAktivitaetsboxAufbereiten(String rohtext, String heading, String zeilenTrailer) {
 		String[] tokens = rohtext.split(" ");
 		int t = 0;
-		String ergebnis = "";
+		String ergebnis = StringUtils.isEmpty(heading) ? "" : heading + " ";
 		for (int z = 0; z < 3; z++) {
 			String zeile = "";
 			while(t < tokens.length) {
@@ -180,8 +185,8 @@ public class GraphvizExporter {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println("'" + textFuerAktivitaetsboxAufbereiten("In Rom ist es im Sommer entschieden zu hei�.", "") + "'");
-		System.out.println("'" + textFuerAktivitaetsboxAufbereiten("Solange ich noch nicht richtig wach bin und noch wenigstens 5 Minuten Zeit bleiben", "") + "'");
+		System.out.println("'" + textFuerAktivitaetsboxAufbereiten("In Rom ist es im Sommer entschieden zu heiß.", "", "") + "'");
+		System.out.println("'" + textFuerAktivitaetsboxAufbereiten("Solange ich noch nicht richtig wach bin und noch wenigstens 5 Minuten Zeit bleiben", "", "") + "'");
 	}
 	
 	/**
