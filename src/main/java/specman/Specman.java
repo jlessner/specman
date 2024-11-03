@@ -443,7 +443,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				if (referenceStep != null) {
+				if (referenceStep != null) { // Avoids placing a catch step as the first one in the diagramm
 					dropWelcomeMessage();
 					new CatchLinkDialog(null, referenceStep.getParent());
 				}
