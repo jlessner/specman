@@ -442,9 +442,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		catchSchrittAnhaengen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
 				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				new CatchLinkDialog(null, referenceStep.getParent());
+				if (referenceStep != null) {
+					dropWelcomeMessage();
+					new CatchLinkDialog(null, referenceStep.getParent());
+				}
 			}
 		});
 

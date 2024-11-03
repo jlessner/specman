@@ -194,12 +194,14 @@ public class DraggingLogic implements Serializable {
             p = SwingUtilities.convertPoint(schritt.getPanel(), 0, 0, specman);
             Rectangle r = createRectangle(p, schritt.getPanel());
 
-            if(schritt.getAenderungsart()==Aenderungsart.Geloescht){
+            if(schritt.getAenderungsart() == Aenderungsart.Geloescht){
                 //Auf einem Gelöschten Schritt nur verbot zeigen
                 
-            }else {
+            }
+            else {
 
-                //Abfrage ob es sich um den letzten Schritt einer Subsquenz gehört // Zusätzliche Abfrage da Marker beim CaseAnängen angezeigt wurde
+                //Abfrage ob es sich um den letzten Schritt einer Subsequenz handelt
+                // Zusätzliche Abfrage da Marker beim CaseAnängen angezeigt wurde
                 if (!(e.getSource().equals(specman.getCaseAnhaengen()))) {
                     if (schrittListe.get(schrittListe.size() - 1) == schritt && schritt.getId().nummern.size() > 1) {
                         if (lastPixels(pos, p, glassPaneHeight, r, glassPane, schritt, insertDecision)) {
@@ -404,7 +406,9 @@ public class DraggingLogic implements Serializable {
 
     // Entfernt die WelcomeMessage und fügt den neuen Schritt hinzu
     private void insertFirstStep(List<AbstractSchrittView> schrittListe, InsertDecision insertDecision, MouseEvent e) {
-        if (schrittListe.size() == 0 && (insertDecision == InsertDecision.Insert)) {
+        if (schrittListe.size() == 0 &&
+          insertDecision == InsertDecision.Insert &&
+          !e.getSource().equals(specman.getCatchSchrittAnhaengen())) {
             SchrittSequenzView curSequenz = specman.getHauptSequenz();
             specman.dropWelcomeMessage();
             addNeuerSchritt(e, curSequenz);
@@ -524,8 +528,6 @@ public class DraggingLogic implements Serializable {
             sequenz.subsequenzSchrittAnhaengen(specman);
         } else if (e.getSource().equals(specman.getBreakSchrittAnhaengen())) {
             sequenz.breakSchrittAnhaengen(specman);
-        } else if (e.getSource().equals(specman.getCatchSchrittAnhaengen())) {
-            // TODO JL: handle catch
         }
     }
 
