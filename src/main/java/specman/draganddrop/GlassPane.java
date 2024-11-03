@@ -32,9 +32,8 @@ public class GlassPane extends JPanel {
 	}
 
 	public void setInputRecBounds(int x, int y, int width, int height) {
-		y= y-menueHeight;
-		insertPosIndicator.setBounds(x-windowsoffset, y, width, height);
+		y -= menueHeight;
+		insertPosIndicator.setBounds(x - windowsoffset, y, width, height);
 		Specman.instance().setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-		//Specman.instance().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("src/main/resources/images/plus.png").getImage().getScaledInstance(15,15,Image.SCALE_SMOOTH),new Point(5,5),"custom cursor"));
 	}
 }

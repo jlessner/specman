@@ -4,6 +4,7 @@ Abschluss für Go-Live
      Überschrift der Case-Sequenz keine Änderungsmarkierung. Ist das richtig oder falsch?
   - Unterstützen wir abgesetzte Darstellung? Wäre nicht schlecht. Aber wie schaltet man um? Der Catchbereich selbst hat keinen Text.
   - DraggingLogic#addNeuerSchritt: Catch-Schritt behandeln
+    - Darf nur unter den letzten Schritt einer Sequenz gedragged werden.
   - Break-Schritte dürfen (noch) nicht in Catch-Sequenzen eingefügt werden. Vielleicht sollten wir insgesamt zunächst nur
      Einfache Schritte zulassen
   - Wenn es in der CatchUeberschrift beim Größer- und Kleinerschieben zu Veränderungen der Höhe durch Zeilenumbrüche kommt, geht manchmal
@@ -125,7 +126,7 @@ Bugs fixen
 - Neue Texte in Tabellen sind im HTML eingefasst in <p style=\"margin-top: 0\"> TEXT </p>
     Das führt zu einer verschobenen Darstellung im PDF-Export
 - Der Dialog für Schritt-Links hat keinen Scrollbalken und erlaubt folglich keine Schritte mit höheren Nummern zu adressieren
-- Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
+x Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
     HTML-Aufzählungszeichen zurück
 - Ändern des Paragraphtypen lässt sich nicht zurücknehmen

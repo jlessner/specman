@@ -4,6 +4,7 @@ import specman.Aenderungsart;
 import specman.EditException;
 import specman.Specman;
 import specman.editarea.InteractiveStepFragment;
+import specman.editarea.SchrittNummerLabel;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.JComponent;
@@ -49,7 +50,7 @@ public class DragMouseAdapter extends MouseAdapter {
 			}
 			Point pt = e.getPoint();
 			JComponent parent = (JComponent) e.getComponent();
-			Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, specman);
+			Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY(), specman);
 			if(!specman.getGlassPane().isVisible() ) {
 				specman.setCursor(Cursor.getDefaultCursor());
 			}
@@ -85,7 +86,6 @@ public class DragMouseAdapter extends MouseAdapter {
 			specman.window.setVisible(false);
 			Point ptCon = SwingUtilities.convertPoint((Component)e.getSource(),(int) e.getPoint().getX(),(int)e.getPoint().getY()-2, specman);
 			draggingLogic.dragGlassPanePos(ptCon, specman.hauptSequenz.schritte,Insert,e);
-			//System.out.println(e.getSource());
 			specman.getGlassPane().setVisible(false);
 			specman.setCursor(Cursor.getDefaultCursor());
 			specman.window.remove(dummy);
@@ -97,7 +97,7 @@ public class DragMouseAdapter extends MouseAdapter {
 
 
 	public void mouseEntered(MouseEvent e) {
-		if(e.getSource() instanceof JLabel){
+		if(e.getSource() instanceof SchrittNummerLabel) {
 			if(checkEinzigerSchritt(e)) {
 				draggingLogic.showInvalidCursor();
 			}
