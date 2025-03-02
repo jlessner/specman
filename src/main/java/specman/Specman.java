@@ -323,6 +323,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	@Override
 	public void setLastFocusedTextArea(TextEditArea area) {
 		lastFocusedTextArea = area;
+		System.out.println("Last focused: " + area.getPlainText());
 	}
 
 	private void setDiagrammDatei(File diagrammDatei) {
@@ -699,6 +700,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public void addTable(int columns, int rows) {
 		if (lastFocusedTextArea != null) {
 			lastFocusedTextArea.addTable(columns, rows, initialArt());
+			diagrammAktualisieren(null);
+		}
+	}
+
+	@Override
+	public void addListItem() {
+		if (lastFocusedTextArea != null) {
+			lastFocusedTextArea.addListItem(initialArt());
 			diagrammAktualisieren(null);
 		}
 	}
@@ -1336,6 +1345,5 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		result.addAll(outro.getTextAreas());
 		return result;
 	}
-
 
 }

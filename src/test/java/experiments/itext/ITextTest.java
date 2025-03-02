@@ -279,4 +279,24 @@ public class ITextTest {
     String rawHTML = "<div align=\"right\">      Neuer Schritt 1    </div>";
     System.out.println(rawHTML.replaceAll("align=\"([a-z]+)\"", "style=\"text-align:$1\""));
   }
+
+  @Test
+  void testRenderingOfStylingFromJEditorPane() throws Exception {
+    java.util.List<IElement> elements = HtmlConverter.convertToElements("<html>\n" +
+      "  <body>\n" +
+      "    <b><font style=\"font-style:italic\" size=\"6\" face=\"Helvetica\">&#220;<span style=\"background-color:#ffff00\"><strike>be</strike></span></font></b><span style=\"background-color:#ffff00\"><strike><font size=\"3\" face=\"Helvetica\">rschr</font><b><font size=\"6\" face=\"Helvetica\">ift</font></b></strike><br>drei<br><br>vier  " +
+      "  </body>\n" +
+      "</html>\n");
+
+    PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
+    Document document = new Document(pdf);
+    for (IElement element : elements) {
+      document.add(new Paragraph().add((IBlockElement)element));
+    }
+    document.close();
+    Desktop desktop = Desktop.getDesktop();
+    desktop.open(new java.io.File("sample.pdf"));
+  }
+
+
 }

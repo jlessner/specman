@@ -39,6 +39,7 @@ public interface EditorI extends FocusListener {
 	void addImageViaFileChooser();
 	List<AbstractSchrittView> queryAllSteps();
 	void addTable(int numColumns, int numRows);
+	void addListItem();
 
   List<JTextComponent> queryAllTextComponents(JTextComponent tc);
 

@@ -86,21 +86,21 @@ public class TextStyles {
         // Text einfügt. Also braucht man noch ein weiteres, persistentes Styling über ein Span-Tag,
         // wie ich es hier gefunden habe:
         // https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
-        String htmlStyle = "background-color:" + INDIKATOR_GELB;
+        String htmlStyleGeaendert = "background-color:" + INDIKATOR_GELB;
         String htmlStyleSchwarz = "background-color:" + INDIKATOR_SCHWARZ;
         String htmlStyleStandard = "background-color:" + toHTMLColor(TEXT_BACKGROUND_COLOR_STANDARD);
         String htmlStyleStepnumber = "background-color:" + stepnumberLinkStyleHTMLColor;
 
-        SimpleAttributeSet htmlHintergrundStyle = new SimpleAttributeSet();
+        SimpleAttributeSet htmlHintergrundStyleGeaendert = new SimpleAttributeSet();
         SimpleAttributeSet htmlHintergrundStyleSchwarz = new SimpleAttributeSet();
         SimpleAttributeSet htmlHintergrundStyleStandard = new SimpleAttributeSet();
         SimpleAttributeSet htmlHintergrundStyleStepnumber = new SimpleAttributeSet();
 
-        htmlHintergrundStyle.addAttribute(HTML.Attribute.STYLE, htmlStyle);
-        geaendertStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
+        htmlHintergrundStyleGeaendert.addAttribute(HTML.Attribute.STYLE, htmlStyleGeaendert);
+        geaendertStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
         StyleConstants.setBackground(geaendertStil, AENDERUNGSMARKIERUNG_FARBE);
 
-        geloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
+        geloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
         StyleConstants.setBackground(geloeschtStil, AENDERUNGSMARKIERUNG_FARBE);
         StyleConstants.setStrikeThrough(geloeschtStil, true);
 
@@ -116,7 +116,7 @@ public class TextStyles {
         StyleConstants.setStrikeThrough(standardStil, false);
         StyleConstants.setForeground(standardStil, Schriftfarbe_Standard);
 
-        quellschrittStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
+        quellschrittStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
         StyleConstants.setBackground(quellschrittStil, AENDERUNGSMARKIERUNG_FARBE);
         StyleConstants.setStrikeThrough(quellschrittStil, true);
         StyleConstants.setForeground(quellschrittStil, Schriftfarbe_Geloescht);
@@ -126,10 +126,10 @@ public class TextStyles {
         stepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleStepnumber);
         StyleConstants.setBackground(stepnumberLinkStyle, stepnumberLinkStyleColor);
 
-        changedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
+        changedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
         StyleConstants.setBackground(changedStepnumberLinkStyle, changedStepnumberLinkColor);
 
-        deletedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyle);
+        deletedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
         StyleConstants.setBackground(deletedStepnumberLinkStyle, changedStepnumberLinkColor);
         StyleConstants.setStrikeThrough(deletedStepnumberLinkStyle, true);
     }

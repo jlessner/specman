@@ -10,6 +10,7 @@ import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
+import specman.model.v001.TextEditAreaModel_V001;
 import specman.pdf.Shape;
 import specman.undo.UndoableTableColumnAdded;
 import specman.undo.UndoableTableColumnRemoved;
@@ -176,7 +177,8 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   private void addCell(int rowIndex, String content) {
-    addCell(rowIndex, new EditContainer(Specman.instance(), content, null));
+    TextEditArea initialContentArea = new TextEditArea(new TextEditAreaModel_V001(content), getFont());
+    addCell(rowIndex, new EditContainer(Specman.instance(), initialContentArea, null));
   }
 
   private void createTablePanelLayout(int columns, int rows) {

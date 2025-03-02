@@ -20,6 +20,7 @@ import specman.undo.UndoableEditAreaAdded;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.JPanel;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
 import java.awt.Color;
@@ -97,8 +98,9 @@ public class EditContainer extends JPanel {
 	private Indentions indentions;
 	private boolean schrittNummerSichtbar = true;
 
-	public EditContainer(EditorI editor, String initialContent, String schrittId) {
-		this(editor, new EditorContentModel_V001(initialContent), schrittId);
+	public EditContainer(EditorI editor, TextEditArea initialContent, String schrittId) {
+		this(editor, new EditorContentModel_V001(), schrittId);
+		addEditArea(initialContent, 0);
 	}
 
 	public EditContainer(EditorI editor, EditorContentModel_V001 initialContent, String schrittId) {
@@ -387,6 +389,45 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
+	/** Adding a list item area is a bit tricky. We first try to find fix line breaks before and after the current caret position.
+	 * The text between these line breaks makes up the initial text of the line item and the line breaks are removed from the splitted
+	 * text portions. However, there are quite a few special cases to be considered:
+	 * <ul>
+	 *   <li>There may no line break occur before the carret. In that case, <i>all</i> the text up to the line break after the carret
+	 *   becomes the initial content of the list item. The initiating text area becomes empty.</li>
+	 *   <li>There may no line break occur after the carret.</li>
+	 *   <li>The carret may be placed at a line break which is actually a typical situation: Press return, to start a new line, then
+	 *   press the list item button to start a list.</li>
+	 * </ul>
+	 */
+	public void addListItem(TextEditArea initiatingTextArea, Aenderungsart aenderungsart) {
+		EditorI editor = Specman.instance();
+		try (UndoRecording ur = editor.composeUndo()) {
+			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
+			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
+			String initiatingPlainText = initiatingTextArea.getPlainText();
+			int headSplit = initiatingCaretPosition == 0 ? -1 : initiatingPlainText.lastIndexOf("\n", initiatingCaretPosition-1);
+			headSplit = (headSplit == -1) ? 0 : headSplit;
+			int tailSplit = initiatingCaretPosition == initiatingPlainText.length() - 1 ? -1 : initiatingPlainText.indexOf("\n", initiatingCaretPosition);
+			TextEditArea cutOffTailTextArea = null;
+			if (tailSplit != -1) {
+				cutOffTailTextArea = initiatingTextArea.split(tailSplit);
+				cutOffTailTextArea.remove(0, 1); // Throw away leading line break
+			}
+			TextEditArea cutOffListItemTextArea = initiatingTextArea.split(headSplit);
+			if (cutOffListItemTextArea.getLength() > 0) {
+				cutOffListItemTextArea.remove(0, 1); // Throw away leading line break
+			}
+			ListItemEditArea listItemEditArea = new ListItemEditArea(cutOffListItemTextArea, aenderungsart);
+			addEditArea(listItemEditArea, initiatingTextAreaIndex+1);
+			if (cutOffTailTextArea != null) {
+				addEditArea(cutOffTailTextArea, initiatingTextAreaIndex+2);
+			}
+			editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, listItemEditArea, cutOffTailTextArea));
+		}
+		updateBounds();
+	}
+
 	public void addEditAreaByUndoRedo(TextEditArea initiatingTextArea, EditArea imageEditArea, TextEditArea cutOffTextArea) {
 		try (UndoRecording ur = Specman.instance().pauseUndo()) {
 			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
@@ -514,4 +555,5 @@ public class EditContainer extends JPanel {
 			.map(editArea -> editArea.asTextArea())
 			.collect(Collectors.toList());
 	}
+
 }

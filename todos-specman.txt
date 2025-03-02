@@ -1,4 +1,18 @@
 Abschluss für Go-Live
+- Line Items als EditAreas
+  - Beim Anlegen: Sauberes Herausschneiden des Bereichs zwischen zwei harten Zeilenumbrüchen
+  - Entfernen, wenn Caret sich bereits in einem Line Items befindet
+  - Unterscheidung nummeriert / nicht nummeriert
+  - Saubere Darstellung des Labels
+    - Vertikal, nicht nummeriert: Mitte der ersten Zeile abhängig von der Zeilenhöhe - hängt von der größten Schrift in der ersten Zeile ab (-> JEditorPaneUtilities)
+    - Vertikal, nummeriert: Baseline der ersten Zeile (-> JEditorPaneUtilities)
+    - Horizontal: zoom-abhängiger rechter Abstand (sorgt für rechtsbündig bei nummeriert)
+    - Wie groß machen wir die Schrift für Nummernlabel? In Word gibt's Regeln. Am besten erstmal: Standardgröße
+    - Wie darstellen, wenn man im Änderungsmodus LI zu normalem Text macht
+  - Undo / Redo für LI anlegen und LI entfernen
+  - PDF-Rendering - in dem Zuge LIRecordingListView und Konsorten entfernen
+  - Irgendeine Idee für mehrstufige LIs?
+  - Alte LI-Buttons entfernen
 - Darstellung von Catch-Bereichen überarbeiten (siehe Powerpoint)
   - Wenn der Break-Schritt ohne Änderungsmodus angelegt wurde, die Catch-Sequence aber schon, dann hat die
      Überschrift der Case-Sequenz keine Änderungsmarkierung. Ist das richtig oder falsch?

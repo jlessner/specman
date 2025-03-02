@@ -678,6 +678,10 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         getParent().addTable(this, columns, rows, aenderungsart);
     }
 
+    public void addListItem(Aenderungsart aenderungsart) {
+        getParent().addListItem(this, aenderungsart);
+    }
+
     @Override
     public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
         return getTextMitAenderungsmarkierungen(formatierterText);
@@ -689,17 +693,22 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     public TextEditArea split(int textPosition) {
+        int textLength = getDocument().getLength();
+        if (textLength > textPosition) {
+            TextEditAreaModel_V001 splittedModel = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
+            TextEditArea splittedArea = new TextEditArea(splittedModel, this.getFont());
+            remove(textPosition, textLength - textPosition);
+            splittedArea.remove(0, textPosition);
+            return splittedArea;
+        }
+        return null;
+    }
+
+    public void remove(int offset, int len) {
         try {
-            int textLength = getDocument().getLength();
-            if (textLength > textPosition) {
-                TextEditAreaModel_V001 splittedModel = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
-                TextEditArea splittedArea = new TextEditArea(splittedModel, this.getFont());
-                getDocument().remove(textPosition, textLength - textPosition);
-                splittedArea.getDocument().remove(0, textPosition);
-                return splittedArea;
-            }
-            return null;
-        } catch (BadLocationException blx) {
+            getDocument().remove(offset, len);
+        }
+        catch (BadLocationException blx) {
             throw new RuntimeException(blx);
         }
     }
@@ -960,4 +969,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     public Shape getShape() {
         return new Shape(this).withText(new FormattedShapeText(this));
     }
+
+    public int getLength() { return getDocument().getLength(); }
 }
