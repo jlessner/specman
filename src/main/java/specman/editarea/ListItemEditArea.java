@@ -154,4 +154,12 @@ public class ListItemEditArea extends JPanel implements EditArea {
     content.addEditComponentListener(l);
   }
 
+  @Override
+  public EditContainer getParent() {
+    return (EditContainer) super.getParent();
+  }
+
+  public EditContainer getContent() {
+    return content;
+  }
 }

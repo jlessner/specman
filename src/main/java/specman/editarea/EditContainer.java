@@ -1,5 +1,6 @@
 package specman.editarea;
 
+import com.itextpdf.layout.element.Text;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -20,7 +21,6 @@ import specman.undo.UndoableEditAreaAdded;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.JPanel;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
 import java.awt.Color;
@@ -423,6 +423,7 @@ public class EditContainer extends JPanel {
 			if (cutOffTailTextArea != null) {
 				addEditArea(cutOffTailTextArea, initiatingTextAreaIndex+2);
 			}
+			cutOffListItemTextArea.requestFocus();
 			editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, listItemEditArea, cutOffTailTextArea));
 		}
 		updateBounds();
@@ -458,11 +459,11 @@ public class EditContainer extends JPanel {
 		try (UndoRecording ur = editor.composeUndo()) {
 			TextEditArea leadingTextArea = null;
 			TextEditArea trailingTextArea = null;
-			int imageIndex = removeEditAreaComponent(editarea);
-			if (imageIndex > 0) {
-				leadingTextArea = editAreas.get(imageIndex-1).asTextArea();
-				if (editAreas.size() > imageIndex) {
-					trailingTextArea = editAreas.get(imageIndex).asTextArea();
+			int editAreaIndex = removeEditAreaComponent(editarea);
+			if (editAreaIndex > 0) {
+				leadingTextArea = editAreas.get(editAreaIndex-1).asTextArea();
+				if (editAreas.size() > editAreaIndex) {
+					trailingTextArea = editAreas.get(editAreaIndex).asTextArea();
 					if (leadingTextArea != null && trailingTextArea != null) {
 						removeEditAreaComponent(trailingTextArea);
 						leadingTextArea.appendText(trailingTextArea.getText());
@@ -480,6 +481,32 @@ public class EditContainer extends JPanel {
 			removeEditAreaComponent(editArea);
 			if (cutOffTextArea != null) {
 				removeEditAreaComponent(cutOffTextArea);
+			}
+		}
+		updateBounds();
+	}
+
+	/** Remove the passed edit area from this edit container and add its content areas directly instead. */
+	public void dissolveListItemEditArea(ListItemEditArea liEditArea, Aenderungsart aenderungsart) {
+		EditorI editor = Specman.instance();
+		try (UndoRecording ur = editor.composeUndo()) {
+			int liEditAreaIndex = removeEditAreaComponent(liEditArea);
+			EditContainer liContentContainer = liEditArea.getContent();
+			if (liEditAreaIndex > 0) {
+				TextEditArea preceedingText = editAreas.get(liEditAreaIndex-1).asTextArea();
+				if (preceedingText != null) {
+					TextEditArea firstLiText = liContentContainer.editAreas.get(0).asTextArea();
+					if (firstLiText != null) {
+						preceedingText.appendText(firstLiText.getText());
+					}
+					liContentContainer.removeEditAreaComponent(firstLiText);
+				}
+			}
+			List<EditArea> areas = liEditArea.getContent().modifyableEditAreas();
+			for (int i = 0; i < areas.size(); i++) {
+				EditArea area = areas.get(i);
+				liContentContainer.removeEditAreaComponent(area);
+				addEditArea(area, liEditAreaIndex + i);
 			}
 		}
 		updateBounds();

@@ -678,8 +678,15 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         getParent().addTable(this, columns, rows, aenderungsart);
     }
 
-    public void addListItem(Aenderungsart aenderungsart) {
-        getParent().addListItem(this, aenderungsart);
+    public void toggleListIten(Aenderungsart aenderungsart) {
+        EditContainer editContainer = getParent();
+        if (editContainer.getParent() instanceof ListItemEditArea) {
+            ListItemEditArea listItemEditArea = (ListItemEditArea) editContainer.getParent();
+            listItemEditArea.getParent().dissolveListItemEditArea(listItemEditArea, aenderungsart);
+        }
+        else {
+            getParent().addListItem(this, aenderungsart);
+        }
     }
 
     @Override
