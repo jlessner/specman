@@ -311,7 +311,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	@Override public void focusLost(FocusEvent e) {
-		setLastFocusedTextArea(e);
+		//setLastFocusedTextArea(e);
 	}
 
 	private void setLastFocusedTextArea(FocusEvent e) {
@@ -707,7 +707,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	@Override
 	public void addListItem() {
 		if (lastFocusedTextArea != null) {
-			lastFocusedTextArea.toggleListIten(initialArt());
+			lastFocusedTextArea.toggleListItem(initialArt());
 			diagrammAktualisieren(null);
 		}
 	}

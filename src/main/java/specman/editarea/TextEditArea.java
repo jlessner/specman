@@ -454,6 +454,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                     scrollToStepnumber();
                 }
             }
+            case KeyEvent.VK_ENTER -> {
+                EditContainer editContainer = (EditContainer)getParent();
+                if (editContainer.getParent() instanceof ListItemEditArea) {
+                    ((ListItemEditArea)editContainer.getParent()).split(this);
+                    e.consume();
+                }
+            }
             default -> {
                 if (shouldPreventActionInsideStepnumberLink()) {
                     e.consume();
@@ -678,7 +685,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         getParent().addTable(this, columns, rows, aenderungsart);
     }
 
-    public void toggleListIten(Aenderungsart aenderungsart) {
+    public void toggleListItem(Aenderungsart aenderungsart) {
         EditContainer editContainer = getParent();
         if (editContainer.getParent() instanceof ListItemEditArea) {
             ListItemEditArea listItemEditArea = (ListItemEditArea) editContainer.getParent();

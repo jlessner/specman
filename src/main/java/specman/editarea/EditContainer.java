@@ -12,6 +12,7 @@ import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
+import specman.model.v001.ListItemEditAreaModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.undo.props.UDBL;
@@ -140,6 +141,10 @@ public class EditContainer extends JPanel {
 			else if (editAreaModel instanceof TableEditAreaModel_V001) {
 				TableEditAreaModel_V001 tableEditAreaModel = (TableEditAreaModel_V001)editAreaModel;
 				editArea = new TableEditArea(tableEditAreaModel);
+			}
+			else if (editAreaModel instanceof ListItemEditAreaModel_V001) {
+				ListItemEditAreaModel_V001 listItemEditAreaModel = (ListItemEditAreaModel_V001)editAreaModel;
+				editArea = new ListItemEditArea(listItemEditAreaModel);
 			}
 			else {
 				throw new RuntimeException("Was soll das denn sein? " + editAreaModel);
@@ -360,7 +365,7 @@ public class EditContainer extends JPanel {
 	public void addTable(TextEditArea initiatingTextArea, int columns, int rows, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
-			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
+			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
 			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
 			TableEditArea tableEditArea = new TableEditArea(columns, rows, aenderungsart);
 			addEditArea(tableEditArea, initiatingTextAreaIndex+1);
@@ -376,7 +381,7 @@ public class EditContainer extends JPanel {
 	public void addImage(File imageFile, TextEditArea initiatingTextArea, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
-			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
+			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
 			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
 			ImageEditArea imageEditArea = new ImageEditArea(imageFile, aenderungsart);
 			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
@@ -403,35 +408,28 @@ public class EditContainer extends JPanel {
 	public void addListItem(TextEditArea initiatingTextArea, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
-			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
+			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
 			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
-			String initiatingPlainText = initiatingTextArea.getPlainText();
-			int headSplit = initiatingCaretPosition == 0 ? -1 : initiatingPlainText.lastIndexOf("\n", initiatingCaretPosition-1);
-			headSplit = (headSplit == -1) ? 0 : headSplit;
-			int tailSplit = initiatingCaretPosition == initiatingPlainText.length() - 1 ? -1 : initiatingPlainText.indexOf("\n", initiatingCaretPosition);
-			TextEditArea cutOffTailTextArea = null;
-			if (tailSplit != -1) {
-				cutOffTailTextArea = initiatingTextArea.split(tailSplit);
-				cutOffTailTextArea.remove(0, 1); // Throw away leading line break
+			TextEditArea cutOffTextArea = initiatingTextArea.split(initiatingCaretPosition);
+			if (cutOffTextArea == null) {
+				cutOffTextArea = new TextEditArea(new TextEditAreaModel_V001(""), initiatingTextArea.getFont());
 			}
-			TextEditArea cutOffListItemTextArea = initiatingTextArea.split(headSplit);
-			if (cutOffListItemTextArea.getLength() > 0) {
-				cutOffListItemTextArea.remove(0, 1); // Throw away leading line break
-			}
-			ListItemEditArea listItemEditArea = new ListItemEditArea(cutOffListItemTextArea, aenderungsart);
-			addEditArea(listItemEditArea, initiatingTextAreaIndex+1);
-			if (cutOffTailTextArea != null) {
-				addEditArea(cutOffTailTextArea, initiatingTextAreaIndex+2);
-			}
-			cutOffListItemTextArea.requestFocus();
-			editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, listItemEditArea, cutOffTailTextArea));
+			ListItemEditArea liEditArea = new ListItemEditArea(cutOffTextArea, aenderungsart);
+			addEditArea(liEditArea, initiatingTextAreaIndex+1);
+			editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, liEditArea, null));
+			cutOffTextArea.requestFocus();
 		}
 		updateBounds();
 	}
 
+	public void addListItem(ListItemEditArea initiatingListItemEditArea, ListItemEditArea splitListItemEditArea) {
+		int initiatingIndex = indexOf(initiatingListItemEditArea);
+		addEditArea(splitListItemEditArea, initiatingIndex+1);
+	}
+
 	public void addEditAreaByUndoRedo(TextEditArea initiatingTextArea, EditArea imageEditArea, TextEditArea cutOffTextArea) {
 		try (UndoRecording ur = Specman.instance().pauseUndo()) {
-			int initiatingTextAreaIndex = editAreas.indexOf(initiatingTextArea);
+			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
 			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
 			if (cutOffTextArea != null) {
 				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
@@ -492,28 +490,40 @@ public class EditContainer extends JPanel {
 		try (UndoRecording ur = editor.composeUndo()) {
 			int liEditAreaIndex = removeEditAreaComponent(liEditArea);
 			EditContainer liContentContainer = liEditArea.getContent();
+			EditArea lastLiftUpArea = null;
 			if (liEditAreaIndex > 0) {
 				TextEditArea preceedingText = editAreas.get(liEditAreaIndex-1).asTextArea();
 				if (preceedingText != null) {
 					TextEditArea firstLiText = liContentContainer.editAreas.get(0).asTextArea();
 					if (firstLiText != null) {
 						preceedingText.appendText(firstLiText.getText());
+						lastLiftUpArea = preceedingText;
 					}
 					liContentContainer.removeEditAreaComponent(firstLiText);
 				}
 			}
 			List<EditArea> areas = liEditArea.getContent().modifyableEditAreas();
 			for (int i = 0; i < areas.size(); i++) {
-				EditArea area = areas.get(i);
-				liContentContainer.removeEditAreaComponent(area);
-				addEditArea(area, liEditAreaIndex + i);
+				lastLiftUpArea = areas.get(i);
+				liContentContainer.removeEditAreaComponent(lastLiftUpArea);
+				addEditArea(lastLiftUpArea, liEditAreaIndex + i);
+			}
+			if (lastLiftUpArea != null && lastLiftUpArea.isTextArea()) {
+				int lastLiftUpAreaIndex = indexOf(lastLiftUpArea);
+				if (editAreas.size() > lastLiftUpAreaIndex+1) {
+					TextEditArea followingTextEditArea = editAreas.get(lastLiftUpAreaIndex+1).asTextArea();
+					if (followingTextEditArea != null) {
+						lastLiftUpArea.asTextArea().appendText(followingTextEditArea.getText());
+						removeEditAreaComponent(followingTextEditArea);
+					}
+				}
 			}
 		}
 		updateBounds();
 	}
 
 	private int removeEditAreaComponent(EditArea area) {
-		int index = editAreas.indexOf(area);
+		int index = indexOf(area);
 		editAreas.remove(area);
 		remove(area.asComponent());
 		for (int followerIndex = index; followerIndex < editAreas.size(); followerIndex++) {
@@ -581,6 +591,27 @@ public class EditContainer extends JPanel {
 			.filter(editArea -> editArea.isTextArea())
 			.map(editArea -> editArea.asTextArea())
 			.collect(Collectors.toList());
+	}
+
+	public int indexOf(EditArea initiatingEditArea) {
+		return editAreas.indexOf(initiatingEditArea);
+	}
+
+	public List<EditArea> removeEditAreaComponents(int fromIndex) {
+		List<EditArea> removedAreas = new ArrayList<>();
+		while(editAreas.size() > fromIndex) {
+			EditArea area = editAreas.get(fromIndex);
+			removeEditAreaComponent(area);
+			removedAreas.add(area);
+		}
+		return removedAreas;
+	}
+
+	public void addEditAreas(List<EditArea> areas) {
+		int addIndex = editAreas.size();
+		for(EditArea area: areas) {
+			addEditArea(area, addIndex++);
+		}
 	}
 
 }
