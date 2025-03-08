@@ -403,6 +403,11 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
     }
   }
 
+  @Override
+  public void requestFocus() {
+    cells.get(0).get(0).requestFocus();
+  }
+
   public void addRowUDBL(int rowIndex) {
     addEmptyRow(rowIndex);
     Specman.instance().addEdit(new UndoableTableRowAdded(this, rowIndex, cells.get(rowIndex)));

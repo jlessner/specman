@@ -21,13 +21,13 @@ public class UndoableToggleStepBorder extends AbstractUndoableInteraction {
   @Override
   public void undoEdit() throws CannotUndoException {
     sequenz.toggleBorderType(schritt);
-    editor.diagrammAktualisieren(schritt);
+    editor.diagrammAktualisieren(schritt.getFirstEditArea());
   }
 
   @Override
   public void redoEdit() throws CannotRedoException {
     sequenz.toggleBorderType(schritt);
-    editor.diagrammAktualisieren(schritt);
+    editor.diagrammAktualisieren(schritt.getFirstEditArea());
   }
 
   @Override

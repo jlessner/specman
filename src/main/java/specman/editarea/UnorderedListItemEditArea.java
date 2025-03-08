@@ -1,12 +1,10 @@
 package specman.editarea;
 
-import com.jgoodies.forms.factories.CC;
 import specman.Aenderungsart;
 import specman.Specman;
 import specman.model.v001.ListItemEditAreaModel_V001;
 import specman.pdf.CircleShape;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 

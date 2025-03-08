@@ -82,7 +82,7 @@ public class DraggingLogic implements Serializable {
         ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(specman, ausgewaehlterZweig);
         specman.addEdit(new UndoableZweigHinzugefuegt(specman, neuerZweig, caseSchritt));
         step.skalieren(specman.getZoomFactor() , 100);
-        specman.diagrammAktualisieren(step);
+        specman.diagrammAktualisieren(step.getFirstEditArea());
     }
 
     // GlassPane and add Step to sequence

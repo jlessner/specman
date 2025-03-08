@@ -1,5 +1,6 @@
 package specman;
 
+import specman.editarea.EditArea;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextEditArea;
 import specman.undo.manager.UndoRecording;
@@ -23,7 +24,7 @@ public interface EditorI extends FocusListener {
 	void diagrammLaden(File diagramFile);
 	int getZoomFactor();
 	void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation);
-	void diagrammAktualisieren(AbstractSchrittView schrittImFokus);
+	void diagrammAktualisieren(EditArea editArea);
 	InteractiveStepFragment getLastFocusedTextArea();
 	void setLastFocusedTextArea(TextEditArea area);
 	void addEdit(UndoableEdit edit);

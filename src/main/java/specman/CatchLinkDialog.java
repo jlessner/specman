@@ -104,7 +104,7 @@ public class CatchLinkDialog extends JDialog {
             BreakSchrittView breakStepToLink = ((JList<BreakSchrittView>) e.getSource()).getSelectedValue();
             CatchSchrittSequenzView catchSequence = sequenz.catchSequenzAnhaengen(breakStepToLink);
             AbstractSchrittView firstInCatchSequence = catchSequence.getSchritte().get(0);
-            editor.diagrammAktualisieren(firstInCatchSequence);
+            editor.diagrammAktualisieren(firstInCatchSequence.getFirstEditArea());
             CatchLinkDialog.this.setVisible(false);
         }
     }

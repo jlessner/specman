@@ -6,6 +6,7 @@ import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
+import specman.editarea.EditArea;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
@@ -309,7 +310,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return "fill:" + groesse + "px";
 	}
 
-	public void requestFocus() { editContainer.requestFocus(); }
+	public EditArea getFirstEditArea() { return editContainer.getFirstEditArea(); }
 
 	public JComponent toggleBorderType() {
 		JComponent toggleResult;

@@ -344,7 +344,7 @@ public class SchrittSequenzView {
 		updateLayoutRowspecsForAllsStepsAndGaps();
 		renummerieren(sequenzBasisId);
 		AbstractSchrittView naechsterFokus = schritte.get(schrittIndex == 0 ? schrittIndex : schrittIndex-1);
-		Specman.instance().diagrammAktualisieren(naechsterFokus);
+		Specman.instance().diagrammAktualisieren(naechsterFokus.getFirstEditArea());
 		return schrittIndex;
 	}
 
@@ -362,7 +362,7 @@ public class SchrittSequenzView {
 				schrittZwischenschieben(schritt, After, vorgaengerSchritt);
 			}
 		}
-		Specman.instance().diagrammAktualisieren(schritt);
+		Specman.instance().diagrammAktualisieren(schritt.getFirstEditArea());
 	}
 
 	public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {

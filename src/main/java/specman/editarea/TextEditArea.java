@@ -681,23 +681,23 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         getParent().addImage(imageFile, this, aenderungsart);
     }
 
-    public void addTable(int columns, int rows, Aenderungsart aenderungsart) {
-        getParent().addTable(this, columns, rows, aenderungsart);
+    public EditArea addTable(int columns, int rows, Aenderungsart aenderungsart) {
+        return getParent().addTable(this, columns, rows, aenderungsart);
     }
 
-    public void toggleListItem(boolean ordered, Aenderungsart aenderungsart) {
+    public EditArea toggleListItem(boolean ordered, Aenderungsart aenderungsart) {
         // TODO JL: Evt. noch schlauer machen. Toggle von Ordered -> Unordered und umgekehrt
         EditContainer editContainer = getParent();
         if (editContainer.getParent() instanceof UnorderedListItemEditArea) {
             UnorderedListItemEditArea unorderedListItemEditArea = (UnorderedListItemEditArea) editContainer.getParent();
-            unorderedListItemEditArea.getParent().dissolveListItemEditArea(unorderedListItemEditArea, aenderungsart);
+            return unorderedListItemEditArea.getParent().dissolveListItemEditArea(unorderedListItemEditArea, aenderungsart);
         }
         if (editContainer.getParent() instanceof OrderedListItemEditArea) {
             OrderedListItemEditArea orderedListItemEditArea = (OrderedListItemEditArea) editContainer.getParent();
-            orderedListItemEditArea.getParent().dissolveListItemEditArea(orderedListItemEditArea, aenderungsart);
+            return orderedListItemEditArea.getParent().dissolveListItemEditArea(orderedListItemEditArea, aenderungsart);
         }
         else {
-            getParent().addListItem(this, ordered, aenderungsart);
+            return getParent().addListItem(this, ordered, aenderungsart);
         }
     }
 

@@ -9,6 +9,7 @@ import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import org.jetbrains.annotations.Nullable;
 import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
+import specman.editarea.EditArea;
 import specman.model.ModelEnvelope;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -469,7 +470,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(Specman.this, ausgewaehlterZweig);
 				addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
 				schritt.skalieren(zoomFaktor, 100);
-				diagrammAktualisieren(schritt);
+				diagrammAktualisieren(schritt.getFirstEditArea());
 				resyncSchrittnummerStil();
 			}
 		});
@@ -554,7 +555,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					SchrittSequenzView sequenz = schritt.getParent();
 					sequenz.toggleBorderType(schritt);
 					addEdit(new UndoableToggleStepBorder(Specman.this, schritt, sequenz));
-					diagrammAktualisieren(schritt);
+					diagrammAktualisieren(schritt.getFirstEditArea());
 				}
 			}
 		});
@@ -691,7 +692,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				File selectedFile = fileChooser.getSelectedFile();
 				if (selectedFile != null && selectedFile.exists()) {
 					lastFocusedTextArea.addImage(selectedFile, initialArt());
-					diagrammAktualisieren(null);
+					diagrammAktualisieren(lastFocusedTextArea);
 				}
 			}
 		}
@@ -699,16 +700,16 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	public void addTable(int columns, int rows) {
 		if (lastFocusedTextArea != null) {
-			lastFocusedTextArea.addTable(columns, rows, initialArt());
-			diagrammAktualisieren(null);
+			EditArea nextFocusArea = lastFocusedTextArea.addTable(columns, rows, initialArt());
+			diagrammAktualisieren(nextFocusArea);
 		}
 	}
 
 	@Override
 	public void toggleListItem(boolean ordered) {
 		if (lastFocusedTextArea != null) {
-			lastFocusedTextArea.toggleListItem(ordered, initialArt());
-			diagrammAktualisieren(null);
+			EditArea nextFocusArea = lastFocusedTextArea.toggleListItem(ordered, initialArt());
+			diagrammAktualisieren(nextFocusArea);
 		}
 	}
 
@@ -870,7 +871,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		hauptlayout.setColumnSpec(2, ColumnSpec.decode(breite + "px"));
 	}
 
-	public void diagrammAktualisieren(AbstractSchrittView schrittImFokus) {
+	public void diagrammAktualisieren(EditArea editArea) {
 		// Null-Abfrage ist für den Fall, dass der User etwas im Intro oder Outro macht,
 		// bevor er überhaupt das Diagramm angefangen hat. Sollte man später noch mal
 		// bereinigen, dass das gar nicht geht, solange die Welcome Message noch angezeigt wird.
@@ -885,8 +886,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				public void run() {
 					diagrammbreiteSetzen(diagrammbreite);
 					hauptSequenzContainer.setVisible(true);
-					if (schrittImFokus != null) {
-						schrittImFokus.requestFocus();
+					if (editArea != null) {
+						editArea.requestFocus();
 					}
 					scrollPane.getViewport().setViewPosition(viewPosition);
 				}
@@ -898,7 +899,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		addEdit(new UndoableSchrittHinzugefuegt(newStep, newStep.getParent()));
 		newStep.skalieren(zoomFaktor, 100);
 		newStep.initInheritedTextFieldIndentions();
-		diagrammAktualisieren(newStep);
+		diagrammAktualisieren(newStep.getFirstEditArea());
 	}
 
 	private void initComponents() {

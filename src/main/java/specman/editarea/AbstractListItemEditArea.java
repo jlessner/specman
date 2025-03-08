@@ -190,6 +190,9 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
     return content;
   }
 
+  @Override
+  public void requestFocus() { content.requestFocus(); }
+
   public void split(TextEditArea initiatingEditArea) {
     EditorI editor = Specman.instance();
     try (UndoRecording ur = editor.composeUndo()) {
@@ -203,8 +206,7 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
       List<EditArea> removedAreas = content.removeEditAreaComponents(splitAreaIndex + 1);
       splitListItemEditArea.addEditAreas(removedAreas);
       this.getParent().addListItem(this, splitListItemEditArea);
-      editor.diagrammAktualisieren(null);
-      splitTextEditArea.requestFocus();
+      editor.diagrammAktualisieren(splitTextEditArea);
     }
   }
 
