@@ -10,6 +10,8 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ListItemEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
+import specman.pdf.CircleShape;
+import specman.pdf.FormattedShapeText;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.*;
@@ -67,18 +69,22 @@ public class ListItemEditArea extends JPanel implements EditArea {
   }
 
   private void drawPrompt(Graphics2D g) {
-    Integer firstLineHeight = content.getFirstLineHeight();
-    System.out.println(firstLineHeight);
-    if (firstLineHeight == null) {
-      firstLineHeight = promptSpace;
-    }
-    int centerX = promptSpace / 2 + DEFAULT_PROMPT_RADIUS;
-    int centerY = firstLineHeight / 2 + DEFAULT_PROMPT_RADIUS;
-    Shape circle = new Ellipse2D.Double(centerX - promptRadius, centerY - promptRadius, 2.0 * promptRadius, 2.0 * promptRadius);
-
+    Point prompCenter = promptCenter();
+    Shape circle = new Ellipse2D.Double(prompCenter.x - promptRadius, prompCenter.y - promptRadius, 2.0 * promptRadius, 2.0 * promptRadius);
     g.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
     g.setColor(DIAGRAMM_LINE_COLOR);
     g.fill(circle);
+  }
+
+  private Point promptCenter() {
+    Integer firstLineHeight = content.getFirstLineHeight();
+    if (firstLineHeight == null) {
+      firstLineHeight = promptSpace;
+    }
+    return new Point(
+    promptSpace / 2 + DEFAULT_PROMPT_RADIUS,
+      firstLineHeight / 2 + DEFAULT_PROMPT_RADIUS
+    );
   }
 
   @Override
@@ -160,7 +166,9 @@ public class ListItemEditArea extends JPanel implements EditArea {
 
   @Override
   public specman.pdf.Shape getShape() {
-    return null;
+    return new specman.pdf.Shape(this)
+      .add(new CircleShape(promptCenter(), promptRadius))
+      .add(content.getShape());
   }
 
   @Override
