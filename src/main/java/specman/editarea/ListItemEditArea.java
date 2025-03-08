@@ -1,6 +1,7 @@
 package specman.editarea;
 
 import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 import specman.EditorI;
@@ -9,20 +10,29 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ListItemEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
-import specman.pdf.Shape;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
+import java.awt.geom.Ellipse2D;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.awt.RenderingHints.KEY_ANTIALIASING;
+import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
+import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
+
 public class ListItemEditArea extends JPanel implements EditArea {
+  static final int DEFAULT_PROMPT_SPACE = 20;
+  static final int DEFAULT_PROMPT_RADIUS = 3;
   private EditContainer content;
   private Aenderungsart aenderungsart;
-  private JLabel itemNumber;
+  private JPanel itemPrompt;
+  private int promptRadius;
+  private int promptSpace;
+  private FormLayout layout;
 
   public ListItemEditArea(TextEditArea initialContent, Aenderungsart aenderungsart) {
     this.aenderungsart = aenderungsart;
@@ -38,14 +48,37 @@ public class ListItemEditArea extends JPanel implements EditArea {
 
   private void initLayout() {
     this.setBackground(aenderungsart.toBackgroundColor());
-    this.itemNumber = new JLabel("o");
-    this.itemNumber.setOpaque(true);
-    itemNumber.setBackground(aenderungsart.toBackgroundColor());
+    this.promptRadius = DEFAULT_PROMPT_RADIUS;
+    this.promptSpace = DEFAULT_PROMPT_SPACE;
+    this.itemPrompt = new JPanel() {
+      @Override
+      public void paint(Graphics g) {
+        super.paint(g);
+        drawPrompt((Graphics2D)g);
+      }
+    };
+    this.itemPrompt.setOpaque(true);
+    itemPrompt.setBackground(aenderungsart.toBackgroundColor());
 
-    FormLayout layout = new FormLayout("10px, 10px, default:grow", "fill:pref:grow");
+    layout = new FormLayout(promptSpace + "px, default:grow", "fill:pref:grow");
     setLayout(layout);
-    add(itemNumber, CC.xy(1, 1));
-    add(content, CC.xy(3, 1));
+    add(itemPrompt, CC.xy(1, 1));
+    add(content, CC.xy(2, 1));
+  }
+
+  private void drawPrompt(Graphics2D g) {
+    Integer firstLineHeight = content.getFirstLineHeight();
+    System.out.println(firstLineHeight);
+    if (firstLineHeight == null) {
+      firstLineHeight = promptSpace;
+    }
+    int centerX = promptSpace / 2 + DEFAULT_PROMPT_RADIUS;
+    int centerY = firstLineHeight / 2 + DEFAULT_PROMPT_RADIUS;
+    Shape circle = new Ellipse2D.Double(centerX - promptRadius, centerY - promptRadius, 2.0 * promptRadius, 2.0 * promptRadius);
+
+    g.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
+    g.setColor(DIAGRAMM_LINE_COLOR);
+    g.fill(circle);
   }
 
   @Override
@@ -74,7 +107,10 @@ public class ListItemEditArea extends JPanel implements EditArea {
 
   @Override
   public void skalieren(int prozentNeu, int prozentAktuell) {
-
+    content.skalieren(prozentNeu, prozentAktuell);
+    promptRadius = DEFAULT_PROMPT_RADIUS * prozentNeu / 100;
+    promptSpace = DEFAULT_PROMPT_SPACE * prozentNeu / 100;
+    layout.setColumnSpec(1, ColumnSpec.decode(promptSpace + "px"));
   }
 
   @Override
@@ -123,7 +159,7 @@ public class ListItemEditArea extends JPanel implements EditArea {
   }
 
   @Override
-  public Shape getShape() {
+  public specman.pdf.Shape getShape() {
     return null;
   }
 

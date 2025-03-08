@@ -10,6 +10,7 @@ import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.pdf.FormattedShapeText;
 import specman.pdf.Shape;
+import specman.pdf.TextlineDimension;
 import specman.undo.UndoableStepnumberLinkAdded;
 import specman.undo.UndoableStepnumberLinkRemoved;
 import specman.undo.manager.UndoRecording;
@@ -29,6 +30,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
+import javax.swing.text.Utilities;
 import javax.swing.text.html.CSS;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -36,6 +38,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -985,4 +988,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     public int getLength() { return getDocument().getLength(); }
+
+    public Integer getFirstLineHeight() {
+        try {
+            return (int)modelToView2D(1).getHeight();
+        }
+        catch(BadLocationException blc) {
+            return null;
+        }
+    }
 }

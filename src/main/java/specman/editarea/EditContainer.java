@@ -614,4 +614,8 @@ public class EditContainer extends JPanel {
 		}
 	}
 
+	public Integer getFirstLineHeight() {
+		TextEditArea firstArea = editAreas.get(0).asTextArea();
+		return firstArea.getFirstLineHeight();
+	}
 }
