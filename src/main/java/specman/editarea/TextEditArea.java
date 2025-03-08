@@ -456,7 +456,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             }
             case KeyEvent.VK_ENTER -> {
                 EditContainer editContainer = getParent();
-                if (editContainer.getParent() instanceof AbstractListItemEditArea) {
+                if (!e.isShiftDown() && editContainer.getParent() instanceof AbstractListItemEditArea) {
                     ((AbstractListItemEditArea)editContainer.getParent()).split(this);
                     e.consume();
                 }
