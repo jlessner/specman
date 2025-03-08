@@ -1,6 +1,5 @@
 package specman.editarea;
 
-import com.itextpdf.layout.element.Text;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -24,10 +23,7 @@ import specman.undo.manager.UndoRecording;
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.io.File;
@@ -144,7 +140,9 @@ public class EditContainer extends JPanel {
 			}
 			else if (editAreaModel instanceof ListItemEditAreaModel_V001) {
 				ListItemEditAreaModel_V001 listItemEditAreaModel = (ListItemEditAreaModel_V001)editAreaModel;
-				editArea = new ListItemEditArea(listItemEditAreaModel);
+				editArea = listItemEditAreaModel.ordered
+					? new OrderedListItemEditArea(listItemEditAreaModel)
+					: new UnorderedListItemEditArea(listItemEditAreaModel);
 			}
 			else {
 				throw new RuntimeException("Was soll das denn sein? " + editAreaModel);
@@ -394,18 +392,7 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
-	/** Adding a list item area is a bit tricky. We first try to find fix line breaks before and after the current caret position.
-	 * The text between these line breaks makes up the initial text of the line item and the line breaks are removed from the splitted
-	 * text portions. However, there are quite a few special cases to be considered:
-	 * <ul>
-	 *   <li>There may no line break occur before the carret. In that case, <i>all</i> the text up to the line break after the carret
-	 *   becomes the initial content of the list item. The initiating text area becomes empty.</li>
-	 *   <li>There may no line break occur after the carret.</li>
-	 *   <li>The carret may be placed at a line break which is actually a typical situation: Press return, to start a new line, then
-	 *   press the list item button to start a list.</li>
-	 * </ul>
-	 */
-	public void addListItem(TextEditArea initiatingTextArea, Aenderungsart aenderungsart) {
+	public void addListItem(TextEditArea initiatingTextArea, boolean ordered, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
 			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
@@ -414,7 +401,9 @@ public class EditContainer extends JPanel {
 			if (cutOffTextArea == null) {
 				cutOffTextArea = new TextEditArea(new TextEditAreaModel_V001(""), initiatingTextArea.getFont());
 			}
-			ListItemEditArea liEditArea = new ListItemEditArea(cutOffTextArea, aenderungsart);
+			AbstractListItemEditArea liEditArea = ordered
+				? new OrderedListItemEditArea(cutOffTextArea, aenderungsart)
+				: new UnorderedListItemEditArea(cutOffTextArea, aenderungsart);
 			addEditArea(liEditArea, initiatingTextAreaIndex+1);
 			editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, liEditArea, null));
 			cutOffTextArea.requestFocus();
@@ -422,7 +411,7 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
-	public void addListItem(ListItemEditArea initiatingListItemEditArea, ListItemEditArea splitListItemEditArea) {
+	public void addListItem(AbstractListItemEditArea initiatingListItemEditArea, AbstractListItemEditArea splitListItemEditArea) {
 		int initiatingIndex = indexOf(initiatingListItemEditArea);
 		addEditArea(splitListItemEditArea, initiatingIndex+1);
 	}
@@ -485,7 +474,7 @@ public class EditContainer extends JPanel {
 	}
 
 	/** Remove the passed edit area from this edit container and add its content areas directly instead. */
-	public void dissolveListItemEditArea(ListItemEditArea liEditArea, Aenderungsart aenderungsart) {
+	public void dissolveListItemEditArea(AbstractListItemEditArea liEditArea, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
 			int liEditAreaIndex = removeEditAreaComponent(liEditArea);
@@ -617,5 +606,29 @@ public class EditContainer extends JPanel {
 	public Integer getFirstLineHeight() {
 		TextEditArea firstArea = editAreas.get(0).asTextArea();
 		return firstArea.getFirstLineHeight();
+	}
+
+	public int getItemNumber(OrderedListItemEditArea item) {
+		int itemIndex = indexOf(item);
+		int itemNumber = 1;
+		while(editAreas.get(itemIndex-itemNumber).isOrderedListItemArea()) {
+			itemNumber++;
+		}
+		return itemNumber;
+	}
+
+	@Override
+	public Font getFont() {
+		return editAreas != null && !editAreas.isEmpty()
+			? editAreas.get(0).asComponent().getFont()
+			: super.getFont();
+	}
+
+	public int getBaseline() {
+		FontMetrics metrics = getFontMetrics(getFont());
+		if (editAreas != null && !editAreas.isEmpty()) {
+			return metrics.getHeight() - metrics.getDescent() + editAreas.get(0).asTextArea().getMargin().top;
+		}
+		return metrics.getHeight() - metrics.getDescent();
 	}
 }

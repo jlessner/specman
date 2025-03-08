@@ -44,8 +44,9 @@ public interface EditArea extends InteractiveStepFragment {
 
   TextEditArea asTextArea();
 
-  boolean isTextArea();
+  default boolean isTextArea() { return false; }
 
+  default boolean isOrderedListItemArea() { return false; }
   ImageEditArea asImageArea();
 
   void setQuellStil();
@@ -67,4 +68,5 @@ public interface EditArea extends InteractiveStepFragment {
   void setAenderungsart(Aenderungsart aenderungsart);
 
   Aenderungsart getAenderungsart();
+
 }

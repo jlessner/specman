@@ -295,11 +295,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public TextEditArea asTextArea() { return null; }
 
   @Override
-  public boolean isTextArea() {
-    return false;
-  }
-
-  @Override
   public ImageEditArea asImageArea() { return this; }
 
   @Override

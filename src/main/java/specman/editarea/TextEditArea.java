@@ -10,7 +10,6 @@ import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.pdf.FormattedShapeText;
 import specman.pdf.Shape;
-import specman.pdf.TextlineDimension;
 import specman.undo.UndoableStepnumberLinkAdded;
 import specman.undo.UndoableStepnumberLinkRemoved;
 import specman.undo.manager.UndoRecording;
@@ -30,7 +29,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
-import javax.swing.text.Utilities;
 import javax.swing.text.html.CSS;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -38,7 +36,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -458,9 +455,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 }
             }
             case KeyEvent.VK_ENTER -> {
-                EditContainer editContainer = (EditContainer)getParent();
-                if (editContainer.getParent() instanceof ListItemEditArea) {
-                    ((ListItemEditArea)editContainer.getParent()).split(this);
+                EditContainer editContainer = getParent();
+                if (editContainer.getParent() instanceof AbstractListItemEditArea) {
+                    ((AbstractListItemEditArea)editContainer.getParent()).split(this);
                     e.consume();
                 }
             }
@@ -688,14 +685,19 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         getParent().addTable(this, columns, rows, aenderungsart);
     }
 
-    public void toggleListItem(Aenderungsart aenderungsart) {
+    public void toggleListItem(boolean ordered, Aenderungsart aenderungsart) {
+        // TODO JL: Evt. noch schlauer machen. Toggle von Ordered -> Unordered und umgekehrt
         EditContainer editContainer = getParent();
-        if (editContainer.getParent() instanceof ListItemEditArea) {
-            ListItemEditArea listItemEditArea = (ListItemEditArea) editContainer.getParent();
-            listItemEditArea.getParent().dissolveListItemEditArea(listItemEditArea, aenderungsart);
+        if (editContainer.getParent() instanceof UnorderedListItemEditArea) {
+            UnorderedListItemEditArea unorderedListItemEditArea = (UnorderedListItemEditArea) editContainer.getParent();
+            unorderedListItemEditArea.getParent().dissolveListItemEditArea(unorderedListItemEditArea, aenderungsart);
+        }
+        if (editContainer.getParent() instanceof OrderedListItemEditArea) {
+            OrderedListItemEditArea orderedListItemEditArea = (OrderedListItemEditArea) editContainer.getParent();
+            orderedListItemEditArea.getParent().dissolveListItemEditArea(orderedListItemEditArea, aenderungsart);
         }
         else {
-            getParent().addListItem(this, aenderungsart);
+            getParent().addListItem(this, ordered, aenderungsart);
         }
     }
 
@@ -736,9 +738,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     @Override
-    public boolean isTextArea() {
-        return true;
-    }
+    public boolean isTextArea() { return true; }
 
     @Override
     public ImageEditArea asImageArea() {

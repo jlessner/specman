@@ -20,7 +20,8 @@ import net.atlanticbb.tantlinger.ui.text.actions.HTMLLineBreakAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLLinkAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLTextEditAction;
 import net.atlanticbb.tantlinger.ui.text.actions.ImageAction;
-import net.atlanticbb.tantlinger.ui.text.actions.ListItemAction;
+import net.atlanticbb.tantlinger.ui.text.actions.OrderedListItemAction;
+import net.atlanticbb.tantlinger.ui.text.actions.UnorderedListItemAction;
 import net.atlanticbb.tantlinger.ui.text.actions.SpecialCharAction;
 import net.atlanticbb.tantlinger.ui.text.actions.StepnumberLinkAction;
 import net.atlanticbb.tantlinger.ui.text.actions.TableAction;
@@ -306,7 +307,11 @@ public class HTMLEditorPane extends JPanel
     actionList.add(act);
     insertMenu.add(act);
 
-    act = new ListItemAction();
+    act = new UnorderedListItemAction();
+    actionList.add(act);
+    insertMenu.add(act);
+
+    act = new OrderedListItemAction();
     actionList.add(act);
     insertMenu.add(act);
 
@@ -438,7 +443,11 @@ public class HTMLEditorPane extends JPanel
     actionList.add(act);
     addToToolBar(formatToolBar, act);
 
-    act = new ListItemAction();
+    act = new UnorderedListItemAction();
+    actionList.add(act);
+    addToToolBar(formatToolBar, act);
+
+    act = new OrderedListItemAction();
     actionList.add(act);
     addToToolBar(formatToolBar, act);
 
