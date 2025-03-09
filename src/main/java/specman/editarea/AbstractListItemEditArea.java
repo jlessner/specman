@@ -221,4 +221,20 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
     splitListItemEditArea.addEditAreas(removedAreas);
     this.getParent().addListItem(this, splitListItemEditArea);
   }
+
+  @Override public boolean isListItemArea() { return true; }
+
+  @Override public AbstractListItemEditArea asListItemArea() { return this; };
+
+  public TextEditArea appendText(String text) {
+    TextEditArea lastArea = content.getLastEditArea().asTextArea();
+    if (lastArea == null) {
+      lastArea = new TextEditArea(new TextEditAreaModel_V001(text), getFont());
+      content.appendTextEditArea(lastArea);
+    }
+    else {
+      lastArea.appendText(text);
+    }
+    return lastArea;
+  }
 }

@@ -422,6 +422,10 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_BACK_SPACE -> {
+                if (getCaretPosition() == 0) {
+                    dissolveEditArea();
+                    return;
+                }
                 if (shouldPreventActionInsideStepnumberLink()) {
                     skipToStepnumberLinkEnd();
                     e.consume();
@@ -474,6 +478,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         } else {
             standardStilSetzenWennNochNichtVorhanden();
         }
+    }
+
+    /** When pressing backspace at the very beginning of a text area, we check if this indicates that the
+     * edit area should be dissolved in the sense that its is removed and its content is merged with the
+     * one of a preceeding edit area. */
+    private void dissolveEditArea() {
+        getParent().tryDissolveEditArea(this);
     }
 
     private void handleTextDeletion() {

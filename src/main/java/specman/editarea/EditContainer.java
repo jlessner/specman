@@ -1,5 +1,6 @@
 package specman.editarea;
 
+import com.itextpdf.layout.element.Text;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -415,6 +416,10 @@ public class EditContainer extends JPanel {
 		addEditArea(splitListItemEditArea, initiatingIndex+1);
 	}
 
+	public void appendTextEditArea(TextEditArea area) {
+		addEditArea(area, editAreas.size());
+	}
+
 	private void addEditArea(EditArea editArea, int index) {
 		editAreasFocusListeners.forEach(fl -> editArea.asComponent().addFocusListener(fl));
 		editAreasComponentListeners.forEach(cl -> editArea.asComponent().addComponentListener(cl));
@@ -635,6 +640,10 @@ public class EditContainer extends JPanel {
 		return hasAreas() ? editAreas.get(0) : null;
 	}
 
+	public EditArea getLastEditArea() {
+		return hasAreas() ? editAreas.get(editAreas.size()-1) : null;
+	}
+
 	public void addEditAreaByUndoRedo(TextEditArea initiatingTextArea, EditArea imageEditArea, TextEditArea cutOffTextArea) {
 		try (UndoRecording ur = Specman.instance().pauseUndo()) {
 			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
@@ -658,4 +667,30 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
+	public void tryDissolveEditArea(TextEditArea initiatingTextEditArea) {
+		// The text is the leading one in a list item
+		if (getParent() instanceof AbstractListItemEditArea) {
+			// Dissolve the list item by merging its content into the upper edit container
+			AbstractListItemEditArea liEditArea = (AbstractListItemEditArea)getParent();
+			EditArea lastLiftUp = liEditArea.getParent().dissolveListItemEditArea(liEditArea, liEditArea.aenderungsart);
+			Specman.instance().diagrammAktualisieren(lastLiftUp);
+		}
+		// The preceeding edit area is a list item
+		else {
+			int areaIndex = indexOf(initiatingTextEditArea);
+			if (areaIndex > 0) {
+				EditArea preceedingArea = editAreas.get(areaIndex-1);
+				if (preceedingArea.isListItemArea()) {
+					AbstractListItemEditArea liEditArea = preceedingArea.asListItemArea();
+					TextEditArea nextToFocus = mergeTextIntoListItem(liEditArea, initiatingTextEditArea);
+					removeEditAreaComponent(initiatingTextEditArea);
+					Specman.instance().diagrammAktualisieren(nextToFocus);
+				}
+			}
+		}
+	}
+
+	private TextEditArea mergeTextIntoListItem(AbstractListItemEditArea target, TextEditArea source) {
+		return target.appendText(source.getText());
+	}
 }
