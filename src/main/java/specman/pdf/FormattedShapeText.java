@@ -12,6 +12,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.font.FontInfo;
 import com.itextpdf.layout.font.FontProvider;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -44,7 +45,7 @@ public class FormattedShapeText extends AbstractShapeText {
   private static ConverterProperties properties;
   private static String htmlStyles;
 
-  public static FontProgram REGULAR_FONT_PROGRAM;
+  public static FontProvider fontProvider;
 
   private TextEditArea content;
 
@@ -189,12 +190,12 @@ public class FormattedShapeText extends AbstractShapeText {
   public static void initFont(int uizoomfactor, float swing2pdfScaleFactor) {
     try {
       properties = new ConverterProperties();
-      FontProvider fontProvider = new DefaultFontProvider(false, false, false);
-      REGULAR_FONT_PROGRAM = FontProgramFactory.createFont(TextStyles.SERIF_FONTCOLLECTION_REGULAR, TextStyles.FONT_INDEX, false);
-      fontProvider.addFont(REGULAR_FONT_PROGRAM);
+      fontProvider = new DefaultFontProvider(false, false, false);
+      fontProvider.addFont(FontProgramFactory.createFont(TextStyles.SERIF_FONTCOLLECTION_REGULAR, TextStyles.FONT_INDEX, false));
       fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaB.ttc", TextStyles.FONT_INDEX, false));
       fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaI.ttc", TextStyles.FONT_INDEX, false));
       fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaZ.ttc", TextStyles.FONT_INDEX, false));
+      fontProvider.addFont(FontProgramFactory.createFont()); // Helvetica
       properties.setFontProvider(fontProvider);
       initHTMLStyles(uizoomfactor, swing2pdfScaleFactor);
     }

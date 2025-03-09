@@ -89,7 +89,6 @@ public class PDFRenderer {
     pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
     pdfCanvas.setLineWidth(((float)LINIENBREITE) * swing2pdfScaleFactor);
 
-    LabelShapeText.initFont(uizoomfactor, swing2pdfScaleFactor);
     FormattedShapeText.initFont(uizoomfactor, swing2pdfScaleFactor);
 
     return overlengthPagesize;

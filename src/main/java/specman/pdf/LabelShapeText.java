@@ -5,23 +5,22 @@ import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.font.PdfSimpleFont;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.font.FontCharacteristics;
+import com.itextpdf.layout.font.FontInfo;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
+
+import static specman.pdf.FormattedShapeText.fontProvider;
 
 public class LabelShapeText extends AbstractShapeText {
-
-  private static PdfFont LABEL_FONT;
 
   private String content;
 
   public LabelShapeText(String content, Insets insets, Color color, Font font) {
     super(insets, color, font);
     this.content = content;
-  }
-
-  public static void initFont(int uizoomfactor, float swing2pdfScaleFactor) {
-    LABEL_FONT = createFont("Helvetica");
   }
 
   public void writeToPDF(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas, Document document) {
@@ -39,8 +38,11 @@ public class LabelShapeText extends AbstractShapeText {
 
   @Override
   protected PdfFont getPDFFont() {
-    return font != null
-      ? PdfFontFactory.createFont(FormattedShapeText.REGULAR_FONT_PROGRAM)
-      : LABEL_FONT;
+    String family = font.getFamily().replace(" ", "");
+    if (family.contains("Sans")) {
+      family = "Helvetica";
+    }
+    FontInfo info = fontProvider.getFontSelector(Arrays.asList(family), null).bestMatch();
+    return fontProvider.getPdfFont(info);
   }
 }
