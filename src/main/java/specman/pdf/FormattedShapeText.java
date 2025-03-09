@@ -68,6 +68,7 @@ public class FormattedShapeText extends AbstractShapeText {
         String lineItemPrompt = listItemPromptFactory.createPrompt(lineHtml, liIndex);
         lineHtml = removeLinebreakingElementsFromHtmlLine(lineHtml);
         lineHtml = stylifyTextAlignment(lineHtml);
+        lineHtml = removeMargin0Paragraphs(lineHtml);
         lineHtml = injectStylesheet(lineHtml);
         java.util.List<IElement> elements = HtmlConverter.convertToElements(lineHtml, properties);
 
@@ -111,6 +112,30 @@ public class FormattedShapeText extends AbstractShapeText {
 
   }
 
+  /** For some unknown reason, JEditorPane (resp. Chef) sometimes adds paragraphs with a styling like
+   * <p style="margin-top: 0">text goes here</p>. They don't have an effect within the editor pane but
+   * they mess up the PDF rendering. So these paragraphs must be removed. As soon as Chef is removed
+   * from the code, there shouldn't occur any paragraphs at all within the texts. */
+  private String removeMargin0Paragraphs(String lineHtml) {
+    String SEARCHSTRING = "<p style=\"margin-top: 0\">";
+    int numParagraphs = 0;
+    int searchIndex = 0;
+    int finding;
+    while(true) {
+      finding = lineHtml.indexOf(SEARCHSTRING, searchIndex);
+      if (finding == -1) {
+        break;
+      }
+      numParagraphs++;
+      searchIndex += finding + SEARCHSTRING.length();
+    }
+    lineHtml = lineHtml.replace(SEARCHSTRING, "");
+    for (int i = 0; i < numParagraphs; i++) {
+      lineHtml = lineHtml.replaceFirst("<p>", "");
+    }
+    return lineHtml;
+  }
+
   private String removeLinebreakingElementsFromHtmlLine(String subHtml) {
     return subHtml
       // List items might be equipped with strange styling information when they were copied over
@@ -138,7 +163,7 @@ public class FormattedShapeText extends AbstractShapeText {
     return lines;
   }
 
-  /** JEditorPane expresses text alignment by plain HTML form in div elements like that:
+  /** JEditorPane expresses text alignment by plain HTML style in div elements like that:
    * <div align="right">text goes here</div>
    * This is not suitable für pdf2html which only supports text alignment to be expressed by styling like that:
    * <div style="text-align: right">text goes here</div>
