@@ -1,10 +1,13 @@
 package specman.pdf;
 
 import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.font.PdfSimpleFont;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class LabelShapeText extends AbstractShapeText {
 
@@ -35,5 +38,9 @@ public class LabelShapeText extends AbstractShapeText {
   public String getContent() { return content; }
 
   @Override
-  protected PdfFont getPDFFont() { return LABEL_FONT; }
+  protected PdfFont getPDFFont() {
+    return font != null
+      ? PdfFontFactory.createFont(FormattedShapeText.REGULAR_FONT_PROGRAM)
+      : LABEL_FONT;
+  }
 }

@@ -3,6 +3,7 @@ package specman.pdf;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
+import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.PageSize;
@@ -42,6 +43,8 @@ public class FormattedShapeText extends AbstractShapeText {
 
   private static ConverterProperties properties;
   private static String htmlStyles;
+
+  public static FontProgram REGULAR_FONT_PROGRAM;
 
   private TextEditArea content;
 
@@ -187,7 +190,8 @@ public class FormattedShapeText extends AbstractShapeText {
     try {
       properties = new ConverterProperties();
       FontProvider fontProvider = new DefaultFontProvider(false, false, false);
-      fontProvider.addFont(FontProgramFactory.createFont(TextStyles.SERIF_FONTCOLLECTION_REGULAR, TextStyles.FONT_INDEX, false));
+      REGULAR_FONT_PROGRAM = FontProgramFactory.createFont(TextStyles.SERIF_FONTCOLLECTION_REGULAR, TextStyles.FONT_INDEX, false);
+      fontProvider.addFont(REGULAR_FONT_PROGRAM);
       fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaB.ttc", TextStyles.FONT_INDEX, false));
       fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaI.ttc", TextStyles.FONT_INDEX, false));
       fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaZ.ttc", TextStyles.FONT_INDEX, false));

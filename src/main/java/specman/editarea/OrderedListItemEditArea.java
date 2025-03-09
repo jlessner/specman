@@ -3,6 +3,8 @@ package specman.editarea;
 import specman.Aenderungsart;
 import specman.Specman;
 import specman.model.v001.ListItemEditAreaModel_V001;
+import specman.pdf.LabelShapeText;
+import specman.pdf.Shape;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -14,6 +16,7 @@ import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 public class OrderedListItemEditArea extends AbstractListItemEditArea {
   private static final int DEFAULT_RIGHT_GAP = 3;
   private int rightGap;
+  private Rectangle2D lastLabelRect;
 
   public OrderedListItemEditArea(TextEditArea initialContent, Aenderungsart aenderungsart) {
     super(initialContent, aenderungsart);
@@ -37,8 +40,8 @@ public class OrderedListItemEditArea extends AbstractListItemEditArea {
     g.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
     g.setFont(content.getFont());
     g.setColor(DIAGRAMM_LINE_COLOR);
-    Rectangle2D rect = metrics.getStringBounds(itemNumberString, g);
-    g.drawString(itemNumberString, promptSpace - (int)rect.getWidth() - rightGap, baseline);
+    lastLabelRect = metrics.getStringBounds(itemNumberString, g);
+    g.drawString(itemNumberString, promptSpace - (int)lastLabelRect.getWidth() - rightGap, baseline);
   }
 
   @Override
@@ -49,8 +52,14 @@ public class OrderedListItemEditArea extends AbstractListItemEditArea {
 
   @Override
   public specman.pdf.Shape getShape() {
-    return super.getShape();
-    // TODO JL: Prompt hinzufügen
+    int topMargin = content.getTopMargin();
+    String itemNumberString = Integer.toString(getParent().getItemNumber(this));
+
+    System.out.println(lastLabelRect);
+    return super.getShape()
+      .add(new Shape(promptSpace - (int)lastLabelRect.getWidth() - rightGap, topMargin)
+        .withText(new LabelShapeText(itemNumberString, new Insets(0, 0, 0, 0), DIAGRAMM_LINE_COLOR, content.getFont()))
+      );
   }
 
   @Override

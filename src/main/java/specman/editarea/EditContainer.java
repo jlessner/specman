@@ -617,25 +617,22 @@ public class EditContainer extends JPanel {
 		return itemNumber;
 	}
 
-	@Override
-	public Font getFont() {
-		return editAreas != null && !editAreas.isEmpty()
-			? editAreas.get(0).asComponent().getFont()
-			: super.getFont();
-	}
+	private boolean hasAreas() { return editAreas != null && !editAreas.isEmpty(); }
 
 	public int getBaseline() {
 		FontMetrics metrics = getFontMetrics(getFont());
-		if (editAreas != null && !editAreas.isEmpty()) {
-			return metrics.getHeight() - metrics.getDescent() + editAreas.get(0).asTextArea().getMargin().top;
-		}
-		return metrics.getHeight() - metrics.getDescent();
+		return metrics.getHeight() - metrics.getDescent() + getTopMargin();
+	}
+
+	@Override
+	public Font getFont() { return hasAreas() ? getFirstEditArea().asComponent().getFont() : super.getFont(); }
+
+	public int getTopMargin() {
+		return hasAreas() ? getFirstEditArea().asTextArea().getMargin().top : 0;
 	}
 
 	public EditArea getFirstEditArea() {
-		return editAreas != null && !editAreas.isEmpty()
-			? editAreas.get(0)
-			: null;
+		return hasAreas() ? editAreas.get(0) : null;
 	}
 
 	public void addEditAreaByUndoRedo(TextEditArea initiatingTextArea, EditArea imageEditArea, TextEditArea cutOffTextArea) {
