@@ -312,7 +312,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	@Override public void focusLost(FocusEvent e) {
-		//setLastFocusedTextArea(e);
+		setLastFocusedTextArea(e);
 	}
 
 	private void setLastFocusedTextArea(FocusEvent e) {
@@ -324,7 +324,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	@Override
 	public void setLastFocusedTextArea(TextEditArea area) {
 		lastFocusedTextArea = area;
-		System.out.println("Last focused: " + area.getPlainText());
 	}
 
 	private void setDiagrammDatei(File diagrammDatei) {

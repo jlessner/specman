@@ -415,17 +415,6 @@ public class EditContainer extends JPanel {
 		addEditArea(splitListItemEditArea, initiatingIndex+1);
 	}
 
-	public void addEditAreaByUndoRedo(TextEditArea initiatingTextArea, EditArea imageEditArea, TextEditArea cutOffTextArea) {
-		try (UndoRecording ur = Specman.instance().pauseUndo()) {
-			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
-			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
-			if (cutOffTextArea != null) {
-				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
-			}
-		}
-		updateBounds();
-	}
-
 	private void addEditArea(EditArea editArea, int index) {
 		editAreasFocusListeners.forEach(fl -> editArea.asComponent().addFocusListener(fl));
 		editAreasComponentListeners.forEach(cl -> editArea.asComponent().addComponentListener(cl));
@@ -648,4 +637,28 @@ public class EditContainer extends JPanel {
 			? editAreas.get(0)
 			: null;
 	}
+
+	public void addEditAreaByUndoRedo(TextEditArea initiatingTextArea, EditArea imageEditArea, TextEditArea cutOffTextArea) {
+		try (UndoRecording ur = Specman.instance().pauseUndo()) {
+			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
+			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
+			if (cutOffTextArea != null) {
+				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
+			}
+		}
+		updateBounds();
+	}
+
+	public void mergeListItemAreasByUndoRedo(AbstractListItemEditArea initiatingArea, AbstractListItemEditArea splitArea) {
+		try (UndoRecording ur = Specman.instance().pauseUndo()) {
+			// The very first edit content in the split list item is ignored. It was created by
+			// splitting the last text area of the initiating list item which is already restored
+			// by undo of its text modification.
+			List<EditArea> areasToMerge = splitArea.content.removeEditAreaComponents(1);
+			initiatingArea.content.addEditAreas(areasToMerge);
+			initiatingArea.getParent().removeEditAreaByUndoRedo(splitArea, null);
+		}
+		updateBounds();
+	}
+
 }

@@ -22,12 +22,12 @@ public class UndoableEditAreaAdded extends AbstractUndoableInteraction {
   @Override
   protected void undoEdit() throws EditException {
     editContainer.removeEditAreaByUndoRedo(editArea, cutOffTextArea);
-    Specman.instance().diagrammAktualisieren(null);
+    Specman.instance().diagrammAktualisieren(initiatingTextArea);
   }
 
   @Override
   protected void redoEdit() throws EditException {
     editContainer.addEditAreaByUndoRedo(initiatingTextArea, editArea, cutOffTextArea);
-    Specman.instance().diagrammAktualisieren(null);
+    Specman.instance().diagrammAktualisieren(editArea);
   }
 }

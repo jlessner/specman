@@ -10,6 +10,7 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ListItemEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
+import specman.undo.UndoableListItemSplitted;
 import specman.undo.manager.UndoRecording;
 
 import javax.swing.*;
@@ -193,6 +194,12 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   @Override
   public void requestFocus() { content.requestFocus(); }
 
+  abstract protected AbstractListItemEditArea createSplittedItem(TextEditArea splitTextEditArea);
+
+  private void addEditAreas(List<EditArea> areas) {
+    content.addEditAreas(areas);
+  }
+
   public void split(TextEditArea initiatingEditArea) {
     EditorI editor = Specman.instance();
     try (UndoRecording ur = editor.composeUndo()) {
@@ -202,18 +209,16 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
         splitTextEditArea = new TextEditArea(new TextEditAreaModel_V001(""), initiatingEditArea.getFont());
       }
       AbstractListItemEditArea splitListItemEditArea =  createSplittedItem(splitTextEditArea);
-      int splitAreaIndex = content.indexOf(initiatingEditArea);
-      List<EditArea> removedAreas = content.removeEditAreaComponents(splitAreaIndex + 1);
-      splitListItemEditArea.addEditAreas(removedAreas);
-      this.getParent().addListItem(this, splitListItemEditArea);
-      editor.diagrammAktualisieren(splitTextEditArea);
+      moveEditAreas(initiatingEditArea, splitListItemEditArea);
+      editor.addEdit(new UndoableListItemSplitted(this, initiatingEditArea, splitListItemEditArea));
+      editor.diagrammAktualisieren(splitListItemEditArea.content.getFirstEditArea());
     }
   }
 
-  abstract protected AbstractListItemEditArea createSplittedItem(TextEditArea splitTextEditArea);
-
-  private void addEditAreas(List<EditArea> areas) {
-    content.addEditAreas(areas);
+  public void moveEditAreas(TextEditArea initiatingEditArea, AbstractListItemEditArea splitListItemEditArea) {
+    int splitAreaIndex = content.indexOf(initiatingEditArea);
+    List<EditArea> removedAreas = content.removeEditAreaComponents(splitAreaIndex + 1);
+    splitListItemEditArea.addEditAreas(removedAreas);
+    this.getParent().addListItem(this, splitListItemEditArea);
   }
-
 }
