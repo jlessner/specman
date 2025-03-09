@@ -237,4 +237,12 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
     }
     return lastArea;
   }
+
+  public EditArea getFirstEditArea() { return content.getFirstEditArea(); }
+
+  public void removeEditAreaComponent(EditArea editArea) { content.removeEditAreaComponent(editArea); }
+
+  public List<EditArea> removeEditAreaComponents(int fromIndex) { return content.removeEditAreaComponents(fromIndex); }
+
+  public EditArea getLastEditArea() { return content.getLastEditArea(); }
 }

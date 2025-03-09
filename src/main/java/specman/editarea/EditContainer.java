@@ -1,6 +1,5 @@
 package specman.editarea;
 
-import com.itextpdf.layout.element.Text;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -15,6 +14,7 @@ import specman.model.v001.ImageEditAreaModel_V001;
 import specman.model.v001.ListItemEditAreaModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
+import specman.undo.UndoableListItemDissolved;
 import specman.undo.props.UDBL;
 import specman.pdf.Shape;
 import specman.undo.UndoableEditAreaRemoved;
@@ -477,46 +477,7 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
-	/** Remove the passed edit area from this edit container and add its content areas directly instead. */
-	public EditArea dissolveListItemEditArea(AbstractListItemEditArea liEditArea, Aenderungsart aenderungsart) {
-		EditorI editor = Specman.instance();
-		EditArea lastLiftUpArea = null;
-		try (UndoRecording ur = editor.composeUndo()) {
-			int liEditAreaIndex = removeEditAreaComponent(liEditArea);
-			EditContainer liContentContainer = liEditArea.getContent();
-			if (liEditAreaIndex > 0) {
-				TextEditArea preceedingText = editAreas.get(liEditAreaIndex-1).asTextArea();
-				if (preceedingText != null) {
-					TextEditArea firstLiText = liContentContainer.editAreas.get(0).asTextArea();
-					if (firstLiText != null) {
-						preceedingText.appendText(firstLiText.getText());
-						lastLiftUpArea = preceedingText;
-					}
-					liContentContainer.removeEditAreaComponent(firstLiText);
-				}
-			}
-			List<EditArea> areas = liEditArea.getContent().modifyableEditAreas();
-			for (int i = 0; i < areas.size(); i++) {
-				lastLiftUpArea = areas.get(i);
-				liContentContainer.removeEditAreaComponent(lastLiftUpArea);
-				addEditArea(lastLiftUpArea, liEditAreaIndex + i);
-			}
-			if (lastLiftUpArea != null && lastLiftUpArea.isTextArea()) {
-				int lastLiftUpAreaIndex = indexOf(lastLiftUpArea);
-				if (editAreas.size() > lastLiftUpAreaIndex+1) {
-					TextEditArea followingTextEditArea = editAreas.get(lastLiftUpAreaIndex+1).asTextArea();
-					if (followingTextEditArea != null) {
-						lastLiftUpArea.asTextArea().appendText(followingTextEditArea.getText());
-						removeEditAreaComponent(followingTextEditArea);
-					}
-				}
-			}
-		}
-		updateBounds();
-		return lastLiftUpArea;
-	}
-
-	private int removeEditAreaComponent(EditArea area) {
+	int removeEditAreaComponent(EditArea area) {
 		int index = indexOf(area);
 		editAreas.remove(area);
 		remove(area.asComponent());
@@ -681,16 +642,110 @@ public class EditContainer extends JPanel {
 			if (areaIndex > 0) {
 				EditArea preceedingArea = editAreas.get(areaIndex-1);
 				if (preceedingArea.isListItemArea()) {
-					AbstractListItemEditArea liEditArea = preceedingArea.asListItemArea();
-					TextEditArea nextToFocus = mergeTextIntoListItem(liEditArea, initiatingTextEditArea);
-					removeEditAreaComponent(initiatingTextEditArea);
+					TextEditArea nextToFocus = mergeTextIntoListItem(preceedingArea.asListItemArea(), initiatingTextEditArea);
 					Specman.instance().diagrammAktualisieren(nextToFocus);
 				}
 			}
 		}
 	}
 
-	private TextEditArea mergeTextIntoListItem(AbstractListItemEditArea target, TextEditArea source) {
-		return target.appendText(source.getText());
+	private TextEditArea mergeTextIntoListItem(AbstractListItemEditArea target, TextEditArea initiatingTextEditArea) {
+		EditorI editor = Specman.instance();
+		try (UndoRecording ur = editor.composeUndo()) {
+			TextEditArea nextToFocus = target.appendText(initiatingTextEditArea.getText());
+			removeEditAreaComponent(initiatingTextEditArea);
+			// TODO JL: Undo recording!
+			return nextToFocus;
+		}
 	}
+
+	/** Remove the passed list item edit area from this edit container and add its content areas directly instead.
+	 * If the preceeding edit area is a text area, merge the first text edit area of the list item with it.
+	 * If the succeeding edit area is a text area and the list item's last edit aera es well, merge them. */
+	public EditArea dissolveListItemEditArea(AbstractListItemEditArea liEditArea, Aenderungsart aenderungsart) {
+		EditorI editor = Specman.instance();
+		List<EditArea> liftUpAreas = liEditArea.content.modifyableEditAreas();
+		EditArea lastLiftUpArea = null;
+		TextEditArea followingTextEditArea = null;
+		try (UndoRecording ur = editor.composeUndo()) {
+			boolean leadingTextMergeRequired = leadingTextMergeOnDissolve(liEditArea);
+			boolean trailingTextMergeRequired = trailingTextMergeOnDissolve(liEditArea);
+			int liEditAreaIndex = removeEditAreaComponent(liEditArea);
+			if (leadingTextMergeRequired) {
+				TextEditArea preceedingText = editAreas.get(liEditAreaIndex-1).asTextArea();
+				TextEditArea firstLiText = liEditArea.getFirstEditArea().asTextArea();
+				preceedingText.appendText(firstLiText.getText());
+				liEditArea.removeEditAreaComponent(firstLiText);
+				lastLiftUpArea = preceedingText;
+			}
+			List<EditArea> areas = liEditArea.removeEditAreaComponents(0);
+			for (int i = 0; i < areas.size(); i++) {
+				lastLiftUpArea = areas.get(i);
+				addEditArea(lastLiftUpArea, liEditAreaIndex + i);
+			}
+			if (trailingTextMergeRequired) {
+				int lastLiftUpAreaIndex = indexOf(lastLiftUpArea);
+				followingTextEditArea = editAreas.get(lastLiftUpAreaIndex+1).asTextArea();
+				lastLiftUpArea.asTextArea().appendText(followingTextEditArea.getText());
+				removeEditAreaComponent(followingTextEditArea);
+			}
+			editor.addEdit(new UndoableListItemDissolved(this, liEditArea, liEditAreaIndex, liftUpAreas, followingTextEditArea));
+		}
+		updateBounds();
+		return lastLiftUpArea;
+	}
+
+	/** Returns true, if dissolving the passed edit area requires a merge of its
+	 * last content edit area with a text area being located directly after the
+	 * list item itself. */
+	private boolean trailingTextMergeOnDissolve(AbstractListItemEditArea liEditArea) {
+		int liEditAreaIndex = indexOf(liEditArea);
+		return liEditAreaIndex < editAreas.size() - 1 &&
+			editAreas.get(liEditAreaIndex + 1).isTextArea() &&
+			liEditArea.getLastEditArea().isTextArea();
+	}
+
+	/** Returns true, if dissolving the passed edit area requires a merge of its
+	 * first content text area with a text area being located directly before the
+	 * list item itself. */
+	private boolean leadingTextMergeOnDissolve(AbstractListItemEditArea liEditArea) {
+		int liEditAreaIndex = indexOf(liEditArea);
+		return liEditAreaIndex > 0 &&
+			editAreas.get(liEditAreaIndex - 1).isTextArea() &&
+			liEditArea.getFirstEditArea().isTextArea();
+	}
+
+	public void undoDissolveListItemEditArea(AbstractListItemEditArea liEditArea, int liEditAreaIndex, List<EditArea> liftUpAreas, TextEditArea followingTextEditArea) {
+		try (UndoRecording ur = Specman.instance().pauseUndo()) {
+			addEditArea(liEditArea, liEditAreaIndex);
+			int lastLiftUpIndex = liEditAreaIndex + 1;
+			for (EditArea liftUpArea : liftUpAreas) {
+				if (indexOf(liftUpArea) != -1) {
+					lastLiftUpIndex = indexOf(liftUpArea);
+					removeEditAreaComponent(liftUpArea);
+				}
+			}
+			if (followingTextEditArea != null) {
+				addEditArea(followingTextEditArea, lastLiftUpIndex);
+			}
+			liEditArea.content.addEditAreas(liftUpAreas);
+		}
+	}
+
+	public EditArea redoDissolveListItemEditArea(AbstractListItemEditArea liEditArea, int liEditAreaIndex, List<EditArea> liftUpAreas, TextEditArea followingTextEditArea) {
+		try (UndoRecording ur = Specman.instance().pauseUndo()) {
+			if (leadingTextMergeOnDissolve(liEditArea)) {
+				liftUpAreas = liftUpAreas.subList(1, liftUpAreas.size());
+			}
+			removeEditAreaComponent(liEditArea);
+			for (EditArea liftUpArea : liftUpAreas) {
+				addEditArea(liftUpArea, liEditAreaIndex++);
+			}
+			if (followingTextEditArea != null) {
+				removeEditAreaComponent(followingTextEditArea);
+			}
+			return getFirstEditArea();
+		}
+	}
+
 }
