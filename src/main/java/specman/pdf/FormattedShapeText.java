@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static specman.pdf.ListItemPromptFactory.LISTITEM_IDENTION;
 import static specman.pdf.PDFRenderer.SWING2PDF_SCALEFACTOR_100PERCENT;
 
 public class FormattedShapeText extends AbstractShapeText {
@@ -62,14 +61,11 @@ public class FormattedShapeText extends AbstractShapeText {
     try {
       java.util.List<TextlineDimension> lines = scanLineDimensions();
       float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right) * swing2pdfScaleFactor;
-      ListItemPromptFactory listItemPromptFactory = new ListItemPromptFactory();
 
       for (TextlineDimension line: lines) {
         System.out.println("Zeile bis " + line.getDocIndexTo() + ", Höhe " + line.getHeight() + ", y = " + line.getY());
 
         String lineHtml = line.extractLineHtml(content);
-        Integer liIndex = LIRecordingListView.isLILine(content.getDocument(), line.getY());
-        String lineItemPrompt = listItemPromptFactory.createPrompt(lineHtml, liIndex);
         lineHtml = removeLinebreakingElementsFromHtmlLine(lineHtml);
         lineHtml = stylifyTextAlignment(lineHtml);
         lineHtml = removeMargin0Paragraphs(lineHtml);
@@ -92,21 +88,6 @@ public class FormattedShapeText extends AbstractShapeText {
           p.add((IBlockElement) elements.get(0));
 
           document.add(p);
-
-          if (lineItemPrompt != null) {
-            p = new Paragraph()
-              .setMargin(0)
-              .setMultipliedLeading(0.0f)
-              .setCharacterSpacing(-0.1f)
-              .setFontSize(scaledFontSize)
-              .setFixedPosition(
-                (renderOffset.x + line.getX() - LISTITEM_IDENTION) * swing2pdfScaleFactor,
-                (renderOffset.y - line.getY() - line.getHeight()) * swing2pdfScaleFactor,
-                (LISTITEM_IDENTION - 5) * swing2pdfScaleFactor);
-            elements = HtmlConverter.convertToElements(lineItemPrompt, properties);
-            p.add((IBlockElement) elements.get(0));
-            document.add(p);
-          }
         }
       }
     }

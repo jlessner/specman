@@ -33,7 +33,6 @@ import novaworx.textpane.SyntaxGutterBase;
 import org.bushe.swing.action.ActionList;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
-import specman.editarea.litrack.LIRecordingHTMLEditorKit;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -91,8 +90,7 @@ import java.util.Vector;
  * object-oriented approach for the following modifications:
  * <ul>
  *   <li>Additional toolbar icon for the creation of step links</li>
- *   <li>Different funtionality for the creation of tables and images</li>
- *   <li>Injection of {@link LIRecordingHTMLEditorKit} for rendering of list items</li>
+ *   <li>Different funtionality for the creation of tables, list items and images</li>
  * </ul>
  * The SHEF library in the project's local repository does not contain the class any more
  * to avoid selection of the wrojng implementation in a Specman distribution jar.
@@ -549,9 +547,6 @@ public class HTMLEditorPane extends JPanel
   }
 
   public void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation) {
-    LIRecordingHTMLEditorKit kit = new LIRecordingHTMLEditorKit();
-    ed.setEditorKit(kit);
-    StyleSheet styleSheet = kit.getStyleSheet();
     //styleSheet.addRule("body { background-color: #ccc; font-family: Times, serif; }");
     //styleSheet.addRule("html { background-color: #ccc; font-family: Times, serif; }");
     //styleSheet.addRule("@font-face { font-family: \"Default\"; src: local(\"Times New Roman\"); }");

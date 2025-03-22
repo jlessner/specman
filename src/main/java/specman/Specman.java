@@ -19,7 +19,6 @@ import specman.pdf.PDFExportChooser;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
 import specman.editarea.EditContainer;
-import specman.editarea.litrack.LIRecordingListView;
 import specman.editarea.TextEditArea;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
@@ -1128,11 +1127,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public void exportAsPDF() {
-		// Force complete rendering (to an unused image) to record line item prompt positions
-		LIRecordingListView.startRecording();
-		final Image unused = createImage(arbeitsbereich.getWidth(), arbeitsbereich.getHeight());
-		arbeitsbereich.paint(unused.getGraphics());
-
 		if (pdfExportChooser == null) {
 			pdfExportChooser = new PDFExportChooser();
 		}
@@ -1153,7 +1147,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					pdfExportChooser.getSelectedPageSize(),
 					pdfExportChooser.isPortrait(),
 					pdfExportChooser.getPaging(), zoomFaktor).render(all);
-				LIRecordingListView.stopRecording();
 				if (pdfExportChooser.displayResult()) {
 					try {
 						Desktop.getDesktop().open(selectedFile);
