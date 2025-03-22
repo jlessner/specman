@@ -12,6 +12,7 @@ import specman.model.v001.ListItemEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.undo.UndoableListItemSplitted;
 import specman.undo.manager.UndoRecording;
+import specman.undo.props.UDBL;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,10 @@ import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.util.HashMap;
 import java.util.List;
+
+import static specman.Aenderungsart.Geloescht;
+import static specman.Aenderungsart.Hinzugefuegt;
+import static specman.Aenderungsart.Untracked;
 
 abstract public class AbstractListItemEditArea extends JPanel implements EditArea {
   static final int DEFAULT_PROMPT_SPACE = 20;
@@ -41,7 +46,6 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   }
 
   protected void initLayout() {
-    this.setBackground(aenderungsart.toBackgroundColor());
     this.promptSpace = DEFAULT_PROMPT_SPACE * Specman.instance().getZoomFactor() / 100;
 
     layout = new FormLayout(promptSpace + "px, default:grow", "fill:pref:grow");
@@ -56,9 +60,17 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
       }
     };
     this.itemPrompt.setOpaque(true);
-    itemPrompt.setBackground(aenderungsart.toBackgroundColor());
+    this.setBackground(aenderungsart.toBackgroundColor());
 
     add(itemPrompt, CC.xy(1, 1));
+  }
+
+  @Override
+  public void setBackground(Color bg) {
+    super.setBackground(bg);
+    if (itemPrompt != null) { // is null on look&feel defaults init
+      itemPrompt.setBackground(bg);
+    }
   }
 
   protected abstract void drawPrompt(Graphics2D g);
@@ -72,6 +84,7 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
 
   @Override
   public void setGeloeschtMarkiertStilUDBL() {
+    setBackgroundUDBL(TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
     content.setGeloeschtMarkiertStilUDBL(null);
   }
 
@@ -98,12 +111,32 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
 
   @Override
   public int aenderungenUebernehmen() {
-    return 0;
+    int changesMade = aenderungsart.asNumChanges();
+    if (aenderungsart == Geloescht) {
+      getParent().removeEditArea(this);
+      changesMade++;
+    }
+    else {
+      changesMade += content.aenderungenUebernehmen();
+    }
+    aenderungsmarkierungenEntfernen();
+    aenderungsart = Untracked;
+    return changesMade;
   }
 
   @Override
   public int aenderungenVerwerfen() {
-    return 0;
+    int changesMade = aenderungsart.asNumChanges();
+    if (aenderungsart == Hinzugefuegt) {
+      getParent().removeEditArea(this);
+      changesMade++;
+    }
+    else {
+      changesMade += content.aenderungenVerwerfen();
+    }
+    aenderungsmarkierungenEntfernen();
+    aenderungsart = Untracked;
+    return changesMade;
   }
 
   @Override
@@ -123,12 +156,12 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
 
   @Override
   public void aenderungsmarkierungenEntfernen() {
-
+    content.aenderungsmarkierungenEntfernen(null);
   }
 
   @Override
   public boolean enthaeltAenderungsmarkierungen() {
-    return false;
+    return aenderungsart != null || content.enthaeltAenderungsmarkierungen();
   }
 
   @Override
@@ -144,7 +177,12 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
 
   @Override
   public void setEditBackgroundUDBL(Color bg) {
+    content.setBackgroundUDBL(aenderungsart.toBackgroundColor());
+    setBackgroundUDBL(bg);
+  }
 
+  private void setBackgroundUDBL(Color bg) {
+    UDBL.setBackgroundUDBL(this, bg);
   }
 
   @Override
