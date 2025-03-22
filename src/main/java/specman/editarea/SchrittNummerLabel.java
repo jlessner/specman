@@ -105,4 +105,8 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
   public void setBackgroundUDBL(Color fg) { UDBL.setBackgroundUDBL(this, fg); }
   private void setBorderUDBL(Border border) { UDBL.setBorderUDBL(this, border); }
 
+  @Override
+  public String toString() {
+    return "SchrittNummerLabel " + getText();
+  }
 }

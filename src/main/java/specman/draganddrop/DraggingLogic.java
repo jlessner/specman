@@ -477,8 +477,9 @@ public class DraggingLogic implements Serializable {
                 // Step must not be placed before or after itself. Should not be possible by the dragging logic anyway.
                 return;
             }
-            SchrittSequenzView sourceSequence = referenceStep.getParent();
+            SchrittSequenzView targetSequence = referenceStep.getParent();
             if(specman.aenderungenVerfolgen() && movingStep.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
+                SchrittSequenzView sourceSequence = movingStep.getParent();
                 QuellSchrittView quellschritt;
                 sourceSequence = movingStep.getParent();
                 if(movingStep.getQuellschritt() == null) {
@@ -492,7 +493,7 @@ public class DraggingLogic implements Serializable {
                 int originalIndex = originalParent.schrittEntfernen(movingStep, Move);
                 movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
                 movingStep.setParent(referenceStep.getParent());
-                sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);
+                targetSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);
                 specman.addEdit(new UndoableSchrittVerschobenMarkiert(movingStep, originalParent, originalIndex, quellschritt));
                 movingStep.setQuellschrittUDBL(quellschritt);
                 movingStep.setZielschrittStilUDBL();
@@ -504,7 +505,7 @@ public class DraggingLogic implements Serializable {
                 int originalIndex = originalParent.schrittEntfernen(movingStep, Move);
                 movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
                 movingStep.setParent(referenceStep.getParent());
-                sourceSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);
+                targetSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);
                 specman.addEdit(new UndoableSchrittVerschoben(movingStep, originalParent, originalIndex));
             }
         }
