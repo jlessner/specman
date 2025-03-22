@@ -18,7 +18,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import specman.Specman;
 import specman.editarea.HTMLTags;
-import specman.editarea.litrack.LIRecordingListView;
 import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
 
