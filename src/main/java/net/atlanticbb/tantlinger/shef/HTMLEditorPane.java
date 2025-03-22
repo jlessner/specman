@@ -308,14 +308,6 @@ public class HTMLEditorPane extends JPanel
     actionList.add(act);
     insertMenu.add(act);
 
-    act = new UnorderedListItemAction();
-    actionList.add(act);
-    insertMenu.add(act);
-
-    act = new OrderedListItemAction();
-    actionList.add(act);
-    insertMenu.add(act);
-
     createFormatToolBar(paraActions, fontSizeActions);
   }
 

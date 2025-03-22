@@ -1281,24 +1281,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return new UndoRecording(this.getUndoManager(), UndoRecordingMode.Composing);
 	}
 
-	public List<AbstractSchrittView> queryAllSteps() {
-		return getSteps(getHauptSequenz().getSchritte());
-	}
-
-	private static List<AbstractSchrittView> getSteps(final List<AbstractSchrittView> steps) {
-		List<AbstractSchrittView> allSteps = new ArrayList<>();
-
-		for (AbstractSchrittView step : steps) {
-			allSteps.add(step);
-			for (SchrittSequenzView unterSequenz : step.unterSequenzen()) {
-				List<AbstractSchrittView> schritte = unterSequenz.getSchritte();
-				if (!schritte.isEmpty()) {
-					allSteps.addAll(getSteps(schritte));
-				}
-			}
-		}
-
-		return allSteps;
+	@Override
+	public List<AbstractSchrittView> listAllSteps() {
+		return getHauptSequenz().listSteps();
 	}
 
 	/**

@@ -104,12 +104,9 @@ public class StepnumberLinkDialog extends JDialog {
         this.setResizable(false);
     }
 
-    /**
-     * TODO Get steps or step ID + description without making {@link AbstractSchrittView#unterSequenzen()} public
-     */
     private DefaultListModel<AbstractSchrittView> getStepnumberList() {
         DefaultListModel<AbstractSchrittView> listModel = new DefaultListModel<>();
-        final List<AbstractSchrittView> steps = Specman.instance().queryAllSteps();
+        final List<AbstractSchrittView> steps = Specman.instance().listAllSteps();
         listModel.addAll(steps);
 
         return listModel;

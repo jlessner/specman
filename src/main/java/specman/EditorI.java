@@ -38,7 +38,7 @@ public interface EditorI extends FocusListener {
 	AbstractSchrittView findeSchritt(TextEditArea textEditArea);
 	double scale(double length);
 	void addImageViaFileChooser();
-	List<AbstractSchrittView> queryAllSteps();
+	List<AbstractSchrittView> listAllSteps();
 	void addTable(int numColumns, int numRows);
 	void toggleListItem(boolean ordered);
 

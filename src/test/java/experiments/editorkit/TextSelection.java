@@ -25,4 +25,5 @@ public class TextSelection {
     return document.getCharacterElement(start).getAttributes();
   }
 
+  public boolean isEmpty() { return start == end; }
 }
