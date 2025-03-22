@@ -10,6 +10,7 @@ import net.atlanticbb.tantlinger.ui.text.IndentationFilter;
 import net.atlanticbb.tantlinger.ui.text.SourceCodeEditor;
 import net.atlanticbb.tantlinger.ui.text.actions.ClearStylesAction;
 import net.atlanticbb.tantlinger.ui.text.actions.FindReplaceAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLBlockAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLEditorActionFactory;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLElementPropertiesAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontAction;
@@ -250,7 +251,9 @@ public class HTMLEditorPane extends JPanel
     formatMenu.add(createMenu(lst, i18n.str("paragraph")));
     paraActions.addAll(lst);
 
-    lst = HTMLEditorActionFactory.createListElementActionList();
+    lst = new ActionList("list");
+    lst.add(new UnorderedListItemAction());
+    lst.add(new OrderedListItemAction());
     actionList.addAll(lst);
     formatMenu.add(createMenu(lst, i18n.str("list")));
     formatMenu.addSeparator();
@@ -407,17 +410,15 @@ public class HTMLEditorPane extends JPanel
     addToToolBar(formatToolBar, act);
     formatToolBar.addSeparator();
 
-    List alst = HTMLEditorActionFactory.createListElementActionList();
-    for(Iterator it = alst.iterator(); it.hasNext();)
-    {
-      act = (Action)it.next();
-      act.putValue(ActionManager.BUTTON_TYPE, ActionManager.BUTTON_TYPE_VALUE_TOGGLE);
-      actionList.add(act);
-      addToToolBar(formatToolBar, act);
-    }
-    formatToolBar.addSeparator();
+    act = new UnorderedListItemAction();
+    actionList.add(act);
+    addToToolBar(formatToolBar, act);
 
-    alst = HTMLEditorActionFactory.createAlignActionList();
+    act = new OrderedListItemAction();
+    actionList.add(act);
+    addToToolBar(formatToolBar, act);
+
+    List alst = HTMLEditorActionFactory.createAlignActionList();
     for(Iterator it = alst.iterator(); it.hasNext();)
     {
       act = (Action)it.next();
@@ -440,14 +441,6 @@ public class HTMLEditorPane extends JPanel
     addToToolBar(formatToolBar, act);
 
     act = new StepnumberLinkAction();
-    actionList.add(act);
-    addToToolBar(formatToolBar, act);
-
-    act = new UnorderedListItemAction();
-    actionList.add(act);
-    addToToolBar(formatToolBar, act);
-
-    act = new OrderedListItemAction();
     actionList.add(act);
     addToToolBar(formatToolBar, act);
 
