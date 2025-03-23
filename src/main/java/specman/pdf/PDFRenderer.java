@@ -8,6 +8,8 @@ import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.LineCapStyle;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.LineJoinStyle;
 import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.layout.Document;
 
@@ -88,6 +90,8 @@ public class PDFRenderer {
     pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
     pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
     pdfCanvas.setLineWidth(((float)LINIENBREITE) * swing2pdfScaleFactor);
+    pdfCanvas.setLineJoinStyle(LineJoinStyle.ROUND);
+    pdfCanvas.setLineCapStyle(LineCapStyle.PROJECTING_SQUARE);
 
     FormattedShapeText.initFont(uizoomfactor, swing2pdfScaleFactor);
 

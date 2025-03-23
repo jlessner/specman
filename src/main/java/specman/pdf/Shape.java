@@ -2,6 +2,7 @@ package specman.pdf;
 
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvasConstants.LineJoinStyle;
 import specman.editarea.TextStyles;
 
 import java.awt.*;
