@@ -25,6 +25,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -43,7 +45,7 @@ import java.util.List;
 import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
 
-public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener {
+public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener, ComponentListener {
   static final Color FOCUS_BORDER_COLOR = Color.GRAY;
   private static final int BORDER_THICKNESS = 1;
   private static final Border SELECTED_BORDER = new CompoundBorder(
@@ -92,6 +94,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     setEditBackgroundUDBL(null);
     this.image = new JLabel();
     add(image, CC.xy(1, 1));
+    addComponentListener(this);
     updateListenersByAenderungsart();
   }
 
@@ -340,4 +343,13 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public int getImageType() { return fullSizeImage.getType(); }
 
   public String getImageFiletype() { return imageType; }
+
+  @Override
+  public void componentResized(ComponentEvent e) {
+    pack(getWidth());
+  }
+
+  @Override public void componentMoved(ComponentEvent e) {}
+  @Override public void componentShown(ComponentEvent e) {}
+  @Override public void componentHidden(ComponentEvent e) {}
 }
