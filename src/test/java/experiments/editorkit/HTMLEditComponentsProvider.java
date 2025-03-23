@@ -51,10 +51,9 @@ public class HTMLEditComponentsProvider implements FocusListener, CaretListener 
     formatToolbar.add(new BoldToggleButton(this));
     formatToolbar.add(new ItalicToggleButton(this));
     formatToolbar.add(new UnderlineToggleButton(this));
+    formatToolbar.add(new YellowToggleButton(this));
+    formatToolbar.add(new SmallButton(this));
 
-    formatToolbar.addSeparator();
-
-    formatToolbar.add(new UnorderedListToggleButton(this));
   }
 
   public JToolBar getFormatToolbar() {
