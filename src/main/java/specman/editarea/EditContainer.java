@@ -248,7 +248,6 @@ public class EditContainer extends JPanel {
 					schrittNummer.setBounds(0, 0, 0, 0);
 				}
 			}
-			editAreas.stream().forEach(ea -> ea.pack(maxEditWidth));
 		}
 	}
 

@@ -221,6 +221,5 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   @Override public void setEditDecorationIndentions(Indentions indentions) { /* Nothing to do here */ }
   @Override public String getText() { return "list item"; }
   @Override public void addSchrittnummer(SchrittNummerLabel schrittNummer) {}
-  @Override public void pack(int availableWidth) { /* Nothing to do here in list item areas */ }
 
 }

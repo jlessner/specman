@@ -67,8 +67,6 @@ import static specman.editarea.TextStyles.standardStil;
 import static specman.editarea.TextStyles.stepnumberLinkStyleColor;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
-    private boolean isMousePressed;
-    private boolean alreadyScrolledDuringCurrentMouseclick;
     private Element hoveredElement;
     private Aenderungsart aenderungsart;
 
@@ -88,15 +86,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                isMousePressed = true;
-                alreadyScrolledDuringCurrentMouseclick = false;
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                isMousePressed = false;
+                if (e.isControlDown()) {
+                    if (stepnumberLinkNormalOrChangedStyleSet(getCaretPosition())) {
+                        scrollToStepnumber();
+                    }
+                }
             }
         });
     }
@@ -154,9 +148,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     public void addSchrittnummer(SchrittNummerLabel schrittNummer) {
         add(schrittNummer);
     }
-
-    /** Nothing to do here in text areas */
-    @Override public void pack(int availableWidth) {}
 
     private void setStyleUDBL(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
         StyledDocument doc = (StyledDocument) getDocument();
@@ -451,11 +442,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 if (skipToStepnumberLinkEnd()) {
                     e.consume();
                     return;
-                }
-            }
-            case KeyEvent.VK_CONTROL -> {
-                if (isMousePressed && !alreadyScrolledDuringCurrentMouseclick && stepnumberLinkNormalOrChangedStyleSet(getCaretPosition())) {
-                    scrollToStepnumber();
                 }
             }
             case KeyEvent.VK_ENTER -> {
@@ -865,7 +851,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     private void scrollToStepnumber() {
         EditorI editor = Specman.instance();
-        alreadyScrolledDuringCurrentMouseclick = true;
 
         StyledDocument doc = (StyledDocument) getDocument();
         Element element = doc.getCharacterElement(getCaretPosition());

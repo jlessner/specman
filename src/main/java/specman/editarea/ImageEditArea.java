@@ -184,20 +184,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   public void setBorderUDBL(Border border) { UDBL.setBorderUDBL(this, border); }
 
-  public void pack(int availableWidth) {
-    if (availableWidth > 0) {
-      int maximumZoomedWidth = fullSizeImage.getWidth() * Specman.instance().getZoomFactor() / 100;
-      int scaledWidth = Math.min(availableWidth, maximumZoomedWidth);
-      if (scaledIcon == null || scaledWidth != scaledIcon.getIconWidth()) {
-        scalePercent = (float)scaledWidth / (float)fullSizeImage.getWidth();
-        scaledIcon = new ImageIcon(fullSizeImage
-          .getScaledInstance((int)(fullSizeImage.getWidth() * scalePercent),
-            (int)(fullSizeImage.getHeight() * scalePercent), Image.SCALE_SMOOTH));
-        image.setIcon(scaledIcon);
-      }
-    }
-  }
-
   @Override
   public EditContainer getParent() { return (EditContainer) super.getParent(); }
 
@@ -345,8 +331,22 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public String getImageFiletype() { return imageType; }
 
   @Override
+  /** On component resize we scale the image if necessary, depending on the available width.
+   * If the component width exceeds the image width, we display the image in full size.
+   * Otherwise we scale it down to fit into the available width. */
   public void componentResized(ComponentEvent e) {
-    pack(getWidth());
+    int availableWidth = getWidth();
+    if (availableWidth > 0) {
+      int maximumZoomedWidth = fullSizeImage.getWidth() * Specman.instance().getZoomFactor() / 100;
+      int scaledWidth = Math.min(availableWidth, maximumZoomedWidth);
+      if (scaledIcon == null || scaledWidth != scaledIcon.getIconWidth()) {
+        scalePercent = (float)scaledWidth / (float)fullSizeImage.getWidth();
+        scaledIcon = new ImageIcon(fullSizeImage
+          .getScaledInstance((int)(fullSizeImage.getWidth() * scalePercent),
+            (int)(fullSizeImage.getHeight() * scalePercent), Image.SCALE_SMOOTH));
+        image.setIcon(scaledIcon);
+      }
+    }
   }
 
   @Override public void componentMoved(ComponentEvent e) {}
