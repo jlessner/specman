@@ -76,20 +76,10 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   protected abstract void drawPrompt(Graphics2D g);
 
   @Override
-  public void addSchrittnummer(SchrittNummerLabel schrittNummer) {
-  }
-
-  /** Nothing to do here in text areas */
-  @Override public void pack(int availableWidth) {}
-
-  @Override
   public void setGeloeschtMarkiertStilUDBL() {
     setBackgroundUDBL(TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
     content.setGeloeschtMarkiertStilUDBL(null);
   }
-
-  @Override
-  public Component asComponent() { return this; }
 
   @Override
   public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
@@ -98,9 +88,6 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   }
 
   abstract protected boolean ordered();
-
-  @Override
-  public String getPlainText() { return content.getPlainText(); }
 
   @Override
   public void skalieren(int prozentNeu, int prozentAktuell) {
@@ -140,36 +127,6 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   }
 
   @Override
-  public TextEditArea asTextArea() {
-    return null;
-  }
-
-  @Override
-  public ImageEditArea asImageArea() {
-    return null;
-  }
-
-  @Override
-  public void setQuellStil() {
-
-  }
-
-  @Override
-  public void aenderungsmarkierungenEntfernen() {
-    content.aenderungsmarkierungenEntfernen(null);
-  }
-
-  @Override
-  public boolean enthaeltAenderungsmarkierungen() {
-    return aenderungsart != null || content.enthaeltAenderungsmarkierungen();
-  }
-
-  @Override
-  public void findStepnumberLinkIDs(HashMap<TextEditArea, List<String>> stepnumberLinkMap) {
-
-  }
-
-  @Override
   public specman.pdf.Shape getShape() {
     return new specman.pdf.Shape(this)
       .add(content.getShape());
@@ -186,51 +143,13 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   }
 
   @Override
-  public void setEditDecorationIndentions(Indentions indentions) {
-
-  }
-
-  @Override
-  public boolean enthaelt(InteractiveStepFragment fragment) {
-    return false;
-  }
-
-  @Override
   public void setAenderungsart(Aenderungsart aenderungsart) {
 
-  }
-
-  @Override
-  public Aenderungsart getAenderungsart() {
-    return aenderungsart;
-  }
-
-  @Override
-  public String getText() {
-    return null;
-  }
-
-  @Override
-  public synchronized void addFocusListener(FocusListener l) {
-    content.addEditAreasFocusListener(l);
-  }
-
-  @Override
-  public synchronized void addComponentListener(ComponentListener l) {
-    content.addEditComponentListener(l);
-  }
-
-  @Override
-  public EditContainer getParent() {
-    return (EditContainer) super.getParent();
   }
 
   public EditContainer getContent() {
     return content;
   }
-
-  @Override
-  public void requestFocus() { content.requestFocus(); }
 
   abstract protected AbstractListItemEditArea createSplittedItem(TextEditArea splitTextEditArea);
 
@@ -260,10 +179,6 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
     this.getParent().addListItem(this, splitListItemEditArea);
   }
 
-  @Override public boolean isListItemArea() { return true; }
-
-  @Override public AbstractListItemEditArea asListItemArea() { return this; };
-
   public TextEditArea appendText(String text) {
     TextEditArea lastArea = content.getLastEditArea().asTextArea();
     if (lastArea == null) {
@@ -283,4 +198,29 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   public List<EditArea> removeEditAreaComponents(int fromIndex) { return content.removeEditAreaComponents(fromIndex); }
 
   public EditArea getLastEditArea() { return content.getLastEditArea(); }
+
+  @Override public synchronized void addFocusListener(FocusListener l) { content.addEditAreasFocusListener(l); }
+  @Override public synchronized void addComponentListener(ComponentListener l) { content.addEditComponentListener(l); }
+  @Override public void requestFocus() { content.requestFocus(); }
+
+
+  //**************** canonical EditArea method implementations ************************
+  @Override public boolean enthaeltAenderungsmarkierungen() { return aenderungsart != null || content.enthaeltAenderungsmarkierungen(); }
+  @Override public void aenderungsmarkierungenEntfernen() { content.aenderungsmarkierungenEntfernen(null); }
+  @Override public void findStepnumberLinkIDs(HashMap<TextEditArea, List<String>> stepnumberLinkMap) { content.findStepnumberLinkIDs(stepnumberLinkMap); }
+  @Override public boolean enthaelt(InteractiveStepFragment fragment) { return content.enthaelt(fragment); }
+  @Override public Aenderungsart getAenderungsart() { return aenderungsart; }
+  @Override public EditContainer getParent() { return (EditContainer) super.getParent(); }
+  @Override public Component asComponent() { return this; }
+  @Override public String getPlainText() { return content.getPlainText(); }
+  @Override public TextEditArea asTextArea() { return null; }
+  @Override public ImageEditArea asImageArea() { return null; }
+  @Override public AbstractListItemEditArea asListItemArea() { return this; };
+  @Override public boolean isListItemArea() { return true; }
+  @Override public void setQuellStil() { /* Not required for list items - source steps only contain an empty text area */ }
+  @Override public void setEditDecorationIndentions(Indentions indentions) { /* Nothing to do here */ }
+  @Override public String getText() { return "list item"; }
+  @Override public void addSchrittnummer(SchrittNummerLabel schrittNummer) {}
+  @Override public void pack(int availableWidth) { /* Nothing to do here in list item areas */ }
+
 }
