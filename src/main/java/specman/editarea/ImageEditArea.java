@@ -89,11 +89,11 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   private void postInit() {
-    setLayout(new FormLayout("pref:grow", "fill:pref:grow"));
-    setBorderByChangetypeUDBL();
-    setEditBackgroundUDBL(null);
+    setLayout(new FormLayout("pref, pref:grow", "fill:pref:grow"));
     this.image = new JLabel();
     add(image, CC.xy(1, 1));
+    setEditBackgroundUDBL(null);
+    setBorderByChangetypeUDBL();
     addComponentListener(this);
     updateListenersByAenderungsart();
   }
@@ -145,7 +145,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override
   public void focusGained(FocusEvent e) {
     if (aenderungsart != Aenderungsart.Geloescht) {
-      setBorder(SELECTED_BORDER);
+      image.setBorder(SELECTED_BORDER);
       addGlassPanel();
     }
   }
@@ -182,7 +182,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     setBorderUDBL(aenderungsart == Aenderungsart.Hinzugefuegt ? UNSELECTED_CHANGED_BORDER : UNSELECTED_BORDER);
   }
 
-  public void setBorderUDBL(Border border) { UDBL.setBorderUDBL(this, border); }
+  public void setBorderUDBL(Border border) { UDBL.setBorderUDBL(image, border); }
 
   @Override
   public EditContainer getParent() { return (EditContainer) super.getParent(); }
