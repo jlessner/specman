@@ -625,6 +625,14 @@ public class SchrittSequenzView {
 				}
 			}
 		}
+		if (catchBereich != null) {
+			for (CatchSchrittSequenzView catchSequence: catchBereich.catchSequences) {
+				AbstractSchrittView result = catchSequence.findStepByStepID(stepID);
+				if (result != null) {
+					return result;
+				}
+			}
+		}
 		return null;
 	}
 
