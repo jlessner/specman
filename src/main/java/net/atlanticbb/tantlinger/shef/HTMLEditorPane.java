@@ -8,6 +8,7 @@ import net.atlanticbb.tantlinger.ui.text.Entities;
 import net.atlanticbb.tantlinger.ui.text.HTMLUtils;
 import net.atlanticbb.tantlinger.ui.text.IndentationFilter;
 import net.atlanticbb.tantlinger.ui.text.SourceCodeEditor;
+import net.atlanticbb.tantlinger.ui.text.WysiwygHTMLEditorKit;
 import net.atlanticbb.tantlinger.ui.text.actions.ClearStylesAction;
 import net.atlanticbb.tantlinger.ui.text.actions.FindReplaceAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLBlockAction;
@@ -539,6 +540,7 @@ public class HTMLEditorPane extends JPanel
   }
 
   public void instrumentWysEditor(JEditorPane ed, String initialText, Integer orientation) {
+    ed.setEditorKit(new WysiwygHTMLEditorKit());
     //styleSheet.addRule("body { background-color: #ccc; font-family: Times, serif; }");
     //styleSheet.addRule("html { background-color: #ccc; font-family: Times, serif; }");
     //styleSheet.addRule("@font-face { font-family: \"Default\"; src: local(\"Times New Roman\"); }");
