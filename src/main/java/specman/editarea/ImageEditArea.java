@@ -5,6 +5,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import org.apache.commons.io.FilenameUtils;
 import specman.Aenderungsart;
 import specman.EditorI;
+import specman.SpaltenContainerI;
+import specman.SpaltenResizer;
 import specman.Specman;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
@@ -44,8 +46,11 @@ import java.util.List;
 
 import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
+import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
 
-public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener, ComponentListener {
+public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener, ComponentListener, SpaltenContainerI {
+  private static final String AFTERIMAGELINE_GAP = FORMLAYOUT_GAP;
+  private static final int IRRELEVANT_COLUMNRESIZE_INDEX = -1;
   static final Color FOCUS_BORDER_COLOR = Color.GRAY;
   private static final int BORDER_THICKNESS = 1;
   private static final Border SELECTED_BORDER = new CompoundBorder(
@@ -58,7 +63,8 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   private BufferedImage fullSizeImage;
   private String imageType;
   private ImageIcon scaledIcon;
-  private float scalePercent;
+  private float totalScalePercent;
+  private float individualScalePercent;
   private JLabel image;
   private ImageEditAreaGlassPane focusGlass;
   private Aenderungsart aenderungsart;
@@ -68,6 +74,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
       this.fullSizeImage = ImageIO.read(imageFile);
       this.imageType = FilenameUtils.getExtension(imageFile.getName());
       this.aenderungsart = aenderungsart;
+      this.individualScalePercent = 1;
       postInit();
     }
     catch(IOException iox) {
@@ -81,6 +88,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
       this.fullSizeImage = ImageIO.read(input);;
       this.imageType = imageEditAreaModel.imageType;
       this.aenderungsart = imageEditAreaModel.aenderungsart;
+      this.individualScalePercent = imageEditAreaModel.individualScalePercent;
       postInit();
     }
     catch(IOException iox) {
@@ -89,11 +97,13 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   }
 
   private void postInit() {
-    setLayout(new FormLayout("pref, pref:grow", "fill:pref:grow"));
+    EditorI editor = Specman.instance();
+    setLayout(new FormLayout("pref, " + AFTERIMAGELINE_GAP + ", pref:grow", "fill:pref:grow"));
     this.image = new JLabel();
     add(image, CC.xy(1, 1));
-    setEditBackgroundUDBL(null);
-    setBorderByChangetypeUDBL();
+    this.add(new SpaltenResizer(this, IRRELEVANT_COLUMNRESIZE_INDEX, editor), CC.xy(2, 1));
+    setBackground(aenderungsart.toBackgroundColor());
+    image.setBorder(changetype2border());
     addComponentListener(this);
     updateListenersByAenderungsart();
   }
@@ -121,7 +131,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
       EditorI editor = Specman.instance();
       try (UndoRecording ur = editor.pauseUndo()){
         // Change back to unselected border before starting to record undoable operations
-        setBorderByChangetypeUDBL();
+        setImageBorderByChangetypeUDBL();
       }
       try (UndoRecording ur = editor.composeUndo()){
         if (aenderungsart == Untracked && editor.aenderungenVerfolgen()) {
@@ -153,7 +163,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override
   public void focusLost(FocusEvent e) {
     if (aenderungsart != Aenderungsart.Geloescht) {
-      setBorderByChangetypeUDBL();
+      image.setBorder(changetype2border());
       removeGlassPanel();
     }
   }
@@ -178,11 +188,15 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     }
   }
 
-  private void setBorderByChangetypeUDBL() {
-    setBorderUDBL(aenderungsart == Aenderungsart.Hinzugefuegt ? UNSELECTED_CHANGED_BORDER : UNSELECTED_BORDER);
+  private void setImageBorderByChangetypeUDBL() {
+    setImageBorderUDBL(changetype2border());
   }
 
-  public void setBorderUDBL(Border border) { UDBL.setBorderUDBL(image, border); }
+  private Border changetype2border() {
+    return aenderungsart == Aenderungsart.Hinzugefuegt ? UNSELECTED_CHANGED_BORDER : UNSELECTED_BORDER;
+  }
+
+  public void setImageBorderUDBL(Border border) { UDBL.setBorderUDBL(image, border); }
 
   @Override
   public EditContainer getParent() { return (EditContainer) super.getParent(); }
@@ -211,7 +225,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   private void updateChangetypeAndDependentStylingUDBL(Aenderungsart aenderungsart) {
     setAenderungsartUDBL(aenderungsart);
-    setBorderByChangetypeUDBL();
+    setImageBorderByChangetypeUDBL();
     setEditBackgroundUDBL(null);
   }
 
@@ -240,7 +254,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     try {
       ByteArrayOutputStream bytes = new ByteArrayOutputStream();
       ImageIO.write(fullSizeImage, imageType, bytes);
-      return new ImageEditAreaModel_V001(bytes.toByteArray(), imageType, aenderungsart);
+      return new ImageEditAreaModel_V001(bytes.toByteArray(), imageType, aenderungsart, individualScalePercent);
     }
     catch (IOException iox) {
       throw new RuntimeException(iox);
@@ -324,32 +338,44 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
 
   public BufferedImage getFullSizeImage() { return fullSizeImage; }
 
-  public float getScalePercent() { return scalePercent; }
+  public float getTotalScalePercent() { return totalScalePercent; }
 
   public int getImageType() { return fullSizeImage.getType(); }
 
   public String getImageFiletype() { return imageType; }
 
-  @Override
-  /** On component resize we scale the image if necessary, depending on the available width.
-   * If the component width exceeds the image width, we display the image in full size.
-   * Otherwise we scale it down to fit into the available width. */
-  public void componentResized(ComponentEvent e) {
+  private void adaptImageSize() {
     int availableWidth = getWidth();
     if (availableWidth > 0) {
-      int maximumZoomedWidth = fullSizeImage.getWidth() * Specman.instance().getZoomFactor() / 100;
+      int maximumZoomedWidth = (int)(fullSizeImage.getWidth() * Specman.instance().getZoomFactor() / 100 * individualScalePercent);
       int scaledWidth = Math.min(availableWidth, maximumZoomedWidth);
       if (scaledIcon == null || scaledWidth != scaledIcon.getIconWidth()) {
-        scalePercent = (float)scaledWidth / (float)fullSizeImage.getWidth();
+        totalScalePercent = (float)scaledWidth / (float)fullSizeImage.getWidth();
         scaledIcon = new ImageIcon(fullSizeImage
-          .getScaledInstance((int)(fullSizeImage.getWidth() * scalePercent),
-            (int)(fullSizeImage.getHeight() * scalePercent), Image.SCALE_SMOOTH));
+          .getScaledInstance((int)(fullSizeImage.getWidth() * totalScalePercent),
+            (int)(fullSizeImage.getHeight() * totalScalePercent), Image.SCALE_SMOOTH));
         image.setIcon(scaledIcon);
       }
     }
   }
 
+  @Override
+  /** On component resize we scale the image if necessary, depending on the available width.
+   * If the component width exceeds the image width, we display the image in full size.
+   * Otherwise, we scale it down to fit into the available width. */
+  public void componentResized(ComponentEvent e) {
+    adaptImageSize();
+  }
+
   @Override public void componentMoved(ComponentEvent e) {}
   @Override public void componentShown(ComponentEvent e) {}
   @Override public void componentHidden(ComponentEvent e) {}
+
+  @Override
+  public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
+    float newIndividualScalePercent = 1 + (float)vergroesserung / scaledIcon.getIconWidth();
+    individualScalePercent *= newIndividualScalePercent;
+    adaptImageSize();
+    return vergroesserung;
+  }
 }

@@ -24,7 +24,7 @@ public class ShapeImage {
   public void drawToPDF(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas, Document document) {
     try {
       BufferedImage fullSizeImage = content.getFullSizeImage();
-      float scaleFactor = content.getScalePercent() * swing2pdfScaleFactor;
+      float scaleFactor = content.getTotalScalePercent() * swing2pdfScaleFactor;
       ByteArrayOutputStream bytes = new ByteArrayOutputStream();
       ImageIO.write(fullSizeImage, content.getImageFiletype(), bytes);
       ImageData data = ImageDataFactory.create(bytes.toByteArray());
