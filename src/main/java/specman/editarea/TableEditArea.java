@@ -223,7 +223,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   public int aenderungenUebernehmen() {
     int changesMade = aenderungsart.asNumChanges();
     if (aenderungsart == Geloescht || allCellsMarkedAs(Geloescht)) {
-      getParent().removeEditArea(this);
+      getParent().removeEditAreaUDBL(this);
       changesMade++;
     }
     else {
@@ -240,7 +240,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   public int aenderungenVerwerfen() {
     int changesReverted = aenderungsart.asNumChanges();
     if (aenderungsart == Hinzugefuegt || allCellsMarkedAs(Hinzugefuegt)) {
-      getParent().removeEditArea(this);
+      getParent().removeEditAreaUDBL(this);
       changesReverted++;
     }
     else {
@@ -398,7 +398,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
       setAenderungsartUDBL(Geloescht);
     }
     else {
-      getParent().removeEditArea(this); // Already includes undo recording
+      getParent().removeEditAreaUDBL(this); // Already includes undo recording
       Specman.instance().diagrammAktualisieren(null);
     }
   }

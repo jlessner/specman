@@ -12,6 +12,7 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.pdf.Shape;
 import specman.pdf.ShapeImage;
+import specman.undo.UndoableEditAreaAdded;
 import specman.undo.manager.UndoRecording;
 import specman.undo.props.UDBL;
 
@@ -127,21 +128,46 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override public void keyTyped(KeyEvent e) {}
   @Override public void keyReleased(KeyEvent e) {}
   @Override public void keyPressed(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
-      EditorI editor = Specman.instance();
-      try (UndoRecording ur = editor.pauseUndo()){
-        // Change back to unselected border before starting to record undoable operations
-        setImageBorderByChangetypeUDBL();
-      }
-      try (UndoRecording ur = editor.composeUndo()){
-        if (aenderungsart == Untracked && editor.aenderungenVerfolgen()) {
-          setGeloeschtMarkiertStilUDBL();
-        }
-        else {
-          getParent().removeEditArea(ImageEditArea.this);
-          editor.diagrammAktualisieren(null);
-        }
+    switch (e.getKeyCode()) {
+      case KeyEvent.VK_BACK_SPACE:
+      case KeyEvent.VK_DELETE:
+        removeAreaByKeypressUDBL();
         e.consume();
+        break;
+      case KeyEvent.VK_ENTER:
+        appendTextEditAreaByKeypressUDBL();
+        e.consume();
+        break;
+    }
+  }
+
+  private void appendTextEditAreaByKeypressUDBL() {
+    EditorI editor = Specman.instance();
+    try (UndoRecording ur = editor.pauseUndo()){
+      // Change back to unselected border before starting to record undoable operations
+      setImageBorderByChangetypeUDBL();
+    }
+    try (UndoRecording ur = editor.composeUndo()){
+      EditContainer editContainer = getParent();
+      TextEditArea editArea = editContainer.addTextEditArea(ImageEditArea.this);
+      editor.addEdit(new UndoableEditAreaAdded(editContainer, this, editArea, null));
+      editor.diagrammAktualisieren(editArea);
+    }
+  }
+
+  private void removeAreaByKeypressUDBL() {
+    EditorI editor = Specman.instance();
+    try (UndoRecording ur = editor.pauseUndo()){
+      // Change back to unselected border before starting to record undoable operations
+      setImageBorderByChangetypeUDBL();
+    }
+    try (UndoRecording ur = editor.composeUndo()){
+      if (aenderungsart == Untracked && editor.aenderungenVerfolgen()) {
+        setGeloeschtMarkiertStilUDBL();
+      }
+      else {
+        getParent().removeEditAreaUDBL(ImageEditArea.this);
+        editor.diagrammAktualisieren(null);
       }
     }
   }
@@ -219,7 +245,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
       focusGlass.toDeleted();
     }
     else if (aenderungsart == Aenderungsart.Hinzugefuegt) {
-      getParent().removeEditArea(this); // Includes recording of required undos
+      getParent().removeEditAreaUDBL(this); // Includes recording of required undos
     }
   }
 
@@ -274,7 +300,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     int changesMade = aenderungsart.asNumChanges();
     switch (aenderungsart) {
       case Hinzugefuegt -> updateChangetypeAndDependentStylingUDBL(null);
-      case Geloescht -> getParent().removeEditArea(this);
+      case Geloescht -> getParent().removeEditAreaUDBL(this);
     }
     aenderungsart = Untracked;
     return changesMade;
@@ -284,7 +310,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public int aenderungenVerwerfen() {
     int changesReverted = aenderungsart.asNumChanges();
     switch(aenderungsart) {
-      case Hinzugefuegt -> getParent().removeEditArea(this);
+      case Hinzugefuegt -> getParent().removeEditAreaUDBL(this);
       case Geloescht -> updateChangetypeAndDependentStylingUDBL(null);
     }
     aenderungsart = Untracked;

@@ -100,7 +100,7 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   public int aenderungenUebernehmen() {
     int changesMade = aenderungsart.asNumChanges();
     if (aenderungsart == Geloescht) {
-      getParent().removeEditArea(this);
+      getParent().removeEditAreaUDBL(this);
       changesMade++;
     }
     else {
@@ -115,7 +115,7 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   public int aenderungenVerwerfen() {
     int changesMade = aenderungsart.asNumChanges();
     if (aenderungsart == Hinzugefuegt) {
-      getParent().removeEditArea(this);
+      getParent().removeEditAreaUDBL(this);
       changesMade++;
     }
     else {

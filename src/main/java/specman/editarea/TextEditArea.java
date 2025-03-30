@@ -682,19 +682,19 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         return getParent().addTable(this, columns, rows, aenderungsart);
     }
 
-    public EditArea toggleListItem(boolean ordered, Aenderungsart aenderungsart) {
+    public EditArea toggleListItemUDBL(boolean ordered, Aenderungsart aenderungsart) {
         // TODO JL: Evt. noch schlauer machen. Toggle von Ordered -> Unordered und umgekehrt
         EditContainer editContainer = getParent();
         if (editContainer.getParent() instanceof UnorderedListItemEditArea) {
             UnorderedListItemEditArea unorderedListItemEditArea = (UnorderedListItemEditArea) editContainer.getParent();
-            return unorderedListItemEditArea.getParent().dissolveListItemEditArea(unorderedListItemEditArea, aenderungsart);
+            return unorderedListItemEditArea.getParent().dissolveListItemEditAreaUDBL(unorderedListItemEditArea, aenderungsart);
         }
         if (editContainer.getParent() instanceof OrderedListItemEditArea) {
             OrderedListItemEditArea orderedListItemEditArea = (OrderedListItemEditArea) editContainer.getParent();
-            return orderedListItemEditArea.getParent().dissolveListItemEditArea(orderedListItemEditArea, aenderungsart);
+            return orderedListItemEditArea.getParent().dissolveListItemEditAreaUDBL(orderedListItemEditArea, aenderungsart);
         }
         else {
-            return getParent().addListItem(this, ordered, aenderungsart);
+            return getParent().addListItemUDBL(this, ordered, aenderungsart);
         }
     }
 

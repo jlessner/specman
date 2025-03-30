@@ -706,7 +706,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	@Override
 	public void toggleListItem(boolean ordered) {
 		if (lastFocusedTextArea != null) {
-			EditArea nextFocusArea = lastFocusedTextArea.toggleListItem(ordered, initialArt());
+			EditArea nextFocusArea = lastFocusedTextArea.toggleListItemUDBL(ordered, initialArt());
 			diagrammAktualisieren(nextFocusArea);
 		}
 	}
