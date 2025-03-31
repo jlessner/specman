@@ -346,7 +346,15 @@ public class EditContainer extends JPanel {
 	}
 
 	public int aenderungenVerwerfen() {
-		return modifyableEditAreas().stream().mapToInt(EditArea::aenderungenVerwerfen).sum();
+		int changes = modifyableEditAreas().stream().mapToInt(EditArea::aenderungenVerwerfen).sum();
+		if (changes != 0) {
+			// This second phase is required for the case that discarding changes caused the removal
+			// of edit areas which and in turn may cause the merge of text edit areas. In this case
+			// the text from the trailing text area may still have change marks which are removed
+			// by this second run.
+			changes += aenderungenVerwerfen();
+		}
+		return changes;
 	}
 
 	public boolean enthaelt(InteractiveStepFragment fragment) {
@@ -417,7 +425,8 @@ public class EditContainer extends JPanel {
 
 	public TextEditArea addTextEditArea(ImageEditArea initiatingImageEditArea) {
 		int initiatingIndex = indexOf(initiatingImageEditArea);
-		TextEditArea newEditArea = new TextEditArea(new TextEditAreaModel_V001(""), getFont());
+		TextEditAreaModel_V001 addedModel = new TextEditAreaModel_V001("", "", new ArrayList<>(), Specman.initialArt());
+		TextEditArea newEditArea = new TextEditArea(addedModel, getFont());
 		addEditArea(newEditArea, initiatingIndex+1);
 		return newEditArea;
 	}

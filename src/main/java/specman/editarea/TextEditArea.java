@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static specman.Aenderungsart.Geloescht;
+import static specman.Aenderungsart.Hinzugefuegt;
 import static specman.Aenderungsart.Untracked;
 import static specman.editarea.HTMLTags.BODY_INTRO;
 import static specman.editarea.HTMLTags.BODY_OUTRO;
@@ -296,26 +297,39 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     // TODO JL: Muss mit aenderungsmarkierungenUebernehmen zusammengelegt werden
     public int aenderungenVerwerfen() {
-        EditorI editor = Specman.instance();
-        StyledDocument doc = (StyledDocument) getDocument();
         int changesReverted = aenderungsart.asNumChanges();
-
-        List<GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
-        for (Element e : doc.getRootElements()) {
-            changesReverted += aenderungsmarkierungenVerwerfen(e, loeschungen);
+        if (aenderungsart == Hinzugefuegt) {
+            if (!areaDetachedByMerge()) {
+                getParent().removeEditAreaUDBL(this);
+            }
         }
-        for (int i = 0; i < loeschungen.size(); i++) {
-            GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) - 1 - i);
-            try {
-                removeTextAndUnregisterStepnumberLinks(loeschung.getVon(), loeschung.getBis(), editor);
-                changesReverted++;
-            } catch (Exception e) {
-                e.printStackTrace();
+        else {
+            EditorI editor = Specman.instance();
+            StyledDocument doc = (StyledDocument) getDocument();
+
+            List<GeloeschtMarkierung_V001> loeschungen = new ArrayList<>();
+            for (Element e : doc.getRootElements()) {
+                changesReverted += aenderungsmarkierungenVerwerfen(e, loeschungen);
+            }
+            for (int i = 0; i < loeschungen.size(); i++) {
+                GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) - 1 - i);
+                try {
+                    removeTextAndUnregisterStepnumberLinks(loeschung.getVon(), loeschung.getBis(), editor);
+                    changesReverted++;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         aenderungsart = Untracked;
         return changesReverted;
     }
+
+    /** If an image edit area is removed while discarding changes, this text area
+     * may be the directly following one in the same edit container and may be
+     * merged with another text area directly above the image area. We can detect
+     * this situation by this text area being no longer attached to its parent. */
+    private boolean areaDetachedByMerge() { return getParent() == null; }
 
     // TODO JL: Muss mit aenderungsmarkierungenVerwerfen zusammengelegt werden
     private int aenderungsmarkierungenUebernehmen(Element e, List<GeloeschtMarkierung_V001> loeschungen) {

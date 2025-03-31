@@ -299,7 +299,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public int aenderungenUebernehmen() {
     int changesMade = aenderungsart.asNumChanges();
     switch (aenderungsart) {
-      case Hinzugefuegt -> updateChangetypeAndDependentStylingUDBL(null);
+      case Hinzugefuegt -> updateChangetypeAndDependentStylingUDBL(Untracked);
       case Geloescht -> getParent().removeEditAreaUDBL(this);
     }
     aenderungsart = Untracked;
@@ -311,7 +311,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     int changesReverted = aenderungsart.asNumChanges();
     switch(aenderungsart) {
       case Hinzugefuegt -> getParent().removeEditAreaUDBL(this);
-      case Geloescht -> updateChangetypeAndDependentStylingUDBL(null);
+      case Geloescht -> updateChangetypeAndDependentStylingUDBL(Untracked);
     }
     aenderungsart = Untracked;
     return changesReverted;
