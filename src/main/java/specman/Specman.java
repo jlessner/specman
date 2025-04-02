@@ -74,6 +74,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -679,20 +680,25 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public void addImageViaFileChooser() {
-		if (lastFocusedTextArea != null) {
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(new File("."));
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "gif", "bmp"));
-			fileChooser.setAcceptAllFileFilterUsed(true);
-			int result = fileChooser.showOpenDialog(arbeitsbereich);
-			if (result == JFileChooser.APPROVE_OPTION) {
-				File selectedFile = fileChooser.getSelectedFile();
-				if (selectedFile != null && selectedFile.exists()) {
-					lastFocusedTextArea.addImage(selectedFile, initialArt());
-					diagrammAktualisieren(lastFocusedTextArea);
+		try {
+			if (lastFocusedTextArea != null) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setCurrentDirectory(new File("."));
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "gif", "bmp"));
+				fileChooser.setAcceptAllFileFilterUsed(true);
+				int result = fileChooser.showOpenDialog(arbeitsbereich);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = fileChooser.getSelectedFile();
+						if (selectedFile != null && selectedFile.exists()) {
+							BufferedImage image = ImageIO.read(selectedFile);
+							lastFocusedTextArea.addImage(image);
+					}
 				}
 			}
+		}
+		catch(IOException iox) {
+			throw new RuntimeException(iox);
 		}
 	}
 

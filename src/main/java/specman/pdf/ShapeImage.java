@@ -26,7 +26,7 @@ public class ShapeImage {
       BufferedImage fullSizeImage = content.getFullSizeImage();
       float scaleFactor = content.getTotalScalePercent() * swing2pdfScaleFactor;
       ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-      ImageIO.write(fullSizeImage, content.getImageFiletype(), bytes);
+      ImageIO.write(fullSizeImage, ImageEditArea.PERSISTED_IMAGETYPE, bytes);
       ImageData data = ImageDataFactory.create(bytes.toByteArray());
       com.itextpdf.layout.element.Image img = new com.itextpdf.layout.element.Image(data);
       img.setAutoScale(true);

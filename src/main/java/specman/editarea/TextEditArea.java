@@ -31,11 +31,15 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.CSS;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -425,46 +429,14 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e.isControlDown() && e.getKeyCode() == 'V') {
+            keyPastePressed(e);
+        }
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_BACK_SPACE -> {
-                if (getCaretPosition() == 0) {
-                    dissolveEditArea();
-                    return;
-                }
-                if (shouldPreventActionInsideStepnumberLink()) {
-                    skipToStepnumberLinkEnd();
-                    e.consume();
-                    return;
-                }
-                if (isTrackingChanges()) {
-                    handleTextDeletion();
-                    e.consume();
-                    return;
-                } else if (stepnumberLinkNormalOrChangedStyleSet(getSelectionEnd() - 1)) {
-                    removePreviousStepnumberLink();
-                    e.consume();
-                    return;
-                }
-            }
-            case KeyEvent.VK_LEFT -> {
-                if (skipToStepnumberLinkStart()) {
-                    e.consume();
-                    return;
-                }
-            }
-            case KeyEvent.VK_RIGHT -> {
-                if (skipToStepnumberLinkEnd()) {
-                    e.consume();
-                    return;
-                }
-            }
-            case KeyEvent.VK_ENTER -> {
-                EditContainer editContainer = getParent();
-                if (!e.isShiftDown() && editContainer.getParent() instanceof AbstractListItemEditArea) {
-                    ((AbstractListItemEditArea)editContainer.getParent()).split(this);
-                    e.consume();
-                }
-            }
+            case KeyEvent.VK_BACK_SPACE -> keyBackspacePressed(e);
+            case KeyEvent.VK_LEFT -> keyLeftPressed(e);
+            case KeyEvent.VK_RIGHT -> keyRightPressed(e);
+            case KeyEvent.VK_ENTER -> keyEnterPressed(e);
             default -> {
                 if (shouldPreventActionInsideStepnumberLink()) {
                     e.consume();
@@ -477,6 +449,61 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             aenderungsStilSetzenWennNochNichtVorhanden();
         } else {
             standardStilSetzenWennNochNichtVorhanden();
+        }
+    }
+
+    private void keyPastePressed(KeyEvent e) {
+        try {
+            System.out.println("STRG+V");
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable contents = clipboard.getContents(null);
+            if (contents != null && contents.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+                BufferedImage image = (BufferedImage) contents.getTransferData(DataFlavor.imageFlavor);
+                addImage(image);
+            }
+        }
+        catch(Exception x) {
+            x.printStackTrace();
+        }
+    }
+
+    private void keyEnterPressed(KeyEvent e) {
+        EditContainer editContainer = getParent();
+        if (!e.isShiftDown() && editContainer.getParent() instanceof AbstractListItemEditArea) {
+            ((AbstractListItemEditArea)editContainer.getParent()).split(this);
+            e.consume();
+        }
+    }
+
+    private void keyRightPressed(KeyEvent e) {
+        if (skipToStepnumberLinkEnd()) {
+            e.consume();
+        }
+    }
+
+    private void keyLeftPressed(KeyEvent e) {
+        if (skipToStepnumberLinkStart()) {
+            e.consume();
+        }
+    }
+
+    private void keyBackspacePressed(KeyEvent e) {
+        if (getCaretPosition() == 0) {
+            dissolveEditArea();
+            return;
+        }
+        if (shouldPreventActionInsideStepnumberLink()) {
+            skipToStepnumberLinkEnd();
+            e.consume();
+            return;
+        }
+        if (isTrackingChanges()) {
+            handleTextDeletion();
+            e.consume();
+        }
+        else if (stepnumberLinkNormalOrChangedStyleSet(getSelectionEnd() - 1)) {
+            removePreviousStepnumberLink();
+            e.consume();
         }
     }
 
@@ -688,8 +715,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         return (EditContainer) super.getParent();
     }
 
-    public void addImage(File imageFile, Aenderungsart aenderungsart) {
-        getParent().addImage(imageFile, this, aenderungsart);
+    public void addImage(BufferedImage image) {
+        getParent().addImage(image, this);
     }
 
     public EditArea addTable(int columns, int rows, Aenderungsart aenderungsart) {

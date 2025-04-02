@@ -50,6 +50,8 @@ import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
 import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
 
 public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener, ComponentListener, SpaltenContainerI {
+  public static final String PERSISTED_IMAGETYPE = "png";
+
   private static final String AFTERIMAGELINE_GAP = FORMLAYOUT_GAP;
   private static final int IRRELEVANT_COLUMNRESIZE_INDEX = -1;
   static final Color FOCUS_BORDER_COLOR = Color.GRAY;
@@ -62,7 +64,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   private static final Border UNSELECTED_CHANGED_BORDER = new LineBorder(AENDERUNGSMARKIERUNG_FARBE, BORDER_THICKNESS*2);
 
   private BufferedImage fullSizeImage;
-  private String imageType;
   private ImageIcon scaledIcon;
   private float totalScalePercent;
   private float individualScalePercent;
@@ -70,24 +71,21 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   private ImageEditAreaGlassPane focusGlass;
   private Aenderungsart aenderungsart;
 
-  ImageEditArea(File imageFile, Aenderungsart aenderungsart) {
-    try {
-      this.fullSizeImage = ImageIO.read(imageFile);
-      this.imageType = FilenameUtils.getExtension(imageFile.getName());
-      this.aenderungsart = aenderungsart;
-      this.individualScalePercent = 1;
-      postInit();
-    }
-    catch(IOException iox) {
-      throw new RuntimeException(iox);
-    }
+  ImageEditArea(BufferedImage fullSizeImage, Aenderungsart aenderungsart) {
+    this.fullSizeImage = fullSizeImage;
+    this.aenderungsart = aenderungsart;
+    this.individualScalePercent = 1;
+    postInit();
+  }
+
+  ImageEditArea(File imageFile, Aenderungsart aenderungsart) throws IOException {
+    this(ImageIO.read(imageFile), aenderungsart);
   }
 
   public ImageEditArea(ImageEditAreaModel_V001 imageEditAreaModel) {
     try {
       InputStream input = new ByteArrayInputStream(imageEditAreaModel.imageData);
-      this.fullSizeImage = ImageIO.read(input);;
-      this.imageType = imageEditAreaModel.imageType;
+      this.fullSizeImage = ImageIO.read(input);
       this.aenderungsart = imageEditAreaModel.aenderungsart;
       this.individualScalePercent = imageEditAreaModel.individualScalePercent;
       postInit();
@@ -279,8 +277,8 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
     try {
       ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-      ImageIO.write(fullSizeImage, imageType, bytes);
-      return new ImageEditAreaModel_V001(bytes.toByteArray(), imageType, aenderungsart, individualScalePercent);
+      ImageIO.write(fullSizeImage, PERSISTED_IMAGETYPE, bytes);
+      return new ImageEditAreaModel_V001(bytes.toByteArray(), PERSISTED_IMAGETYPE, aenderungsart, individualScalePercent);
     }
     catch (IOException iox) {
       throw new RuntimeException(iox);
@@ -365,10 +363,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public BufferedImage getFullSizeImage() { return fullSizeImage; }
 
   public float getTotalScalePercent() { return totalScalePercent; }
-
-  public int getImageType() { return fullSizeImage.getType(); }
-
-  public String getImageFiletype() { return imageType; }
 
   private void adaptImageSize() {
     int availableWidth = getWidth();

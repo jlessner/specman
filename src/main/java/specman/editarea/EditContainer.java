@@ -27,7 +27,9 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -382,18 +384,19 @@ public class EditContainer extends JPanel {
 		return tableEditArea;
 	}
 
-	public void addImage(File imageFile, TextEditArea initiatingTextArea, Aenderungsart aenderungsart) {
+	public void addImage(BufferedImage image, TextEditArea initiatingTextArea) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
 			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
 			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
-			ImageEditArea imageEditArea = new ImageEditArea(imageFile, aenderungsart);
+			ImageEditArea imageEditArea = new ImageEditArea(image, Specman.initialArt());
 			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
 			TextEditArea cutOffTextArea = initiatingTextArea.split(initiatingCaretPosition);
 			if (cutOffTextArea != null) {
 				addEditArea(cutOffTextArea, initiatingTextAreaIndex+2);
 			}
 			editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, imageEditArea, cutOffTextArea));
+			editor.diagrammAktualisieren(initiatingTextArea);
 		}
 		updateBounds();
 	}
