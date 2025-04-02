@@ -24,10 +24,10 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Image;
-import java.awt.Insets;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
@@ -78,10 +78,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     postInit();
   }
 
-  ImageEditArea(File imageFile, Aenderungsart aenderungsart) throws IOException {
-    this(ImageIO.read(imageFile), aenderungsart);
-  }
-
   public ImageEditArea(ImageEditAreaModel_V001 imageEditAreaModel) {
     try {
       InputStream input = new ByteArrayInputStream(imageEditAreaModel.imageData);
@@ -127,6 +123,12 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override public void keyReleased(KeyEvent e) {}
   @Override public void keyPressed(KeyEvent e) {
     switch (e.getKeyCode()) {
+      case 'C':
+        keyCopyPressed(e);
+        break;
+      case 'X':
+        keyCutPressed(e);
+        break;
       case KeyEvent.VK_BACK_SPACE:
       case KeyEvent.VK_DELETE:
         removeAreaByKeypressUDBL();
@@ -136,6 +138,21 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
         appendTextEditAreaByKeypressUDBL();
         e.consume();
         break;
+    }
+  }
+
+  private void keyCopyPressed(KeyEvent e) {
+    if (e.isControlDown()) {
+      Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+      clipboard.setContents(new ImageClipboardSelection(fullSizeImage), null);
+      e.consume();
+    }
+  }
+
+  private void keyCutPressed(KeyEvent e) {
+    if (e.isControlDown()) {
+      keyCopyPressed(e);
+      removeAreaByKeypressUDBL();
     }
   }
 

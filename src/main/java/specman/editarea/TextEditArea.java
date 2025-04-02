@@ -454,7 +454,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     private void keyPastePressed(KeyEvent e) {
         try {
-            System.out.println("STRG+V");
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             Transferable contents = clipboard.getContents(null);
             if (contents != null && contents.isDataFlavorSupported(DataFlavor.imageFlavor)) {
