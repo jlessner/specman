@@ -7,6 +7,7 @@ import specman.editarea.TextStyles;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -130,7 +131,7 @@ public class JEditorPaneUtilities extends JFrame {
       @Override
       public void componentResized(ComponentEvent e) {
         try {
-          //splitByLines();
+          splitByLines();
           //checkCharacterStyling();
         }
         catch(Exception x) {

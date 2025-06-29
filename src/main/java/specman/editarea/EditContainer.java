@@ -28,8 +28,6 @@ import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -366,7 +364,7 @@ public class EditContainer extends JPanel {
 
 	public InteractiveStepFragment asInteractiveFragment() { return editAreas.get(0); }
 
-	public EditArea addTable(TextEditArea initiatingTextArea, int columns, int rows, Aenderungsart aenderungsart) {
+	public EditArea addTableUDBL(TextEditArea initiatingTextArea, int columns, int rows, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		TableEditArea tableEditArea;
 		try (UndoRecording ur = editor.composeUndo()) {
@@ -384,7 +382,7 @@ public class EditContainer extends JPanel {
 		return tableEditArea;
 	}
 
-	public void addImage(BufferedImage image, TextEditArea initiatingTextArea) {
+	public void addImageUDBL(BufferedImage image, TextEditArea initiatingTextArea) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
 			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
@@ -406,16 +404,16 @@ public class EditContainer extends JPanel {
 		AbstractListItemEditArea liEditArea;
 		try (UndoRecording ur = editor.composeUndo()) {
 			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
-			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
-			TextEditArea cutOffTextArea = initiatingTextArea.split(initiatingCaretPosition);
-			if (cutOffTextArea == null) {
-				cutOffTextArea = new TextEditArea(new TextEditAreaModel_V001(""), initiatingTextArea.getFont());
-			}
+			ParagraphCutter cutter = new ParagraphCutter().cutAtCaret(initiatingTextArea);
 			liEditArea = ordered
-				? new OrderedListItemEditArea(cutOffTextArea, aenderungsart)
-				: new UnorderedListItemEditArea(cutOffTextArea, aenderungsart);
+				? new OrderedListItemEditArea(cutter.caretTextArea(), aenderungsart)
+				: new UnorderedListItemEditArea(cutter.caretTextArea(), aenderungsart);
 			addEditArea(liEditArea, initiatingTextAreaIndex+1);
 			editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, liEditArea, null));
+			if (cutter.trailingTextArea() != null) {
+				addEditArea(cutter.trailingTextArea(), initiatingTextAreaIndex+2);
+				editor.addEdit(new UndoableEditAreaAdded(this, initiatingTextArea, cutter.trailingTextArea(), null));
+			}
 		}
 		updateBounds();
 		return liEditArea;

@@ -125,7 +125,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private final Set<Integer> pressedKeys = new HashSet<>();
 	public static final String SPECMAN_TITLE = "Specman";
 
-	public Specman() throws Exception {
+	public Specman(File fileToOpen) throws Exception {
 		instance = this;
 		setApplicationIcon();
 		setTitle(SPECMAN_TITLE);
@@ -188,6 +188,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		configureKeyboardManager();
 		setupQuestionDialogWhenClosingWithoutSaving();
+
+		openInitialFile(fileToOpen);
+	}
+
+	private void openInitialFile(File fileToOpen) {
+		if (fileToOpen != null) {
+			diagrammLaden(fileToOpen);
+		}
 	}
 
 	private void setInitialWindowSizeAndScreenCenteredLocation() {
@@ -1107,7 +1115,18 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new Specman();
+		File initialFileToOpen = readFileFromArgs(args);
+		new Specman(initialFileToOpen);
+	}
+
+	private static File readFileFromArgs(String[] args) {
+		if (args.length > 0) {
+			File file = new File(args[0]);
+			if (file.exists()) {
+				return file;
+			}
+		}
+		return null;
 	}
 
 	public StruktogrammModel_V001 generiereStruktogrammModel(boolean formatierterText) {

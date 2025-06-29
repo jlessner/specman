@@ -40,7 +40,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -715,11 +714,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     public void addImage(BufferedImage image) {
-        getParent().addImage(image, this);
+        getParent().addImageUDBL(image, this);
     }
 
     public EditArea addTable(int columns, int rows, Aenderungsart aenderungsart) {
-        return getParent().addTable(this, columns, rows, aenderungsart);
+        return getParent().addTableUDBL(this, columns, rows, aenderungsart);
     }
 
     public EditArea toggleListItemUDBL(boolean ordered, Aenderungsart aenderungsart) {
@@ -758,6 +757,28 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             return splittedArea;
         }
         return null;
+    }
+
+    public TextEditArea copySection(int fromPosition, int toPosition) {
+        TextEditAreaModel_V001 selectionModel = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
+        TextEditArea selectionArea = new TextEditArea(selectionModel, this.getFont());
+        selectionArea.shrink(fromPosition, toPosition);
+        return selectionArea.getLength() > 0 ? selectionArea : null;
+    }
+
+    public void shrink(int fromPosition, int toPosition) {
+        int textLength = getDocument().getLength();
+        if (toPosition < fromPosition) {
+            remove(0, textLength);
+        }
+        else {
+            if (textLength > toPosition) {
+                remove(toPosition + 1, textLength - toPosition - 1);
+            }
+            if (fromPosition > 0) {
+                remove(0, fromPosition);
+            }
+        }
     }
 
     public void remove(int offset, int len) {
@@ -1031,6 +1052,37 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
         catch(BadLocationException blc) {
             return null;
+        }
+    }
+
+    public int getCurrentParagraphStartOffset() {
+        return currentParagraphElement().getStartOffset();
+    }
+
+    public int getCurrentParagraphEndOffset() {
+        return currentParagraphElement().getEndOffset();
+    }
+
+    public boolean caretIsAtLineBreak() {
+        try {
+            Element currentElement = currentParagraphElement();
+            String elementText = getText(currentElement.getStartOffset(), currentElement.getEndOffset());
+            return elementText.startsWith("\n");
+        }
+        catch(BadLocationException blc) { return false; }
+    }
+
+    private Element currentParagraphElement() {
+        StyledDocument doc = (StyledDocument) getDocument();
+        return doc.getParagraphElement(getCaretPosition());
+    }
+
+    public String getTextRX(int offs, int len) {
+        try {
+            return getText(offs, len);
+        }
+        catch(BadLocationException blx) {
+            throw new RuntimeException(blx);
         }
     }
 }

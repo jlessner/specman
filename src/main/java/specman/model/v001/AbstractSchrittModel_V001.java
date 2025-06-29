@@ -10,6 +10,7 @@ import static specman.view.RoundedBorderDecorationStyle.None;
 
 public abstract class AbstractSchrittModel_V001 {
 	public final SchrittID id;
+	public final String nummer;
 	public final EditorContentModel_V001 inhalt;
 	public final int farbe;
 	public final Aenderungsart aenderungsart;
@@ -28,6 +29,7 @@ public abstract class AbstractSchrittModel_V001 {
 			SchrittID quellschrittID,
 			RoundedBorderDecorationStyle decorationStyle) {
 		this.id = id;
+		this.nummer = id != null ? id.toString() : null;
 		this.inhalt = inhalt;
 		this.farbe = farbe;
 		this.aenderungsart = aenderungsart;
