@@ -1,3 +1,9 @@
+Aus UC-791
+- Übernahme von Word-Texten unformatiert.
+- Falsche Caret-Position und unsaubere Trennung bei Drücken von RETURN in einem Listitem
+- Die meisten Texte im PDF-Export sind etwas zu klein
+- Listitems füllen die Höhe von Schritten
+
 Abschluss für Go-Live
 - Line Items als EditAreas
   - Beim Anlegen: Sauberes Herausschneiden des Bereichs zwischen zwei harten Zeilenumbrüchen
