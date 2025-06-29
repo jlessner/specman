@@ -28,7 +28,7 @@ public class ParagraphCutter {
     this.caretPosition = initiatingArea.getCaretPosition();
     int leadingAreaStart = findLeadingAreaStart();
     int caretAreaStart = findCaretAreaStart();
-    int caretAreaEnd = findCaretAreaEnd(leadingAreaStart);
+    int caretAreaEnd = findCaretAreaEnd();
     int leadingAreaEnd = findLeadingAreaEnd();
     int trailingAreaStart = findTrailingAreaStart(caretAreaEnd);
 
@@ -59,8 +59,8 @@ public class ParagraphCutter {
     return newlineAt(pos) ? pos - 1 : pos;
   }
 
-  private int findCaretAreaEnd(int leadingAreaStart) {
-    int endPos = currentParagraphElement().getEndOffset() - leadingAreaStart;
+  private int findCaretAreaEnd() {
+    int endPos = currentParagraphElement().getEndOffset() - 1;
     return newlineAt(endPos) ? endPos - 1 : endPos;
   }
 
