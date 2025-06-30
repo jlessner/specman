@@ -5,12 +5,12 @@ Aus UC-791
 
 Abschluss für Go-Live
 - Line Items als EditAreas
-  - Beim Anlegen: Sauberes Herausschneiden des Bereichs zwischen zwei harten Zeilenumbrüchen
+  x Beim Anlegen: Sauberes Herausschneiden des Bereichs zwischen zwei harten Zeilenumbrüchen
     Element currentElement = StyledDocument.getElement(caretPosition)
     int startOffset = currentElement.getStartOffset();
     int endOffset = currentElement.getEndOffset();
   x Entfernen, wenn Caret sich bereits in einem Line Items befindet
-  - Unterscheidung nummeriert / nicht nummeriert
+  x Unterscheidung nummeriert / nicht nummeriert
   - Saubere Darstellung des Labels
     - Vertikal, nicht nummeriert: Mitte der ersten Zeile abhängig von der Zeilenhöhe - hängt von der größten Schrift in der ersten Zeile ab (-> JEditorPaneUtilities)
     - Vertikal, nummeriert: Baseline der ersten Zeile (-> JEditorPaneUtilities)
