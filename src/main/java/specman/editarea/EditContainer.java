@@ -85,7 +85,7 @@ import static specman.editarea.TextStyles.labelFont;
  * situationsbedingt beide Techniken mischen.
  */
 public class EditContainer extends JPanel {
-	private final static RowSpec EDITAREA_LAYOUT_ROWSPEC = RowSpec.decode("fill:pref:grow");
+	private final static RowSpec EDITAREA_LAYOUT_ROWSPEC = RowSpec.decode("fill:pref");
 
 	// ACHTUNG: Das ist hier noch auf halbem Wege. Später wird es eine Liste von EditAreas geben
 	private final List<EditArea> editAreas = new ArrayList<>();

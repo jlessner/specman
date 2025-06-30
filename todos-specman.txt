@@ -1,8 +1,7 @@
 Aus UC-791
-- Übernahme von Word-Texten unformatiert.
 - Falsche Caret-Position und unsaubere Trennung bei Drücken von RETURN in einem Listitem
-- Die meisten Texte im PDF-Export sind etwas zu klein
-- Listitems füllen die Höhe von Schritten
+- Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
+- Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 
 Abschluss für Go-Live
 - Line Items als EditAreas

@@ -6,9 +6,11 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 
 public class ClipboardTest {
 
@@ -18,6 +20,8 @@ public class ClipboardTest {
     Transferable contents = clipboard.getContents(null);
     boolean hasTransferableText = (contents != null) &&
         contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+    String stringOnly = (String)contents.getTransferData(DataFlavor.stringFlavor);
+    clipboard.setContents(new StringSelection(stringOnly), null);
     if (hasTransferableText) {
       String result = (String)contents.getTransferData(DataFlavor.stringFlavor);
       System.out.println(result);
