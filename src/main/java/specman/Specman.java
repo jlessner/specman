@@ -1155,7 +1155,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		if (pdfExportChooser == null) {
 			pdfExportChooser = new PDFExportChooser();
 		}
-		int result = pdfExportChooser.showSaveDialog(arbeitsbereich);
+		int result = pdfExportChooser.showSaveDialog(arbeitsbereich, diagrammDatei);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			pdfExportChooser.safeUserPreferences();
 		  File selectedFile = pdfExportChooser.getSelectedFile();

@@ -27,7 +27,6 @@ public class PDFExportChooser extends JFileChooser {
   JCheckBox display = new JCheckBox("Display result");
 
   public PDFExportChooser() {
-    setCurrentDirectory(new File("."));
     setFileSelectionMode(JFileChooser.FILES_ONLY);
     addChoosableFileFilter(new FileNameExtensionFilter(PDF_EXTENSION, "pdf"));
     setAcceptAllFileFilterUsed(true);
@@ -101,5 +100,12 @@ public class PDFExportChooser extends JFileChooser {
     prefs.put(PDF_PAGE_SIZE_PREF, pageSize.getSelectedItem().toString());
     prefs.put(PDF_PAGE_PORTRAIT_PREF, Boolean.toString(portrait.isSelected()));
     prefs.put(PDF_DISPLAY_PREF, Boolean.toString(display.isSelected()));
+  }
+
+  public int showSaveDialog(Component component, File diagrammDatei) {
+    File exportDirectory = diagrammDatei != null
+      ? diagrammDatei.getParentFile() : new File(".");
+    setCurrentDirectory(exportDirectory);
+    return showSaveDialog(component);
   }
 }
