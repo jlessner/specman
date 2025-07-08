@@ -1,5 +1,6 @@
 package net.atlanticbb.tantlinger.ui.text.actions;
 
+import jdk.security.jarsigner.JarSigner;
 import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.HeaderPanel;
 import net.atlanticbb.tantlinger.ui.UIUtils;
@@ -8,26 +9,12 @@ import specman.Specman;
 import specman.editarea.TextEditArea;
 import specman.view.AbstractSchrittView;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.text.JTextComponent;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -95,11 +82,13 @@ public class StepnumberLinkDialog extends JDialog {
         close.addActionListener(e -> StepnumberLinkDialog.this.setVisible(false));
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(close);
+        JScrollPane scrollPane = new JScrollPane(jlist);
         this.getRootPane().setDefaultButton(close);
         this.getContentPane().setLayout(new BorderLayout());
         this.getContentPane().add(headerPanel, "North");
-        this.getContentPane().add(jlist, "Center");
+        this.getContentPane().add(scrollPane, "Center");
         this.getContentPane().add(buttonPanel, "South");
+        this.setMinimumSize(new Dimension(400, 600));
         this.pack();
         this.setResizable(false);
     }
