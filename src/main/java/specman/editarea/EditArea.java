@@ -67,7 +67,14 @@ public interface EditArea extends InteractiveStepFragment {
 
   Aenderungsart getAenderungsart();
 
+  EditContainer getParent();
+
   default boolean isListItemArea() { return false; }
 
+  default boolean isTableEditArea() { return false; }
+
+  default boolean isImageEditArea() { return false; }
+
   default AbstractListItemEditArea asListItemArea() { return null; };
+
 }

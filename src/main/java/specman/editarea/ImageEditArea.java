@@ -2,12 +2,12 @@ package specman.editarea;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import org.apache.commons.io.FilenameUtils;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
+import specman.editarea.focusmover.CrossEditAreaFocusMoverFromImage;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.pdf.Shape;
@@ -26,8 +26,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
@@ -39,7 +37,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -136,6 +133,14 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
         break;
       case KeyEvent.VK_ENTER:
         appendTextEditAreaByKeypressUDBL();
+        e.consume();
+        break;
+      case KeyEvent.VK_DOWN:
+        new CrossEditAreaFocusMoverFromImage(this).moveFocusToSucceedingEditArea();
+        e.consume();
+        break;
+      case KeyEvent.VK_UP:
+        new CrossEditAreaFocusMoverFromImage(this).moveFocusToPreceedingEditArea();
         e.consume();
         break;
     }
@@ -332,14 +337,10 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
     return changesReverted;
   }
 
-  @Override
-  public String getText() { return "image"; }
-
-  @Override
-  public TextEditArea asTextArea() { return null; }
-
-  @Override
-  public ImageEditArea asImageArea() { return this; }
+  @Override public String getText() { return "image"; }
+  @Override public TextEditArea asTextArea() { return null; }
+  @Override public ImageEditArea asImageArea() { return this; }
+  @Override public boolean isImageEditArea() { return true; }
 
   @Override
   public boolean enthaeltAenderungsmarkierungen() { return aenderungsart != null; }

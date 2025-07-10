@@ -614,11 +614,15 @@ public class EditContainer extends JPanel {
 	}
 
 	public EditArea getFirstEditArea() {
-		return hasAreas() ? editAreas.get(0) : null;
+		return getEditAreaAt(0);
 	}
 
 	public EditArea getLastEditArea() {
 		return hasAreas() ? editAreas.get(editAreas.size()-1) : null;
+	}
+
+	public EditArea getEditAreaAt(int index) {
+		return hasAreas() ? editAreas.get(index) : null;
 	}
 
 	public void addEditAreaByUndoRedo(EditArea initiatingTextArea, EditArea imageEditArea, TextEditArea cutOffTextArea) {

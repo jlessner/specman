@@ -550,5 +550,5 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   @Override public ImageEditArea asImageArea() { return null; }
   @Override public String getText() { return "table"; }
   @Override public void setEditDecorationIndentions(Indentions indentions) { /* Nothing to do */ }
-
+  @Override public boolean isTableEditArea() { return true; }
 }

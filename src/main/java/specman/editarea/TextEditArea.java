@@ -4,6 +4,7 @@ import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
+import specman.editarea.focusmover.CrossEditAreaFocusMoverFromText;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.Aenderungsmarkierung_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
@@ -194,9 +195,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     @Override
-    public Component asComponent() {
-        return this;
-    }
+    public Component asComponent() { return this; }
 
     public String getPlainText() {
         try {
@@ -437,6 +436,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
         switch (e.getKeyCode()) {
             case KeyEvent.VK_BACK_SPACE -> keyBackspacePressed(e);
+            case KeyEvent.VK_UP -> keyUpPressed(e);
+            case KeyEvent.VK_DOWN -> keyDownPressed(e);
             case KeyEvent.VK_LEFT -> keyLeftPressed(e);
             case KeyEvent.VK_RIGHT -> keyRightPressed(e);
             case KeyEvent.VK_ENTER -> keyEnterPressed(e);
@@ -497,6 +498,14 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         if (skipToStepnumberLinkStart()) {
             e.consume();
         }
+    }
+
+    private void keyUpPressed(KeyEvent e) {
+        new CrossEditAreaFocusMoverFromText(this).moveFocusToPreceedingEditArea();
+    }
+
+    private void keyDownPressed(KeyEvent e) {
+        new CrossEditAreaFocusMoverFromText(this).moveFocusToSucceedingEditArea();
     }
 
     private void keyBackspacePressed(KeyEvent e) {
