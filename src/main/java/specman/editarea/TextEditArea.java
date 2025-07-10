@@ -432,6 +432,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         if (e.isControlDown() && e.getKeyCode() == 'V') {
             keyPastePressed(e);
         }
+        if (e.isControlDown() && e.getKeyCode() == 'X') {
+            markSelectedTextAsDeletedInModificationMode();
+        }
         switch (e.getKeyCode()) {
             case KeyEvent.VK_BACK_SPACE -> keyBackspacePressed(e);
             case KeyEvent.VK_LEFT -> keyLeftPressed(e);
@@ -684,11 +687,20 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+        if (e.getKeyCode() == 0) {
+            // This is indicator for some control action like copy or paste rather than entering or deleting text.
+            // In this case we skip the following special behaviour logic. Control actions should have already
+            // been handled in keyPressed().
+            return;
+        }
         if (shouldPreventActionInsideStepnumberLink()) {
             e.consume();
             return;
         }
+        markSelectedTextAsDeletedInModificationMode();
+    }
 
+    private void markSelectedTextAsDeletedInModificationMode() {
         if (!Specman.instance().aenderungenVerfolgen()) {
             return;
         }
@@ -764,7 +776,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             TextEditAreaModel_V001 splittedModel = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
             TextEditArea splittedArea = new TextEditArea(splittedModel, this.getFont());
             remove(textPosition, textLength - textPosition);
-            splittedArea.remove(0, textPosition);
+            int removeStart = splittedArea.newlineAt(0) ? 1 : 0;
+            splittedArea.remove(removeStart, textPosition);
             return splittedArea;
         }
         return null;
