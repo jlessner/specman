@@ -785,8 +785,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             TextEditAreaModel_V001 splittedModel = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
             TextEditArea splittedArea = new TextEditArea(splittedModel, this.getFont());
             remove(textPosition, textLength - textPosition);
-            int removeStart = splittedArea.newlineAt(0) ? 1 : 0;
-            splittedArea.remove(removeStart, textPosition);
+            //int removeStart = splittedArea.newlineAt(0) ? 1 : 0;
+            splittedArea.remove(0, textPosition);
             return splittedArea;
         }
         return null;

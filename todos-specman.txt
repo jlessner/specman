@@ -1,5 +1,6 @@
 Aus UC-791
-- Falsche Caret-Position und unsaubere Trennung bei Drücken von RETURN in einem Listitem
+- Falsche Caret-Position bei Drücken von RETURN in einem Listitem
+- Unsaubere Trennung bei Drücken von RETURN innerhalb eines Listitem, das man grade neu angelegt hat. Wenn man die Datei erst einmal speichert, funktioniert es anschließend.
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
