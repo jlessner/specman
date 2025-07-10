@@ -43,7 +43,7 @@ public class ParagraphCutter {
   }
 
   private boolean newlineAt(int pos) {
-    return initiatingArea.getTextRX(pos, 1).startsWith("\n");
+    return initiatingArea.newlineAt(pos);
   }
 
   private int findLeadingAreaStart() {

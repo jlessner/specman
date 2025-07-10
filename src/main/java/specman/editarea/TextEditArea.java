@@ -1096,4 +1096,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             throw new RuntimeException(blx);
         }
     }
+
+    public boolean newlineAt(int pos) {
+        return getTextRX(pos, 1).startsWith("\n");
+    }
 }
