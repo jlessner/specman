@@ -1,4 +1,5 @@
 Aus UC-791
+- Focus in Tabellen durch Drücken von TAB verschieben
 - Falsche Caret-Position bei Drücken von RETURN in einem Listitem
 - Unsaubere Trennung bei Drücken von RETURN innerhalb eines Listitem, das man grade neu angelegt hat. Wenn man die Datei erst einmal speichert, funktioniert es anschließend.
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
@@ -7,6 +8,8 @@ Aus UC-791
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
 
 Abschluss für Go-Live
+x Schrittnummerreferenzen gehen bei Annahme von Änderungen kaputt
+x Neu eingefügte, übergroße Bilder sind initial etwas zu groß, so dass man nicht an den linken Rand herankommt, um die Größe zu ändern
 x Hoch/Runterscrollen über Grenzen von EditAreas innerhalb eines Schritts
 x STRG+C bewirkt in Änderungsmodus eine Löschmarkierung des zuvor markierten Texts. Es sollte gar keine Textänderung erfolgen!
 - Line Items als EditAreas

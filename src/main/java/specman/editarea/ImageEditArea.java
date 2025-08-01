@@ -45,6 +45,7 @@ import java.util.List;
 import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
 import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
+import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener, ComponentListener, SpaltenContainerI {
   public static final String PERSISTED_IMAGETYPE = "png";
@@ -255,7 +256,6 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   @Override
   public void aenderungsmarkierungenEntfernen() {
     aenderungsart = Untracked;
-    // Nothing to do for images - job is completely done in aenderungenVerwerfen/Uebernehmen
   }
 
   @Override
@@ -383,7 +383,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public float getTotalScalePercent() { return totalScalePercent; }
 
   private void adaptImageSize() {
-    int availableWidth = getWidth();
+    int availableWidth = getWidth() - 3 * LINIENBREITE;
     if (availableWidth > 0) {
       int maximumZoomedWidth = (int)(fullSizeImage.getWidth() * Specman.instance().getZoomFactor() / 100 * individualScalePercent);
       int scaledWidth = Math.min(availableWidth, maximumZoomedWidth);

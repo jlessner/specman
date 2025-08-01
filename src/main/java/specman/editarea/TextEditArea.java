@@ -165,12 +165,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     private void setBackgroundUDBL(Color backgroundColor) { UDBL.setBackgroundUDBL(this, backgroundColor); }
     private void setEditableUDBL(boolean editable) { UDBL.setEditable(this, editable); }
 
-    private boolean hasStyle(MutableAttributeSet attr, Color backgroundColor, boolean editable) {
-        StyledDocument doc = (StyledDocument) getDocument();
-        AttributeSet attributes = doc.getCharacterElement(0).getAttributes();
-        return attributes.containsAttributes(attr) && isEditable() == editable && getBackground() == backgroundColor;
-    }
-
     @Override
     public void setQuellStil() {
         setStyleUDBL(quellschrittStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
@@ -178,13 +172,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void aenderungsmarkierungenEntfernen() {
-        if (!hasStandardStyle()) {
-            setStyleUDBL(standardStil, BACKGROUND_COLOR_STANDARD, true);
-        }
-    }
-
-    private boolean hasStandardStyle() {
-        return hasStyle(standardStil, BACKGROUND_COLOR_STANDARD, true);
+        // Nothing to do for text areas - job is completely done in aenderungenVerwerfen/Uebernehmen
     }
 
     @Override
