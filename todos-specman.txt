@@ -1,4 +1,5 @@
 Aus UC-791
+- Schrittreferenzen werden im Outro und Catch-Blöcken des UC-791 nicht aktualisiert. Allgemein geht es aber.
 - Focus in Tabellen durch Drücken von TAB verschieben
 - Falsche Caret-Position bei Drücken von RETURN in einem Listitem
 - Unsaubere Trennung bei Drücken von RETURN innerhalb eines Listitem, das man grade neu angelegt hat. Wenn man die Datei erst einmal speichert, funktioniert es anschließend.

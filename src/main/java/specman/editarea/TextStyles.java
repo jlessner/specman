@@ -15,10 +15,12 @@ public class TextStyles {
     public static final int FONTSIZE = 15;
     public static final int SCHRITTNR_FONTSIZE = 10;
 
-    public static MutableAttributeSet geaendertStil = new SimpleAttributeSet();
+    public static MutableAttributeSet geaendertTextBackground = new SimpleAttributeSet();
+    public static MutableAttributeSet geaendertTextBackgroundSpan = new SimpleAttributeSet();
     public static MutableAttributeSet geloeschtStil = new SimpleAttributeSet();
     public static MutableAttributeSet ganzerSchrittGeloeschtStil = new SimpleAttributeSet();
     public static MutableAttributeSet standardStil = new SimpleAttributeSet();
+    public static MutableAttributeSet standardTextBackground = new SimpleAttributeSet();
     public static MutableAttributeSet quellschrittStil = new SimpleAttributeSet();
     public static MutableAttributeSet stepnumberLinkStyle = new SimpleAttributeSet();
     public static MutableAttributeSet changedStepnumberLinkStyle = new SimpleAttributeSet();
@@ -97,10 +99,10 @@ public class TextStyles {
         SimpleAttributeSet htmlHintergrundStyleStepnumber = new SimpleAttributeSet();
 
         htmlHintergrundStyleGeaendert.addAttribute(HTML.Attribute.STYLE, htmlStyleGeaendert);
-        geaendertStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
-        StyleConstants.setBackground(geaendertStil, AENDERUNGSMARKIERUNG_FARBE);
+        StyleConstants.setBackground(geaendertTextBackground, AENDERUNGSMARKIERUNG_FARBE);
+        StyleConstants.setBackground(geaendertTextBackgroundSpan, AENDERUNGSMARKIERUNG_FARBE);
+        geaendertTextBackgroundSpan.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
 
-        geloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
         StyleConstants.setBackground(geloeschtStil, AENDERUNGSMARKIERUNG_FARBE);
         StyleConstants.setStrikeThrough(geloeschtStil, true);
 
@@ -115,6 +117,7 @@ public class TextStyles {
         StyleConstants.setBackground(standardStil, TEXT_BACKGROUND_COLOR_STANDARD);
         StyleConstants.setStrikeThrough(standardStil, false);
         StyleConstants.setForeground(standardStil, Schriftfarbe_Standard);
+        StyleConstants.setBackground(standardTextBackground, TEXT_BACKGROUND_COLOR_STANDARD);
 
         quellschrittStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
         StyleConstants.setBackground(quellschrittStil, AENDERUNGSMARKIERUNG_FARBE);

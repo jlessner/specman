@@ -55,7 +55,6 @@ import static specman.editarea.HTMLTags.BODY_OUTRO;
 import static specman.editarea.HTMLTags.HTML_INTRO;
 import static specman.editarea.HTMLTags.HTML_OUTRO;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
-import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.FONTSIZE;
 import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.INDIKATOR_GELB;
@@ -66,7 +65,7 @@ import static specman.editarea.TextStyles.changedStepnumberLinkHTMLColor;
 import static specman.editarea.TextStyles.deletedStepnumberLinkStyle;
 import static specman.editarea.TextStyles.font;
 import static specman.editarea.TextStyles.ganzerSchrittGeloeschtStil;
-import static specman.editarea.TextStyles.geaendertStil;
+import static specman.editarea.TextStyles.geaendertTextBackground;
 import static specman.editarea.TextStyles.geloeschtStil;
 import static specman.editarea.TextStyles.quellschrittStil;
 import static specman.editarea.TextStyles.standardStil;
@@ -86,6 +85,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         addMouseMotionListener();
         setBackground(aenderungsart.toBackgroundColor());
         registerToolTipManager();
+        styleChangedTextSections(model);
+    }
+
+    private void styleChangedTextSections(TextEditAreaModel_V001 model) {
+        new ChangeBackgroundStyleInitializer(this, model).styleChangedTextSections();
     }
 
     private void addMouseListener() {
@@ -410,7 +414,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             StyledEditorKit k = (StyledEditorKit) getEditorKit();
             MutableAttributeSet inputAttributes = k.getInputAttributes();
             StyleConstants.setStrikeThrough(inputAttributes, false); // Falls noch Gelöscht-Stil herrschte
-            inputAttributes.addAttributes(geaendertStil);
+            inputAttributes.addAttributes(geaendertTextBackground);
         }
     }
 
@@ -469,10 +473,27 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     private void keyEnterPressed(KeyEvent e) {
+        e.consume();
         EditContainer editContainer = getParent();
         if (!e.isShiftDown() && editContainer.getParent() instanceof AbstractListItemEditArea) {
             ((AbstractListItemEditArea)editContainer.getParent()).split(this);
             e.consume();
+            return;
+        }
+        addNewlineAtCaret(e);
+    }
+
+    /** The original code causes text background style loss in the edited line,
+     * so we simply do what we need by our own. */
+    private void addNewlineAtCaret(KeyEvent e) {
+        try {
+            StyledDocument doc = (StyledDocument) getDocument();
+            int caretPosition = getCaretPosition();
+            doc.insertString(caretPosition, "\n", null);
+            e.consume();
+        }
+        catch(BadLocationException blx) {
+            blx.printStackTrace();
         }
     }
 
