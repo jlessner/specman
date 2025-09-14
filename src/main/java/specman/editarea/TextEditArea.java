@@ -417,7 +417,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
     }
 
-    private WrappedPosition getWrappedCaretPosition() {
+    public WrappedPosition getWrappedCaretPosition() {
         return getWrappedDocument().wrap(getCaretPosition());
     }
 
