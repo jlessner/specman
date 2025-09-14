@@ -19,12 +19,12 @@ import static specman.editarea.TextStyles.standardTextBackground;
  * applies to the succeeding text too. The styles being used here are "overlays", only focussed
  * on text background. So they do not destroy any foreground styling, font sizing and so on. */
 public class ChangeBackgroundStyleInitializer {
-  private final StyledDocument doc;
+  private final WrappedDocument doc;
   private final TextEditAreaModel_V001 model;
 
   public ChangeBackgroundStyleInitializer(TextEditArea textEditArea, TextEditAreaModel_V001 model) {
     // TODO JL: This is not yet complete as it erases the background styling of step references.
-    this.doc = (StyledDocument) textEditArea.getDocument();
+    this.doc = textEditArea.getWrappedDocument();
     this.model = model;
   }
 
@@ -44,7 +44,7 @@ public class ChangeBackgroundStyleInitializer {
 
   private StyledSection followingStandardSection(TextEditAreaModel_V001 model, int i) {
     Aenderungsmarkierung_V001 lastChange = model.aenderungen.get(i);
-    int resetStart = lastChange.getVon() + lastChange.laenge();
+    int resetStart = lastChange.getVon() + lastChange.laenge() + 1;
     int resetLength;
     if (model.aenderungen.size() > i+1) {
       Aenderungsmarkierung_V001 nextChange = model.aenderungen.get(i+1);

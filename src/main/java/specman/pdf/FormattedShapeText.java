@@ -40,7 +40,7 @@ public class FormattedShapeText extends AbstractShapeText {
   private static final String HTML2PDF_STYLESHEET = "stylesheets/specman-pdf.css";
   private static final Pattern FONTSIZE_PATTERN = Pattern.compile("(.*font-size:[\\s]*)([\\d\\.]+)(.+)");
 
-  private static ConverterProperties properties;
+  static ConverterProperties properties;
   private static String htmlStyles;
 
   public static FontProvider fontProvider;

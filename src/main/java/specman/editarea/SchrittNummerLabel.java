@@ -78,12 +78,12 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
 
   public void wrapAsZielUDBL(SchrittID quellschrittId) {
     wrapUDBL(SPAN_INTRO,
-      SPAN_OUTRO + SPAN_INTRO + "&lArr" + SPAN_OUTRO + SPAN_GELOESCHT_MARKIERT + quellschrittId + SPAN_OUTRO);
+      SPAN_OUTRO + SPAN_INTRO + " &lt; " + SPAN_OUTRO + SPAN_GELOESCHT_MARKIERT + quellschrittId + SPAN_OUTRO);
   }
 
   public void wrapAsQuelleUDBL(SchrittID zielschrittID) {
     wrapUDBL(SPAN_GELOESCHT_MARKIERT,
-      SPAN_OUTRO + SPAN_INTRO + "&rArr" + SPAN_OUTRO + SPAN_INTRO + zielschrittID + SPAN_OUTRO);
+      SPAN_OUTRO + SPAN_INTRO + " &gt; " + SPAN_OUTRO + SPAN_INTRO + zielschrittID + SPAN_OUTRO);
   }
 
   public void wrapAsDeletedUDBL() { wrapUDBL(SPAN_GELOESCHT_MARKIERT, SPAN_OUTRO); }

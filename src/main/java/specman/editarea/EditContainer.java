@@ -150,7 +150,7 @@ public class EditContainer extends JPanel {
 			}
 			addEditArea(editArea, index++);
 		}
-		if (schrittNummer != null) {
+		if (schrittNummer != null && !editAreas.isEmpty()) {
 			editAreas.get(0).addSchrittnummer(schrittNummer);
 		}
 		skalieren(Specman.instance().getZoomFactor(), 0);
