@@ -80,4 +80,6 @@ public class WrappedPosition {
   public String toString() {
     return "" + position;
   }
+
+  public int toModel() { return position; }
 }

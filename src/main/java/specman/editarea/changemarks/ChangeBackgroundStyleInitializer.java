@@ -1,10 +1,10 @@
-package specman.editarea;
+package specman.editarea.changemarks;
 
+import specman.editarea.TextEditArea;
+import specman.editarea.WrappedDocument;
 import specman.model.v001.Aenderungsmarkierung_V001;
-import specman.model.v001.TextEditAreaModel_V001;
 
 import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.StyledDocument;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +20,18 @@ import static specman.editarea.TextStyles.standardTextBackground;
  * on text background. So they do not destroy any foreground styling, font sizing and so on. */
 public class ChangeBackgroundStyleInitializer {
   private final WrappedDocument doc;
-  private final TextEditAreaModel_V001 model;
+  private final List<Aenderungsmarkierung_V001> model;
 
-  public ChangeBackgroundStyleInitializer(TextEditArea textEditArea, TextEditAreaModel_V001 model) {
+  public ChangeBackgroundStyleInitializer(TextEditArea textEditArea, List<Aenderungsmarkierung_V001> model) {
     // TODO JL: This is not yet complete as it erases the background styling of step references.
     this.doc = textEditArea.getWrappedDocument();
     this.model = model;
   }
 
-  private List<StyledSection> model2StyledSections(TextEditAreaModel_V001 model) {
+  private List<StyledSection> model2StyledSections(List<Aenderungsmarkierung_V001> model) {
     List<StyledSection> stylings = new ArrayList<>();
-    for (int i = 0; i < model.aenderungen.size(); i++) {
-      Aenderungsmarkierung_V001 change = model.aenderungen.get(i);
+    for (int i = 0; i < model.size(); i++) {
+      Aenderungsmarkierung_V001 change = model.get(i);
       StyledSection changeSection = new StyledSection(change.getVon(), change.laenge(), geaendertTextBackground);
       stylings.add(changeSection);
       StyledSection standardSection = followingStandardSection(model, i);
@@ -42,12 +42,12 @@ public class ChangeBackgroundStyleInitializer {
     return stylings;
   }
 
-  private StyledSection followingStandardSection(TextEditAreaModel_V001 model, int i) {
-    Aenderungsmarkierung_V001 lastChange = model.aenderungen.get(i);
+  private StyledSection followingStandardSection(List<Aenderungsmarkierung_V001> model, int i) {
+    Aenderungsmarkierung_V001 lastChange = model.get(i);
     int resetStart = lastChange.getVon() + lastChange.laenge() + 1;
     int resetLength;
-    if (model.aenderungen.size() > i+1) {
-      Aenderungsmarkierung_V001 nextChange = model.aenderungen.get(i+1);
+    if (model.size() > i+1) {
+      Aenderungsmarkierung_V001 nextChange = model.get(i+1);
       resetLength = nextChange.getVon() - 1 - resetStart;
     }
     else {

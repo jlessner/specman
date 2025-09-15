@@ -4,6 +4,8 @@ import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
+import specman.editarea.changemarks.ChangeBackgroundStyleInitializer;
+import specman.editarea.changemarks.ChangemarkSplitter;
 import specman.editarea.focusmover.CrossEditAreaFocusMoverFromText;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.Aenderungsmarkierung_V001;
@@ -86,7 +88,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     private void styleChangedTextSections(TextEditAreaModel_V001 model) {
-        new ChangeBackgroundStyleInitializer(this, model).styleChangedTextSections();
+        new ChangeBackgroundStyleInitializer(this, model.aenderungen).styleChangedTextSections();
     }
 
     private void addMouseListener() {
@@ -247,7 +249,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     private void findeAenderungsmarkierungen(WrappedElement e, java.util.List<Aenderungsmarkierung_V001> ergebnis, boolean nurErste) {
         if (elementHatAenderungshintergrund(e)) {
-            ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset().position, e.getEndOffset().position));
+            ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset().toModel(), e.getEndOffset().toModel()));
             if (nurErste) {
                 return;
             }
@@ -332,7 +334,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         WrappedDocument doc = e.getDocument();
         if (elementHatAenderungshintergrund(e)) {
             if (elementHatDurchgestrichenenText(e)) {
-                loeschungen.add(new GeloeschtMarkierung_V001(e.getStartOffset().position, e.getEndOffset().position));
+                loeschungen.add(new GeloeschtMarkierung_V001(e.getStartOffset().toModel(), e.getEndOffset().toModel()));
             } else {
                 AttributeSet attribute = e.getAttributes();
                 MutableAttributeSet entfaerbt = new SimpleAttributeSet();
@@ -477,12 +479,37 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     private void keyEnterPressed(KeyEvent e) {
         EditContainer editContainer = getParent();
-        if (!e.isShiftDown() && editContainer.getParent() instanceof AbstractListItemEditArea) {
-            ((AbstractListItemEditArea)editContainer.getParent()).split(this);
-            e.consume();
-            return;
+        if (!e.isShiftDown()) {
+            if (editContainer.getParent() instanceof AbstractListItemEditArea) {
+                // TODO: this "self-made" splitting also requires restauration of change marks
+                ((AbstractListItemEditArea) editContainer.getParent()).split(this);
+                e.consume();
+                return;
+            }
+            List<Aenderungsmarkierung_V001> aenderungen = findeAenderungsmarkierungen(false);
+            WrappedPosition caretPositionBeforeSplit = getWrappedCaretPosition();
+            System.out.println("Caret vorher: " + caretPositionBeforeSplit.toModel());
+            System.out.println("Textlänge ab Caret vorher: " + (getWrappedDocument().getLength() - caretPositionBeforeSplit.toModel()));
+            // TODO: Not yet considered:
+            // Whitespaces before and after the caret position are erased by the paragraph split
+            // TODO: Restoring of changemarks must be clustered for Undo and also be merged with the paragraph split
+            List<Aenderungsmarkierung_V001> splittedChangemarks = new ChangemarkSplitter(aenderungen).split(caretPositionBeforeSplit);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    WrappedPosition caretPositionAfterSplit = getWrappedCaretPosition();
+                    // Zu erwarten ist eine Caret-Position, die um 1 größer ist als die ursprüngliche.
+                    // Jede Differenz davon deutet auf einen Verlust von Whitespaces vor dem Caret
+                    // durch die Absatztrennung hin. Dieser Verlust muss in den Changemarks berücksichtigt werden.
+                    System.out.println("Caret nachher: " + caretPositionAfterSplit.toModel());
+                    // Zu erwarten ist die gleiche Textlänge ab Caret-Position wie vorher.
+                    // Jede Differenz davon deutet auf einen Verlust von Whitespaces NACH dem Caret
+                    // durch die Absatztrennung hin. Dieser Verlust muss in den Changemarks berücksichtigt werden.
+                    System.out.println("Textlänge ab Caret nachher: " + (getWrappedDocument().getLength() - caretPositionAfterSplit.toModel()));
+                    new ChangeBackgroundStyleInitializer(TextEditArea.this, splittedChangemarks).styleChangedTextSections();
+                }
+            });
         }
-        addNewlineAtCaret(e);
     }
 
     /** The original code causes text background style loss in the edited line,
