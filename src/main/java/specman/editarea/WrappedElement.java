@@ -13,11 +13,11 @@ public class WrappedElement {
   }
 
   public WrappedPosition getStartOffset() {
-    return new WrappedPosition(element.getStartOffset(), document);
+    return document.fromUI(element.getStartOffset());
   }
 
   public WrappedPosition getEndOffset() {
-    return new WrappedPosition(element.getEndOffset(), document);
+    return document.fromUI(element.getEndOffset());
   }
 
   public int getElementCount() {

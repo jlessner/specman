@@ -4,7 +4,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
-import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.StyledDocument;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +30,7 @@ public class WrappedDocument {
   }
 
   public void setCharacterAttributes(int offset, int length, AttributeSet style, boolean replace) {
-    setCharacterAttributes(wrap(offset), length, style, replace);
+    setCharacterAttributes(fromUI(offset), length, style, replace);
   }
 
   public void setCharacterAttributes(WrappedPosition offset, int length, AttributeSet style, boolean replace) {
@@ -46,7 +45,7 @@ public class WrappedDocument {
   }
 
   public WrappedElement getCharacterElement(int position) {
-    return getCharacterElement(wrap(position));
+    return getCharacterElement(fromUI(position));
   }
 
   public WrappedElement getCharacterElement(WrappedPosition position) {
@@ -88,8 +87,11 @@ public class WrappedDocument {
     return new WrappedElement(element, this);
   }
 
-  public WrappedPosition wrap(int position) {
-    return new WrappedPosition(position, this);
+  public WrappedPosition fromUI(int position) {
+    return new WrappedPosition(position - getVisibleTextStart(), this);
   }
 
+  public WrappedPosition fromModel(int position) {
+    return new WrappedPosition(position, this);
+  }
 }

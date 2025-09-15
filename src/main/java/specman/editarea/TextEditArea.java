@@ -275,8 +275,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         for (int i = 0; i < loeschungen.size(); i++) {
             GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) - 1 - i);
             try {
-                WrappedPosition loeschungVon = doc.wrap(loeschung.getVon());
-                WrappedPosition loeschungBis = doc.wrap(loeschung.getBis());
+                WrappedPosition loeschungVon = doc.fromModel(loeschung.getVon());
+                WrappedPosition loeschungBis = doc.fromModel(loeschung.getBis());
                 removeTextAndUnregisterStepnumberLinks(loeschungVon, loeschungBis, editor);
                 changesMade++;
             } catch (Exception e) {
@@ -306,8 +306,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             for (int i = 0; i < loeschungen.size(); i++) {
                 GeloeschtMarkierung_V001 loeschung = loeschungen.get((loeschungen.size()) - 1 - i);
                 try {
-                    WrappedPosition loeschungVon = doc.wrap(loeschung.getVon());
-                    WrappedPosition loeschungBis = doc.wrap(loeschung.getBis());
+                    WrappedPosition loeschungVon = doc.fromModel(loeschung.getVon());
+                    WrappedPosition loeschungBis = doc.fromModel(loeschung.getBis());
                     removeTextAndUnregisterStepnumberLinks(loeschungVon, loeschungBis, editor);
                     changesReverted++;
                 } catch (Exception e) {
@@ -418,7 +418,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     public WrappedPosition getWrappedCaretPosition() {
-        return getWrappedDocument().wrap(getCaretPosition());
+        return getWrappedDocument().fromUI(getCaretPosition());
     }
 
     @Override
@@ -581,8 +581,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             return;
         }
 
-        WrappedPosition startOffset = getWrappedDocument().wrap(pStartOffset);
-        WrappedPosition endOffset = getWrappedDocument().wrap(pEndOffset);
+        WrappedPosition startOffset = getWrappedDocument().fromUI(pStartOffset);
+        WrappedPosition endOffset = getWrappedDocument().fromUI(pEndOffset);
 
         EditorI editor = Specman.instance();
 
@@ -755,11 +755,11 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     private WrappedPosition getWrappedSelectionEnd() {
-        return getWrappedDocument().wrap(getSelectionEnd());
+        return getWrappedDocument().fromUI(getSelectionEnd());
     }
 
     private WrappedPosition getWrappedSelectionStart() {
-        return getWrappedDocument().wrap(getSelectionStart());
+        return getWrappedDocument().fromUI(getSelectionStart());
     }
 
     @Override

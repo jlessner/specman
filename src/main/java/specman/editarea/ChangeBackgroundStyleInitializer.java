@@ -61,11 +61,11 @@ public class ChangeBackgroundStyleInitializer {
   public void styleChangedTextSections() {
     List<StyledSection> stylings = model2StyledSections(model);
     for (StyledSection styling: stylings) {
-      doc.setCharacterAttributes(new WrappedPosition(styling, doc), styling.length, styling.style, false);
+      doc.setCharacterAttributes(doc.fromModel(styling.start), styling.length, styling.style, false);
     }
   }
 
-  public static class StyledSection {
+  private static class StyledSection {
     final int start;
     final int length;
     final MutableAttributeSet style;

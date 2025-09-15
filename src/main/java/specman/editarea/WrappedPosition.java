@@ -1,27 +1,27 @@
 package specman.editarea;
 
-import specman.editarea.ChangeBackgroundStyleInitializer.StyledSection;
 import specman.model.v001.Aenderungsmarkierung_V001;
 
+import javax.swing.text.Document;
 import java.util.Objects;
 
 public class WrappedPosition {
   final int position;
   final WrappedDocument document;
 
-  public WrappedPosition(int position, WrappedDocument document) {
+  /** This constructor is package-visible by intention as it is only allowed to
+   * be used from {@link WrappedDocument} to make sure that the passed position
+   * integer is always properly converted to a logical value. If it comes from
+   * a model object like {@link Aenderungsmarkierung_V001}, the value is supposed
+   * to be used as is, while integers from a {@link Document} might require adaption. */
+  WrappedPosition(int position, WrappedDocument document) {
     this.document = document;
-    this.position = position - document.getVisibleTextStart();
+    this.position = position;
   }
 
   public WrappedPosition(int delta, WrappedPosition from) {
     this.document = from.document;
     this.position = from.position + delta;
-  }
-
-  public WrappedPosition(StyledSection styling, WrappedDocument document) {
-    this.document = document;
-    this.position = styling.start;
   }
 
   public boolean greater(WrappedPosition than) {
@@ -41,7 +41,7 @@ public class WrappedPosition {
   }
 
   public WrappedPosition max(WrappedPosition rhs) {
-    return new WrappedPosition(Math.max(unwrap(), rhs.unwrap()), document);
+    return document.fromUI(Math.max(unwrap(), rhs.unwrap()));
   }
 
   public int distance(WrappedPosition lhs) {
@@ -73,7 +73,7 @@ public class WrappedPosition {
   }
 
   public WrappedPosition min(WrappedPosition rhs) {
-    return new WrappedPosition(Math.min(unwrap(), rhs.unwrap()), document);
+    return document.fromUI(Math.min(unwrap(), rhs.unwrap()));
   }
 
   @Override
