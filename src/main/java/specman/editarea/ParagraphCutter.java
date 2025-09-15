@@ -10,7 +10,7 @@ import javax.swing.text.StyledDocument;
  * paragraphs within the same text area. As a result, the cutter produces
  * <ol>
  *   <li>a new TextEditArea containing only the text of the paragraph which the caret was in, and</li>
- *   <li>a new TextEditArea containing the text of all trailing paragraphs.</li>
+ *   <li>a new TextEditArea containing the text of all trailing paragraphs, and</li>
  *   <li>a limitation of the initiating TextEditArea to the text from all leading paragraphs.</li>
  * </ol>
  * The two new TextEditAreas have to be added to the parent EditContainer of the initiating TextEditArea.

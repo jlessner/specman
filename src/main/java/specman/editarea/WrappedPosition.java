@@ -1,5 +1,8 @@
 package specman.editarea;
 
+import specman.editarea.ChangeBackgroundStyleInitializer.StyledSection;
+import specman.model.v001.Aenderungsmarkierung_V001;
+
 import java.util.Objects;
 
 public class WrappedPosition {
@@ -14,6 +17,11 @@ public class WrappedPosition {
   public WrappedPosition(int delta, WrappedPosition from) {
     this.document = from.document;
     this.position = from.position + delta;
+  }
+
+  public WrappedPosition(StyledSection styling, WrappedDocument document) {
+    this.document = document;
+    this.position = styling.start;
   }
 
   public boolean greater(WrappedPosition than) {
