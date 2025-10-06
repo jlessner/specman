@@ -1,4 +1,4 @@
-package specman.editarea;
+package specman.editarea.document;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -8,7 +8,7 @@ import javax.swing.text.StyledDocument;
 import java.util.Arrays;
 import java.util.List;
 
-public class WrappedDocument {
+public class WrappedDocument implements WrappedDocumentI {
   private final StyledDocument document;
   private final int visibleTextStart;
 
@@ -26,7 +26,7 @@ public class WrappedDocument {
   public int getVisibleTextStart() { return visibleTextStart; }
 
   public int getLength() {
-    return document.getLength() - visibleTextStart;
+    return document.getLength();
   }
 
   public void setCharacterAttributes(int offset, int length, AttributeSet style, boolean replace) {
@@ -94,4 +94,5 @@ public class WrappedDocument {
   public WrappedPosition fromModel(int position) {
     return new WrappedPosition(position, this);
   }
+
 }

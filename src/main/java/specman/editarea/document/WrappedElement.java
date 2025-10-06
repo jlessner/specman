@@ -1,4 +1,4 @@
-package specman.editarea;
+package specman.editarea.document;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Element;
@@ -17,7 +17,11 @@ public class WrappedElement {
   }
 
   public WrappedPosition getEndOffset() {
-    return document.fromUI(element.getEndOffset());
+    WrappedPosition result = document.fromUI(element.getEndOffset());
+    // Documents derived from AbstractDocument have an implied newline at the end
+    // See Javadoc of Element#getEndOffset(). Therefore the Method may return an
+    // end offset acceeding the document length. We adjust this here.
+    return result.exists() ? result : result.dec();
   }
 
   public int getElementCount() {
@@ -28,11 +32,11 @@ public class WrappedElement {
     return new WrappedElement(element.getElement(i), document);
   }
 
-  public AttributeSet getAttributes() {
-    return element.getAttributes();
-  }
-
   public WrappedDocument getDocument() {
     return document;
   }
+
+  public AttributeSet getAttributes() { return element.getAttributes(); }
+  public boolean isLeaf() { return element.isLeaf(); }
+  public String getName() { return element.getName(); }
 }

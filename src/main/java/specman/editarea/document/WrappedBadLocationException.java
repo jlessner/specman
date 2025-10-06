@@ -1,4 +1,4 @@
-package specman.editarea;
+package specman.editarea.document;
 
 import javax.swing.text.BadLocationException;
 

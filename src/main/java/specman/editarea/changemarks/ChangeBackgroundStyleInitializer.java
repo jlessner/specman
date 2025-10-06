@@ -1,7 +1,7 @@
 package specman.editarea.changemarks;
 
 import specman.editarea.TextEditArea;
-import specman.editarea.WrappedDocument;
+import specman.editarea.document.WrappedDocument;
 import specman.model.v001.Aenderungsmarkierung_V001;
 
 import javax.swing.text.MutableAttributeSet;

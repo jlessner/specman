@@ -6,6 +6,9 @@ import specman.EditorI;
 import specman.Specman;
 import specman.editarea.changemarks.ChangeBackgroundStyleInitializer;
 import specman.editarea.changemarks.ChangemarkSplitter;
+import specman.editarea.document.WrappedDocument;
+import specman.editarea.document.WrappedElement;
+import specman.editarea.document.WrappedPosition;
 import specman.editarea.focusmover.CrossEditAreaFocusMoverFromText;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.Aenderungsmarkierung_V001;
@@ -69,6 +72,8 @@ import static specman.editarea.TextStyles.geloeschtStil;
 import static specman.editarea.TextStyles.quellschrittStil;
 import static specman.editarea.TextStyles.standardStil;
 import static specman.editarea.TextStyles.stepnumberLinkStyleColor;
+import static specman.editarea.changemarks.CharType.ParagraphBoundary;
+import static specman.editarea.changemarks.CharType.Whitespace;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     private WrappedElement hoveredElement;
@@ -239,24 +244,26 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<>();
         WrappedDocument doc = getWrappedDocument();
         for (WrappedElement e : doc.getRootElements()) {
-            findeAenderungsmarkierungen(e, ergebnis, nurErste);
+            findeAenderungsmarkierungen(e, ergebnis, nurErste, 0);
             if (!ergebnis.isEmpty() && nurErste) {
                 break;
             }
         }
+        System.out.println(ergebnis);
         return ergebnis;
     }
 
-    private void findeAenderungsmarkierungen(WrappedElement e, java.util.List<Aenderungsmarkierung_V001> ergebnis, boolean nurErste) {
+    private void findeAenderungsmarkierungen(WrappedElement e, java.util.List<Aenderungsmarkierung_V001> ergebnis, boolean nurErste, int level) {
+        System.out.println(" ".repeat(level) + "Element " + e.getStartOffset().toModel() + ".." + e.getEndOffset().toModel() + " " + e.isLeaf() + " " + e.getName());
         if (elementHatAenderungshintergrund(e)) {
-            ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset().toModel(), e.getEndOffset().toModel()));
+            ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset().toModel(), e.getEndOffset().toModel()-1));
             if (nurErste) {
                 return;
             }
         }
         if (ergebnis.isEmpty() || !nurErste) {
             for (int i = 0; i < e.getElementCount(); i++) {
-                findeAenderungsmarkierungen(e.getElement(i), ergebnis, nurErste);
+                findeAenderungsmarkierungen(e.getElement(i), ergebnis, nurErste, level+1);
                 if (!ergebnis.isEmpty() && nurErste) {
                     break;
                 }
@@ -363,7 +370,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         WrappedDocument doc = getWrappedDocument();
         if (elementHatAenderungshintergrund(e)) {
             if (!elementHatDurchgestrichenenText(e)) {
-                loeschungen.add(new GeloeschtMarkierung_V001(e.getStartOffset().position, e.getEndOffset().position));
+                loeschungen.add(new GeloeschtMarkierung_V001(e.getStartOffset().toModel(), e.getEndOffset().toModel()));
             } else {
                 AttributeSet attribute = e.getAttributes();
                 MutableAttributeSet entfaerbt = new SimpleAttributeSet();
@@ -453,6 +460,20 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
     }
 
+    /** If there is a whitespace directly in front or behind the caret position,
+     * we do not want to insert another whitespace there. The same is true if the
+     * caret is at the very beginning of the document or at the beginning of a paragraph. */
+    private void keySpaceTyped(KeyEvent e) {
+        WrappedDocument doc = getWrappedDocument();
+        WrappedPosition caret = getWrappedCaretPosition();
+        if (caret.isZero() ||
+          Whitespace.at(caret) ||
+          Whitespace.at(caret.dec()) ||
+          ParagraphBoundary.at(caret.dec())) {
+            e.consume();
+        }
+    }
+
     private void keyPastePressed(KeyEvent e) {
         try {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -493,10 +514,19 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             // TODO: Not yet considered:
             // Whitespaces before and after the caret position are erased by the paragraph split
             // TODO: Restoring of changemarks must be clustered for Undo and also be merged with the paragraph split
-            List<Aenderungsmarkierung_V001> splittedChangemarks = new ChangemarkSplitter(aenderungen).split(caretPositionBeforeSplit);
+            List<Aenderungsmarkierung_V001> splittedChangemarks = new ChangemarkSplitter(getWrappedDocument(), caretPositionBeforeSplit, aenderungen).split();
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
+                    // Beim Zerschneiden eines Absatzes gehen folgende Whitespaces verloren:
+                    // - Alle Whitespaces am Anfang des Absatzes
+                    // - Alle Whitespaces am Ende des Absatzes
+                    // - Alle Whitespaces unmittelbar vor und hinter der Caret-Position
+                    // Wir müssen also die Grenzen des aktuellen Absatzes im Text finden, die an Newline-Zeichen (\n)
+                    // erkennbar sind.
+                    // Linebreaks innerhalb des Absatzes (HTML <br>) werden im Dokumententext nur als Leerzeichen
+                    // repräsentiert. Stören also nicht bei der Suche nach den Absatzgrenzen.
+                    // Kleiner Knackpunkt: Linebreaks innerhalb verschwindener Whitespace-Bereiche bleiben erhalten
                     WrappedPosition caretPositionAfterSplit = getWrappedCaretPosition();
                     // Zu erwarten ist eine Caret-Position, die um 1 größer ist als die ursprüngliche.
                     // Jede Differenz davon deutet auf einen Verlust von Whitespaces vor dem Caret
@@ -510,27 +540,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 }
             });
         }
-    }
-
-    /** The original code causes text background style loss in the edited line,
-     * so we simply do what we need by our own. */
-    private void addNewlineAtCaret(KeyEvent e) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                StyledDocument doc = (StyledDocument) getDocument();
-//                doc.setCharacterAttributes(1, 5, geaendertTextBackground, false);
-//            }
-//        });
-//        try {
-//            StyledDocument doc = (StyledDocument) getDocument();
-//            int caretPosition = getCaretPosition();
-//            doc.insertString(caretPosition, "\n", null);
-//            e.consume();
-//        }
-//        catch(BadLocationException blx) {
-//            blx.printStackTrace();
-//        }
     }
 
     private void keyRightPressed(KeyEvent e) {
@@ -741,6 +750,9 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+        if (e.getKeyChar() == KeyEvent.VK_SPACE) {
+            keySpaceTyped(e);
+        }
         if (e.getKeyCode() == 0) {
             // This is indicator for some control action like copy or paste rather than entering or deleting text.
             // In this case we skip the following special behaviour logic. Control actions should have already

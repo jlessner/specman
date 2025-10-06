@@ -1,4 +1,4 @@
-package specman.editarea;
+package specman.editarea.document;
 
 import specman.model.v001.Aenderungsmarkierung_V001;
 
@@ -7,14 +7,14 @@ import java.util.Objects;
 
 public class WrappedPosition {
   final int position;
-  final WrappedDocument document;
+  final WrappedDocumentI document;
 
   /** This constructor is package-visible by intention as it is only allowed to
    * be used from {@link WrappedDocument} to make sure that the passed position
    * integer is always properly converted to a logical value. If it comes from
    * a model object like {@link Aenderungsmarkierung_V001}, the value is supposed
    * to be used as is, while integers from a {@link Document} might require adaption. */
-  WrappedPosition(int position, WrappedDocument document) {
+  WrappedPosition(int position, WrappedDocumentI document) {
     this.document = document;
     this.position = position;
   }
@@ -24,28 +24,12 @@ public class WrappedPosition {
     this.position = from.position + delta;
   }
 
-  public boolean greater(WrappedPosition than) {
-    return position > than.position;
-  }
-
   public int unwrap() {
     return position + document.getVisibleTextStart();
   }
 
-  public WrappedPosition dec() {
-    return dec(1);
-  }
-
   public WrappedPosition dec(int length) {
     return new WrappedPosition(-length, this);
-  }
-
-  public WrappedPosition max(WrappedPosition rhs) {
-    return document.fromUI(Math.max(unwrap(), rhs.unwrap()));
-  }
-
-  public int distance(WrappedPosition lhs) {
-    return position - lhs.position;
   }
 
   @Override
@@ -60,20 +44,8 @@ public class WrappedPosition {
     return Objects.hashCode(position);
   }
 
-  public boolean less(WrappedPosition than) {
-    return position < than.position;
-  }
-
   public WrappedPosition inc(int length) {
     return new WrappedPosition(length, this);
-  }
-
-  public WrappedPosition inc() {
-    return inc(1);
-  }
-
-  public WrappedPosition min(WrappedPosition rhs) {
-    return document.fromUI(Math.min(unwrap(), rhs.unwrap()));
   }
 
   @Override
@@ -82,4 +54,28 @@ public class WrappedPosition {
   }
 
   public int toModel() { return position; }
+
+  public boolean exists() {
+    return position >= 0 && position < document.getLength();
+  }
+
+  public boolean isZero() { return position == 0; }
+  public WrappedPosition dec() { return dec(1); }
+  public WrappedPosition inc() { return inc(1); }
+  public boolean greater(WrappedPosition than) { return position > than.position; }
+  public boolean less(WrappedPosition than) { return position < than.position; };
+  public int distance(WrappedPosition lhs) { return position - lhs.position; }
+  public WrappedPosition max(WrappedPosition rhs) {
+    return document.fromUI(Math.max(unwrap(), rhs.unwrap()));
+  }
+  public WrappedPosition min(WrappedPosition rhs) {
+    return document.fromUI(Math.min(unwrap(), rhs.unwrap()));
+  }
+  public char charAt() {
+    return document.getText(this, 1).charAt(0);
+  }
+
+  public boolean isInChangeMark(Aenderungsmarkierung_V001 mark) {
+    return mark.getVon() <= toModel() && mark.getBis() >= toModel();
+  }
 }
