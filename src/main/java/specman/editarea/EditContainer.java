@@ -151,7 +151,12 @@ public class EditContainer extends JPanel {
 			addEditArea(editArea, index++);
 		}
 		if (schrittNummer != null) {
-			editAreas.get(0).addSchrittnummer(schrittNummer);
+			if (editAreas.isEmpty()) {
+				System.err.println("Can't set step number in " + schrittNummer);
+			}
+			else {
+				editAreas.get(0).addSchrittnummer(schrittNummer);
+			}
 		}
 		skalieren(Specman.instance().getZoomFactor(), 0);
 	}
