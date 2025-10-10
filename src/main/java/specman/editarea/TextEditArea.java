@@ -5,7 +5,9 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
 import specman.editarea.changemarks.ChangeBackgroundStyleInitializer;
+import specman.editarea.changemarks.ChangemarkRestorer;
 import specman.editarea.changemarks.ChangemarkSplitter;
+import specman.editarea.changemarks.MarkedCharSequence;
 import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedElement;
 import specman.editarea.document.WrappedPosition;
@@ -507,39 +509,32 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 e.consume();
                 return;
             }
+            MarkedCharSequence changes = findChangemarks();
             List<Aenderungsmarkierung_V001> aenderungen = findeAenderungsmarkierungen(false);
             WrappedPosition caretPositionBeforeSplit = getWrappedCaretPosition();
-            System.out.println("Caret vorher: " + caretPositionBeforeSplit.toModel());
-            System.out.println("Textlänge ab Caret vorher: " + (getWrappedDocument().getLength() - caretPositionBeforeSplit.toModel()));
             // TODO: Not yet considered:
             // Whitespaces before and after the caret position are erased by the paragraph split
             // TODO: Restoring of changemarks must be clustered for Undo and also be merged with the paragraph split
             List<Aenderungsmarkierung_V001> splittedChangemarks = new ChangemarkSplitter(getWrappedDocument(), caretPositionBeforeSplit, aenderungen).split();
+            List<Aenderungsmarkierung_V001> restoredChangemarks = new ChangemarkRestorer(getWrappedDocument(), changes).restore();
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    // Beim Zerschneiden eines Absatzes gehen folgende Whitespaces verloren:
-                    // - Alle Whitespaces am Anfang des Absatzes
-                    // - Alle Whitespaces am Ende des Absatzes
-                    // - Alle Whitespaces unmittelbar vor und hinter der Caret-Position
-                    // Wir müssen also die Grenzen des aktuellen Absatzes im Text finden, die an Newline-Zeichen (\n)
-                    // erkennbar sind.
-                    // Linebreaks innerhalb des Absatzes (HTML <br>) werden im Dokumententext nur als Leerzeichen
-                    // repräsentiert. Stören also nicht bei der Suche nach den Absatzgrenzen.
-                    // Kleiner Knackpunkt: Linebreaks innerhalb verschwindener Whitespace-Bereiche bleiben erhalten
                     WrappedPosition caretPositionAfterSplit = getWrappedCaretPosition();
-                    // Zu erwarten ist eine Caret-Position, die um 1 größer ist als die ursprüngliche.
-                    // Jede Differenz davon deutet auf einen Verlust von Whitespaces vor dem Caret
-                    // durch die Absatztrennung hin. Dieser Verlust muss in den Changemarks berücksichtigt werden.
-                    System.out.println("Caret nachher: " + caretPositionAfterSplit.toModel());
-                    // Zu erwarten ist die gleiche Textlänge ab Caret-Position wie vorher.
-                    // Jede Differenz davon deutet auf einen Verlust von Whitespaces NACH dem Caret
-                    // durch die Absatztrennung hin. Dieser Verlust muss in den Changemarks berücksichtigt werden.
-                    System.out.println("Textlänge ab Caret nachher: " + (getWrappedDocument().getLength() - caretPositionAfterSplit.toModel()));
                     new ChangeBackgroundStyleInitializer(TextEditArea.this, splittedChangemarks).styleChangedTextSections();
                 }
             });
         }
+    }
+
+    private MarkedCharSequence findChangemarks() {
+        MarkedCharSequence seq = new MarkedCharSequence();
+        WrappedDocument doc = getWrappedDocument();
+        for (WrappedPosition p = doc.fromModel(0); p.exists(); p = p.inc()) {
+            MarkedChar c = new MarkedChar(doc, p);
+            seq.add(c);
+        }
+        return seq;
     }
 
     private void keyRightPressed(KeyEvent e) {
