@@ -1,4 +1,7 @@
 Changemark-Recovery
+- Beim Split von Line Items muss auch eine Wiederherstellung im hinteren Item erfolgen
+- Beim Einfügen eines Bildes oder eine Tabelle müssen im abgespaltenen Text die Changemarks wieder hergestellt werden
+- Ausweitung auf Schrittreferenzen
 - Wenn man als allererste Operation nach dem Öffnen einer Datei einen neuen Textparagraphen einfügt, dann funktoniert das Undo dafür nicht. Macht man
    davor (oder auch danach!) irgendeine andere Operation, dann funktioniert es
 
