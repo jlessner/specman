@@ -1,3 +1,7 @@
+Changemark-Recovery
+- Wenn man als allererste Operation nach dem Öffnen einer Datei einen neuen Textparagraphen einfügt, dann funktoniert das Undo dafür nicht. Macht man
+   davor (oder auch danach!) irgendeine andere Operation, dann funktioniert es
+
 Aus UC-791
 - Schrittreferenzen werden im Outro und Catch-Blöcken des UC-791 nicht aktualisiert. Allgemein geht es aber.
 - Focus in Tabellen durch Drücken von TAB verschieben

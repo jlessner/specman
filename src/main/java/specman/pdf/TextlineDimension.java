@@ -1,6 +1,8 @@
 package specman.pdf;
 
+import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
+import specman.editarea.document.WrappedDocument;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
@@ -26,7 +28,7 @@ public class TextlineDimension {
   public float getY() { return (float)space.getY(); }
   public float getX() { return (float)space.getX(); }
 
-  public String extractLineHtml(JEditorPane field) throws BadLocationException {
+  public String extractLineHtml(TextEditArea field) throws BadLocationException {
     List<TextRange> changes = findChanges(field);
     JEditorPane subdocCarrier = new JEditorPane();
     subdocCarrier.setContentType("text/html");
@@ -42,18 +44,16 @@ public class TextlineDimension {
     return subdocCarrier.getText();
   }
 
-  private List<TextRange> findChanges(JEditorPane field) throws BadLocationException {
+  private List<TextRange> findChanges(TextEditArea field) throws BadLocationException {
     List<TextRange> changes = new java.util.ArrayList<>();
     TextRange change = null;
-    StyledDocument doc = (StyledDocument) field.getDocument();
-    String start = doc.getText(0, 1);
-    int textStart = start.equals("\n") ? 1 : 0;
-    for (int i = textStart; i < doc.getLength(); i++) {
+    WrappedDocument doc = field.getWrappedDocument();
+    for (int i = 0; i < doc.getLength(); i++) {
       AttributeSet attrs = doc.getCharacterElement(i).getAttributes();
       boolean isChange = StyleConstants.getBackground(attrs).equals(TextStyles.AENDERUNGSMARKIERUNG_FARBE);
       if (isChange) {
         if (change == null) {
-          change = new TextRange(i - textStart);
+          change = new TextRange(i);
         }
         else {
           change.increase();
