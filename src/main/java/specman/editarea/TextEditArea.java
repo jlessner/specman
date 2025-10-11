@@ -5,8 +5,7 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
 import specman.editarea.changemarks.ChangeBackgroundStyleInitializer;
-import specman.editarea.changemarks.ChangemarkRestorer;
-import specman.editarea.changemarks.ChangemarkSplitter;
+import specman.editarea.changemarks.ChangemarkRecovery;
 import specman.editarea.changemarks.MarkedCharSequence;
 import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedElement;
@@ -510,19 +509,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 return;
             }
             MarkedCharSequence changes = findChangemarks();
-            List<Aenderungsmarkierung_V001> aenderungen = findeAenderungsmarkierungen(false);
-            WrappedPosition caretPositionBeforeSplit = getWrappedCaretPosition();
-            // TODO: Not yet considered:
-            // Whitespaces before and after the caret position are erased by the paragraph split
+            changes.insertParagraphBoundaryAt(getWrappedCaretPosition(), Specman.instance().aenderungenVerfolgen());
             // TODO: Restoring of changemarks must be clustered for Undo and also be merged with the paragraph split
-            List<Aenderungsmarkierung_V001> splittedChangemarks = new ChangemarkSplitter(getWrappedDocument(), caretPositionBeforeSplit, aenderungen).split();
-            List<Aenderungsmarkierung_V001> restoredChangemarks = new ChangemarkRestorer(getWrappedDocument(), changes).restore();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    WrappedPosition caretPositionAfterSplit = getWrappedCaretPosition();
-                    new ChangeBackgroundStyleInitializer(TextEditArea.this, splittedChangemarks).styleChangedTextSections();
-                }
+            UndoRecording ur = Specman.instance().composeUndo();
+            SwingUtilities.invokeLater(() -> {
+                List<Aenderungsmarkierung_V001> recoveredChangemarks = new ChangemarkRecovery(getWrappedDocument(), changes).recover();
+                new ChangeBackgroundStyleInitializer(TextEditArea.this, recoveredChangemarks).styleChangedTextSections();
+                ur.close();
             });
         }
     }

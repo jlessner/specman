@@ -5,7 +5,7 @@ import specman.model.v001.Aenderungsmarkierung_V001;
 
 import java.util.List;
 
-public class ChangemarkSplitTest extends AbstractChangemarkSplitterTest {
+public class ChangemarkSplitTest extends AbstractChangemarkRecoveryTest {
 
   @Test
   void testSimpleSplit() {

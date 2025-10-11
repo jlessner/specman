@@ -11,13 +11,18 @@ import static specman.editarea.TextStyles.INDIKATOR_GELB;
 import static specman.editarea.TextStyles.changedStepnumberLinkHTMLColor;
 
 public class MarkedChar {
-  final char c;
-  final boolean changed;
+  public final char c;
+  public final boolean changed;
 
   public MarkedChar(WrappedDocument doc, WrappedPosition p) {
     c = doc.getChar(p);
     WrappedElement element = doc.getCharacterElement(p);
     changed = elementHasChangeBackground(element);
+  }
+
+  public MarkedChar(char c, boolean changed) {
+    this.c = c;
+    this.changed = changed;
   }
 
   private static boolean elementHasChangeBackground(WrappedElement element) {

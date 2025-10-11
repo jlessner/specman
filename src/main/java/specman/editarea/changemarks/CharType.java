@@ -6,12 +6,15 @@ public enum CharType {
   ParagraphBoundary, NonWhitespace, Whitespace;
 
   public boolean at(WrappedPosition pos) {
-    char ch = pos.charAt();
+    return is(pos.charAt());
+  }
+
+  public boolean is(char ch) {
     if (this == ParagraphBoundary) {
       return ch == '\n';
     }
     else if (this == NonWhitespace) {
-      return !isWhitespace(ch);
+      return !isWhitespace(ch) && ch != '\n';
     }
     else if (this == Whitespace) {
       return isWhitespace(ch);

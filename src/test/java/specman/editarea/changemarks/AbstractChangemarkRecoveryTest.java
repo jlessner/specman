@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-abstract class AbstractChangemarkSplitterTest {
+abstract class AbstractChangemarkRecoveryTest {
   protected void assertMarked(List<Aenderungsmarkierung_V001> marks, Integer... fromTo) {
     assertNotNull(marks);
     assertEquals(fromTo.length / 2, marks.size());
@@ -26,7 +26,8 @@ abstract class AbstractChangemarkSplitterTest {
     TestWrappedDocument doc = new TestWrappedDocument(documentContent);
     WrappedPosition cut = doc.fromModel(s1.indexOf('|') / 2);
     List<Aenderungsmarkierung_V001> marks = marksString2Marks(s2);
-    return new ChangemarkSplitter(doc, cut, marks).split();
+
+    return new ChangemarkRecovery(doc, null).recover();
   }
 
   private List<Aenderungsmarkierung_V001> marksString2Marks(String markstring) {
