@@ -8,7 +8,8 @@ Changemark-Recovery
     (Methode EditContainer#dissolveListItemEditAreaUDBL)
   - Wechsel des Absatztyps
 x Ausweitung auf Schrittreferenzen
-- Ausweitung auf gelöschte Schritte (schwarzer Hintergrund) notwendig?
+x Ausweitung auf gelöschte Schritte (schwarzer Hintergrund) notwendig?
+   x ENTER drücken geht fälschlicherweise, auch in gelöschtem Schritt (mit und ihne Shift)
 - Beim Speichern eines Textes muss selbiger erst bereinigt werden - setText(getText)) - und in dem Zuge müssen auch die Changemarks
    wieder hergestellt werden. Sonst landen sie ggf. mit falschen Indizes auf Datei. Ist die ganze Zeit schon falsch, war aber bisher
    nicht so schlimm, weil die Changemarks in der Datei nicht verwendet wurden.

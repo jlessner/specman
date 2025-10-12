@@ -504,10 +504,13 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     private void keyEnterPressed(KeyEvent e) {
+        if (!isEditable()) {
+            e.consume();
+            return;
+        }
         EditContainer editContainer = getParent();
         if (!e.isShiftDown()) {
             if (editContainer.getParent() instanceof AbstractListItemEditArea) {
-                // TODO: this "self-made" splitting also requires restauration of change marks
                 AbstractListItemEditArea listItem = (AbstractListItemEditArea) editContainer.getParent();
                 listItem.split(this);
                 e.consume();
