@@ -504,13 +504,16 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         if (!e.isShiftDown()) {
             if (editContainer.getParent() instanceof AbstractListItemEditArea) {
                 // TODO: this "self-made" splitting also requires restauration of change marks
-                ((AbstractListItemEditArea) editContainer.getParent()).split(this);
+                AbstractListItemEditArea listItem = (AbstractListItemEditArea) editContainer.getParent();
+                listItem.split(this);
                 e.consume();
                 return;
             }
             MarkedCharSequence changes = findChangemarks();
             changes.insertParagraphBoundaryAt(getWrappedCaretPosition(), Specman.instance().aenderungenVerfolgen());
-            // TODO: Restoring of changemarks must be clustered for Undo and also be merged with the paragraph split
+            // We start the Undo composition here and close it in the invokeLater section to cover both
+            // - all the changes from JEditoPane when inserting a new paragraph and
+            // - all changes required for changemark recovery
             UndoRecording ur = Specman.instance().composeUndo();
             SwingUtilities.invokeLater(() -> {
                 List<Aenderungsmarkierung_V001> recoveredChangemarks = new ChangemarkRecovery(getWrappedDocument(), changes).recover();

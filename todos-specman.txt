@@ -1,11 +1,14 @@
 Changemark-Recovery
-- Beim Split von Line Items muss auch eine Wiederherstellung im hinteren Item erfolgen
-- Beim Einfügen eines Bildes oder eine Tabelle müssen im abgespaltenen Text die Changemarks wieder hergestellt werden
+- Wiederherstellung auch bei
+  - Split von Line Items, für das untere Item
+  - Einfügen von Bild oder Tabelle, für den unteren Text
+  - Beim Wechsel des Absatztyps
 - Ausweitung auf Schrittreferenzen
 - Beim Speichern eines Textes muss selbiger erst bereinigt werden - setText(getText)) - und in dem Zuge müssen auch die Changemarks
-   wieder hergestellt werden. Sonst landen sie ggf. mit falschen Indizes auf Datei.
-- Wenn man als allererste Operation nach dem Öffnen einer Datei einen neuen Textparagraphen einfügt, dann funktoniert das Undo dafür nicht. Macht man
-   davor (oder auch danach!) irgendeine andere Operation, dann funktioniert es
+   wieder hergestellt werden. Sonst landen sie ggf. mit falschen Indizes auf Datei. Ist die ganze Zeit schon falsch, war aber bisher
+   nicht so schlimm, weil die Changemarks in der Datei nicht verwendet wurden.
+- Kleine, eigenartige Macke: Wenn man als allererste Operation nach dem Öffnen einer Datei einen neuen Textparagraphen einfügt, dann
+   funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 
 Aus UC-791
 - Schrittreferenzen werden im Outro und Catch-Blöcken des UC-791 nicht aktualisiert. Allgemein geht es aber.
