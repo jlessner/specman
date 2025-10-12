@@ -1,29 +1,30 @@
-package specman.editarea.changemarks;
+package specman.editarea.markups;
 
 import specman.editarea.document.WrappedDocumentI;
 import specman.editarea.document.WrappedPosition;
-import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.Markup_V001;
 
 import java.util.List;
+import java.util.Objects;
 
-import static specman.editarea.changemarks.CharType.NonWhitespace;
+import static specman.editarea.markups.CharType.NonWhitespace;
 
-public class ChangemarkRecovery {
+public class MarkupRecovery {
   final WrappedDocumentI target;
   final MarkedCharSequence source;
-  final boolean[] marksPerChar;
+  final MarkupType[] marksPerChar;
   WrappedPosition targetProcess;
   Integer sourceProcess;
 
-  public ChangemarkRecovery(WrappedDocumentI target, MarkedCharSequence source) {
+  public MarkupRecovery(WrappedDocumentI target, MarkedCharSequence source) {
     this.target = target;
     this.source = source;
-    this.marksPerChar = new boolean[target.getLength()];
+    this.marksPerChar = new MarkupType[target.getLength()];
     this.targetProcess = target.fromModel(0);
     this.sourceProcess = 0;
   }
 
-  public List<Aenderungsmarkierung_V001> recover() {
+  public List<Markup_V001> recover() {
     WrappedPosition nextTargetVisibleCharSeqStart;
     Integer nextSourceVisibleCharSeqStart;
     do {
@@ -34,7 +35,7 @@ public class ChangemarkRecovery {
     }
     while(nextTargetVisibleCharSeqStart != null);
 
-    return assembleChangemarksFromBooleans();
+    return assembleMarkupsFromMarkupsPerChar();
   }
 
   private void recoverVisibleCharMarks(WrappedPosition targetPos, Integer sourcePos) {
@@ -42,7 +43,7 @@ public class ChangemarkRecovery {
       return;
     }
     do {
-      marksPerChar[targetPos.toModel()] = source.isChanged(sourcePos);
+      marksPerChar[targetPos.toModel()] = source.type(sourcePos);
       targetPos = targetPos.inc();
       sourcePos++;
     }
@@ -62,7 +63,7 @@ public class ChangemarkRecovery {
       WrappedPosition targetWhitespacePos = targetProcess;
       int sourceWhitespacePos = sourceProcess;
       for (int i = 0; i < targetWhitespaceLen; i++) {
-        marksPerChar[targetWhitespacePos.toModel()] = source.isChanged(sourceWhitespacePos);
+        marksPerChar[targetWhitespacePos.toModel()] = source.type(sourceWhitespacePos);
         targetWhitespacePos = targetWhitespacePos.inc();
         sourceWhitespacePos++;
       }
@@ -88,24 +89,25 @@ public class ChangemarkRecovery {
     return null;
   }
 
-  private List<Aenderungsmarkierung_V001> assembleChangemarksFromBooleans() {
-    List<Aenderungsmarkierung_V001> changemarks = new java.util.ArrayList<>();
-    int markStart = -1;
+  private List<Markup_V001> assembleMarkupsFromMarkupsPerChar() {
+    List<Markup_V001> changemarks = new java.util.ArrayList<>();
+    Integer markStart = null;
+    MarkupType lastType = null;
     for (int i = 0; i < marksPerChar.length; i++) {
-      if (marksPerChar[i]) {
-        if (markStart < 0) {
+      MarkupType currentType = marksPerChar[i];
+      if (!Objects.equals(currentType, lastType)) {
+        if (markStart != null) {
+          changemarks.add(new Markup_V001(markStart, i - 1, lastType));
+          markStart = null;
+        }
+        if (currentType != null) {
           markStart = i;
         }
-      }
-      else {
-        if (markStart >= 0) {
-          changemarks.add(new Aenderungsmarkierung_V001(markStart, i - 1));
-          markStart = -1;
-        }
+        lastType = currentType;
       }
     }
-    if (markStart >= 0) {
-      changemarks.add(new Aenderungsmarkierung_V001(markStart, marksPerChar.length - 1));
+    if (markStart != null) {
+      changemarks.add(new Markup_V001(markStart, marksPerChar.length - 1, lastType));
     }
     return changemarks;
   }

@@ -1,6 +1,5 @@
-package specman.editarea.changemarks;
+package specman.editarea.markups;
 
-import specman.editarea.MarkedChar;
 import specman.editarea.document.WrappedPosition;
 
 import java.util.ArrayList;
@@ -28,8 +27,8 @@ public class MarkedCharSequence {
     return chars.get(pos);
   }
 
-  public boolean isChanged(int pos) {
-    return get(pos).changed;
+  public MarkupType type(int pos) {
+    return get(pos).markupType;
   }
 
   public boolean isVisibleChar(int pos) {
@@ -39,7 +38,7 @@ public class MarkedCharSequence {
 
   public void insertParagraphBoundaryAt(WrappedPosition pos, boolean changed) {
     int modelPos = pos.toModel();
-    chars.add(modelPos, new MarkedChar('\n', changed));
+    chars.add(modelPos, new MarkedChar('\n', changed ? MarkupType.Changed : null));
   }
 
   public void append(MarkedCharSequence changemarks) {

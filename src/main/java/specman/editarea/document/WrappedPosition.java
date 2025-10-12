@@ -1,6 +1,6 @@
 package specman.editarea.document;
 
-import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.Markup_V001;
 
 import javax.swing.text.Document;
 import java.util.Objects;
@@ -12,7 +12,7 @@ public class WrappedPosition {
   /** This constructor is package-visible by intention as it is only allowed to
    * be used from {@link WrappedDocument} to make sure that the passed position
    * integer is always properly converted to a logical value. If it comes from
-   * a model object like {@link Aenderungsmarkierung_V001}, the value is supposed
+   * a model object like {@link Markup_V001}, the value is supposed
    * to be used as is, while integers from a {@link Document} might require adaption. */
   WrappedPosition(int position, WrappedDocumentI document) {
     this.document = document;
@@ -75,8 +75,8 @@ public class WrappedPosition {
     return document.getText(this, 1).charAt(0);
   }
 
-  public boolean isInChangeMark(Aenderungsmarkierung_V001 mark) {
-    return mark.getVon() <= toModel() && mark.getBis() >= toModel();
+  public boolean isInChangeMark(Markup_V001 mark) {
+    return mark.getFrom() <= toModel() && mark.getTo() >= toModel();
   }
 
   public boolean isLast() {

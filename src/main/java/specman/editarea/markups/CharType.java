@@ -1,4 +1,4 @@
-package specman.editarea.changemarks;
+package specman.editarea.markups;
 
 import specman.editarea.document.WrappedPosition;
 

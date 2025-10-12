@@ -4,15 +4,17 @@ import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
-import specman.editarea.changemarks.ChangeBackgroundStyleInitializer;
-import specman.editarea.changemarks.ChangemarkRecovery;
-import specman.editarea.changemarks.MarkedCharSequence;
+import specman.editarea.markups.MarkupBackgroundStyleInitializer;
+import specman.editarea.markups.MarkupRecovery;
+import specman.editarea.markups.MarkedChar;
+import specman.editarea.markups.MarkedCharSequence;
 import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedElement;
 import specman.editarea.document.WrappedPosition;
 import specman.editarea.focusmover.CrossEditAreaFocusMoverFromText;
+import specman.editarea.markups.MarkupType;
 import specman.model.v001.AbstractEditAreaModel_V001;
-import specman.model.v001.Aenderungsmarkierung_V001;
+import specman.model.v001.Markup_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextEditAreaModel_V001;
 import specman.pdf.FormattedShapeText;
@@ -75,8 +77,8 @@ import static specman.editarea.TextStyles.geloeschtStil;
 import static specman.editarea.TextStyles.quellschrittStil;
 import static specman.editarea.TextStyles.standardStil;
 import static specman.editarea.TextStyles.stepnumberLinkStyleColor;
-import static specman.editarea.changemarks.CharType.ParagraphBoundary;
-import static specman.editarea.changemarks.CharType.Whitespace;
+import static specman.editarea.markups.CharType.ParagraphBoundary;
+import static specman.editarea.markups.CharType.Whitespace;
 
 public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     private WrappedElement hoveredElement;
@@ -96,7 +98,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     private void styleChangedTextSections(TextEditAreaModel_V001 model) {
-        new ChangeBackgroundStyleInitializer(this, model.aenderungen).styleChangedTextSections();
+        new MarkupBackgroundStyleInitializer(this, model.markups).styleChangedTextSections();
     }
 
     private void addMouseListener() {
@@ -228,45 +230,45 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
     }
 
-    public TextEditAreaModel_V001 getTextMitAenderungsmarkierungen(boolean formatierterText) {
+    public TextEditAreaModel_V001 getTextWithMarkups(boolean formatierterText) {
         String text;
-        java.util.List<Aenderungsmarkierung_V001> aenderungen = null;
+        java.util.List<Markup_V001> markups = null;
         if (formatierterText) {
             // Wenn wir die Zeilenumbrüche nicht rausnehmen, dann entstehen später beim Laden u.U.
             // Leerzeichen an Zeilenenden, die im ursprünglichen Text nicht drin waren. Das ist doof,
             // weil dann die separat abgespeicherten Textintervalle der Aenderungsmarkierungen nicht mehr passen.
             text = getText().replace("\n", "");
-            aenderungen = findeAenderungsmarkierungen(false);
-        } else {
+            markups = findMarkups(false);
+        }
+        else {
             text = getPlainText().replace("\n", " ").trim();
         }
-        return new TextEditAreaModel_V001(text, getPlainText(), aenderungen, aenderungsart);
+        return new TextEditAreaModel_V001(text, getPlainText(), markups, aenderungsart);
     }
 
-    public java.util.List<Aenderungsmarkierung_V001> findeAenderungsmarkierungen(boolean nurErste) {
-        java.util.List<Aenderungsmarkierung_V001> ergebnis = new ArrayList<>();
+    public java.util.List<Markup_V001> findMarkups(boolean nurErste) {
+        java.util.List<Markup_V001> ergebnis = new ArrayList<>();
         WrappedDocument doc = getWrappedDocument();
         for (WrappedElement e : doc.getRootElements()) {
-            findeAenderungsmarkierungen(e, ergebnis, nurErste, 0);
+            findMarkups(e, ergebnis, nurErste);
             if (!ergebnis.isEmpty() && nurErste) {
                 break;
             }
         }
-        System.out.println(ergebnis);
         return ergebnis;
     }
 
-    private void findeAenderungsmarkierungen(WrappedElement e, java.util.List<Aenderungsmarkierung_V001> ergebnis, boolean nurErste, int level) {
-        System.out.println(" ".repeat(level) + "Element " + e.getStartOffset().toModel() + ".." + e.getEndOffset().toModel() + " " + e.isLeaf() + " " + e.getName());
-        if (elementHatAenderungshintergrund(e)) {
-            ergebnis.add(new Aenderungsmarkierung_V001(e.getStartOffset().toModel(), e.getEndOffset().toModel()-1));
-            if (nurErste) {
+    private void findMarkups(WrappedElement e, java.util.List<Markup_V001> ergebnis, boolean nurErste) {
+        MarkupType markupType = MarkupType.fromBackground(e);
+        if (markupType != null) {
+            ergebnis.add(new Markup_V001(e.getStartOffset().toModel(), e.getEndOffset().toModel()-1, markupType));
+            if (markupType.marksChange() && nurErste) {
                 return;
             }
         }
         if (ergebnis.isEmpty() || !nurErste) {
             for (int i = 0; i < e.getElementCount(); i++) {
-                findeAenderungsmarkierungen(e.getElement(i), ergebnis, nurErste, level+1);
+                findMarkups(e.getElement(i), ergebnis, nurErste);
                 if (!ergebnis.isEmpty() && nurErste) {
                     break;
                 }
@@ -511,21 +513,21 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
                 e.consume();
                 return;
             }
-            MarkedCharSequence changes = findChangemarks();
+            MarkedCharSequence changes = findMarkups();
             changes.insertParagraphBoundaryAt(getWrappedCaretPosition(), Specman.instance().aenderungenVerfolgen());
             // We start the Undo composition here and close it in the invokeLater section to cover both
             // - all the changes from JEditoPane when inserting a new paragraph and
             // - all changes required for changemark recovery
             UndoRecording ur = Specman.instance().composeUndo();
             SwingUtilities.invokeLater(() -> {
-                List<Aenderungsmarkierung_V001> recoveredChangemarks = new ChangemarkRecovery(getWrappedDocument(), changes).recover();
-                new ChangeBackgroundStyleInitializer(TextEditArea.this, recoveredChangemarks).styleChangedTextSections();
+                List<Markup_V001> recoveredChangemarks = new MarkupRecovery(getWrappedDocument(), changes).recover();
+                new MarkupBackgroundStyleInitializer(TextEditArea.this, recoveredChangemarks).styleChangedTextSections();
                 ur.close();
             });
         }
     }
 
-    private MarkedCharSequence findChangemarks() {
+    private MarkedCharSequence findMarkups() {
         MarkedCharSequence seq = new MarkedCharSequence();
         WrappedDocument doc = getWrappedDocument();
         for (WrappedPosition p = doc.fromModel(0); p.exists(); p = p.inc()) {
@@ -829,7 +831,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     @Override
     public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
-        return getTextMitAenderungsmarkierungen(formatierterText);
+        return getTextWithMarkups(formatierterText);
     }
 
     @Override
@@ -850,10 +852,10 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     public TextEditArea copyArea() {
         TextEditAreaModel_V001 modelCopy = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
-        MarkedCharSequence marksBackup = findChangemarks();
+        MarkedCharSequence marksBackup = findMarkups();
         TextEditArea areaCopy = new TextEditArea(modelCopy, this.getFont());
-        List<Aenderungsmarkierung_V001> recoveredChangemarks = new ChangemarkRecovery(getWrappedDocument(), marksBackup).recover();
-        new ChangeBackgroundStyleInitializer(areaCopy, recoveredChangemarks).styleChangedTextSections();
+        List<Markup_V001> recoveredChangemarks = new MarkupRecovery(getWrappedDocument(), marksBackup).recover();
+        new MarkupBackgroundStyleInitializer(areaCopy, recoveredChangemarks).styleChangedTextSections();
         return areaCopy;
     }
 
@@ -901,8 +903,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     public void appendText(TextEditArea trailingText) {
-        MarkedCharSequence marksBackup = findChangemarks();
-        marksBackup.append(trailingText.findChangemarks());
+        MarkedCharSequence marksBackup = findMarkups();
+        marksBackup.append(trailingText.findMarkups());
         int endOfOldText = getDocument().getLength();
         String oldText = getText();
         String newText =
@@ -919,8 +921,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             .replace(HEAD_INTRO, "")
             .trim();
         setText(newText);
-        List<Aenderungsmarkierung_V001> recoveredChangemarks = new ChangemarkRecovery(getWrappedDocument(), marksBackup).recover();
-        new ChangeBackgroundStyleInitializer(this, recoveredChangemarks).styleChangedTextSections();
+        List<Markup_V001> recoveredChangemarks = new MarkupRecovery(getWrappedDocument(), marksBackup).recover();
+        new MarkupBackgroundStyleInitializer(this, recoveredChangemarks).styleChangedTextSections();
         setCaretPosition(endOfOldText);
     }
 
@@ -1001,7 +1003,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     @Override
     public boolean enthaeltAenderungsmarkierungen() {
         return aenderungsart.istAenderung()
-          || !findeAenderungsmarkierungen(true).isEmpty();
+          || !findMarkups(true).isEmpty();
     }
 
     private void scrollToStepnumber() {

@@ -7,7 +7,8 @@ Changemark-Recovery
   x Auflösen eines List Items mit Merge der Inhalte in führende oder folgende TextEditArea, sowohl für den Item Text als auch für den aufnehmenden Text
     (Methode EditContainer#dissolveListItemEditAreaUDBL)
   - Wechsel des Absatztyps
-- Ausweitung auf Schrittreferenzen
+x Ausweitung auf Schrittreferenzen
+- Ausweitung auf gelöschte Schritte (schwarzer Hintergrund) notwendig?
 - Beim Speichern eines Textes muss selbiger erst bereinigt werden - setText(getText)) - und in dem Zuge müssen auch die Changemarks
    wieder hergestellt werden. Sonst landen sie ggf. mit falschen Indizes auf Datei. Ist die ganze Zeit schon falsch, war aber bisher
    nicht so schlimm, weil die Changemarks in der Datei nicht verwendet wurden.

@@ -91,12 +91,10 @@ public class TextStyles {
         String htmlStyleGeaendert = "background-color:" + INDIKATOR_GELB;
         String htmlStyleSchwarz = "background-color:" + INDIKATOR_SCHWARZ;
         String htmlStyleStandard = "background-color:" + toHTMLColor(TEXT_BACKGROUND_COLOR_STANDARD);
-        String htmlStyleStepnumber = "background-color:" + stepnumberLinkStyleHTMLColor;
 
         SimpleAttributeSet htmlHintergrundStyleGeaendert = new SimpleAttributeSet();
         SimpleAttributeSet htmlHintergrundStyleSchwarz = new SimpleAttributeSet();
         SimpleAttributeSet htmlHintergrundStyleStandard = new SimpleAttributeSet();
-        SimpleAttributeSet htmlHintergrundStyleStepnumber = new SimpleAttributeSet();
 
         htmlHintergrundStyleGeaendert.addAttribute(HTML.Attribute.STYLE, htmlStyleGeaendert);
         StyleConstants.setBackground(geaendertTextBackground, AENDERUNGSMARKIERUNG_FARBE);
@@ -125,11 +123,8 @@ public class TextStyles {
         StyleConstants.setForeground(quellschrittStil, Schriftfarbe_Geloescht);
         StyleConstants.setFontSize(quellschrittStil, 7);
 
-        htmlHintergrundStyleStepnumber.addAttribute(HTML.Attribute.STYLE, htmlStyleStepnumber);
-        stepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleStepnumber);
         StyleConstants.setBackground(stepnumberLinkStyle, stepnumberLinkStyleColor);
 
-        changedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
         StyleConstants.setBackground(changedStepnumberLinkStyle, changedStepnumberLinkColor);
 
         deletedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
