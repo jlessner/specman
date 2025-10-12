@@ -55,6 +55,8 @@ import static specman.Aenderungsart.Hinzugefuegt;
 import static specman.Aenderungsart.Untracked;
 import static specman.editarea.HTMLTags.BODY_INTRO;
 import static specman.editarea.HTMLTags.BODY_OUTRO;
+import static specman.editarea.HTMLTags.HEAD_INTRO;
+import static specman.editarea.HTMLTags.HEAD_OUTRO;
 import static specman.editarea.HTMLTags.HTML_INTRO;
 import static specman.editarea.HTMLTags.HTML_OUTRO;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
@@ -835,49 +837,55 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         setFont(font.deriveFont((float) FONTSIZE * prozentNeu / 100));
     }
 
-    public TextEditArea split(int textPosition) {
-        int textLength = getDocument().getLength();
-        if (textLength > textPosition) {
-            TextEditAreaModel_V001 splittedModel = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
-            TextEditArea splittedArea = new TextEditArea(splittedModel, this.getFont());
-            remove(textPosition, textLength - textPosition);
-            //int removeStart = splittedArea.newlineAt(0) ? 1 : 0;
-            splittedArea.remove(0, textPosition);
+    public TextEditArea split(WrappedPosition textPosition) {
+        WrappedDocument document = getWrappedDocument();
+        if (!textPosition.isLast()) {
+            TextEditArea splittedArea = copyArea();
+            document.removeFrom(textPosition);
+            splittedArea.remove(textPosition.toModel());
             return splittedArea;
         }
         return null;
     }
 
-    public TextEditArea copySection(int fromPosition, int toPosition) {
-        TextEditAreaModel_V001 selectionModel = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
-        TextEditArea selectionArea = new TextEditArea(selectionModel, this.getFont());
-        selectionArea.shrink(fromPosition, toPosition);
-        return selectionArea.getLength() > 0 ? selectionArea : null;
+    public TextEditArea copyArea() {
+        TextEditAreaModel_V001 modelCopy = new TextEditAreaModel_V001(getText(), getPlainText(), new ArrayList<>(), aenderungsart);
+        MarkedCharSequence marksBackup = findChangemarks();
+        TextEditArea areaCopy = new TextEditArea(modelCopy, this.getFont());
+        List<Aenderungsmarkierung_V001> recoveredChangemarks = new ChangemarkRecovery(getWrappedDocument(), marksBackup).recover();
+        new ChangeBackgroundStyleInitializer(areaCopy, recoveredChangemarks).styleChangedTextSections();
+        return areaCopy;
     }
 
-    public void shrink(int fromPosition, int toPosition) {
-        int textLength = getDocument().getLength();
-        if (toPosition < fromPosition) {
-            remove(0, textLength);
+    public TextEditArea copySection(WrappedPosition fromPosition, WrappedPosition toPosition) {
+        TextEditArea selectionArea = copyArea();
+        selectionArea.shrink(fromPosition, toPosition);
+        return selectionArea.hasContent() ? selectionArea : null;
+    }
+
+    public void shrink(WrappedPosition fromPosition, WrappedPosition toPosition) {
+        WrappedDocument doc = getWrappedDocument();
+        WrappedPosition end = doc.end();
+        WrappedPosition start = doc.start();
+        int textLength = getWrappedDocument().getLength();
+        if (toPosition.less(fromPosition)) {
+            remove(doc.start(), textLength);
         }
         else {
-            if (textLength > toPosition) {
-                remove(toPosition + 1, textLength - toPosition - 1);
+            if (end.greater(toPosition)) {
+                doc.removeFrom(toPosition.inc());
             }
-            if (fromPosition > 0) {
-                remove(0, fromPosition);
+            if (fromPosition.greater(start)) {
+                remove(start, fromPosition.distance(start));
             }
         }
     }
 
-    public void remove(int offset, int len) {
-        try {
-            getDocument().remove(offset, len);
-        }
-        catch (BadLocationException blx) {
-            throw new RuntimeException(blx);
-        }
-    }
+    private boolean hasContent() { return getWrappedDocument().hasContent(); }
+
+    public void remove(int len) { getWrappedDocument().remove(len); }
+
+    public void remove(WrappedPosition offset, int len) { getWrappedDocument().remove(offset, len); }
 
     @Override
     public TextEditArea asTextArea() {
@@ -892,20 +900,29 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         return null;
     }
 
-    public void appendText(String trailingText) {
+    public void appendText(TextEditArea trailingText) {
+        MarkedCharSequence marksBackup = findChangemarks();
+        marksBackup.append(trailingText.findChangemarks());
         int endOfOldText = getDocument().getLength();
         String oldText = getText();
         String newText =
-                oldText
-                        .replace(HTML_OUTRO, "")
-                        .replace(BODY_OUTRO, "")
-                        + trailingText
-                        .replace(HTML_INTRO, "")
-                        .replace(BODY_INTRO, "");
+          oldText
+            .replace(HTML_OUTRO, "")
+            .replace(BODY_OUTRO, "")
+            .replace(HEAD_OUTRO, "")
+            .replace(HEAD_INTRO, "")
+            .trim()
+          + trailingText.getText()
+            .replace(HTML_INTRO, "")
+            .replace(BODY_INTRO, "")
+            .replace(HEAD_OUTRO, "")
+            .replace(HEAD_INTRO, "")
+            .trim();
         setText(newText);
+        List<Aenderungsmarkierung_V001> recoveredChangemarks = new ChangemarkRecovery(getWrappedDocument(), marksBackup).recover();
+        new ChangeBackgroundStyleInitializer(this, recoveredChangemarks).styleChangedTextSections();
         setCaretPosition(endOfOldText);
     }
-
 
     public void addStepnumberLink(AbstractSchrittView referencedStep) {
         EditorI editor = Specman.instance();
@@ -1121,19 +1138,6 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
 
     private WrappedElement currentParagraphElement() {
         return getWrappedDocument().getParagraphElement(getCaretPosition());
-    }
-
-    public String getTextRX(int offs, int len) {
-        try {
-            return getText(offs, len);
-        }
-        catch(BadLocationException blx) {
-            throw new RuntimeException(blx);
-        }
-    }
-
-    public boolean newlineAt(int pos) {
-        return getTextRX(pos, 1).startsWith("\n");
     }
 
     public WrappedDocument getWrappedDocument() {

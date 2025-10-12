@@ -78,4 +78,8 @@ public class WrappedPosition {
   public boolean isInChangeMark(Aenderungsmarkierung_V001 mark) {
     return mark.getVon() <= toModel() && mark.getBis() >= toModel();
   }
+
+  public boolean isLast() {
+    return position == document.getLength()-1;
+  }
 }

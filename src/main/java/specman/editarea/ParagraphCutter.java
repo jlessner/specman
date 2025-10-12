@@ -1,9 +1,9 @@
 package specman.editarea;
 
+import specman.editarea.document.WrappedDocument;
+import specman.editarea.document.WrappedElement;
+import specman.editarea.document.WrappedPosition;
 import specman.model.v001.TextEditAreaModel_V001;
-
-import javax.swing.text.Element;
-import javax.swing.text.StyledDocument;
 
 /** This class splits a TextEdiArea into multiple areas based on the current caret position.
  * In the maximum case, the caret position is placed in a paragraph with leading and trailing
@@ -20,57 +20,46 @@ import javax.swing.text.StyledDocument;
 public class ParagraphCutter {
   private TextEditArea caretArea;
   private TextEditArea trailingArea;
-  private TextEditArea initiatingArea;
-  private int caretPosition;
+  private WrappedDocument initiatingDocument;
+  private WrappedPosition caretPosition;
 
   public ParagraphCutter cutAtCaret(TextEditArea initiatingArea) {
-    this.initiatingArea = initiatingArea;
-    this.caretPosition = initiatingArea.getCaretPosition();
-    int leadingAreaStart = findLeadingAreaStart();
-    int caretAreaStart = findCaretAreaStart();
-    int caretAreaEnd = findCaretAreaEnd();
-    int leadingAreaEnd = findLeadingAreaEnd();
-    int trailingAreaStart = findTrailingAreaStart(caretAreaEnd);
+    this.caretPosition = initiatingArea.getWrappedCaretPosition();
+    this.initiatingDocument = initiatingArea.getWrappedDocument();
+    WrappedPosition leadingAreaStart = initiatingDocument.start();
+    WrappedPosition caretAreaStart = findCaretAreaStart();
+    WrappedPosition caretAreaEnd = findCaretAreaEnd();
+    WrappedPosition leadingAreaEnd = findLeadingAreaEnd();
+    WrappedPosition trailingAreaStart = findTrailingAreaStart(caretAreaEnd);
 
     caretArea = initiatingArea.copySection(caretAreaStart, caretAreaEnd);
     if (caretArea == null) {
       caretArea = new TextEditArea(new TextEditAreaModel_V001(""), initiatingArea.getFont());
     }
-    trailingArea = initiatingArea.copySection(trailingAreaStart, initiatingArea.getLength() - 1);
+    trailingArea = initiatingArea.copySection(trailingAreaStart, initiatingDocument.end());
     initiatingArea.shrink(leadingAreaStart, leadingAreaEnd);
 
     return this;
   }
 
-  private boolean newlineAt(int pos) {
-    return initiatingArea.newlineAt(pos);
+  private WrappedPosition findTrailingAreaStart(WrappedPosition caretAreaEnd) {
+    return caretAreaEnd.inc().min(initiatingDocument.end().inc());
   }
 
-  private int findLeadingAreaStart() {
-    return newlineAt(0) ? 1 : 0;
+  private WrappedPosition findLeadingAreaEnd() {
+    return findCaretAreaStart().dec();
   }
 
-  private int findTrailingAreaStart(int caretAreaEnd) {
-    return Math.min(caretAreaEnd + 2, initiatingArea.getLength());
+  private WrappedPosition findCaretAreaEnd() {
+    return currentParagraphElement().getEndOffset().dec();
   }
 
-  private int findLeadingAreaEnd() {
-    int pos = findCaretAreaStart() - 1;
-    return newlineAt(pos) ? pos - 1 : pos;
-  }
-
-  private int findCaretAreaEnd() {
-    int endPos = currentParagraphElement().getEndOffset() - 1;
-    return newlineAt(endPos) ? endPos - 1 : endPos;
-  }
-
-  private int findCaretAreaStart() {
+  private WrappedPosition findCaretAreaStart() {
     return currentParagraphElement().getStartOffset();
   }
 
-  private Element currentParagraphElement() {
-    StyledDocument doc = (StyledDocument) initiatingArea.getDocument();
-    return doc.getParagraphElement(caretPosition);
+  private WrappedElement currentParagraphElement() {
+    return initiatingDocument.getParagraphElement(caretPosition);
   }
 
   public TextEditArea caretTextArea() {

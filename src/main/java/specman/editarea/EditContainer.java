@@ -8,6 +8,7 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
+import specman.editarea.document.WrappedPosition;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
@@ -369,7 +370,7 @@ public class EditContainer extends JPanel {
 		TableEditArea tableEditArea;
 		try (UndoRecording ur = editor.composeUndo()) {
 			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
-			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
+			WrappedPosition initiatingCaretPosition = initiatingTextArea.getWrappedCaretPosition();
 			tableEditArea = new TableEditArea(columns, rows, aenderungsart);
 			addEditArea(tableEditArea, initiatingTextAreaIndex+1);
 			TextEditArea cutOffTextArea = initiatingTextArea.split(initiatingCaretPosition);
@@ -386,7 +387,7 @@ public class EditContainer extends JPanel {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
 			int initiatingTextAreaIndex = indexOf(initiatingTextArea);
-			int initiatingCaretPosition = initiatingTextArea.getCaretPosition();
+			WrappedPosition initiatingCaretPosition = initiatingTextArea.getWrappedCaretPosition();
 			ImageEditArea imageEditArea = new ImageEditArea(image, Specman.initialArt());
 			addEditArea(imageEditArea, initiatingTextAreaIndex+1);
 			TextEditArea cutOffTextArea = initiatingTextArea.split(initiatingCaretPosition);
@@ -462,7 +463,7 @@ public class EditContainer extends JPanel {
 					trailingTextArea = editAreas.get(editAreaIndex).asTextArea();
 					if (leadingTextArea != null && trailingTextArea != null) {
 						removeEditAreaComponent(trailingTextArea);
-						leadingTextArea.appendText(trailingTextArea.getText());
+						leadingTextArea.appendText(trailingTextArea);
 						leadingTextArea.requestFocus();
 					}
 				}
@@ -672,7 +673,7 @@ public class EditContainer extends JPanel {
 	private TextEditArea mergeTextIntoListItem(AbstractListItemEditArea target, TextEditArea initiatingTextEditArea) {
 		EditorI editor = Specman.instance();
 		try (UndoRecording ur = editor.composeUndo()) {
-			TextEditArea nextToFocus = target.appendText(initiatingTextEditArea.getText());
+			TextEditArea nextToFocus = target.appendText(initiatingTextEditArea);
 			removeEditAreaComponent(initiatingTextEditArea);
 			// TODO JL: Undo recording!
 			return nextToFocus;
@@ -681,7 +682,7 @@ public class EditContainer extends JPanel {
 
 	/** Remove the passed list item edit area from this edit container and add its content areas directly instead.
 	 * If the preceeding edit area is a text area, merge the first text edit area of the list item with it.
-	 * If the succeeding edit area is a text area and the list item's last edit aera es well, merge them. */
+	 * If the succeeding edit area is a text area and the list item's last edit area es well, merge them. */
 	public EditArea dissolveListItemEditAreaUDBL(AbstractListItemEditArea liEditArea, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		List<EditArea> liftUpAreas = liEditArea.content.modifyableEditAreas();
@@ -694,7 +695,7 @@ public class EditContainer extends JPanel {
 			if (leadingTextMergeRequired) {
 				TextEditArea preceedingText = editAreas.get(liEditAreaIndex-1).asTextArea();
 				TextEditArea firstLiText = liEditArea.getFirstEditArea().asTextArea();
-				preceedingText.appendText(firstLiText.getText());
+				preceedingText.appendText(firstLiText);
 				liEditArea.removeEditAreaComponent(firstLiText);
 				lastLiftUpArea = preceedingText;
 			}
@@ -706,7 +707,7 @@ public class EditContainer extends JPanel {
 			if (trailingTextMergeRequired) {
 				int lastLiftUpAreaIndex = indexOf(lastLiftUpArea);
 				followingTextEditArea = editAreas.get(lastLiftUpAreaIndex+1).asTextArea();
-				lastLiftUpArea.asTextArea().appendText(followingTextEditArea.getText());
+				lastLiftUpArea.asTextArea().appendText(followingTextEditArea);
 				removeEditAreaComponent(followingTextEditArea);
 			}
 			editor.addEdit(new UndoableListItemDissolved(this, liEditArea, liEditAreaIndex, liftUpAreas, followingTextEditArea));

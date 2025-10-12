@@ -41,4 +41,8 @@ public class MarkedCharSequence {
     int modelPos = pos.toModel();
     chars.add(modelPos, new MarkedChar('\n', changed));
   }
+
+  public void append(MarkedCharSequence changemarks) {
+    chars.addAll(changemarks.chars);
+  }
 }

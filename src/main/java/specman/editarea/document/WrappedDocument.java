@@ -1,12 +1,17 @@
 package specman.editarea.document;
 
+import specman.editarea.changemarks.CharType;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.StyledDocument;
+import javax.swing.text.html.HTMLDocument;
 import java.util.Arrays;
 import java.util.List;
+
+import static specman.editarea.changemarks.CharType.ParagraphBoundary;
 
 public class WrappedDocument implements WrappedDocumentI {
   private final StyledDocument document;
@@ -55,6 +60,15 @@ public class WrappedDocument implements WrappedDocumentI {
 
   public void remove(WrappedPosition offs, int len) {
     try {
+      // I hope this won't cause us trouble in the future:
+      // A leading newline at the beginning of the document does increase the
+      // document's length (see method getLength). So if the passed offset and length
+      // came out of a calculation, the sum of both might reach to the very end of this
+      // WrappedDocument and exceed the underlaying document's length by 1. If this is
+      // the case, we silently decrease the passed length by 1.
+      if (offs.unwrap() + len == document.getLength() + 1) {
+        len--;
+      }
       document.remove(offs.unwrap(), len);
     }
     catch(BadLocationException blx) {
@@ -82,6 +96,10 @@ public class WrappedDocument implements WrappedDocumentI {
     }
   }
 
+  public WrappedElement getParagraphElement(WrappedPosition pos) {
+    return getParagraphElement(pos.toModel());
+  }
+
   public WrappedElement getParagraphElement(int pos) {
     Element element = document.getParagraphElement(pos + visibleTextStart);
     return new WrappedElement(element, this);
@@ -93,6 +111,17 @@ public class WrappedDocument implements WrappedDocumentI {
 
   public WrappedPosition fromModel(int position) {
     return new WrappedPosition(position, this);
+  }
+
+  public WrappedPosition start() { return fromModel(0); }
+  public WrappedPosition end() { return fromModel(getLength()-1); }
+
+  public boolean hasContent() {
+    switch(getLength()) {
+      case 0: return false;
+      case 1: return !ParagraphBoundary.at(start());
+      default: return true;
+    }
   }
 
 }
