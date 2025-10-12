@@ -11,6 +11,8 @@ Changemark-Recovery
 - Beim Speichern eines Textes muss selbiger erst bereinigt werden - setText(getText)) - und in dem Zuge müssen auch die Changemarks
    wieder hergestellt werden. Sonst landen sie ggf. mit falschen Indizes auf Datei. Ist die ganze Zeit schon falsch, war aber bisher
    nicht so schlimm, weil die Changemarks in der Datei nicht verwendet wurden.
+- Restauration für Whitespacesequenzen noch ein bisschen verbessern.
+   Noch ganz unberücksichtigt: abschließendes Whitespace hinter der letzten Sequenz sichtbarer Zeichen
 - Mit erledigen (war vorher schon falsch): Wenn beim Split einer TextEditArea der *vordere* Textteil überflüssige Whitespaces enthält,
    dann wird der hintere Teil falsch kopiert. Für das Herstellen des hinteren Textteils wird nämlich intern zuerst der *ganze* Text
    kopiert und anschließend gekürzt. Das Kopieren bewirkt die Bereinigung, sodass die ursprüngliche Caret Position im kopierten Text
