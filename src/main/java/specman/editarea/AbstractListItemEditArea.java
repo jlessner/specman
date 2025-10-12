@@ -6,6 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
+import specman.editarea.document.WrappedPosition;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ListItemEditAreaModel_V001;
@@ -160,7 +161,7 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   public void split(TextEditArea initiatingEditArea) {
     EditorI editor = Specman.instance();
     try (UndoRecording ur = editor.composeUndo()) {
-      int initiatingCarretPosition = initiatingEditArea.getCaretPosition();
+      WrappedPosition initiatingCarretPosition = initiatingEditArea.getWrappedCaretPosition();
       TextEditArea splitTextEditArea = initiatingEditArea.split(initiatingCarretPosition);
       if (splitTextEditArea == null) {
         splitTextEditArea = new TextEditArea(new TextEditAreaModel_V001(""), initiatingEditArea.getFont());
@@ -179,10 +180,10 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
     this.getParent().addListItem(this, splitListItemEditArea);
   }
 
-  public TextEditArea appendText(String text) {
+  public TextEditArea appendText(TextEditArea text) {
     TextEditArea lastArea = content.getLastEditArea().asTextArea();
     if (lastArea == null) {
-      lastArea = new TextEditArea(new TextEditAreaModel_V001(text), getFont());
+      lastArea = text.copyArea();
       content.appendTextEditArea(lastArea);
     }
     else {
