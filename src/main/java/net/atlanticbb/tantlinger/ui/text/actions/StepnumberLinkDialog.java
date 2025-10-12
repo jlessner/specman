@@ -1,5 +1,7 @@
 package net.atlanticbb.tantlinger.ui.text.actions;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import jdk.security.jarsigner.JarSigner;
 import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.HeaderPanel;
@@ -15,6 +17,10 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -32,8 +38,11 @@ public class StepnumberLinkDialog extends JDialog {
     private static final Color HOVERED_BACKGROUND = Color.lightGray;
     private static final int MAXIMAL_REFERENCE_TEXTLENGTH = 60;
     private JTextComponent editor;
+    private JTextField filter;
     private int hoveredIndex = -1;
     private final CustomListCellRenderer customListCellRenderer = new CustomListCellRenderer();
+    private List<AbstractSchrittView> steps;
+    private JList<AbstractSchrittView> stepsList;
 
     public StepnumberLinkDialog(Frame parent, JTextComponent ed) {
         super(parent, title);
@@ -48,18 +57,20 @@ public class StepnumberLinkDialog extends JDialog {
     }
 
     private void init() {
+        steps = Specman.instance().listAllSteps();
+
         JPanel headerPanel = new HeaderPanel(title, desc, icon);
 
-        JList<AbstractSchrittView> jlist = new JList<>(getStepnumberList());
-        jlist.addMouseListener(new MouseAdapter() {
+        stepsList = new JList<>(stepListModel(steps));
+        stepsList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
                 hoveredIndex = -1;
-                jlist.repaint();
+                stepsList.repaint();
             }
         });
-        jlist.addMouseMotionListener(new MouseMotionListener() {
+        stepsList.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
             }
@@ -72,32 +83,52 @@ public class StepnumberLinkDialog extends JDialog {
                 jlist.repaint();
             }
         });
-        jlist.addListSelectionListener(this::ListValueChanged);
-        jlist.setCellRenderer(customListCellRenderer);
-
-
-        jlist.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), new MatteBorder(1, 1, 1, 1, Color.black)));
+        stepsList.addListSelectionListener(this::ListValueChanged);
+        stepsList.setCellRenderer(customListCellRenderer);
+        stepsList.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), new MatteBorder(1, 1, 1, 1, Color.black)));
 
         JButton close = new JButton(i18n.str("close"));
         close.addActionListener(e -> StepnumberLinkDialog.this.setVisible(false));
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(close);
-        JScrollPane scrollPane = new JScrollPane(jlist);
+
+        filter = new JTextField();
+        filter.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                List<AbstractSchrittView> filteredSteps = filterSteps(filter.getText());
+                stepsList.setModel(stepListModel(filteredSteps));
+            }
+        });
+
+
+        JScrollPane scrollPane = new JScrollPane(stepsList);
         this.getRootPane().setDefaultButton(close);
-        this.getContentPane().setLayout(new BorderLayout());
-        this.getContentPane().add(headerPanel, "North");
-        this.getContentPane().add(scrollPane, "Center");
-        this.getContentPane().add(buttonPanel, "South");
+
+        this.getContentPane().setLayout(new FormLayout("0px:grow", "pref,pref,fill:pref:grow,pref"));
+        this.getContentPane().add(headerPanel, CC.xy(1, 1));
+        this.getContentPane().add(filter, CC.xy(1, 2));
+        this.getContentPane().add(scrollPane, CC.xy(1, 3));
+        this.getContentPane().add(buttonPanel, CC.xy(1, 4));
+
         this.setMinimumSize(new Dimension(400, 600));
         this.pack();
         this.setResizable(false);
     }
 
-    private DefaultListModel<AbstractSchrittView> getStepnumberList() {
-        DefaultListModel<AbstractSchrittView> listModel = new DefaultListModel<>();
-        final List<AbstractSchrittView> steps = Specman.instance().listAllSteps();
-        listModel.addAll(steps);
+    private List<AbstractSchrittView> filterSteps(String text) {
+        if (text.isEmpty() || text.isBlank()) {
+            return steps;
+        }
+        return steps
+          .stream()
+          .filter(step -> step.toString().toLowerCase().contains(text.toLowerCase()))
+          .toList();
+    }
 
+    private DefaultListModel<AbstractSchrittView> stepListModel(List<AbstractSchrittView> steps) {
+        DefaultListModel<AbstractSchrittView> listModel = new DefaultListModel<>();
+        listModel.addAll(steps);
         return listModel;
     }
 

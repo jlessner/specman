@@ -687,7 +687,7 @@ public class EditContainer extends JPanel {
 
 	/** Remove the passed list item edit area from this edit container and add its content areas directly instead.
 	 * If the preceeding edit area is a text area, merge the first text edit area of the list item with it.
-	 * If the succeeding edit area is a text area and the list item's last edit area es well, merge them. */
+	 * If the succeeding edit area is a text area and the list item's last edit aera es well, merge them. */
 	public EditArea dissolveListItemEditAreaUDBL(AbstractListItemEditArea liEditArea, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		List<EditArea> liftUpAreas = liEditArea.content.modifyableEditAreas();
