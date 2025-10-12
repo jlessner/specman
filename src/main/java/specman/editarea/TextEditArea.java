@@ -234,16 +234,21 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         String text;
         java.util.List<Markup_V001> markups = null;
         if (formatierterText) {
-            // Wenn wir die Zeilenumbrüche nicht rausnehmen, dann entstehen später beim Laden u.U.
-            // Leerzeichen an Zeilenenden, die im ursprünglichen Text nicht drin waren. Das ist doof,
-            // weil dann die separat abgespeicherten Textintervalle der Aenderungsmarkierungen nicht mehr passen.
-            text = getText().replace("\n", "");
+            cleanupText();
             markups = findMarkups(false);
+            text = getText();
         }
         else {
             text = getPlainText().replace("\n", " ").trim();
         }
         return new TextEditAreaModel_V001(text, getPlainText(), markups, aenderungsart);
+    }
+
+    private void cleanupText() {
+        MarkedCharSequence marksBackup = findMarkups();
+        setText(getText());
+        List<Markup_V001> recoveredChangemarks = new MarkupRecovery(getWrappedDocument(), marksBackup).recover();
+        new MarkupBackgroundStyleInitializer(this, recoveredChangemarks).styleChangedTextSections();
     }
 
     public java.util.List<Markup_V001> findMarkups(boolean nurErste) {
