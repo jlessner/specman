@@ -8,7 +8,7 @@ x Wiederherstellung auch bei
   x Auflösen eines List Items mit Merge der Inhalte in führende oder folgende TextEditArea, sowohl für den Item Text als auch für den aufnehmenden Text
     (Methode EditContainer#dissolveListItemEditAreaUDBL)
   x Wechsel des Absatztyps
-  - Entfernen einer Absatzgrenze, für beide dadurch gemergten Absätze
+  x Entfernen einer Absatzgrenze, für beide dadurch gemergten Absätze
 x Ausweitung auf Schrittreferenzen
 x Ausweitung auf gelöschte Schritte (schwarzer Hintergrund) notwendig?
    x ENTER drücken geht fälschlicherweise, auch in gelöschtem Schritt (mit und ihne Shift)
@@ -28,6 +28,7 @@ Prio II
    funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 
 Aus UC-791
+- Bei Drücken von DELETE, analoges Verhalten zu BACKSPACE
 - Schrittreferenzen werden im Outro und Catch-Blöcken des UC-791 nicht aktualisiert. Allgemein geht es aber.
 - Focus in Tabellen durch Drücken von TAB verschieben
 - Falsche Caret-Position bei Drücken von RETURN in einem Listitem

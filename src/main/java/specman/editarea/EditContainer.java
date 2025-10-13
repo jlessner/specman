@@ -654,7 +654,7 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
-	public void tryDissolveEditArea(TextEditArea initiatingTextEditArea) {
+	public void tryDissolveEditAreaUDBL(TextEditArea initiatingTextEditArea) {
 		// The text is the leading one in a list item
 		if (getParent() instanceof AbstractListItemEditArea) {
 			// Dissolve the list item by merging its content into the upper edit container

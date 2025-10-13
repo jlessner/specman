@@ -4,6 +4,7 @@ import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
+import specman.editarea.markups.CharType;
 import specman.editarea.markups.MarkupBackgroundStyleInitializer;
 import specman.editarea.markups.MarkupRecovery;
 import specman.editarea.markups.MarkedChar;
@@ -566,7 +567,8 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
     }
 
     private void keyBackspacePressed(KeyEvent e) {
-        if (getCaretPosition() == 0) {
+        WrappedPosition caretPos = getWrappedCaretPosition();
+        if (caretPos.isZero()) {
             dissolveEditArea();
             return;
         }
@@ -583,13 +585,23 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
             removePreviousStepnumberLink();
             e.consume();
         }
+        else if (ParagraphBoundary.at(caretPos.dec())) {
+            // We are about to merge two paragraphs, so must ensure markup recovery
+            MarkedCharSequence marksBackup = findMarkups();
+            UndoRecording ur = Specman.instance().composeUndo();
+            SwingUtilities.invokeLater(() -> {
+                List<Markup_V001> recoveredChangemarks = new MarkupRecovery(getWrappedDocument(), marksBackup).recover();
+                new MarkupBackgroundStyleInitializer(this, recoveredChangemarks).styleChangedTextSections();
+                ur.close();
+            });
+        }
     }
 
     /** When pressing backspace at the very beginning of a text area, we check if this indicates that the
      * edit area should be dissolved in the sense that its is removed and its content is merged with the
      * one of a preceeding edit area. */
     private void dissolveEditArea() {
-        getParent().tryDissolveEditArea(this);
+        getParent().tryDissolveEditAreaUDBL(this);
     }
 
     private void handleTextDeletion() {
