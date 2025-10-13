@@ -11,6 +11,7 @@ import net.atlanticbb.tantlinger.ui.text.SourceCodeEditor;
 import net.atlanticbb.tantlinger.ui.text.WysiwygHTMLEditorKit;
 import net.atlanticbb.tantlinger.ui.text.actions.ClearStylesAction;
 import net.atlanticbb.tantlinger.ui.text.actions.FindReplaceAction;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLBlockActionWithMarkupRecovery;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLBlockAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLEditorActionFactory;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLElementPropertiesAction;
@@ -34,6 +35,13 @@ import novaworx.textpane.SyntaxGutterBase;
 import org.bushe.swing.action.ActionList;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
+import specman.Specman;
+import specman.editarea.TextEditArea;
+import specman.editarea.markups.MarkedCharSequence;
+import specman.editarea.markups.MarkupBackgroundStyleInitializer;
+import specman.editarea.markups.MarkupRecovery;
+import specman.model.v001.Markup_V001;
+import specman.undo.manager.UndoRecording;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -59,7 +67,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 import javax.swing.undo.UndoManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -87,14 +94,15 @@ import java.util.Vector;
 
 /**
  * This class was extracted from the SHEF library and modified / extended for Specman.
- * Unfortunately it was not really design for modification and we didn't find an elegant
+ * Unfortunately it was not really designed for modification, and we didn't find an elegant
  * object-oriented approach for the following modifications:
  * <ul>
  *   <li>Additional toolbar icon for the creation of step links</li>
- *   <li>Different funtionality for the creation of tables, list items and images</li>
+ *   <li>Differing functionality for the creation of tables, list items and images</li>
+ *   <li>Recovery of markups on change of paragraph type</li>
  * </ul>
  * The SHEF library in the project's local repository does not contain the class any more
- * to avoid selection of the wrojng implementation in a Specman distribution jar.
+ * to avoid selection of the wrong implementation in a Specman distribution jar.
  */
 public class HTMLEditorPane extends JPanel
 {
@@ -246,6 +254,7 @@ public class HTMLEditorPane extends JPanel
     formatMenu.addSeparator();
 
     lst = HTMLEditorActionFactory.createBlockElementActionList();
+    lst = HTMLBlockActionWithMarkupRecovery.wrap(lst);
     actionList.addAll(lst);
     formatMenu.add(createMenu(lst, i18n.str("paragraph")));
     paraActions.addAll(lst);
@@ -840,8 +849,7 @@ public class HTMLEditorPane extends JPanel
 
   private class ParagraphComboHandler implements ActionListener
   {
-    public void actionPerformed(ActionEvent e)
-    {
+    public void actionPerformed(ActionEvent e) {
       if(e.getSource() == paragraphCombo)
       {
         Action a = (Action)(paragraphCombo.getSelectedItem());
@@ -849,6 +857,21 @@ public class HTMLEditorPane extends JPanel
       }
     }
   }
+
+//  private void recoverMarkups(MarkedCharSequence marksBackup) {
+//    if (marksBackup != null) {
+//      TextEditArea editArea = (TextEditArea) focusedEditor;
+//      List<Markup_V001> recoveredChangemarks = new MarkupRecovery(editArea.getWrappedDocument(), marksBackup).recover();
+//      new MarkupBackgroundStyleInitializer(editArea, recoveredChangemarks).styleChangedTextSections();
+//    }
+//  }
+//
+//  private MarkedCharSequence backupMarkups(Object htmlAction) {
+//    if (htmlAction instanceof HTMLBlockAction) {
+//      return ((TextEditArea)focusedEditor).findMarkups();
+//    }
+//    return null;
+//  }
 
   private class ParagraphComboRenderer extends DefaultListCellRenderer
   {

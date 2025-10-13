@@ -535,7 +535,7 @@ public class TextEditArea extends JEditorPane implements EditArea, KeyListener {
         }
     }
 
-    private MarkedCharSequence findMarkups() {
+    public MarkedCharSequence findMarkups() {
         MarkedCharSequence seq = new MarkedCharSequence();
         WrappedDocument doc = getWrappedDocument();
         for (WrappedPosition p = doc.fromModel(0); p.exists(); p = p.inc()) {
