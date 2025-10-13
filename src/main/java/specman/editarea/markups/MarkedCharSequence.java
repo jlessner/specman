@@ -44,4 +44,6 @@ public class MarkedCharSequence {
   public void append(MarkedCharSequence changemarks) {
     chars.addAll(changemarks.chars);
   }
+
+  public int size() { return chars.size(); }
 }

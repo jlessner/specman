@@ -47,7 +47,7 @@ public class MarkupRecovery {
       targetPos = targetPos.inc();
       sourcePos++;
     }
-    while(targetPos.exists() && source.isVisibleChar(sourcePos));
+    while(targetPos.exists() && sourcePos < source.size() && source.isVisibleChar(sourcePos));
     targetProcess = targetPos;
     sourceProcess = sourcePos;
   }

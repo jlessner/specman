@@ -1,4 +1,5 @@
 Changemark-Recovery
+Prio I
 x Wiederherstellung auch bei
   x Split von List Items, für das untere Item
   x Einfügen von Bild oder Tabelle, für den unteren Text
@@ -7,13 +8,16 @@ x Wiederherstellung auch bei
   x Auflösen eines List Items mit Merge der Inhalte in führende oder folgende TextEditArea, sowohl für den Item Text als auch für den aufnehmenden Text
     (Methode EditContainer#dissolveListItemEditAreaUDBL)
   x Wechsel des Absatztyps
+  - Entfernen einer Absatzgrenze, für beide dadurch gemergten Absätze
 x Ausweitung auf Schrittreferenzen
 x Ausweitung auf gelöschte Schritte (schwarzer Hintergrund) notwendig?
    x ENTER drücken geht fälschlicherweise, auch in gelöschtem Schritt (mit und ihne Shift)
 x Beim Speichern eines Textes muss selbiger erst bereinigt werden - setText(getText)) - und in dem Zuge müssen auch die Changemarks
    wieder hergestellt werden. Sonst landen sie ggf. mit falschen Indizes auf Datei. Ist die ganze Zeit schon falsch, war aber bisher
    nicht so schlimm, weil die Changemarks in der Datei nicht verwendet wurden.
-- Restauration für Whitespacesequenzen noch ein bisschen verbessern.
+x Exception beim Merge einer Textarea in ein List Item
+Prio II
+- Restauration für Whitespacesequenzen evt. noch ein bisschen verbessern.
    Noch ganz unberücksichtigt: abschließendes Whitespace hinter der letzten Sequenz sichtbarer Zeichen
 - Speichern sorgt jetzt für ein unerwünschtes Durchscrollen durch die gesamte Datei.
 - Mit erledigen (war vorher schon falsch): Wenn beim Split einer TextEditArea der *vordere* Textteil überflüssige Whitespaces enthält,
