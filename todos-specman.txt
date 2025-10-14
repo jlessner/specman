@@ -8,7 +8,8 @@ x Wiederherstellung auch bei
   x Auflösen eines List Items mit Merge der Inhalte in führende oder folgende TextEditArea, sowohl für den Item Text als auch für den aufnehmenden Text
     (Methode EditContainer#dissolveListItemEditAreaUDBL)
   x Wechsel des Absatztyps
-  x Entfernen einer Absatzgrenze, für beide dadurch gemergten Absätze
+  x Entfernen einer Absatzgrenze, für beide dadurch gemergte Absätze
+    - Geht jetzt bei BACKSPACE, aber noch nicht bei DELETE
 x Ausweitung auf Schrittreferenzen
 x Ausweitung auf gelöschte Schritte (schwarzer Hintergrund) notwendig?
    x ENTER drücken geht fälschlicherweise, auch in gelöschtem Schritt (mit und ihne Shift)
