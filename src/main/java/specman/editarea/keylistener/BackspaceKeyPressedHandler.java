@@ -7,28 +7,22 @@ import specman.editarea.TextEditArea;
 import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedElement;
 import specman.editarea.document.WrappedPosition;
-import specman.editarea.markups.MarkedCharSequence;
-import specman.editarea.markups.MarkupBackgroundStyleInitializer;
-import specman.editarea.markups.MarkupRecovery;
-import specman.model.v001.Markup_V001;
 import specman.undo.UndoableStepnumberLinkRemoved;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 
-import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.util.List;
 
 import static specman.editarea.TextStyles.deletedStepnumberLinkStyle;
 import static specman.editarea.TextStyles.geloeschtStil;
 import static specman.editarea.markups.CharType.ParagraphBoundary;
 
-class KeyBackspacePressedHandler extends AbstractKeyEventHandler {
-  KeyBackspacePressedHandler(TextEditArea textArea) {
-    super(textArea);
+class BackspaceKeyPressedHandler extends AbstractKeyEventHandler {
+  BackspaceKeyPressedHandler(TextEditArea textArea, KeyEvent keyEvent) {
+    super(textArea, keyEvent);
   }
 
-  void keyBackspacePressed(KeyEvent e) {
+  void handle() {
     WrappedPosition caretPos = getWrappedCaretPosition();
     if (caretPos.isZero()) {
       textArea.dissolveEditArea();
@@ -36,26 +30,20 @@ class KeyBackspacePressedHandler extends AbstractKeyEventHandler {
     }
     if (shouldPreventActionInsideStepnumberLink()) {
       skipToStepnumberLinkEnd();
-      e.consume();
+      event.consume();
       return;
     }
     if (isTrackingChanges()) {
       handleTextDeletion();
-      e.consume();
+      event.consume();
     }
-    else if (stepnumberLinkNormalOrChangedStyleSet(getWrappedSelectionEnd().dec())) {
-      removePreviousStepnumberLink();
-      e.consume();
+    else if (stepnumberLinkStyleSet(getWrappedSelectionEnd().dec())) {
+      removeStepnumberLinkBefore();
+      event.consume();
     }
     else if (ParagraphBoundary.at(caretPos.dec())) {
       // We are about to merge two paragraphs, so must ensure markup recovery
-      MarkedCharSequence marksBackup = findMarkups();
-      UndoRecording ur = Specman.instance().composeUndo();
-      SwingUtilities.invokeLater(() -> {
-        List<Markup_V001> recoveredChangemarks = new MarkupRecovery(getWrappedDocument(), marksBackup).recover();
-        new MarkupBackgroundStyleInitializer(textArea, recoveredChangemarks).styleChangedTextSections();
-        ur.close();
-      });
+      backupMarkupsAndRecoverAfterDefaultKeyOperation();
     }
   }
 
@@ -128,7 +116,7 @@ class KeyBackspacePressedHandler extends AbstractKeyEventHandler {
 
   }
 
-  public void removePreviousStepnumberLink() {
+  public void removeStepnumberLinkBefore() {
     EditorI editor = Specman.instance();
     try (UndoRecording ur = editor.composeUndo()) {
       WrappedPosition position = getWrappedSelectionEnd().dec();
@@ -150,7 +138,7 @@ class KeyBackspacePressedHandler extends AbstractKeyEventHandler {
       int length = currentEndOffset.distance(currentOffset);
       WrappedElement element = doc.getCharacterElement(currentOffset);
 
-      if (stepnumberLinkNormalOrChangedStyleSet(element)) {
+      if (stepnumberLinkStyleSet(element)) {
         String stepnumberLinkID = getStepnumberLinkIDFromElement(currentOffset, currentEndOffset);
         if (!StepnumberLink.isStepnumberLinkDefect(stepnumberLinkID)) {
           AbstractSchrittView step = editor.findStepByStepID(stepnumberLinkID);

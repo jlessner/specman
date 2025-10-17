@@ -7,14 +7,15 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-class KeyPastePressedHandler extends AbstractKeyEventHandler {
-  KeyPastePressedHandler(TextEditArea textArea) {
-    super(textArea);
+class PasteKeyPressedHandler extends AbstractKeyEventHandler {
+  PasteKeyPressedHandler(TextEditArea textArea, KeyEvent keyEvent) {
+    super(textArea, keyEvent);
   }
 
-  void keyPastePressed() {
+  void handle() {
     try {
       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
       Transferable contents = clipboard.getContents(null);

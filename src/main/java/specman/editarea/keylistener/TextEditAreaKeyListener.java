@@ -1,32 +1,18 @@
 package specman.editarea.keylistener;
 
-import specman.EditorI;
 import specman.Specman;
-import specman.editarea.AbstractListItemEditArea;
-import specman.editarea.EditContainer;
-import specman.editarea.StepnumberLink;
 import specman.editarea.TextEditArea;
 import specman.editarea.document.WrappedDocument;
-import specman.editarea.document.WrappedElement;
 import specman.editarea.document.WrappedPosition;
 import specman.editarea.focusmover.CrossEditAreaFocusMoverFromText;
-import specman.editarea.markups.MarkedChar;
-import specman.editarea.markups.MarkedCharSequence;
-import specman.editarea.markups.MarkupBackgroundStyleInitializer;
-import specman.editarea.markups.MarkupRecovery;
-import specman.model.v001.Markup_V001;
-import specman.undo.UndoableStepnumberLinkRemoved;
-import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 
-import javax.swing.*;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.CSS;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.List;
 
 import static specman.editarea.TextStyles.INDIKATOR_GELOESCHT_MARKIERT;
 import static specman.editarea.TextStyles.INDIKATOR_GRAU;
@@ -38,7 +24,7 @@ import static specman.editarea.TextStyles.standardStil;
 import static specman.editarea.markups.CharType.ParagraphBoundary;
 import static specman.editarea.markups.CharType.Whitespace;
 
-public class TextEditAreaKeyListener extends AbstractKeyEventHandler implements KeyListener {
+public class TextEditAreaKeyListener extends AbstractKeyHandler implements KeyListener {
   public TextEditAreaKeyListener(TextEditArea textArea) {
     super(textArea);
   }
@@ -46,18 +32,19 @@ public class TextEditAreaKeyListener extends AbstractKeyEventHandler implements 
   @Override
   public void keyPressed(KeyEvent e) {
     if (e.isControlDown() && e.getKeyCode() == 'V') {
-      new KeyPastePressedHandler(textArea).keyPastePressed();
+      keyPastePressed(e);
     }
     if (e.isControlDown() && e.getKeyCode() == 'X') {
       markSelectedTextAsDeletedInModificationMode();
     }
     switch (e.getKeyCode()) {
-      case KeyEvent.VK_BACK_SPACE -> new KeyBackspacePressedHandler(textArea).keyBackspacePressed(e);
+      case KeyEvent.VK_BACK_SPACE -> keyBackspacePressed(e);
       case KeyEvent.VK_UP -> keyUpPressed(e);
       case KeyEvent.VK_DOWN -> keyDownPressed(e);
       case KeyEvent.VK_LEFT -> keyLeftPressed(e);
       case KeyEvent.VK_RIGHT -> keyRightPressed(e);
       case KeyEvent.VK_ENTER -> keyEnterPressed(e);
+      case KeyEvent.VK_DELETE -> keyDeletePressed(e);
       default -> {
         if (shouldPreventActionInsideStepnumberLink()) {
           e.consume();
@@ -73,45 +60,24 @@ public class TextEditAreaKeyListener extends AbstractKeyEventHandler implements 
     }
   }
 
-  /** If there is a whitespace directly in front or behind the caret position,
-   * we do not want to insert another whitespace there. The same is true if the
-   * caret is at the very beginning of the document or at the beginning of a paragraph. */
-  private void keySpaceTyped(KeyEvent e) {
-    WrappedDocument doc = getWrappedDocument();
-    WrappedPosition caret = getWrappedCaretPosition();
-    if (caret.isZero() ||
-      Whitespace.at(caret) ||
-      Whitespace.at(caret.dec()) ||
-      ParagraphBoundary.at(caret.dec())) {
-      e.consume();
-    }
+  private void keyBackspacePressed(KeyEvent e) {
+    new BackspaceKeyPressedHandler(textArea, e).handle();
+  }
+
+  private void keyDeletePressed(KeyEvent e) {
+    new DeleteKeyPressedHandler(textArea, e).handle();
+  }
+
+  private void keyPastePressed(KeyEvent e) {
+    new PasteKeyPressedHandler(textArea, e).handle();
   }
 
   private void keyEnterPressed(KeyEvent e) {
-    if (!isEditable()) {
-      e.consume();
-      return;
-    }
-    EditContainer editContainer = textArea.getParent();
-    if (!e.isShiftDown()) {
-      if (editContainer.getParent() instanceof AbstractListItemEditArea) {
-        AbstractListItemEditArea listItem = (AbstractListItemEditArea) editContainer.getParent();
-        listItem.split(textArea);
-        e.consume();
-        return;
-      }
-      MarkedCharSequence changes = findMarkups();
-      changes.insertParagraphBoundaryAt(getWrappedCaretPosition(), Specman.instance().aenderungenVerfolgen());
-      // We start the Undo composition here and close it in the invokeLater section to cover both
-      // - all the changes from JEditoPane when inserting a new paragraph and
-      // - all changes required for changemark recovery
-      UndoRecording ur = Specman.instance().composeUndo();
-      SwingUtilities.invokeLater(() -> {
-        java.util.List<Markup_V001> recoveredChangemarks = new MarkupRecovery(getWrappedDocument(), changes).recover();
-        new MarkupBackgroundStyleInitializer(textArea, recoveredChangemarks).styleChangedTextSections();
-        ur.close();
-      });
-    }
+    new EnterKeyPressedHandler(textArea, e).handle();
+  }
+
+  private void keySpaceTyped(KeyEvent e) {
+    new SpaceKeyTypedHandler(textArea, e).handle();
   }
 
   private void keyRightPressed(KeyEvent e) {
@@ -155,8 +121,7 @@ public class TextEditAreaKeyListener extends AbstractKeyEventHandler implements 
   }
 
   @Override
-  public void keyReleased(KeyEvent e) {
-  }
+  public void keyReleased(KeyEvent e) {}
 
   public void markSelectedTextAsDeletedInModificationMode() {
     if (!Specman.instance().aenderungenVerfolgen()) {

@@ -93,7 +93,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.isControlDown()) {
-                    if (stepnumberLinkNormalOrChangedStyleSet(getWrappedCaretPosition())) {
+                    if (stepnumberLinkStyleSet(getWrappedCaretPosition())) {
                         scrollToStepnumber();
                     }
                 }
@@ -129,7 +129,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
 
         EditorI editor = Specman.instance();
         Cursor cursorToUse;
-        if (editor.isKeyPressed(KeyEvent.VK_CONTROL) && stepnumberLinkNormalOrChangedStyleSet(hoveredElement)) {
+        if (editor.isKeyPressed(KeyEvent.VK_CONTROL) && stepnumberLinkStyleSet(hoveredElement)) {
             cursorToUse = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
         } else {
             cursorToUse = Cursor.getDefaultCursor();
@@ -143,7 +143,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
     }
 
     @Override public String getToolTipText() {
-        if (stepnumberLinkNormalOrChangedStyleSet(hoveredElement)) {
+        if (stepnumberLinkStyleSet(hoveredElement)) {
             return "STRG+Klicken um Link zu folgen";
         }
         return super.getToolTipText();
@@ -418,7 +418,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
             int length = currentEndOffset.distance(currentOffset);
             WrappedElement element = doc.getCharacterElement(currentOffset);
 
-            if (stepnumberLinkNormalOrChangedStyleSet(element)) {
+            if (stepnumberLinkStyleSet(element)) {
                 String stepnumberLinkID = getStepnumberLinkIDFromElement(currentOffset, currentEndOffset);
                 if (!StepnumberLink.isStepnumberLinkDefect(stepnumberLinkID)) {
                     AbstractSchrittView step = editor.findStepByStepID(stepnumberLinkID);
@@ -435,7 +435,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
 
     public boolean skipToStepnumberLinkStart() {
         WrappedPosition selectionEnd = getWrappedSelectionEnd();
-        if (stepnumberLinkNormalOrChangedStyleSet(selectionEnd.dec())) {
+        if (stepnumberLinkStyleSet(selectionEnd.dec())) {
             setCaretPosition(getStartOffsetFromPosition(selectionEnd.dec()).unwrap());
             return true;
         }
@@ -585,7 +585,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
             WrappedPosition caretPos = getWrappedCaretPosition();
 
             // Add space between two stepnumberlinks to prevent merging them
-            if (stepnumberLinkNormalOrChangedStyleSet(caretPos.dec())) {
+            if (stepnumberLinkStyleSet(caretPos.dec())) {
                 doc.insertString(caretPos, " ", null);
                 caretPos = caretPos.inc();
             }
@@ -619,12 +619,13 @@ public class TextEditArea extends JEditorPane implements EditArea {
     }
 
 
-    public boolean stepnumberLinkNormalOrChangedStyleSet(WrappedPosition position) {
-        return stepnumberLinkNormalOrChangedStyleSet(getWrappedDocument().getCharacterElement(position));
+    public boolean stepnumberLinkStyleSet(WrappedPosition position) {
+        return stepnumberLinkStyleSet(getWrappedDocument().getCharacterElement(position));
     }
 
-    public boolean stepnumberLinkNormalOrChangedStyleSet(WrappedElement element) {
-        return element != null && (stepnumberLinkNormalStyleSet(element) || stepnumberLinkChangedStyleSet(element));
+    public boolean stepnumberLinkStyleSet(WrappedElement element) {
+        return element != null &&
+          (stepnumberLinkNormalStyleSet(element) || stepnumberLinkChangedStyleSet(element));
     }
 
 
@@ -688,7 +689,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
 
     private boolean replaceStepnumberLink(WrappedElement e, String oldID, String newID) {
         WrappedDocument doc = getWrappedDocument();
-        if (stepnumberLinkNormalOrChangedStyleSet(e)) {
+        if (stepnumberLinkStyleSet(e)) {
             String stepnumberLinkID = getStepnumberLinkIDFromElement(e);
             if (stepnumberLinkID.equals(oldID)) {
                 CompoundUndoManager.beginCompoundEdit(doc.getCore());
@@ -720,7 +721,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
     private List<WrappedElement> findStepnumberLinks(WrappedElement e) {
         List<WrappedElement> stepnumberLinks = new ArrayList<>();
 
-        if (stepnumberLinkNormalOrChangedStyleSet(e)) {
+        if (stepnumberLinkStyleSet(e)) {
             stepnumberLinks.add(e);
         }
         for (int i = 0; i < e.getElementCount(); i++) {
