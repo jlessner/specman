@@ -22,7 +22,6 @@ public class QuellSchrittView extends AbstractSchrittView {
         super(editor, parent, new EditorContentModel_V001(".", Aenderungsart.Quellschritt), id, Aenderungsart.Quellschritt);
         setQuellStil();
         setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-        alsGeloeschtMarkierenUDBL(editor);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class QuellSchrittView extends AbstractSchrittView {
     public JComponent getPanel() { return editContainer; }
 
     public SchrittID getZielschrittID(){
-        return zielschritt!=null?zielschritt.getId():null;
+        return zielschritt != null ? zielschritt.getId() : null;
     }
 
     public void setQuellStil() {
