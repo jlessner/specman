@@ -21,7 +21,9 @@ public class TextEditAreaModel_V001 extends AbstractEditAreaModel_V001 {
 
 	public TextEditAreaModel_V001(String text) { this(text, text, new ArrayList<>(), Specman.initialArt()); }
 
-  public TextEditAreaModel_V001(String text, String plainText, List<Markup_V001> markups, Aenderungsart aenderungsart) {
+	public TextEditAreaModel_V001(String text, Aenderungsart aenderungsart) { this(text, text, new ArrayList<>(), aenderungsart); }
+
+	public TextEditAreaModel_V001(String text, String plainText, List<Markup_V001> markups, Aenderungsart aenderungsart) {
 		this.text = text;
 		this.plainText = plainText;
 		this.markups = markups;

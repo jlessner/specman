@@ -29,6 +29,7 @@ Prio II
    funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 
 Aus UC-791
+- Quellschritten fehlt im Label die Nummer des Zielschritts
 - Bei Drücken von DELETE, analoges Verhalten zu BACKSPACE
 - Schrittreferenzen werden im Outro und Catch-Blöcken des UC-791 nicht aktualisiert. Allgemein geht es aber.
 - Focus in Tabellen durch Drücken von TAB verschieben
@@ -40,6 +41,7 @@ Aus UC-791
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
 
 Abschluss für Go-Live
+x Quellschritte sind ohne Content
 x Schrittnummerreferenzen gehen bei Annahme von Änderungen kaputt
 x Neu eingefügte, übergroße Bilder sind initial etwas zu groß, so dass man nicht an den linken Rand herankommt, um die Größe zu ändern
 x Hoch/Runterscrollen über Grenzen von EditAreas innerhalb eines Schritts

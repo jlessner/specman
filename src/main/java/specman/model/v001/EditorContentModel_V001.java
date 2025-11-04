@@ -1,6 +1,7 @@
 package specman.model.v001;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import specman.Aenderungsart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,11 @@ public class EditorContentModel_V001 {
 
   public EditorContentModel_V001() {
     areas = new ArrayList<>();
+  }
+
+  public EditorContentModel_V001(String initialContent, Aenderungsart aenderungsart) {
+    this();
+    addArea(new TextEditAreaModel_V001(initialContent, aenderungsart));
   }
 
   public EditorContentModel_V001(String initialContent) {

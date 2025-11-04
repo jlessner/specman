@@ -7,8 +7,8 @@ import specman.editarea.document.WrappedPosition;
 import javax.swing.text.StyledEditorKit;
 
 /** There is a whole lot of functionality for the class {@link TextEditArea}. To
- * keep the class itself to grow infinitely, most functionality is separated in
- * other classes which need access to the basis functions of {@link TextEditArea}.
+ * keep the class itself from growing infinitely, most functionality is separated in
+ * other classes which need access to the base functionality of {@link TextEditArea}.
  * The mixin here makes delegation to these functions a little bit simpler. The
  * implementing classes can just use func() rather than textEditArea.func() where
  * ever they access the edit area object. */
