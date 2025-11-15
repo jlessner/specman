@@ -1,6 +1,5 @@
 package specman.view;
 
-import org.jetbrains.annotations.NotNull;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
@@ -63,7 +62,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	protected final EditContainer editContainer;
 	protected SchrittID id;
-	@NotNull protected Aenderungsart aenderungsart;
+	protected Aenderungsart aenderungsart;
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
 	protected QuellSchrittView quellschritt;
