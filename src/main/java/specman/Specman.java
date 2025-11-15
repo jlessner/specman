@@ -781,7 +781,16 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 				setDiagrammDatei(new File(ausgewaehlterDateiname));
 			}
+      final Point viewPositionBackup = scrollPane.getViewport().getViewPosition();
+      scrollPane.setVisible(false);
 			StruktogrammModel_V001 model = generiereStruktogrammModel(true);
+      // Generating the model includes cleaning up text edit areas which in turn runs setText which
+      // in turn causes the scroll position to be changed. Therefore the original scroll position
+      // must be restored.
+      SwingUtilities.invokeLater(() -> {
+        scrollPane.getViewport().setViewPosition(viewPositionBackup);
+        scrollPane.setVisible(true);
+      });
 			ModelEnvelope wrappedModel = wrapModel(model);
 
 			ObjectMapper objectMapper = new ObjectMapper();
