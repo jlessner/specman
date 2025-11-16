@@ -11,6 +11,9 @@ import specman.undo.UndoableStepnumberLinkRemoved;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
 import java.awt.event.KeyEvent;
 
 import static specman.editarea.TextStyles.deletedStepnumberLinkStyle;
@@ -33,6 +36,10 @@ class BackspaceKeyPressedHandler extends AbstractKeyEventHandler {
       event.consume();
       return;
     }
+    if (removeTrailingEmptyLine()) {
+      event.consume();
+      return;
+    }
     if (isTrackingChanges()) {
       handleTextDeletion();
       event.consume();
@@ -45,6 +52,35 @@ class BackspaceKeyPressedHandler extends AbstractKeyEventHandler {
       // We are about to merge two paragraphs, so must ensure markup recovery
       backupMarkupsAndRecoverAfterDefaultKeyOperation();
     }
+  }
+
+  /** This compensates a nasty glitch in JEditorPane: usually the underlying document
+   * ends with an invisible newline. However, when the user types RETURN at the end of
+   * the text, this causes a new empty line to appear in the UI without any change in
+   * the document. The ending newline is now visible, so to say, and the use can not
+   * get rid of it by default. So we check for this situation here and cleen up the
+   * text by re-resetting the complete content which causes thr UI to be corrected. */
+  private boolean removeTrailingEmptyLine() {
+    WrappedPosition caretPositon = getWrappedCaretPosition();
+    WrappedPosition startOffset = getWrappedSelectionStart();
+    WrappedPosition endOffset = getWrappedSelectionEnd();
+
+    if (endOffset.equals(startOffset) && caretPositon.isLast() && !caretPositon.isZero()) {
+      try {
+        int rowStart = Utilities.getRowStart(textArea, textArea.getCaretPosition());
+        int rowEnd = Utilities.getRowEnd(textArea, textArea.getCaretPosition());
+        if (rowStart == rowEnd) {
+          try(UndoRecording ur = Specman.instance().composeUndo()) {
+            textArea.setText(textArea.getText());
+          }
+          return true;
+        }
+      }
+      catch(BadLocationException blx) {
+        throw new RuntimeException(blx);
+      }
+    }
+    return false;
   }
 
   /** When pressing BACKSPACE at the very beginning of a text edit area we check if this
