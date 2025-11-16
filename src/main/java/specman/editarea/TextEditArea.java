@@ -495,6 +495,8 @@ public class TextEditArea extends JEditorPane implements EditArea {
             TextEditArea splittedArea = copyArea();
             document.removeFrom(textPosition);
             splittedArea.remove(textPosition.toModel());
+            WrappedDocument splittedAreaDoc = splittedArea.getWrappedDocument();
+            splittedArea.setCaretPosition(splittedAreaDoc.start().unwrap());
             return splittedArea;
         }
         return null;

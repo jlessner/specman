@@ -36,12 +36,12 @@ Aus UC-791
 - Bei Drücken von DELETE, analoges Verhalten zu BACKSPACE
 - Schrittreferenzen werden im Outro und Catch-Blöcken des UC-791 nicht aktualisiert. Allgemein geht es aber.
 - Focus in Tabellen durch Drücken von TAB verschieben
-- Falsche Caret-Position bei Drücken von RETURN in einem Listitem
-- Unsaubere Trennung bei Drücken von RETURN innerhalb eines Listitem, das man grade neu angelegt hat. Wenn man die Datei erst einmal speichert, funktioniert es anschließend.
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Unsaubere Trennung bei Drücken von RETURN innerhalb eines Listitem, das man grade neu angelegt hat. Wenn man die Datei erst einmal speichert, funktioniert es anschließend.
+x Falsche Caret-Position bei Drücken von RETURN in einem Listitem
 
 Abschluss für Go-Live
 x Quellschritten fehlt im Label die Nummer des Zielschritts

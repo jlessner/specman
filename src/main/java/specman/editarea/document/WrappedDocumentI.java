@@ -4,7 +4,7 @@ import javax.swing.text.AttributeSet;
 
 public interface WrappedDocumentI {
   void remove(WrappedPosition offs, int len);
-  default void removeFrom(WrappedPosition offs) { remove(offs, getLength() - offs.toModel() - 1); }
+  default void removeFrom(WrappedPosition offs) { remove(offs, getLength() - offs.toModel()); }
   default void remove(int len) { remove(fromModel(0), len); }
   void insertString(WrappedPosition offset, String str, AttributeSet a);
   String getText(WrappedPosition offset, int length);

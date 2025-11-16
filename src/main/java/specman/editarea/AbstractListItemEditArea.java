@@ -161,8 +161,8 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   public void split(TextEditArea initiatingEditArea) {
     EditorI editor = Specman.instance();
     try (UndoRecording ur = editor.composeUndo()) {
-      WrappedPosition initiatingCarretPosition = initiatingEditArea.getWrappedCaretPosition();
-      TextEditArea splitTextEditArea = initiatingEditArea.split(initiatingCarretPosition);
+      WrappedPosition initiatingCaretPosition = initiatingEditArea.getWrappedCaretPosition();
+      TextEditArea splitTextEditArea = initiatingEditArea.split(initiatingCaretPosition);
       if (splitTextEditArea == null) {
         splitTextEditArea = new TextEditArea(new TextEditAreaModel_V001(""), initiatingEditArea.getFont());
       }
