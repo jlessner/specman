@@ -1,5 +1,6 @@
 package specman.model.v001;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import specman.Aenderungsart;
 import specman.Specman;
 
@@ -29,4 +30,7 @@ public class TextEditAreaModel_V001 extends AbstractEditAreaModel_V001 {
 		this.markups = markups;
 		this.aenderungsart = aenderungsart;
 	}
+
+  @JsonIgnore
+  public boolean isEmpty() { return text.isEmpty(); }
 }

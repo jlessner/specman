@@ -68,12 +68,15 @@ import static specman.editarea.TextStyles.quellschrittStil;
 import static specman.editarea.TextStyles.stepnumberLinkStyleColor;
 
 public class TextEditArea extends JEditorPane implements EditArea {
+  private static final String INITIAL_EMPTY_CONTENT_INDICATOR = "x";
+
     private WrappedElement hoveredElement;
     private Aenderungsart aenderungsart;
 
     public TextEditArea(TextEditAreaModel_V001 model, Font font) {
         this.aenderungsart = model.aenderungsart;
-        Specman.instance().instrumentWysEditor(this, model.text, 0);
+        String initialText = model.isEmpty() ? INITIAL_EMPTY_CONTENT_INDICATOR : model.text;
+        Specman.instance().instrumentWysEditor(this, initialText, 0);
         putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         setFont(font);
         addKeyListener(new TextEditAreaKeyListener(this));
@@ -82,6 +85,14 @@ public class TextEditArea extends JEditorPane implements EditArea {
         setBackground(aenderungsart.toBackgroundColor());
         registerToolTipManager();
         styleChangedTextSections(model);
+        if (model.isEmpty()) {
+          clear();
+        }
+    }
+
+    private void clear() {
+      WrappedDocument wd = getWrappedDocument();
+      wd.removeFrom(wd.start());
     }
 
     /** Produces an empty TextEditArea which by first creating it from a single letter model
@@ -96,9 +107,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
      * <p>
      * the problem can still arise by <div>s, but the compensation here, already helps a lot. */
     public TextEditArea(Font font) {
-      this(new TextEditAreaModel_V001("x"), font);
-      WrappedDocument wd = getWrappedDocument();
-      wd.removeFrom(wd.start());
+      this(new TextEditAreaModel_V001(""), font);
     }
 
     private void styleChangedTextSections(TextEditAreaModel_V001 model) {
