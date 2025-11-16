@@ -117,9 +117,11 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   public int catchEntfernen(CatchSchrittSequenzView catchSequence) {
     int index = catchSequences.indexOf(catchSequence);
     catchSequences.remove(index);
-    sequencesWidthPercent = releasePercent(index, sequencesWidthPercent);
-    recomputeLayout();
-    if (catchSequences.isEmpty()) {
+    if (!catchSequences.isEmpty()) {
+      sequencesWidthPercent = releasePercent(index, sequencesWidthPercent);
+      recomputeLayout();
+    }
+    else {
       bereichPanel.setVisible(false);
     }
     return index;
