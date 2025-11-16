@@ -39,28 +39,7 @@ import specman.view.SchrittSequenzView;
 import specman.view.ZweigSchrittSequenzView;
 
 import javax.imageio.ImageIO;
-import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.JWindow;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
@@ -109,6 +88,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	JPanel hauptSequenzContainer;
 	SpaltenResizer breitenAnpasser;
 	JScrollPane scrollPane;
+  PausableViewport viewport;
 	EditContainer intro, outro;
 	FormLayout hauptlayout;
 	int diagrammbreite = INITIAL_DIAGRAMM_WIDTH;
@@ -141,6 +121,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		hauptSequenz = new SchrittSequenzView();
 
 		scrollPane = new JScrollPane();
+    viewport = new PausableViewport();
+    scrollPane.setViewport(viewport);
 		//TODO
 		scrollPane.addMouseWheelListener(new DragMouseAdapter(this));
 		contentPane.add(scrollPane, CC.xy(2, 3));
@@ -781,16 +763,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 				setDiagrammDatei(new File(ausgewaehlterDateiname));
 			}
-      final Point viewPositionBackup = scrollPane.getViewport().getViewPosition();
-      scrollPane.setVisible(false);
-			StruktogrammModel_V001 model = generiereStruktogrammModel(true);
       // Generating the model includes cleaning up text edit areas which in turn runs setText which
-      // in turn causes the scroll position to be changed. Therefore the original scroll position
-      // must be restored.
-      SwingUtilities.invokeLater(() -> {
-        scrollPane.getViewport().setViewPosition(viewPositionBackup);
-        scrollPane.setVisible(true);
-      });
+      // in turn causes the scroll position to be changed. Therefore, the temporarily pause scrolling.
+      pauseScrolling();
+			StruktogrammModel_V001 model = generiereStruktogrammModel(true);
 			ModelEnvelope wrappedModel = wrapModel(model);
 
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -1358,4 +1334,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return result;
 	}
 
+  @Override
+  public void pauseScrolling() {
+    viewport.pauseScrolling();
+  }
 }

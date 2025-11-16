@@ -119,6 +119,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	@Override
 	public void focusLost(FocusEvent e) {
 		if (catchSequence != null && aenderungsart != Aenderungsart.Geloescht) {
+      Specman.instance().pauseScrolling();
 			catchSequence.updateHeading(editContainer.editorContent2Model(true));
 		}
 	}
