@@ -39,6 +39,7 @@ import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.SCHRITTNR_FONTSIZE;
 import static specman.editarea.TextStyles.labelFont;
+import static specman.model.v001.EditorContentModel_V001.empty;
 
 /** Zentrales grafisches Containerpanel für einen zusammenhängenden Text mit einem Nummernlabel
  * für Schrittbeschreibungen. Normalerweise besteht diese Beschreibung aus einem einzelnen HTML
@@ -164,7 +165,7 @@ public class EditContainer extends JPanel {
 	}
 
 	public EditContainer(EditorI editor) {
-		this(editor, new EditorContentModel_V001(""), null);
+		this(editor, empty(), null);
 	}
 
 	/** Entfernt im Rahmen der Übernahme oder Rücknahme von Änderungen alle Einfärbungen,
@@ -210,19 +211,6 @@ public class EditContainer extends JPanel {
 
 	public void setId(String id) {
 		schrittNummer.setText(id);
-	}
-
-	public void setPlainText(String plainText) {
-		setPlainText(plainText, StyleConstants.ALIGN_LEFT);
-	}
-
-	public void setPlainText(String plainText, int orientation) {
-		EditorContentModel_V001 content = switch (orientation) {
-			case StyleConstants.ALIGN_CENTER -> center(plainText);
-			case StyleConstants.ALIGN_RIGHT -> right(plainText);
-			default -> new EditorContentModel_V001(plainText);
-		};
-		initLayoutAndEditAreas(content);
 	}
 
 	public EditorContentModel_V001 editorContent2Model(boolean formatierterText) {

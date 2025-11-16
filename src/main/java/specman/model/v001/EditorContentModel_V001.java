@@ -18,9 +18,13 @@ public class EditorContentModel_V001 {
     addArea(new TextEditAreaModel_V001(initialContent, aenderungsart));
   }
 
-  public EditorContentModel_V001(String initialContent) {
+  public static EditorContentModel_V001 empty() {
+    return new EditorContentModel_V001(new TextEditAreaModel_V001(""));
+  }
+
+  public EditorContentModel_V001(AbstractEditAreaModel_V001 initialContent) {
     this();
-    addArea(new TextEditAreaModel_V001(initialContent));
+    addArea(initialContent);
   }
 
   public EditorContentModel_V001(List<AbstractEditAreaModel_V001> areas) {

@@ -10,11 +10,9 @@ import org.jetbrains.annotations.Nullable;
 import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
 import specman.editarea.EditArea;
+import specman.editarea.markups.MarkupType;
 import specman.model.ModelEnvelope;
-import specman.model.v001.AbstractSchrittModel_V001;
-import specman.model.v001.EditorContentModel_V001;
-import specman.model.v001.SchrittSequenzModel_V001;
-import specman.model.v001.StruktogrammModel_V001;
+import specman.model.v001.*;
 import specman.pdf.PDFExportChooser;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
@@ -64,6 +62,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static specman.Aenderungsart.Hinzugefuegt;
+import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
@@ -494,7 +494,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
 				if (instance != null
 					&& instance.aenderungenVerfolgen()
-					&& schritt.getAenderungsart() != Aenderungsart.Hinzugefuegt
+					&& schritt.getAenderungsart() != Hinzugefuegt
 					&& !(schritt instanceof CatchBereich)) {
 						//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
 						if (schritt.getAenderungsart() != Aenderungsart.Geloescht) {
@@ -1178,13 +1178,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public static EditorContentModel_V001 initialtext(String text) { return initialtext(text, null); }
 
 	public static EditorContentModel_V001 initialtext(String text, @Nullable String align) {
-		String styledText = (instance() != null && instance().aenderungenVerfolgen()) ?
-				"<span style=\"background-color:" + INDIKATOR_GELB + "\">" + text + "</span>" :
-				text;
-		if (align != null) {
-				styledText = "<div align='" + align + "'>" + styledText + "</div>";
-		}
-		return new EditorContentModel_V001(styledText);
+    List<Markup_V001> markups = new ArrayList<>();
+    if (instance().aenderungenVerfolgen()) {
+      markups.add(new Markup_V001(0, text.length()-1, MarkupType.Changed));
+    }
+    String styledText = (align != null)
+      ? "<div align='" + align + "'>" + text + "</div>"
+      : text;
+    TextEditAreaModel_V001 textModel = new TextEditAreaModel_V001(styledText, text, markups, initialArt());
+		return new EditorContentModel_V001(textModel);
 	}
 
 	public static Color schrittHintergrund() {
@@ -1195,7 +1197,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	//Methode um die Aenderugnsart von neuen Schritten auf hinzugefügt zu ändern, wenn die Änderungsverfolgung aktiviert ist
 	public static Aenderungsart initialArt() {
 		return (instance() != null && instance().aenderungenVerfolgen()) ?
-				Aenderungsart.Hinzugefuegt : Aenderungsart.Untracked;
+				Hinzugefuegt : Untracked;
 	}
 
 

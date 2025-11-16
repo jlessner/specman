@@ -108,10 +108,6 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return direction == RelativeStepPosition.After ? id.naechsteID() : id.sameID();
 	}
 
-	public void setPlainText(String plainText) {
-		editContainer.setPlainText(plainText);
-	}
-
 	protected EditorContentModel_V001 getEditorContent(boolean formatierterText) {
 		return editContainer.editorContent2Model(formatierterText);
 	}

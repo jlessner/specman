@@ -1,6 +1,6 @@
 Changemark-Recovery
 Prio I
-- Der initiale Text eines Schritts wird nicht persistent entfärbt.
+x Der initiale Text eines Schritts wird nicht persistent entfärbt.
 x Wiederherstellung auch bei
   x Split von List Items, für das untere Item
   x Einfügen von Bild oder Tabelle, für den unteren Text

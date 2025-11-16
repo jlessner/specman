@@ -16,6 +16,7 @@ import specman.undo.props.UDBL;
 import java.awt.*;
 
 import static specman.Specman.schrittHintergrund;
+import static specman.model.v001.EditorContentModel_V001.empty;
 
 /**
  * Im Gegensatz zum Struktogramm-Standard verwenden wird die <i>rechte</i> Seite für die Sequenz der
@@ -32,14 +33,14 @@ public class IfSchrittView extends IfElseSchrittView {
 	
 	public IfSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerString, SchrittID id, Aenderungsart aenderungsart) {
 		super(editor, parent, initialerString, id, aenderungsart, false);
-		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), new EditorContentModel_V001("")));
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), empty()));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), EditContainer.right("Ja")));
 		ifBreite = SPALTENLAYOUT_UMGEHUNG_GROESSE + 2; /**@author PVN, Dueck */ 
 	}
 
 	public IfSchrittView(EditorI editor, SchrittSequenzView parent, IfSchrittModel_V001 model) {
 		super(editor, parent, model.inhalt, model.id, model.aenderungsart, false);
-		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), new EditorContentModel_V001("")));
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), empty()));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		this.setBackgroundUDBL(new Color(model.farbe));
 		ifBreiteSetzen(model.leerBreite);
