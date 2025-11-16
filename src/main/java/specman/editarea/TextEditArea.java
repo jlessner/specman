@@ -84,6 +84,23 @@ public class TextEditArea extends JEditorPane implements EditArea {
         styleChangedTextSections(model);
     }
 
+    /** Produces an empty TextEditArea which by first creating it from a single letter model
+     * object and removing that letter immediately afterwards. This crazy-looking procedure
+     * compensates a strange default behaviour of JEditorPane: when creating it immediately
+     * with empty content, the content, being interactively added later on, sometimes gets
+     * wrapped into <p style=\"margin-top: 0\">...</p>. The reason is unclear and it usually
+     * doesn't matter. However, it causes unintuitive behaviour when merging two text areas,
+     * e.g. when dissolving an area by pressing BACKSPACE at the very beginning of a text.
+     * Instead of a single flowtext, the paragraph boundary is still around as is represented
+     * as a line break in the merged text. That's different from the user's expectation.
+     * <p>
+     * the problem can still arise by <div>s, but the compensation here, already helps a lot. */
+    public TextEditArea(Font font) {
+      this(new TextEditAreaModel_V001("x"), font);
+      WrappedDocument wd = getWrappedDocument();
+      wd.removeFrom(wd.start());
+    }
+
     private void styleChangedTextSections(TextEditAreaModel_V001 model) {
         new MarkupBackgroundStyleInitializer(this, model.markups).styleChangedTextSections();
     }

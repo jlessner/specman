@@ -6,6 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
+import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedPosition;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -164,7 +165,7 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
       WrappedPosition initiatingCaretPosition = initiatingEditArea.getWrappedCaretPosition();
       TextEditArea splitTextEditArea = initiatingEditArea.split(initiatingCaretPosition);
       if (splitTextEditArea == null) {
-        splitTextEditArea = new TextEditArea(new TextEditAreaModel_V001(""), initiatingEditArea.getFont());
+        splitTextEditArea = new TextEditArea(initiatingEditArea.getFont());
       }
       AbstractListItemEditArea splitListItemEditArea =  createSplittedItem(splitTextEditArea);
       moveEditAreas(initiatingEditArea, splitListItemEditArea);

@@ -34,7 +34,7 @@ public class ParagraphCutter {
 
     caretArea = initiatingArea.copySection(caretAreaStart, caretAreaEnd);
     if (caretArea == null) {
-      caretArea = new TextEditArea(new TextEditAreaModel_V001(""), initiatingArea.getFont());
+      caretArea = new TextEditArea(initiatingArea.getFont());
     }
     trailingArea = initiatingArea.copySection(trailingAreaStart, initiatingDocument.end());
     initiatingArea.shrink(leadingAreaStart, leadingAreaEnd);

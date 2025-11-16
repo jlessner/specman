@@ -28,11 +28,6 @@ x Speichern sorgt jetzt für ein unerwünschtes Durchscrollen durch die gesamte 
    funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 
 Aus UC-791
-- Bei Umwandlung von ListItem zu Text durch Drücken von BACKSPACE verschwindet das letzte Zeichen des Texts,
-   wenn es sich um das letzte Item einer Liste handelt, d.h. wenn es in dem Zuge mit einer nachfolgenden Text Area
-   zusammengeführt wird.
-- Bei Entfernen einen Listitem-Grenze durch Drücken von BACKSPACE verschwindet etwaiger markierter Text nicht.
-   Vielleicht einfach das Event nicht konsumieren?
 - Document.removeText() sorgt für ein Scrollen zu dem betreffenden Text. Das ist meistens nicht gewollt, z.B.
   - Beim Ändern der Texte von Break-Schritte, was auch zur Änderung im Catch-Schritt führt
   - Beim Speichern, wo über setText(getText()) der Inhalt aller Schritte bereinigt wird
@@ -45,8 +40,16 @@ Aus UC-791
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Merge einer Text Edit Area mit einem vorhergehenden List Ite fühlt sich nicht intuitiv an. Es bleibt ein Zeilenumbruch
+   zwischen den beiden gemergten Texten übrig. Der sollte weg.
+   Ursache liegt bei der *Anlage* neuer List Items. Da legt das JEditorPain aus noch unbekanntem Grund ein
+   <p style=\"margin-top: 0\">...</p> um den Text herum. Beim Merge bleibt dann korrekterweise ein Zeilenumbruch erhalten.
 x Unsaubere Trennung bei Drücken von RETURN innerhalb eines Listitem, das man grade neu angelegt hat. Wenn man die Datei erst einmal speichert, funktioniert es anschließend.
 x Falsche Caret-Position bei Drücken von RETURN in einem Listitem
+x Bei Entfernen einen Listitem-Grenze durch Drücken von BACKSPACE verschwindet etwaiger markierter Text nicht.
+x Bei Umwandlung von ListItem zu Text durch Drücken von BACKSPACE verschwindet das letzte Zeichen des Texts,
+   wenn es sich um das letzte Item einer Liste handelt, d.h. wenn es in dem Zuge mit einer nachfolgenden Text Area
+   zusammengeführt wird.
 
 Abschluss für Go-Live
 x Quellschritten fehlt im Label die Nummer des Zielschritts
