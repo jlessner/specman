@@ -42,6 +42,7 @@ public interface EditorI extends FocusListener {
 	void addTable(int numColumns, int numRows);
 	void toggleListItem(boolean ordered);
   void pauseScrolling();
+  void resumeScrolling();
 
   List<JTextComponent> queryAllTextComponents(JTextComponent tc);
 }

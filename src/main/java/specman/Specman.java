@@ -768,6 +768,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
       pauseScrolling();
 			StruktogrammModel_V001 model = generiereStruktogrammModel(true);
 			ModelEnvelope wrappedModel = wrapModel(model);
+      resumeScrolling();
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.enableDefaultTyping();
@@ -828,6 +829,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			neueSchritteNachinitialisieren();
 			quellZielZuweisung(model.queryAllSteps());
 			hauptSequenz.viewsNachinitialisieren();
+      intro.registerAllExistingStepnumbers();
+      outro.registerAllExistingStepnumbers();
 			aenderungenVerfolgen.setSelected(model.changeModeenabled);
 			recentFiles.add(diagramFile);
 			undoManager.discardAllEdits();
@@ -1339,5 +1342,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
   @Override
   public void pauseScrolling() {
     viewport.pauseScrolling();
+  }
+
+  @Override
+  public void resumeScrolling() {
+    viewport.resumeScrolling();
   }
 }

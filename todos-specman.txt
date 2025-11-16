@@ -30,12 +30,12 @@ x Speichern sorgt jetzt für ein unerwünschtes Durchscrollen durch die gesamte 
 
 Aus UC-791
 - Bei Drücken von DELETE, analoges Verhalten zu BACKSPACE
-- Schrittreferenzen werden im Outro und Catch-Blöcken des UC-791 nicht aktualisiert. Allgemein geht es aber.
 - Focus in Tabellen durch Drücken von TAB verschieben
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Schrittreferenzen werden im Outro und Catch-Blöcken des UC-791 nicht aktualisiert. Allgemein geht es aber.
 x Document.removeText() sorgt für ein Scrollen zu dem betreffenden Text. Das ist meistens nicht gewollt, z.B.
   - Beim Ändern der Texte von Break-Schritte, was auch zur Änderung im Catch-Schritt führt
   - Beim Speichern, wo über setText(getText()) der Inhalt aller Schritte bereinigt wird

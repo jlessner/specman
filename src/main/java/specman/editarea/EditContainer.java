@@ -22,6 +22,7 @@ import specman.pdf.Shape;
 import specman.undo.UndoableEditAreaRemoved;
 import specman.undo.UndoableEditAreaAdded;
 import specman.undo.manager.UndoRecording;
+import specman.view.AbstractSchrittView;
 
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
@@ -33,6 +34,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
@@ -771,4 +773,21 @@ public class EditContainer extends JPanel {
 		}
 	}
 
+  public void registerAllExistingStepnumbers() {
+    EditorI editor = Specman.instance();
+    HashMap<TextEditArea, List<String>> stepnumberLinks = new HashMap<>();
+    findStepnumberLinkIDs(stepnumberLinks);
+    for (Map.Entry<TextEditArea, List<String>> listEntry : stepnumberLinks.entrySet()) {
+      TextEditArea referencingTextEditArea = listEntry.getKey();
+      List<String> stepIDs = listEntry.getValue();
+
+      for (String stepID : stepIDs) {
+        if (!StepnumberLink.isStepnumberLinkDefect(stepID)) {
+          AbstractSchrittView step = editor.findStepByStepID(stepID);
+          step.registerStepnumberLink(referencingTextEditArea);
+        }
+      }
+    }
+
+  }
 }

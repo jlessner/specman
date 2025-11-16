@@ -22,6 +22,11 @@ public class PausableViewport extends JViewport {
   public void pauseScrolling() {
     if (scrollingEnabled) {
       scrollingEnabled = false;
+    }
+  }
+
+  public void resumeScrolling() {
+    if (!scrollingEnabled) {
       SwingUtilities.invokeLater(() -> scrollingEnabled = true);
     }
   }

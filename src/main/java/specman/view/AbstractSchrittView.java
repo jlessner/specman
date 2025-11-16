@@ -424,20 +424,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	 * However, to benefit from such a cache it would need to be shared with other {@link AbstractSchrittView}s
 	 */
 	protected void registerAllExistingStepnumbers() {
-		EditorI editor = Specman.instance();
-		HashMap<TextEditArea, List<String>> stepnumberLinks = new HashMap<>();
-		editContainer.findStepnumberLinkIDs(stepnumberLinks);
-		for (Map.Entry<TextEditArea, List<String>> listEntry : stepnumberLinks.entrySet()) {
-			TextEditArea referencingTextEditArea = listEntry.getKey();
-			List<String> stepIDs = listEntry.getValue();
-
-			for (String stepID : stepIDs) {
-				if (!StepnumberLink.isStepnumberLinkDefect(stepID)) {
-					AbstractSchrittView step = editor.findStepByStepID(stepID);
-					step.registerStepnumberLink(referencingTextEditArea);
-				}
-			}
-		}
+    editContainer.registerAllExistingStepnumbers();
 	}
 
 	public AbstractSchrittView findeSchrittZuId(SchrittID id) {

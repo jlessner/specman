@@ -68,7 +68,7 @@ import static specman.editarea.TextStyles.quellschrittStil;
 import static specman.editarea.TextStyles.stepnumberLinkStyleColor;
 
 public class TextEditArea extends JEditorPane implements EditArea {
-  private static final String INITIAL_EMPTY_CONTENT_INDICATOR = "x";
+    private static final String INITIAL_EMPTY_CONTENT_INDICATOR = "x";
 
     private WrappedElement hoveredElement;
     private Aenderungsart aenderungsart;

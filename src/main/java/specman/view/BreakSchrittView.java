@@ -121,6 +121,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 		if (catchSequence != null && aenderungsart != Aenderungsart.Geloescht) {
       Specman.instance().pauseScrolling();
 			catchSequence.updateHeading(editContainer.editorContent2Model(true));
+      Specman.instance().resumeScrolling();
 		}
 	}
 
