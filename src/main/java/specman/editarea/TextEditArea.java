@@ -386,7 +386,15 @@ public class TextEditArea extends JEditorPane implements EditArea {
     }
 
     public WrappedPosition getWrappedCaretPosition() {
-        return getWrappedDocument().fromUI(getCaretPosition());
+      int caretPosition = getCaretPosition();
+      // Not so nice, but hopefully OK: There might occur the situation that a document starts with an
+      // unvisible newline but the caret position is 0, so that it points to that invisible character.
+      // In that case we keep this 0 rather than compensating anything. There should only bew rare cases
+      // where this comes into play. The one we know of is when the user keeps pressing Backspace in a
+      // text area whichj is already empty.
+      return (caretPosition > 0)
+        ? getWrappedDocument().fromUI(getCaretPosition())
+        : getWrappedDocument().fromModel(0);
     }
 
     public MarkedCharSequence findMarkups() {
@@ -400,10 +408,11 @@ public class TextEditArea extends JEditorPane implements EditArea {
     }
 
     /** When pressing backspace at the very beginning of a text area, we check if this indicates that the
-     * edit area should be dissolved in the sense that its is removed and its content is merged with the
-     * one of a preceeding edit area. */
-    public void dissolveEditArea() {
-        getParent().tryDissolveEditAreaUDBL(this);
+     * edit area should be dissolved in the sense that it is removed and its content is merged with the
+     * one of a preceding and / or succeeding edit area. The method returns null if the structure of edit
+     * areas didn't change. */
+    public EditArea dissolveEditArea() {
+        return getParent().tryDissolveEditAreaUDBL(this);
     }
 
     private void removeTextAndUnregisterStepnumberLinks(WrappedPosition startOffset, WrappedPosition endOffset, EditorI editor) {

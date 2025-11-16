@@ -8,6 +8,7 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
+import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedPosition;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -654,13 +655,14 @@ public class EditContainer extends JPanel {
 		updateBounds();
 	}
 
-	public void tryDissolveEditAreaUDBL(TextEditArea initiatingTextEditArea) {
+	public EditArea tryDissolveEditAreaUDBL(TextEditArea initiatingTextEditArea) {
 		// The text is the leading one in a list item
 		if (getParent() instanceof AbstractListItemEditArea) {
 			// Dissolve the list item by merging its content into the upper edit container
 			AbstractListItemEditArea liEditArea = (AbstractListItemEditArea)getParent();
 			EditArea lastLiftUp = liEditArea.getParent().dissolveListItemEditAreaUDBL(liEditArea, liEditArea.aenderungsart);
 			Specman.instance().diagrammAktualisieren(lastLiftUp);
+      return lastLiftUp;
 		}
 		// The preceeding edit area is a list item
 		else {
@@ -670,9 +672,11 @@ public class EditContainer extends JPanel {
 				if (preceedingArea.isListItemArea()) {
 					TextEditArea nextToFocus = mergeTextIntoListItem(preceedingArea.asListItemArea(), initiatingTextEditArea);
 					Specman.instance().diagrammAktualisieren(nextToFocus);
+          return nextToFocus;
 				}
 			}
 		}
+    return null;
 	}
 
 	private TextEditArea mergeTextIntoListItem(AbstractListItemEditArea target, TextEditArea initiatingTextEditArea) {
@@ -687,7 +691,7 @@ public class EditContainer extends JPanel {
 
 	/** Remove the passed list item edit area from this edit container and add its content areas directly instead.
 	 * If the preceeding edit area is a text area, merge the first text edit area of the list item with it.
-	 * If the succeeding edit area is a text area and the list item's last edit aera es well, merge them. */
+	 * If the succeeding edit area is a text area and the list item's last edit area es well, merge them. */
 	public EditArea dissolveListItemEditAreaUDBL(AbstractListItemEditArea liEditArea, Aenderungsart aenderungsart) {
 		EditorI editor = Specman.instance();
 		List<EditArea> liftUpAreas = liEditArea.content.modifyableEditAreas();
@@ -712,8 +716,13 @@ public class EditContainer extends JPanel {
 			if (trailingTextMergeRequired) {
 				int lastLiftUpAreaIndex = indexOf(lastLiftUpArea);
 				followingTextEditArea = editAreas.get(lastLiftUpAreaIndex+1).asTextArea();
-				lastLiftUpArea.asTextArea().appendText(followingTextEditArea);
+        TextEditArea lastLiftUpTextArea = lastLiftUpArea.asTextArea();
+        lastLiftUpTextArea.appendText(followingTextEditArea);
 				removeEditAreaComponent(followingTextEditArea);
+        if (!leadingTextMergeRequired) {
+          WrappedDocument lastLiftUpAreaDoc = lastLiftUpTextArea.getWrappedDocument();
+          lastLiftUpTextArea.setCaretPosition(lastLiftUpAreaDoc.start().unwrap());
+        }
 			}
 			editor.addEdit(new UndoableListItemDissolved(this, liEditArea, liEditAreaIndex, liftUpAreas, followingTextEditArea));
 		}

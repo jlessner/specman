@@ -28,6 +28,11 @@ x Speichern sorgt jetzt für ein unerwünschtes Durchscrollen durch die gesamte 
    funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 
 Aus UC-791
+- Bei Umwandlung von ListItem zu Text durch Drücken von BACKSPACE verschwindet das letzte Zeichen des Texts,
+   wenn es sich um das letzte Item einer Liste handelt, d.h. wenn es in dem Zuge mit einer nachfolgenden Text Area
+   zusammengeführt wird.
+- Bei Entfernen einen Listitem-Grenze durch Drücken von BACKSPACE verschwindet etwaiger markierter Text nicht.
+   Vielleicht einfach das Event nicht konsumieren?
 - Document.removeText() sorgt für ein Scrollen zu dem betreffenden Text. Das ist meistens nicht gewollt, z.B.
   - Beim Ändern der Texte von Break-Schritte, was auch zur Änderung im Catch-Schritt führt
   - Beim Speichern, wo über setText(getText()) der Inhalt aller Schritte bereinigt wird

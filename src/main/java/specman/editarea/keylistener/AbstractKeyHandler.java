@@ -22,7 +22,7 @@ public class AbstractKeyHandler implements TextEditAreaAccessMixin {
         return true;
       }
 
-      for (WrappedPosition i = getWrappedSelectionStart(); i.less(getWrappedSelectionEnd()); i.inc()) {
+      for (WrappedPosition i = getWrappedSelectionStart(); i.less(getWrappedSelectionEnd()); i = i.inc()) {
         if (stepnumberLinkStyleSet(i)) {
           if (getStartOffsetFromPosition(i).less(getWrappedSelectionStart()) ||
             getEndOffsetFromPosition(i).greater(getWrappedSelectionEnd())) {

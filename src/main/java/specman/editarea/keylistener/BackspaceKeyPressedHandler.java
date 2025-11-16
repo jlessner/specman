@@ -24,8 +24,8 @@ class BackspaceKeyPressedHandler extends AbstractKeyEventHandler {
 
   void handle() {
     WrappedPosition caretPos = getWrappedCaretPosition();
-    if (caretPos.isZero()) {
-      textArea.dissolveEditArea();
+    if (dissolveEdiArea(textArea, caretPos)) {
+      event.consume();
       return;
     }
     if (shouldPreventActionInsideStepnumberLink()) {
@@ -41,10 +41,23 @@ class BackspaceKeyPressedHandler extends AbstractKeyEventHandler {
       removeStepnumberLinkBefore();
       event.consume();
     }
-    else if (ParagraphBoundary.at(caretPos.dec())) {
+    else if (!caretPos.isZero() && ParagraphBoundary.at(caretPos.dec())) {
       // We are about to merge two paragraphs, so must ensure markup recovery
       backupMarkupsAndRecoverAfterDefaultKeyOperation();
     }
+  }
+
+  /** When pressing BACKSPACE at the very beginning of a text edit area we check if this
+   * will cause the area to be dissolved by merging its content to other areas. However,
+   * we do that only of there is no text selected at this moment. A text selection will
+   * cause the ordinary handling to take place. */
+  private boolean dissolveEdiArea(TextEditArea textArea, WrappedPosition caretPos) {
+    if (caretPos.isZero()) {
+      if (textArea.getSelectionStart() == textArea.getSelectionEnd()) {
+        return textArea.dissolveEditArea() != null;
+      }
+    }
+    return false;
   }
 
   private void handleTextDeletion() {
