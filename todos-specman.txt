@@ -35,9 +35,6 @@ x Speichern sorgt jetzt für ein unerwünschtes Durchscrollen durch die gesamte 
    funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 
 Aus UC-791
-- Es kommt hin und wieder zu Zeilen, die im PDF etwas zu lang sind und dann in die nächste Zeile umbrechen
-   Kann man das Feld für den Text einfach etwas zu breit definieren? Besser der Text ragt gelegentlich rechts ein wenig raus
-   als wenn er umbricht und den Text darunter unleserlich macht
 - Bei Drücken von DELETE, analoges Verhalten zu BACKSPACE
 - Focus in Tabellen durch Drücken von TAB verschieben
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
@@ -154,6 +151,10 @@ x PDF-Export
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Springen über Schrittreferenzen im PDF
+  - Es kommt hin und wieder zu Zeilen, die im PDF etwas zu lang sind und dann in die nächste Zeile umbrechen
+     Kann man das Feld für den Text einfach etwas zu breit definieren? Besser der Text ragt gelegentlich rechts ein wenig
+     raus als wenn er umbricht und den Text darunter unleserlich macht. Problem scheint aber hauptsächlich zu entstehen,
+     wenn der Inhalt skaliert werden muss. Wenn das also sauber funktioniert, ist das Problem hier vielleicht weg.
   x Initiales Verzeichnis für PDF-Export = Ablageort der .nsd-Datei
   x Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen
   x Renderfehler von gutenmorgen.xsd lösen:
@@ -215,8 +216,7 @@ x Neue Texte in Tabellen sind im HTML eingefasst in <p style=\"margin-top: 0\"> 
     Das führt zu einer verschobenen Darstellung im PDF-Export
 x Der Dialog für Schritt-Links hat keinen Scrollbalken und erlaubt folglich keine Schritte mit höheren Nummern zu adressieren
 x Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
-- Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche und
-    HTML-Aufzählungszeichen zurück
+- Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche zurück
 - Ändern des Paragraphtypen lässt sich nicht zurücknehmen
 - Letzter Zeilenumbruch in einem Schritt kann nicht entfernt werden
     - Problem ist, dass der Umbruch nicht entfernt werden kann, da der Offset angeblich größer als das Dokumentenende ist:
