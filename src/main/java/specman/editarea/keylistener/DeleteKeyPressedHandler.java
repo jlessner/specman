@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 
 import static specman.editarea.markups.CharType.ParagraphBoundary;
 
-class DeleteKeyPressedHandler extends AbstractKeyEventHandler{
+class DeleteKeyPressedHandler extends AbstractRemovalKeyPressedHandler {
   DeleteKeyPressedHandler(TextEditArea textArea, KeyEvent keyEvent) {
     super(textArea, keyEvent);
   }
@@ -29,12 +29,17 @@ class DeleteKeyPressedHandler extends AbstractKeyEventHandler{
     }
   }
 
-  private void handleTextDeletion() {
-//    if (getSelectionStart() == getSelectionEnd()) {
-//      handleTextDeletion(getSelectionStart() - 1, getSelectionEnd());
-//    } else {
-//      handleTextDeletion(getSelectionStart(), getSelectionEnd());
-//    }
+  protected void handleTextDeletion() {
+    int deleteTo = (getSelectionStart() == getSelectionEnd())
+      ? getSelectionEnd() + 1
+      : getSelectionEnd();
+    handleTextDeletion(getSelectionStart(), deleteTo);
+    // If the deleted text reaches up to the very end of the text area's content,
+    // we can't move the caret beyond that position.
+    if (!getWrappedDocument().fromUI(deleteTo).exists()) {
+      deleteTo--;
+    }
+    setCaretPosition(deleteTo);
   }
 
 }
