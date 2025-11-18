@@ -51,6 +51,15 @@ public class AbstractKeyHandler implements TextEditAreaAccessMixin {
     return false;
   }
 
+  protected boolean skipToStepnumberLinkStart() {
+    WrappedPosition selectionStart = getWrappedSelectionStart();
+    if (stepnumberLinkStyleSet(selectionStart)) {
+      setCaretPosition(getStartOffsetFromPosition(selectionStart).unwrap());
+      return true;
+    }
+    return false;
+  }
+
   protected void markRangeAsDeleted(WrappedPosition deleteStart, int deleteLength, MutableAttributeSet deleteStyle) {
     getWrappedDocument().setCharacterAttributes(deleteStart, deleteLength, deleteStyle, false);
   }

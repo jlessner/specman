@@ -92,8 +92,6 @@ public class TextEditAreaKeyListener extends AbstractKeyHandler implements KeyLi
     }
   }
 
-  private boolean skipToStepnumberLinkStart() { return textArea.skipToStepnumberLinkStart(); }
-
   private void keyUpPressed(KeyEvent e) {
     new CrossEditAreaFocusMoverFromText(textArea).moveFocusToPreceedingEditArea();
   }

@@ -1,7 +1,10 @@
 package specman.editarea.keylistener;
 
+import specman.EditorI;
+import specman.Specman;
 import specman.editarea.TextEditArea;
 import specman.editarea.document.WrappedPosition;
+import specman.undo.manager.UndoRecording;
 
 import java.awt.event.KeyEvent;
 
@@ -14,18 +17,32 @@ class DeleteKeyPressedHandler extends AbstractRemovalKeyPressedHandler {
 
   void handle() {
     WrappedPosition caretPos = getWrappedCaretPosition();
-    // TODO: similar behaviour as in BackspaceKeyPressedHandler
+    if (shouldPreventActionInsideStepnumberLink()) {
+      skipToStepnumberLinkStart();
+      event.consume();
+      return;
+    }
     if (isTrackingChanges()) {
       handleTextDeletion();
       event.consume();
     }
-//    else if (stepnumberLinkStyleSet(getWrappedSelectionEnd().dec())) {
-//      removePreviousStepnumberLink();
-//      event.consume();
-//    }
+    else if (stepnumberLinkStyleSet(getWrappedSelectionStart().inc())) {
+      removeStepnumberLinkAfter();
+      event.consume();
+    }
     else if (ParagraphBoundary.at(caretPos)) {
       // We are about to merge two paragraphs, so must ensure markup recovery
       backupMarkupsAndRecoverAfterDefaultKeyOperation();
+    }
+  }
+
+  void removeStepnumberLinkAfter() {
+    EditorI editor = Specman.instance();
+    try (UndoRecording ur = editor.composeUndo()) {
+      WrappedPosition position = getWrappedSelectionStart().inc();
+      WrappedPosition endOffset = getWrappedSelectionEnd().max(getEndOffsetFromPosition(position));
+      WrappedPosition startOffset = getStartOffsetFromPosition(position);
+      removeTextAndUnregisterStepnumberLinks(startOffset, endOffset, editor);
     }
   }
 
@@ -33,13 +50,14 @@ class DeleteKeyPressedHandler extends AbstractRemovalKeyPressedHandler {
     int deleteTo = (getSelectionStart() == getSelectionEnd())
       ? getSelectionEnd() + 1
       : getSelectionEnd();
-    handleTextDeletion(getSelectionStart(), deleteTo);
+    WrappedPosition maxDeleteMark = handleTextDeletion(getSelectionStart(), deleteTo);
+
     // If the deleted text reaches up to the very end of the text area's content,
     // we can't move the caret beyond that position.
-    if (!getWrappedDocument().fromUI(deleteTo).exists()) {
-      deleteTo--;
+    if (!maxDeleteMark.exists()) {
+      maxDeleteMark = getWrappedDocument().end();
     }
-    setCaretPosition(deleteTo);
+    setCaretPosition(maxDeleteMark.unwrap());
   }
 
 }

@@ -31,14 +31,15 @@ abstract class AbstractRemovalKeyPressedHandler extends AbstractKeyEventHandler 
    * - Changed text - Yellow Background - Gets deleted <p>
    * - Marked as deleted text - Yellow Background with strikethrough - No changes
    */
-  protected void handleTextDeletion(int pStartOffset, int pEndOffset) {
-    if (pStartOffset <= 0) {
-      setCaretPosition(1);
-      return;
-    }
-
+  protected WrappedPosition handleTextDeletion(int pStartOffset, int pEndOffset) {
     WrappedPosition startOffset = getWrappedDocument().fromUI(pStartOffset);
     WrappedPosition endOffset = getWrappedDocument().fromUI(pEndOffset);
+    WrappedPosition maxDeletionMarked = endOffset.copy();
+
+    if (pStartOffset <= 0) {
+      setCaretPosition(1);
+      return maxDeletionMarked;
+    }
 
     EditorI editor = Specman.instance();
 
@@ -57,20 +58,26 @@ abstract class AbstractRemovalKeyPressedHandler extends AbstractKeyEventHandler 
         if (elementIsChangedButNotMarkedAsDeleted(element)) {
           if (stepnumberLinkChangedStyleSet(element)) {
             removeTextAndUnregisterStepnumberLinks(linkStilStart, linkStilEnd, editor);
-          } else {
+          }
+          else {
             removeTextAndUnregisterStepnumberLinks(currentStartPosition, currentEndPosition, editor);
           }
-        } else {
+        }
+        else {
           if (elementHatDurchgestrichenenText(element)) { // No need to reapply deletedStyle if it's already set
             if (stepnumberLinkChangedStyleSet(currentStartPosition)) {
               setCaretPosition(linkStilStart.unwrap());
-            } else {
+            }
+            else {
               setCaretPosition(currentStartPosition.unwrap());
             }
-          } else if (stepnumberLinkNormalStyleSet(currentStartPosition)) {
+          }
+          else if (stepnumberLinkNormalStyleSet(currentStartPosition)) {
             markRangeAsDeleted(linkStilStart, linkStilEnd.distance(linkStilStart), deletedStepnumberLinkStyle);
+            maxDeletionMarked = maxDeletionMarked.max(linkStilEnd);
             setCaretPosition(linkStilStart.unwrap());
-          } else {
+          }
+          else {
             markRangeAsDeleted(currentStartPosition, length, geloeschtStil);
             setCaretPosition(currentStartPosition.unwrap());
           }
@@ -80,6 +87,7 @@ abstract class AbstractRemovalKeyPressedHandler extends AbstractKeyEventHandler 
       }
     }
 
+    return maxDeletionMarked;
   }
 
   protected void removeTextAndUnregisterStepnumberLinks(WrappedPosition startOffset, WrappedPosition endOffset, EditorI editor) {

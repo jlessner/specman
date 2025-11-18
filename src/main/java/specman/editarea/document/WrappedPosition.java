@@ -82,4 +82,6 @@ public class WrappedPosition {
   public boolean isLast() {
     return position == document.getLength()-1;
   }
+
+  public WrappedPosition copy() { return new WrappedPosition(position, document); }
 }
