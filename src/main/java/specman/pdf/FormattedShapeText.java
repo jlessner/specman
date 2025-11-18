@@ -20,6 +20,8 @@ import specman.Specman;
 import specman.editarea.HTMLTags;
 import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
+import specman.editarea.document.WrappedDocument;
+import specman.editarea.document.WrappedPosition;
 import specman.editarea.markups.MarkedCharSequence;
 
 import javax.swing.text.BadLocationException;
@@ -139,13 +141,24 @@ public class FormattedShapeText extends AbstractShapeText {
 
   private List<TextlineDimension> scanLineDimensions() throws BadLocationException {
     List<TextlineDimension> lines = new ArrayList<>();
-    javax.swing.text.Document document = content.getDocument();
-    for (int rowStart = 1; rowStart < document.getLength(); rowStart++) {
-      Rectangle2D lineSpace = content.modelToView2D(rowStart);
-      int rowEnd = Utilities.getRowEnd(content, rowStart);
+    WrappedDocument document = content.getWrappedDocument();
+    // Progress for rowStart is a little fuzzy due to the problem of trailing, unvisible newline in HTMLDocuments
+    for (WrappedPosition rowStart = document.start(); !rowStart.isLast(); rowStart = rowStart.isLast() ? rowStart : rowStart.inc()) {
+      Rectangle2D lineSpace = content.modelToView2D(rowStart.unwrap());
+      int rowEndUI = Utilities.getRowEnd(content, rowStart.unwrap());
+      WrappedPosition rowEnd = document.fromUI(rowEndUI);
       lines.add(new TextlineDimension(rowStart, rowEnd, lineSpace));
       rowStart = rowEnd;
     }
+
+//    javax.swing.text.Document document = content.getDocument();
+//    for (int rowStart = 1; rowStart < document.getLength(); rowStart++) {
+//      Rectangle2D lineSpace = content.modelToView2D(rowStart);
+//      int rowEnd = Utilities.getRowEnd(content, rowStart);
+//      lines.add(new TextlineDimension(rowStart, rowEnd, lineSpace));
+//      rowStart = rowEnd;
+//    }
+
     return lines;
   }
 

@@ -16,14 +16,16 @@ public class TextStyles {
     public static final int SCHRITTNR_FONTSIZE = 10;
 
     public static MutableAttributeSet geaendertTextBackground = new SimpleAttributeSet();
-    public static MutableAttributeSet geaendertTextBackgroundSpan = new SimpleAttributeSet();
+    public static MutableAttributeSet geaendertTextBackgroundPDF = new SimpleAttributeSet();
     public static MutableAttributeSet geloeschtStil = new SimpleAttributeSet();
     public static MutableAttributeSet ganzerSchrittGeloeschtStil = new SimpleAttributeSet();
     public static MutableAttributeSet standardStil = new SimpleAttributeSet();
     public static MutableAttributeSet standardTextBackground = new SimpleAttributeSet();
     public static MutableAttributeSet quellschrittStil = new SimpleAttributeSet();
     public static MutableAttributeSet stepnumberLinkStyle = new SimpleAttributeSet();
+    public static MutableAttributeSet stepnumberLinkStylePDF = new SimpleAttributeSet();
     public static MutableAttributeSet changedStepnumberLinkStyle = new SimpleAttributeSet();
+    public static MutableAttributeSet changedStepnumberLinkStylePDF = new SimpleAttributeSet();
     public static MutableAttributeSet deletedStepnumberLinkStyle = new SimpleAttributeSet();
 
     /**
@@ -68,7 +70,7 @@ public class TextStyles {
     public static final Color AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE = new Color(255, 255, 200);
     public static final Color SCHRITTNUMMER_VORDERGRUNDFARBE = BACKGROUND_COLOR_STANDARD;
     public static final Color SCHRITTNUMMER_HINTERGRUNDFARBE2 = Color.BLACK;
-    public static final Color stepnumberLinkStyleColor = new Color(188, 188, 188);
+    public static final Color stepnumberLinkStyleColor = new Color(220, 220, 220);
     public static final Color changedStepnumberLinkColor = combineColors(stepnumberLinkStyleColor, AENDERUNGSMARKIERUNG_FARBE);
     public static final String INDIKATOR_GELB = toHTMLColor(AENDERUNGSMARKIERUNG_FARBE);
     public static final String INDIKATOR_GELOESCHT_MARKIERT = "line-through";
@@ -81,55 +83,66 @@ public class TextStyles {
     public static final String changedStepnumberLinkHTMLColor = toHTMLColor(changedStepnumberLinkColor);
 
     static {
-        // Das hier ist ein bisschen tricky:
-        // Die Zeile mit StyleConstants.setBackground sorgt dafür, dass man die Hintergrundfarbe
-        // unmittelbar beim Editieren in der Oberfläche sieht. Allerdings taucht sie dann nicht
-        // im abgespeicherten HTML auf und geht auch verloren, sobald man einen Zeilenumbruch im
-        // Text einfügt. Also braucht man noch ein weiteres, persistentes Styling über ein Span-Tag,
-        // wie ich es hier gefunden habe:
-        // https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
-        String htmlStyleGeaendert = "background-color:" + INDIKATOR_GELB;
-        String htmlStyleSchwarz = "background-color:" + INDIKATOR_SCHWARZ;
-        String htmlStyleStandard = "background-color:" + toHTMLColor(TEXT_BACKGROUND_COLOR_STANDARD);
+      // TODO JL: Modify comment concerning usage in PDF
+      // Das hier ist ein bisschen tricky:
+      // Die Zeile mit StyleConstants.setBackground sorgt dafür, dass man die Hintergrundfarbe
+      // unmittelbar beim Editieren in der Oberfläche sieht. Allerdings taucht sie dann nicht
+      // im abgespeicherten HTML auf und geht auch verloren, sobald man einen Zeilenumbruch im
+      // Text einfügt. Also braucht man noch ein weiteres, persistentes Styling über ein Span-Tag,
+      // wie ich es hier gefunden habe:
+      // https://stackoverflow.com/questions/13285526/jtextpane-text-background-color-does-not-work
+      String htmlStyleGeaendert = "background-color:" + INDIKATOR_GELB;
+      String htmlStyleSchwarz = "background-color:" + INDIKATOR_SCHWARZ;
+      String htmlStyleStandard = "background-color:" + toHTMLColor(TEXT_BACKGROUND_COLOR_STANDARD);
+      String htmlStyleSteplink = "background-color:" + stepnumberLinkStyleHTMLColor;
+      String htmlStyleChangedSteplink = "background-color:" + changedStepnumberLinkHTMLColor;
 
-        SimpleAttributeSet htmlHintergrundStyleGeaendert = new SimpleAttributeSet();
-        SimpleAttributeSet htmlHintergrundStyleSchwarz = new SimpleAttributeSet();
-        SimpleAttributeSet htmlHintergrundStyleStandard = new SimpleAttributeSet();
+      SimpleAttributeSet htmlBackgroundStyleChanged = new SimpleAttributeSet();
+      SimpleAttributeSet htmlBackgroundStyleBlack = new SimpleAttributeSet();
+      SimpleAttributeSet htmlBackgroundStyleStandard = new SimpleAttributeSet();
+      SimpleAttributeSet htmlBackgroundStyleSteplink = new SimpleAttributeSet();
+      SimpleAttributeSet htmlBackgroundStyleChangedSteplink = new SimpleAttributeSet();
 
-        htmlHintergrundStyleGeaendert.addAttribute(HTML.Attribute.STYLE, htmlStyleGeaendert);
-        StyleConstants.setBackground(geaendertTextBackground, AENDERUNGSMARKIERUNG_FARBE);
-        StyleConstants.setBackground(geaendertTextBackgroundSpan, AENDERUNGSMARKIERUNG_FARBE);
-        geaendertTextBackgroundSpan.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
+      htmlBackgroundStyleChanged.addAttribute(HTML.Attribute.STYLE, htmlStyleGeaendert);
+      StyleConstants.setBackground(geaendertTextBackground, AENDERUNGSMARKIERUNG_FARBE);
+      StyleConstants.setBackground(geaendertTextBackgroundPDF, AENDERUNGSMARKIERUNG_FARBE);
+      geaendertTextBackgroundPDF.addAttribute(HTML.Tag.SPAN, htmlBackgroundStyleChanged);
 
-        StyleConstants.setBackground(geloeschtStil, AENDERUNGSMARKIERUNG_FARBE);
-        StyleConstants.setStrikeThrough(geloeschtStil, true);
+      StyleConstants.setBackground(geloeschtStil, AENDERUNGSMARKIERUNG_FARBE);
+      StyleConstants.setStrikeThrough(geloeschtStil, true);
 
-        htmlHintergrundStyleSchwarz.addAttribute(HTML.Attribute.STYLE, htmlStyleSchwarz);
-        ganzerSchrittGeloeschtStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleSchwarz);
-        StyleConstants.setBackground(ganzerSchrittGeloeschtStil, Hintergrundfarbe_Geloescht);
-        StyleConstants.setStrikeThrough(ganzerSchrittGeloeschtStil, true);
-        StyleConstants.setForeground(ganzerSchrittGeloeschtStil, Schriftfarbe_Geloescht);
+      htmlBackgroundStyleBlack.addAttribute(HTML.Attribute.STYLE, htmlStyleSchwarz);
+      ganzerSchrittGeloeschtStil.addAttribute(HTML.Tag.SPAN, htmlBackgroundStyleBlack);
+      StyleConstants.setBackground(ganzerSchrittGeloeschtStil, Hintergrundfarbe_Geloescht);
+      StyleConstants.setStrikeThrough(ganzerSchrittGeloeschtStil, true);
+      StyleConstants.setForeground(ganzerSchrittGeloeschtStil, Schriftfarbe_Geloescht);
 
-        htmlHintergrundStyleStandard.addAttribute(HTML.Attribute.STYLE, htmlStyleStandard);
-        standardStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleStandard);
-        StyleConstants.setBackground(standardStil, TEXT_BACKGROUND_COLOR_STANDARD);
-        StyleConstants.setStrikeThrough(standardStil, false);
-        StyleConstants.setForeground(standardStil, Schriftfarbe_Standard);
-        StyleConstants.setBackground(standardTextBackground, TEXT_BACKGROUND_COLOR_STANDARD);
+      htmlBackgroundStyleStandard.addAttribute(HTML.Attribute.STYLE, htmlStyleStandard);
+      standardStil.addAttribute(HTML.Tag.SPAN, htmlBackgroundStyleStandard);
+      StyleConstants.setBackground(standardStil, TEXT_BACKGROUND_COLOR_STANDARD);
+      StyleConstants.setStrikeThrough(standardStil, false);
+      StyleConstants.setForeground(standardStil, Schriftfarbe_Standard);
+      StyleConstants.setBackground(standardTextBackground, TEXT_BACKGROUND_COLOR_STANDARD);
 
-        quellschrittStil.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
-        StyleConstants.setBackground(quellschrittStil, AENDERUNGSMARKIERUNG_FARBE);
-        StyleConstants.setStrikeThrough(quellschrittStil, true);
-        StyleConstants.setForeground(quellschrittStil, Schriftfarbe_Geloescht);
-        StyleConstants.setFontSize(quellschrittStil, 7);
+      quellschrittStil.addAttribute(HTML.Tag.SPAN, htmlBackgroundStyleChanged);
+      StyleConstants.setBackground(quellschrittStil, AENDERUNGSMARKIERUNG_FARBE);
+      StyleConstants.setStrikeThrough(quellschrittStil, true);
+      StyleConstants.setForeground(quellschrittStil, Schriftfarbe_Geloescht);
+      StyleConstants.setFontSize(quellschrittStil, 7);
 
-        StyleConstants.setBackground(stepnumberLinkStyle, stepnumberLinkStyleColor);
+      StyleConstants.setBackground(stepnumberLinkStyle, stepnumberLinkStyleColor);
+      htmlBackgroundStyleSteplink.addAttribute(HTML.Attribute.STYLE, htmlStyleSteplink);
+      StyleConstants.setBackground(stepnumberLinkStylePDF, stepnumberLinkStyleColor);
+      stepnumberLinkStylePDF.addAttribute(HTML.Tag.SPAN, htmlBackgroundStyleSteplink);
 
-        StyleConstants.setBackground(changedStepnumberLinkStyle, changedStepnumberLinkColor);
+      StyleConstants.setBackground(changedStepnumberLinkStyle, changedStepnumberLinkColor);
+      htmlBackgroundStyleChangedSteplink.addAttribute(HTML.Attribute.STYLE, htmlStyleChangedSteplink);
+      StyleConstants.setBackground(changedStepnumberLinkStylePDF, changedStepnumberLinkColor);
+      changedStepnumberLinkStylePDF.addAttribute(HTML.Tag.SPAN, htmlBackgroundStyleChangedSteplink);
 
-        deletedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlHintergrundStyleGeaendert);
-        StyleConstants.setBackground(deletedStepnumberLinkStyle, changedStepnumberLinkColor);
-        StyleConstants.setStrikeThrough(deletedStepnumberLinkStyle, true);
+      deletedStepnumberLinkStyle.addAttribute(HTML.Tag.SPAN, htmlBackgroundStyleChanged);
+      StyleConstants.setBackground(deletedStepnumberLinkStyle, changedStepnumberLinkColor);
+      StyleConstants.setStrikeThrough(deletedStepnumberLinkStyle, true);
     }
 
     public static String toHTMLColor(Color color) {

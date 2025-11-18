@@ -232,7 +232,7 @@ public class TextEditArea extends JEditorPane implements EditArea {
         return new TextEditAreaModel_V001(text, getPlainText(), markups, aenderungsart);
     }
 
-    private void cleanupText() {
+    public void cleanupText() {
         MarkedCharSequence marksBackup = findMarkups();
         setText(getText());
         List<Markup_V001> recoveredChangemarks = new MarkupRecovery(getWrappedDocument(), marksBackup).recover();

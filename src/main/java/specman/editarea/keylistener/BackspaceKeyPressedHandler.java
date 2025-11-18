@@ -71,7 +71,7 @@ class BackspaceKeyPressedHandler extends AbstractKeyEventHandler {
         int rowEnd = Utilities.getRowEnd(textArea, textArea.getCaretPosition());
         if (rowStart == rowEnd) {
           try(UndoRecording ur = Specman.instance().composeUndo()) {
-            textArea.setText(textArea.getText());
+            cleanupText();
           }
           return true;
         }

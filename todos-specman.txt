@@ -1,10 +1,10 @@
 Changemark-Recovery
 Prio I
-- Aufbau von Änderungsmarkierungen in PDF hat noch einen Glitsch am Zeilenanfang. Das jeweils 1. Zeichen einer Zeile ist nicht markiert
-   Hier muss auch mit WrappedDocument und WrappedPosition gearbeitet werden
-- Schrittnummern verlieren im PDF noch ihre Hintergrundfarbe. Muss genauso mit einem Span-Style gemacht werden, wie die "normalen" Änderungen
-- Löschen der anhängenden Leerzeile führt zu Markup-Verlust im Text davor.
+x Schrittnummern verlieren im PDF noch ihre Hintergrundfarbe. Muss genauso mit einem Span-Style gemacht werden, wie die "normalen" Änderungen
+x Löschen der anhängenden Leerzeile führt zu Markup-Verlust im Text davor.
    Eigentlich logisch: wir müssen sauber TextEditArea.cleanup() aufrufen, wo die Markups auch restauriert werden
+x Aufbau von Änderungsmarkierungen in PDF hat noch einen Glitsch am Zeilenanfang. Das jeweils 1. Zeichen einer Zeile ist nicht markiert
+   Hier muss auch mit WrappedDocument und WrappedPosition gearbeitet werden
 x Beim PDF-Rendering werden Textpassagen als geändert markiert, die es im Modell und im UI gar nicht sind.
 x Der initiale Text eines Schritts wird nicht persistent entfärbt.
 x Wiederherstellung auch bei

@@ -6,13 +6,7 @@ import specman.editarea.document.WrappedElement;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.html.CSS;
 
-import static specman.editarea.TextStyles.INDIKATOR_GELB;
-import static specman.editarea.TextStyles.INDIKATOR_GRAU;
-import static specman.editarea.TextStyles.changedStepnumberLinkHTMLColor;
-import static specman.editarea.TextStyles.changedStepnumberLinkStyle;
-import static specman.editarea.TextStyles.geaendertTextBackground;
-import static specman.editarea.TextStyles.stepnumberLinkStyle;
-import static specman.editarea.TextStyles.stepnumberLinkStyleHTMLColor;
+import static specman.editarea.TextStyles.*;
 
 public enum MarkupType {
   Changed, Steplink, ChangedSteplink;
@@ -51,4 +45,23 @@ public enum MarkupType {
     }
     return null;
   }
+
+  /** This method returns styles for PDF rendering based on html2pdf. The difference to the
+   * styles from {@link #toBackground()} is, that the background coloring is associated with
+   * HTML span tags which actually makes it visible two rendering engines other than JEditorPane.
+   * The disadvantage is, that the HTML is cluttered with spans which causes multiple problems
+   * in the actual model text. But concerning the transient HTML text for PDF rendering we don't
+   * care if it is ugly ;-) */
+  public AttributeSet toPDFBackground() {
+    switch(this) {
+      case Changed:
+        return geaendertTextBackgroundPDF;
+      case Steplink:
+        return stepnumberLinkStylePDF;
+      case ChangedSteplink:
+        return changedStepnumberLinkStylePDF;
+    }
+    return null;
+  }
+
 }

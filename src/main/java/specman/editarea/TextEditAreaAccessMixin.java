@@ -36,5 +36,6 @@ public interface TextEditAreaAccessMixin {
   default void setSelectionStart(int position) { textArea().setSelectionStart(position); }
   default boolean isEditable() { return textArea().isEditable(); }
   default StyledEditorKit getEditorKit() { return (StyledEditorKit) textArea().getEditorKit(); }
+  default void cleanupText() { textArea().cleanupText();}
 
 }
