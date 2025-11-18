@@ -11,6 +11,7 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.CSS;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -45,6 +46,7 @@ public class TextEditAreaKeyListener extends AbstractKeyHandler implements KeyLi
       case KeyEvent.VK_RIGHT -> keyRightPressed(e);
       case KeyEvent.VK_ENTER -> keyEnterPressed(e);
       case KeyEvent.VK_DELETE -> keyDeletePressed(e);
+      case KeyEvent.VK_TAB -> keyTabPressed(e);
       default -> {
         if (shouldPreventActionInsideStepnumberLink()) {
           e.consume();
@@ -60,9 +62,7 @@ public class TextEditAreaKeyListener extends AbstractKeyHandler implements KeyLi
     }
   }
 
-  private void keyBackspacePressed(KeyEvent e) {
-    new BackspaceKeyPressedHandler(textArea, e).handle();
-  }
+  private void keyBackspacePressed(KeyEvent e) { new BackspaceKeyPressedHandler(textArea, e).handle(); }
 
   private void keyDeletePressed(KeyEvent e) {
     new DeleteKeyPressedHandler(textArea, e).handle();
@@ -79,6 +79,8 @@ public class TextEditAreaKeyListener extends AbstractKeyHandler implements KeyLi
   private void keySpaceTyped(KeyEvent e) {
     new SpaceKeyTypedHandler(textArea, e).handle();
   }
+
+  private void keyTabPressed(KeyEvent e) { new TabKeyPressedHandler(textArea, e).handle(); }
 
   private void keyRightPressed(KeyEvent e) {
     if (skipToStepnumberLinkEnd()) {
