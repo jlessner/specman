@@ -35,6 +35,9 @@ x Speichern sorgt jetzt für ein unerwünschtes Durchscrollen durch die gesamte 
    funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 
 Aus UC-791
+- Es kommt hin und wieder zu Zeilen, die im PDF etwas zu lang sind und dann in die nächste Zeile umbrechen
+   Kann man das Feld für den Text einfach etwas zu breit definieren? Besser der Text ragt gelegentlich rechts ein wenig raus
+   als wenn er umbricht und den Text darunter unleserlich macht
 - Bei Drücken von DELETE, analoges Verhalten zu BACKSPACE
 - Focus in Tabellen durch Drücken von TAB verschieben
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
