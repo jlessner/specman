@@ -23,7 +23,11 @@ public class MarkupBackgroundStyleInitializer {
   private final List<Markup_V001> model;
 
   public MarkupBackgroundStyleInitializer(TextEditArea textEditArea, List<Markup_V001> model) {
-    this.doc = textEditArea.getWrappedDocument();
+    this(textEditArea.getWrappedDocument(), model);
+  }
+
+  public MarkupBackgroundStyleInitializer(WrappedDocument doc, List<Markup_V001> model) {
+    this.doc = doc;
     this.model = model;
   }
 

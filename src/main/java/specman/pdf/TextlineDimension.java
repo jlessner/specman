@@ -1,8 +1,14 @@
 package specman.pdf;
 
+import org.apache.commons.lang.math.IntRange;
 import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
 import specman.editarea.document.WrappedDocument;
+import specman.editarea.markups.MarkedCharSequence;
+import specman.editarea.markups.MarkupBackgroundStyleInitializer;
+import specman.editarea.markups.MarkupRecovery;
+import specman.editarea.markups.MarkupType;
+import specman.model.v001.Markup_V001;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
@@ -11,6 +17,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
+import java.util.Objects;
 
 public class TextlineDimension {
   int docIndexFrom, docIndexTo;
@@ -28,8 +35,7 @@ public class TextlineDimension {
   public float getY() { return (float)space.getY(); }
   public float getX() { return (float)space.getX(); }
 
-  public String extractLineHtml(TextEditArea field) throws BadLocationException {
-    List<TextRange> changes = findChanges(field);
+  public String extractLineHtml(TextEditArea field, MarkedCharSequence fieldmarks) throws BadLocationException {
     JEditorPane subdocCarrier = new JEditorPane();
     subdocCarrier.setContentType("text/html");
     subdocCarrier.setText(field.getText());
@@ -38,44 +44,16 @@ public class TextlineDimension {
       subdoc.remove(getDocIndexTo(), field.getDocument().getLength() - getDocIndexTo());
     }
     subdoc.remove(0, getDocIndexFrom());
-    for (TextRange change : changes) {
-      subdoc.setCharacterAttributes(change.from - getDocIndexFrom(), change.length, TextStyles.geaendertTextBackgroundSpan, false);
+
+    MarkedCharSequence lineMarks = fieldmarks.subsequence(docIndexFrom, docIndexTo);
+    for (int i = 0; i < lineMarks.size(); i++) {
+      MarkupType markupType = lineMarks.type(i);
+      if (markupType != null) {
+        subdoc.setCharacterAttributes(i+1, 1, TextStyles.geaendertTextBackgroundSpan,false);
+      }
     }
+
     return subdocCarrier.getText();
   }
 
-  private List<TextRange> findChanges(TextEditArea field) throws BadLocationException {
-    List<TextRange> changes = new java.util.ArrayList<>();
-    TextRange change = null;
-    WrappedDocument doc = field.getWrappedDocument();
-    for (int i = 0; i < doc.getLength(); i++) {
-      AttributeSet attrs = doc.getCharacterElement(i).getAttributes();
-      boolean isChange = StyleConstants.getBackground(attrs).equals(TextStyles.AENDERUNGSMARKIERUNG_FARBE);
-      if (isChange) {
-        if (change == null) {
-          change = new TextRange(i);
-        }
-        else {
-          change.increase();
-        }
-      }
-      else {
-        if (change != null) {
-          changes.add(change);
-          change = null;
-        }
-      }
-    }
-    if (change != null) {
-      changes.add(change);
-    }
-    return changes;
-  }
-
-  private static class TextRange {
-    final int from;
-    int length;
-    public TextRange(int from) { this.from = from; this.length = 1; }
-    public void increase() { this.length++; };
-  }
 }

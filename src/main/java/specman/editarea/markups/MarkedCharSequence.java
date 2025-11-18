@@ -6,7 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarkedCharSequence {
-  final List<MarkedChar> chars = new ArrayList<MarkedChar>();
+  final List<MarkedChar> chars;
+
+  private MarkedCharSequence(List<MarkedChar> chars) {
+    this.chars = chars;
+  }
+
+  public MarkedCharSequence() { this(new ArrayList<>()); }
 
   public void add(final MarkedChar mc) {
     chars.add(mc);
@@ -46,4 +52,8 @@ public class MarkedCharSequence {
   }
 
   public int size() { return chars.size(); }
+
+  public MarkedCharSequence subsequence(int fromIndex, int toIndex) {
+    return new MarkedCharSequence(chars.subList(fromIndex, toIndex));
+  }
 }

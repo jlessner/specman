@@ -20,6 +20,7 @@ import specman.Specman;
 import specman.editarea.HTMLTags;
 import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
+import specman.editarea.markups.MarkedCharSequence;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Utilities;
@@ -60,11 +61,12 @@ public class FormattedShapeText extends AbstractShapeText {
     try {
       java.util.List<TextlineDimension> lines = scanLineDimensions();
       float paragraphWidth = (content.getWidth() - getInsets().left - getInsets().right) * swing2pdfScaleFactor;
+      MarkedCharSequence changemarks = content.findMarkups();
 
       for (TextlineDimension line: lines) {
         System.out.println("Zeile bis " + line.getDocIndexTo() + ", Höhe " + line.getHeight() + ", y = " + line.getY());
 
-        String lineHtml = line.extractLineHtml(content);
+        String lineHtml = line.extractLineHtml(content, changemarks);
         lineHtml = removeLinebreakingElementsFromHtmlLine(lineHtml);
         lineHtml = stylifyTextAlignment(lineHtml);
         lineHtml = removeMargin0Paragraphs(lineHtml);

@@ -13,23 +13,23 @@ public class MarkupRecovery {
   final WrappedDocumentI target;
   final MarkedCharSequence source;
   final MarkupType[] marksPerChar;
-  WrappedPosition targetProcess;
-  Integer sourceProcess;
+  WrappedPosition targetProgress;
+  Integer sourceProgress;
 
   public MarkupRecovery(WrappedDocumentI target, MarkedCharSequence source) {
     this.target = target;
     this.source = source;
     this.marksPerChar = new MarkupType[target.getLength()];
-    this.targetProcess = target.fromModel(0);
-    this.sourceProcess = 0;
+    this.targetProgress = target.fromModel(0);
+    this.sourceProgress = 0;
   }
 
   public List<Markup_V001> recover() {
     WrappedPosition nextTargetVisibleCharSeqStart;
     Integer nextSourceVisibleCharSeqStart;
     do {
-      nextTargetVisibleCharSeqStart = findRight(targetProcess, NonWhitespace);
-      nextSourceVisibleCharSeqStart = source.findRight(sourceProcess, NonWhitespace);
+      nextTargetVisibleCharSeqStart = findRight(targetProgress, NonWhitespace);
+      nextSourceVisibleCharSeqStart = source.findRight(sourceProgress, NonWhitespace);
       recoverSkippedWhitespaceMarks(nextTargetVisibleCharSeqStart, nextSourceVisibleCharSeqStart);
       recoverVisibleCharMarks(nextTargetVisibleCharSeqStart, nextSourceVisibleCharSeqStart);
     }
@@ -48,20 +48,20 @@ public class MarkupRecovery {
       sourcePos++;
     }
     while(targetPos.exists() && sourcePos < source.size() && source.isVisibleChar(sourcePos));
-    targetProcess = targetPos;
-    sourceProcess = sourcePos;
+    targetProgress = targetPos;
+    sourceProgress = sourcePos;
   }
 
   /** TODO: Skipped whitespaces might also have changemarks, which need to be recovered. */
   private void recoverSkippedWhitespaceMarks(WrappedPosition targetVisibleCharSeqStart, Integer sourceVisibleCharSeqStart) {
-    if (targetVisibleCharSeqStart == null || targetVisibleCharSeqStart.equals(targetProcess)) {
+    if (targetVisibleCharSeqStart == null || targetVisibleCharSeqStart.equals(targetProgress)) {
       return;
     }
     int targetWhitespaceLen = targetWhitespaceLen(targetVisibleCharSeqStart);
     int sourceWhitespaceLen = sourceWhitespaceLen(sourceVisibleCharSeqStart);
     if (targetWhitespaceLen == sourceWhitespaceLen) {
-      WrappedPosition targetWhitespacePos = targetProcess;
-      int sourceWhitespacePos = sourceProcess;
+      WrappedPosition targetWhitespacePos = targetProgress;
+      int sourceWhitespacePos = sourceProgress;
       for (int i = 0; i < targetWhitespaceLen; i++) {
         marksPerChar[targetWhitespacePos.toModel()] = source.type(sourceWhitespacePos);
         targetWhitespacePos = targetWhitespacePos.inc();
@@ -72,11 +72,11 @@ public class MarkupRecovery {
   }
 
   private int sourceWhitespaceLen(Integer sourceVisibleCharSeqStart) {
-    return sourceVisibleCharSeqStart - sourceProcess;
+    return sourceVisibleCharSeqStart - sourceProgress;
   }
 
   private int targetWhitespaceLen(WrappedPosition targetVisibleCharSeqStart) {
-    return targetVisibleCharSeqStart.distance(targetProcess);
+    return targetVisibleCharSeqStart.distance(targetProgress);
   }
 
   private WrappedPosition findRight(WrappedPosition pos, CharType charType) {
