@@ -217,18 +217,18 @@ x Neue Texte in Tabellen sind im HTML eingefasst in <p style=\"margin-top: 0\"> 
 x Der Dialog für Schritt-Links hat keinen Scrollbalken und erlaubt folglich keine Schritte mit höheren Nummern zu adressieren
 x Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
 - Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche zurück
-- Ändern des Paragraphtypen lässt sich nicht zurücknehmen
-- Letzter Zeilenumbruch in einem Schritt kann nicht entfernt werden
-    - Problem ist, dass der Umbruch nicht entfernt werden kann, da der Offset angeblich größer als das Dokumentenende ist:
-      RemoveAction.actionPerformed(e) -> HTMLUtils.removeElement()Zeile199 - Es wird erkannt, dass der Offset des zu entfernenden Elements größer ist
-      als die Länge des Documents und die zu entfernende Länge auf 0 reduziert wird. Dies führt dazu, dass der Zeilenumbruch nicht entfernt wird.
-      Eine Ausgabe von document.getText() mit den Offsets gibt jedoch den erwarteten Text (\n) zurück.
 - Gleiches Problem wie oben, nur andere Stelle: Exception beim Zurücknehmen von Einfügungen mit Zeilenumbrüchen:
     Caused by: javax.swing.text.BadLocationException: Invalid remove
         at java.desktop/javax.swing.text.AbstractDocument.handleRemove(AbstractDocument.java:634)
         at java.desktop/javax.swing.text.AbstractDocument.remove(AbstractDocument.java:619)
         at specman.editarea.TextEditArea.removeTextAndUnregisterStepnumberLinks(TextEditArea.java:580)
         ... 44 more
+- Ändern des Paragraphtypen lässt sich nicht zurücknehmen
+x Letzter Zeilenumbruch in einem Schritt kann nicht entfernt werden
+    - Problem ist, dass der Umbruch nicht entfernt werden kann, da der Offset angeblich größer als das Dokumentenende ist:
+      RemoveAction.actionPerformed(e) -> HTMLUtils.removeElement()Zeile199 - Es wird erkannt, dass der Offset des zu entfernenden Elements größer ist
+      als die Länge des Documents und die zu entfernende Länge auf 0 reduziert wird. Dies führt dazu, dass der Zeilenumbruch nicht entfernt wird.
+      Eine Ausgabe von document.getText() mit den Offsets gibt jedoch den erwarteten Text (\n) zurück.
 x Beim Undo einer Verschiebung eines BreakSchritts im Änderungsmodus, wird die Schrittnummer im verlinkten Catch-Schritt nicht mehr gerendert
      Repaint des Diagramms bringt sie wieder zum Vorschein.
 x Wenn man einen Breakschritt mit angekoppeltem Catch-Schritt verschiebt, verschwinden der Catch-Schritt
