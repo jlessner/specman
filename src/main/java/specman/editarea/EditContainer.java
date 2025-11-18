@@ -26,7 +26,6 @@ import specman.view.AbstractSchrittView;
 
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
-import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
