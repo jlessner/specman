@@ -69,7 +69,7 @@ public class PDFExportChooser extends JFileChooser {
       setOrientation(pdfExportOptions.portrait);
       paging.setSelected(pdfExportOptions.paging);
       pageSize.setSelectedItem(pdfExportOptions.pageSize);
-      //setSelectedFile(new File(pdfExportOptions.filename));
+      setSelectedFile(new File(pdfExportOptions.filename));
     }
   }
 

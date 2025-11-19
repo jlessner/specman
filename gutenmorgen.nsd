@@ -334,7 +334,7 @@
             } ] ] ]
           }
         },
-        "ifBreitenanteil" : 0.28929386
+        "ifBreitenanteil" : 0.24829157
       } ] ] ],
       "catchBereich" : {
         "catchSequences" : [ "java.util.ArrayList", [ ] ],
@@ -358,6 +358,11 @@
         "aenderungsart" : "Untracked"
       } ] ] ]
     },
-    "pdfExportOptions" : null
+    "pdfExportOptions" : {
+      "filename" : "gutenmorgen-export.pdf",
+      "pageSize" : "A4",
+      "portrait" : true,
+      "paging" : false
+    }
   }
 }
