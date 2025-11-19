@@ -98,6 +98,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	RecentFiles recentFiles;
 	private JComponent welcomeMessage;
 	PDFExportChooser pdfExportChooser;
+  PDFExportOptionsModel_V001 pdfExportOptions;
 
 	//TODO window for dragging
 	public final JWindow window = new JWindow();
@@ -821,6 +822,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			diagrammbreite = model.breite;
 			intro.setEditorContent(model.intro);
 			outro.setEditorContent(model.outro);
+      pdfExportOptions = model.pdfExportOptions;
 			setName(model.name);
 			hauptSequenz = new SchrittSequenzView(this, null, model.hauptSequenz);
 
@@ -1124,7 +1126,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			aenderungenVerfolgen(),
 			hauptSequenz.generiereSchrittSequenzModel(formatierterText),
 			intro.editorContent2Model(formatierterText),
-			outro.editorContent2Model(formatierterText));
+			outro.editorContent2Model(formatierterText),
+      pdfExportOptions);
 		return model;
 	}
 
@@ -1142,9 +1145,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		if (pdfExportChooser == null) {
 			pdfExportChooser = new PDFExportChooser();
 		}
+    pdfExportChooser.initFromModel(pdfExportOptions);
 		int result = pdfExportChooser.showSaveDialog(arbeitsbereich, diagrammDatei);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			pdfExportChooser.safeUserPreferences();
+      pdfExportOptions = pdfExportChooser.getExportOptions();
 		  File selectedFile = pdfExportChooser.getSelectedFile();
 			if (selectedFile != null) {
 				Point scrollPosition = scrollPane.getViewport().getViewPosition();

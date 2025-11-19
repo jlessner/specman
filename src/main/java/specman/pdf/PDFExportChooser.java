@@ -4,6 +4,7 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.Specman;
+import specman.model.v001.PDFExportOptionsModel_V001;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -58,14 +59,27 @@ public class PDFExportChooser extends JFileChooser {
     ButtonGroup orientiations = new ButtonGroup();
     orientiations.add(portrait);
     orientiations.add(landscape);
-    if (prefs.getBoolean(PDF_PAGE_PORTRAIT_PREF, true)) {
+    setOrientation(prefs.getBoolean(PDF_PAGE_PORTRAIT_PREF, true));
+    paging.setSelected(prefs.getBoolean(PDF_PAGING_PREF, false));
+    display.setSelected(prefs.getBoolean(PDF_DISPLAY_PREF, true));
+  }
+
+  public void initFromModel(PDFExportOptionsModel_V001 pdfExportOptions) {
+    if (pdfExportOptions != null) {
+      setOrientation(pdfExportOptions.portrait);
+      paging.setSelected(pdfExportOptions.paging);
+      pageSize.setSelectedItem(pdfExportOptions.pageSize);
+      //setSelectedFile(new File(pdfExportOptions.filename));
+    }
+  }
+
+  private void setOrientation(boolean portraitOrientation) {
+    if (portraitOrientation) {
       portrait.setSelected(true);
     }
     else {
       landscape.setSelected(true);
     }
-    paging.setSelected(prefs.getBoolean(PDF_PAGING_PREF, false));
-    display.setSelected(prefs.getBoolean(PDF_DISPLAY_PREF, true));
   }
 
   private void addAvailablePageSizes(Preferences prefs) {
@@ -107,5 +121,14 @@ public class PDFExportChooser extends JFileChooser {
       ? diagrammDatei.getParentFile() : new File(".");
     setCurrentDirectory(exportDirectory);
     return showSaveDialog(component);
+  }
+
+  public PDFExportOptionsModel_V001 getExportOptions() {
+    return new PDFExportOptionsModel_V001(
+      getSelectedFile().getName(),
+      pageSize.getSelectedItem().toString(),
+      portrait.isSelected(),
+      paging.isSelected()
+    );
   }
 }

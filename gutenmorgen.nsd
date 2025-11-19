@@ -334,7 +334,7 @@
             } ] ] ]
           }
         },
-        "ifBreitenanteil" : 0.29840547
+        "ifBreitenanteil" : 0.28929386
       } ] ] ],
       "catchBereich" : {
         "catchSequences" : [ "java.util.ArrayList", [ ] ],
@@ -357,6 +357,7 @@
         "markups" : [ "java.util.ArrayList", [ ] ],
         "aenderungsart" : "Untracked"
       } ] ] ]
-    }
+    },
+    "pdfExportOptions" : null
   }
 }

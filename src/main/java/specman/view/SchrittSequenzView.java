@@ -82,6 +82,7 @@ public class SchrittSequenzView {
 
 	public SchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittSequenzModel_V001 model) {
 		this(parent, model.id);
+    this.aenderungsart = model.aenderungsart;
 		for (AbstractSchrittModel_V001 schritt : model.schritte) {
 			AbstractSchrittView schrittView = AbstractSchrittView.baueSchrittView(editor, this, schritt);
 			schrittAnhaengen(schrittView, editor);
