@@ -35,7 +35,10 @@ x Speichern sorgt jetzt für ein unerwünschtes Durchscrollen durch die gesamte 
    funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 
 Aus UC-791
-- Focus in Tabellen durch Drücken von TAB verschieben
+- Kopplung von Dateiname und Seitenformat des letzten PDF-Exports an das Modell
+   UC-791 braucht A3 Querformat, also viel größer als andere kleine Usecases. Arbeitet man an mehreren
+   Usecases gleichzeitig, vergisst man das Umstellen und erinnert sich auch nicht unbedingt, für welchen
+   Usecase man welches Format ausgewählt hat.
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
@@ -57,6 +60,8 @@ x Bei Entfernen einen Listitem-Grenze durch Drücken von BACKSPACE verschwindet 
 x Bei Umwandlung von ListItem zu Text durch Drücken von BACKSPACE verschwindet das letzte Zeichen des Texts,
    wenn es sich um das letzte Item einer Liste handelt, d.h. wenn es in dem Zuge mit einer nachfolgenden Text Area
    zusammengeführt wird.
+x Focus in Tabellen durch Drücken von TAB verschieben
+   Geht in erster brauchbarer Form über CTRL+TAB als Standardfunktionalität von Swing
 
 Abschluss für Go-Live
 x Quellschritten fehlt im Label die Nummer des Zielschritts
