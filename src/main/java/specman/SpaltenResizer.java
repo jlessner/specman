@@ -4,6 +4,7 @@ import specman.editarea.TableEditAreaSelectionTracker;
 import specman.pdf.LineShape;
 import specman.pdf.Shape;
 import specman.undo.UndoableSpaltenbreiteAngepasst;
+import specman.view.AbstractSchrittView;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -16,6 +17,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+
+import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class SpaltenResizer extends JPanel {
 	Integer dragX;
@@ -63,6 +66,6 @@ public class SpaltenResizer extends JPanel {
 	}
 
 	public Shape getShape() {
-		return new LineShape(getX(), getY(), getX(), getY() + getHeight());
+		return new LineShape(getX(), getY() + LINIENBREITE, getX(), getY() + getHeight() - LINIENBREITE);
 	}
 }
