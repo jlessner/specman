@@ -1,40 +1,8 @@
-Changemark-Recovery
-Prio I
-x Schrittnummern verlieren im PDF noch ihre Hintergrundfarbe. Muss genauso mit einem Span-Style gemacht werden, wie die "normalen" Änderungen
-x Löschen der anhängenden Leerzeile führt zu Markup-Verlust im Text davor.
-   Eigentlich logisch: wir müssen sauber TextEditArea.cleanup() aufrufen, wo die Markups auch restauriert werden
-x Aufbau von Änderungsmarkierungen in PDF hat noch einen Glitsch am Zeilenanfang. Das jeweils 1. Zeichen einer Zeile ist nicht markiert
-   Hier muss auch mit WrappedDocument und WrappedPosition gearbeitet werden
-x Beim PDF-Rendering werden Textpassagen als geändert markiert, die es im Modell und im UI gar nicht sind.
-x Der initiale Text eines Schritts wird nicht persistent entfärbt.
-x Wiederherstellung auch bei
-  x Split von List Items, für das untere Item
-  x Einfügen von Bild oder Tabelle, für den unteren Text
-  x Entfernen von Bild oder Tabelle mit Merge der Texte ober- und unterhalb (Methode TextEditArea#appendText)
-  x Auflösen eines List Items mit Merge der Inhalte in führende oder folgende TextEditArea, sowohl für den Item Text als auch für den aufnehmenden Text
-    (Methode EditContainer#dissolveListItemEditAreaUDBL)
-  x Wechsel des Absatztyps
-  x Entfernen einer Absatzgrenze, für beide dadurch gemergte Absätze
-    x Geht jetzt bei BACKSPACE, aber noch nicht bei DELETE
-x Ausweitung auf Schrittreferenzen
-x Ausweitung auf gelöschte Schritte (schwarzer Hintergrund) notwendig?
-   x ENTER drücken geht fälschlicherweise, auch in gelöschtem Schritt (mit und ihne Shift)
-x Beim Speichern eines Textes muss selbiger erst bereinigt werden - setText(getText)) - und in dem Zuge müssen auch die Changemarks
-   wieder hergestellt werden. Sonst landen sie ggf. mit falschen Indizes auf Datei. Ist die ganze Zeit schon falsch, war aber bisher
-   nicht so schlimm, weil die Changemarks in der Datei nicht verwendet wurden.
-x Exception beim Merge einer Textarea in ein List Item
-Prio II
-x Speichern sorgt jetzt für ein unerwünschtes Durchscrollen durch die gesamte Datei.
-- Restauration für Whitespacesequenzen evt. noch ein bisschen verbessern.
-   Noch ganz unberücksichtigt: abschließendes Whitespace hinter der letzten Sequenz sichtbarer Zeichen
-- Mit erledigen (war vorher schon falsch): Wenn beim Split einer TextEditArea der *vordere* Textteil überflüssige Whitespaces enthält,
-   dann wird der hintere Teil falsch kopiert. Für das Herstellen des hinteren Textteils wird nämlich intern zuerst der *ganze* Text
-   kopiert und anschließend gekürzt. Das Kopieren bewirkt die Bereinigung, sodass die ursprüngliche Caret Position im kopierten Text
-   nicht mehr sauber den Index repräsentiert, bis wohin der vordere Textteil in der Kopie abgeschnitten werden muss.
-- Kleine, eigenartige Macke: Wenn man als allererste Operation nach dem Öffnen einer Datei einen neuen Textparagraphen einfügt, dann
-   funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
-
 Aus UC-791
+- PDF-Option "Export beim Speichern"
+- PDF-Export beim Speichern erfordert aber, dass der Export auch funktioniert, wenn man nicht einmal durchs Dokument gescrollt hat.
+- PDF-Export muss auch Fehlermeldung liefern, wenn das Schreiben nicht funktioniert hat, z.B. weil das PDF grade geöffnet ist.
+   Aktuell passiert einach gar nicht und es kommt nur eine Exception auf Standard Out.
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
@@ -62,6 +30,12 @@ x Focus in Tabellen durch Drücken von TAB verschieben
    Geht in erster brauchbarer Form über CTRL+TAB als Standardfunktionalität von Swing
 
 Abschluss für Go-Live
+- Wenn beim Split einer TextEditArea der *vordere* Textteil überflüssige Whitespaces enthält,
+   dann wird der hintere Teil falsch kopiert. Für das Herstellen des hinteren Textteils wird nämlich intern zuerst der *ganze* Text
+   kopiert und anschließend gekürzt. Das Kopieren bewirkt die Bereinigung, sodass die ursprüngliche Caret Position im kopierten Text
+   nicht mehr sauber den Index repräsentiert, bis wohin der vordere Textteil in der Kopie abgeschnitten werden muss.
+- Kleine, eigenartige Macke: Wenn man als allererste Operation nach dem Öffnen einer Datei einen neuen Textparagraphen einfügt, dann
+   funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 x Quellschritten fehlt im Label die Nummer des Zielschritts
 x Quellschritte sind ohne Content
 x Schrittnummerreferenzen gehen bei Annahme von Änderungen kaputt
