@@ -16,7 +16,6 @@ import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 public class OrderedListItemEditArea extends AbstractListItemEditArea {
   private static final int DEFAULT_RIGHT_GAP = 3;
   private int rightGap;
-  private Rectangle2D lastLabelRect;
 
   public OrderedListItemEditArea(TextEditArea initialContent, Aenderungsart aenderungsart) {
     super(initialContent, aenderungsart);
@@ -33,15 +32,19 @@ public class OrderedListItemEditArea extends AbstractListItemEditArea {
 
   @Override
   protected void drawPrompt(Graphics2D g) {
-    Font font = content.getFont();
     int baseline = content.getBaseline();
-    FontMetrics metrics = getFontMetrics(font);
     String itemNumberString = Integer.toString(getParent().getItemNumber(this));
     g.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
     g.setFont(content.getFont());
     g.setColor(DIAGRAMM_LINE_COLOR);
-    lastLabelRect = metrics.getStringBounds(itemNumberString, g);
-    g.drawString(itemNumberString, promptSpace - (int)lastLabelRect.getWidth() - rightGap, baseline);
+    g.drawString(itemNumberString, promptPosition(itemNumberString), baseline);
+  }
+
+  private int promptPosition(String itemNumberString) {
+    Font font = content.getFont();
+    FontMetrics metrics = getFontMetrics(font);
+    int promptWidth = metrics.stringWidth(itemNumberString);
+    return promptSpace - promptWidth - rightGap;
   }
 
   @Override
@@ -55,9 +58,8 @@ public class OrderedListItemEditArea extends AbstractListItemEditArea {
     int topMargin = content.getTopMargin();
     String itemNumberString = Integer.toString(getParent().getItemNumber(this));
 
-    System.out.println(lastLabelRect);
     return super.getShape()
-      .add(new Shape(promptSpace - (int)lastLabelRect.getWidth() - rightGap, topMargin)
+      .add(new Shape(promptPosition(itemNumberString), topMargin)
         .withText(new LabelShapeText(itemNumberString, new Insets(0, 0, 0, 0), DIAGRAMM_LINE_COLOR, content.getFont()))
       );
   }
