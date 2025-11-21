@@ -15,4 +15,15 @@ public class LineShape extends Shape {
     return path.get(1);
   }
 
+  public Point start() { return path.get(0); }
+
+  public LineShape withColor(Color color) {
+    backgroundColor = color;
+    return this;
+  }
+
+  public LineShape withWidth(float width) {
+    this.lineWidth = width;
+    return this;
+  }
 }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
+import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class Shape {
   public static final com.itextpdf.kernel.colors.Color DEFAULT_FILL_COLOR = DeviceRgb.WHITE;
@@ -23,6 +24,7 @@ public class Shape {
   private boolean withOutline;
   private AbstractShapeText text;
   private ShapeImage image;
+  protected float lineWidth = (float)LINIENBREITE;
 
   public Shape() {}
 
@@ -200,4 +202,5 @@ public class Shape {
   public void applyDecoration(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas) {
   }
 
+  public float lineWidth() { return lineWidth; }
 }

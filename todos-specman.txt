@@ -1,11 +1,11 @@
 Aus UC-791
 - PDF-Option "Export beim Speichern"
-- PDF-Export muss auch Fehlermeldung liefern, wenn das Schreiben nicht funktioniert hat, z.B. weil das PDF grade geöffnet ist.
-   Aktuell passiert einach gar nicht und es kommt nur eine Exception auf Standard Out.
+- PDF-Export muss auch Fehlermeldung liefern, wenn das Schreiben nicht funktioniert hat, z.B. weil das PDF grade geöffnet ist. Aktuell passiert einfach gar nicht und es kommt nur eine Exception auf Standard Out.
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Schrittnummerlabel für gelöschte Schritte und Ziel- und Quellschritte werden im PDF-Export nicht korrekt dargestellt
 x PDF-Export beim Speichern erfordert aber, dass der Export auch funktioniert, wenn man nicht einmal durchs Dokument gescrollt hat.
    Das macht aktuell Ärger in OrderedListItemEditArea, weil die das Rechteck für den nummerierten Prompt erst lazy beim Rendering angelegt
    wird.

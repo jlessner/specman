@@ -100,12 +100,12 @@ public class EditContainer extends JPanel {
 	private Indentions indentions;
 	private boolean schrittNummerSichtbar = true;
 
-	public EditContainer(EditorI editor, TextEditArea initialContent, String schrittId) {
+	public EditContainer(EditorI editor, TextEditArea initialContent, SchrittID schrittId) {
 		this(editor, new EditorContentModel_V001(), schrittId);
 		addEditArea(initialContent, 0);
 	}
 
-	public EditContainer(EditorI editor, EditorContentModel_V001 initialContent, String schrittId) {
+	public EditContainer(EditorI editor, EditorContentModel_V001 initialContent, SchrittID schrittId) {
 		if (schrittId != null) {
 			schrittNummer = new SchrittNummerLabel(schrittId);
 			setEnabled(false);
@@ -193,25 +193,25 @@ public class EditContainer extends JPanel {
 	}
 
 	public void setZielschrittStilUDBL(SchrittID quellschrittId) {
-		schrittNummer.setZielschrittStilUDBL(quellschrittId);
+		schrittNummer.setTargetStyleUDBL(quellschrittId);
 	}
 
 	public void setQuellStil(SchrittID zielschrittID) {
 		editAreas.forEach(ea -> ea.setQuellStil());
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
-		schrittNummer.setQuellschrittStil(zielschrittID);
+		schrittNummer.setSourceStyle(zielschrittID);
 	}
 
 	public void setGeloeschtMarkiertStilUDBL(SchrittID id) {
 		setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		modifyableEditAreas().forEach(ea -> ea.setGeloeschtMarkiertStilUDBL());
 		if (schrittNummer != null) {
-			schrittNummer.setGeloeschtStilUDBL(id);
+			schrittNummer.setDeletedStyleUDBL(id);
 		}
 	}
 
-	public void setId(String id) {
-		schrittNummer.setText(id);
+	public void setId(SchrittID id) {
+		schrittNummer.setStepNumber(id);
 	}
 
 	public EditorContentModel_V001 editorContent2Model(boolean formatierterText) {
@@ -327,9 +327,9 @@ public class EditContainer extends JPanel {
 
 	public Rectangle getStepNumberBounds() { return schrittNummer.getBounds(); }
 
-	public void wrapSchrittnummerAsDeleted() { schrittNummer.wrapAsDeletedUDBL(); }
-	public void wrapSchrittnummerAsZiel(SchrittID quellschrittId) { schrittNummer.wrapAsZielUDBL(quellschrittId); }
-	public void wrapSchrittnummerAsQuelle(SchrittID zielschrittID) { schrittNummer.wrapAsQuelleUDBL(zielschrittID); }
+	public void markStepnumberAsDeleted() { schrittNummer.markAsDeletedUDBL(); }
+	public void markStepnumberAsTarget(SchrittID quellschrittId) { schrittNummer.markAsTargetUDBL(quellschrittId); }
+	public void markStepnumberAsSource(SchrittID zielschrittID) { schrittNummer.markAsSourceUDBL(zielschrittID); }
 
 	/** Required for iterations that may modify the list of edit areas. Working directly on the
 	 * list whould cause concurrent operation exceptions in these cases. The usage of this method

@@ -22,7 +22,6 @@ import specman.pdf.Shape;
 import specman.editarea.EditContainer;
 import specman.editarea.Indentions;
 import specman.editarea.InteractiveStepFragment;
-import specman.editarea.StepnumberLink;
 import specman.editarea.TextEditArea;
 import specman.undo.props.UDBL;
 
@@ -35,9 +34,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Untracked;
@@ -72,7 +69,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialContent, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
 		this.aenderungsart = aenderungsart;
-		this.editContainer = new EditContainer(editor, initialContent, id != null ? id.toString() : null);
+		this.editContainer = new EditContainer(editor, initialContent, id);
 		this.parent = parent;
 		editContainer.addEditAreasFocusListener(editor);
 		editContainer.addEditAreasFocusListener(this);
@@ -95,7 +92,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		SchrittID oldStepID = this.id;
 
 		this.id = id;
-		editContainer.setId(id.toString());
+		editContainer.setId(id);
 
 		if (!oldStepID.equals(id)) {
 			for (TextEditArea textEditArea : referencedByTextEditAreas) {
@@ -392,13 +389,13 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void resyncSchrittnummerStil() {
 		if (getAenderungsart() == Geloescht) {
-			editContainer.wrapSchrittnummerAsDeleted();
+			editContainer.markStepnumberAsDeleted();
 		}
 		if (getAenderungsart() == Aenderungsart.Quellschritt) {
-			editContainer.wrapSchrittnummerAsQuelle(((QuellSchrittView)this).getZielschrittID());
+			editContainer.markStepnumberAsSource(((QuellSchrittView)this).getZielschrittID());
 		}
 		if (getAenderungsart() == Zielschritt) {
-			editContainer.wrapSchrittnummerAsZiel(getQuellschritt().getId());
+			editContainer.markStepnumberAsTarget(getQuellschritt().getId());
 		}
 	}
 

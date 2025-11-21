@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static specman.pdf.Shape.DEFAULT_LINE_COLOR;
+import static specman.pdf.Shape.toPDFColor;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
 
 public class PDFRenderer {
@@ -89,7 +90,6 @@ public class PDFRenderer {
 
     pdfCanvas.setFillColor(Shape.DEFAULT_FILL_COLOR);
     pdfCanvas.setStrokeColor(Shape.DEFAULT_LINE_COLOR);
-    pdfCanvas.setLineWidth(((float)LINIENBREITE) * swing2pdfScaleFactor);
     pdfCanvas.setLineJoinStyle(LineJoinStyle.ROUND);
     pdfCanvas.setLineCapStyle(LineCapStyle.PROJECTING_SQUARE);
 
@@ -166,7 +166,8 @@ public class PDFRenderer {
           pdfCanvas.fill();
         }
         if (shape.withOutline()) {
-          pdfCanvas.setStrokeColor(DEFAULT_LINE_COLOR);
+          pdfCanvas.setLineWidth(shape.lineWidth() * swing2pdfScaleFactor);
+          pdfCanvas.setStrokeColor(toPDFColor(shape.backgroundColor, DEFAULT_LINE_COLOR));
           shape.runPath(renderOffset, swing2pdfScaleFactor, pdfCanvas);
           pdfCanvas.stroke();
         }

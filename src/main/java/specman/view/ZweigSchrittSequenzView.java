@@ -36,7 +36,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		this.aenderungsart = Specman.initialArt();
 	}
 
-	protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, String initialeSchrittnummer) {
+	protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, SchrittID initialeSchrittnummer) {
 		ueberschrift = new EditContainer(editor, initialerText, initialeSchrittnummer);
 		ueberschrift.addEditAreasFocusListener(editor);
 	}

@@ -3,6 +3,7 @@ package specman.editarea;
 import specman.SchrittID;
 import specman.Specman;
 import specman.draganddrop.DragMouseAdapter;
+import specman.pdf.LineShape;
 import specman.undo.props.UDBL;
 import specman.pdf.LabelShapeText;
 import specman.pdf.Shape;
@@ -11,18 +12,12 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.geom.Line2D;
 
-import static specman.editarea.HTMLTags.BODY_INTRO;
-import static specman.editarea.HTMLTags.BODY_OUTRO;
-import static specman.editarea.HTMLTags.HTML_INTRO;
-import static specman.editarea.HTMLTags.HTML_OUTRO;
-import static specman.editarea.HTMLTags.SPAN_INTRO;
-import static specman.editarea.HTMLTags.SPAN_OUTRO;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.Hintergrundfarbe_Geloescht;
 import static specman.editarea.TextStyles.Hintergrundfarbe_Schrittnummer;
 import static specman.editarea.TextStyles.SCHRITTNUMMER_VORDERGRUNDFARBE;
-import static specman.editarea.TextStyles.SPAN_GELOESCHT_MARKIERT;
 import static specman.editarea.TextStyles.Schriftfarbe_Geloescht;
 import static specman.editarea.TextStyles.labelFont;
 
@@ -30,9 +25,15 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
   private static final Border STANDARD_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Schrittnummer);
   private static final Border CHANGED_BORDER = new MatteBorder(0, 2, 0, 1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
   private static final Border DELETED_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Geloescht);
+  private static final String TO_TARGET_ARROW = " > ";
+  private static final String FROM_SOURCE_ARROW = " < ";
 
-  public SchrittNummerLabel(String schrittId) {
-    super(schrittId);
+  private SchrittID stepNumber, sourceStepNumber, targetStepNumber;
+
+  public SchrittNummerLabel(SchrittID stepNumber) {
+    super(String.valueOf(stepNumber));
+    this.stepNumber = stepNumber;
+
     setFont(labelFont);
     setBackground(Hintergrundfarbe_Schrittnummer);
     setBorder(STANDARD_BORDER);
@@ -44,69 +45,117 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
     addMouseMotionListener(ada);
   }
 
+  public void setStepNumber(SchrittID stepNumber) {
+    this.stepNumber = stepNumber;
+    assembleText();
+  }
+
+  @Override
+  public void paint(Graphics g) {
+    super.paint(g);
+    drawDeletionLine(g);
+  }
+
+  private void drawDeletionLine(Graphics g) {
+    LineShape dline = createDeletionLine();
+    if (dline != null) {
+      g.drawLine(dline.start().x, dline.start().y, dline.end().x, dline.end().y);
+    }
+  }
+
+  private LineShape createDeletionLine() {
+    if (sourceStepNumber != null) {
+      return createDeletionLine(stepNumber.toString().length() + FROM_SOURCE_ARROW.length(), sourceStepNumber.toString().length());
+    }
+    else if (targetStepNumber != null) {
+      return createDeletionLine(0, stepNumber.toString().length());
+    }
+    return null;
+  }
+
+  private LineShape createDeletionLine(int fromTextIndex, int textLength) {
+    FontMetrics metrics = getFontMetrics(getFont());
+    int undeletedWidth = metrics.stringWidth(getText().substring(0, fromTextIndex));
+    int deletedWidth = metrics.stringWidth(getText().substring(fromTextIndex, fromTextIndex + textLength));
+    return new LineShape(
+      undeletedWidth + 1,
+      getHeight() / 2,
+      undeletedWidth + deletedWidth + 1, getHeight() / 2)
+      .withColor(getForeground())
+      .withWidth(0.5f);
+  }
+
   public void setStandardStil(SchrittID id) {
-    setText(String.valueOf(id));
     setBorder(STANDARD_BORDER);
     setBackground(Hintergrundfarbe_Schrittnummer);
     setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
+    this.stepNumber = id;
+    this.targetStepNumber = null;
+    assembleText();
   }
 
-  public void setZielschrittStilUDBL(SchrittID quellschrittId) {
-    wrapAsZielUDBL(quellschrittId);
+  public void setTargetStyleUDBL(SchrittID quellschrittId) {
     setBorderUDBL(CHANGED_BORDER);
     setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
     setForegroundUDBL(Hintergrundfarbe_Geloescht);
+    markAsTargetUDBL(quellschrittId);
   }
 
-  public void setQuellschrittStil(SchrittID zielschrittID) {
-    wrapAsQuelleUDBL(zielschrittID);
+  public void markAsTargetUDBL(SchrittID sourceStepNumber) {
+    this.sourceStepNumber = sourceStepNumber;
+    assembleText();
+  }
+
+  public void setSourceStyle(SchrittID zielschrittID) {
     setBorder(DELETED_BORDER);
     setBackground(Hintergrundfarbe_Geloescht);
     setForeground(Schriftfarbe_Geloescht);
+    markAsSourceUDBL(zielschrittID);
   }
 
-  public void setGeloeschtStilUDBL(SchrittID id) {
+  public void markAsSourceUDBL(SchrittID zielschrittID) {
+    this.targetStepNumber = zielschrittID;
+    assembleText();
+  }
+
+  public void setDeletedStyleUDBL(SchrittID id) {
     setBorderUDBL(DELETED_BORDER);
     setBackgroundUDBL(Hintergrundfarbe_Geloescht);
     setForegroundUDBL(Schriftfarbe_Geloescht);
-    setWrappedTextUDBL(SPAN_GELOESCHT_MARKIERT, id, SPAN_OUTRO);
+    stepNumber = id;
+    markAsDeletedUDBL();
   }
 
-  public void wrapUDBL(String intro, String outro) {
-    setWrappedTextUDBL(intro, getText(), outro);
+  public void markAsDeletedUDBL() {
+    targetStepNumber = stepNumber;
+    assembleText();
   }
 
-  public void wrapAsZielUDBL(SchrittID quellschrittId) {
-    wrapUDBL(SPAN_INTRO,
-      SPAN_OUTRO + SPAN_INTRO + " &lt; " + SPAN_OUTRO + SPAN_GELOESCHT_MARKIERT + quellschrittId + SPAN_OUTRO);
-  }
-
-  public void wrapAsQuelleUDBL(SchrittID zielschrittID) {
-    wrapUDBL(SPAN_GELOESCHT_MARKIERT,
-      SPAN_OUTRO + SPAN_INTRO + " &gt; " + SPAN_OUTRO + SPAN_INTRO + zielschrittID + SPAN_OUTRO);
-  }
-
-  public void wrapAsDeletedUDBL() { wrapUDBL(SPAN_GELOESCHT_MARKIERT, SPAN_OUTRO); }
-
-  public void setWrappedTextUDBL(String intro, SchrittID schrittID, String outro) {
-    setWrappedTextUDBL(intro, schrittID.toString(), outro);
-  }
-
-  public void setWrappedTextUDBL(String intro, String schrittNummerText, String outro) {
-    setTextUDBL(HTML_INTRO + BODY_INTRO + intro + schrittNummerText + outro + BODY_OUTRO + HTML_OUTRO);
+  private void assembleText() {
+    String text = String.valueOf(stepNumber);
+    if (sourceStepNumber != null) {
+      text = text + FROM_SOURCE_ARROW + sourceStepNumber;
+    }
+    else if (targetStepNumber != null && targetStepNumber != stepNumber) {
+      text = text + TO_TARGET_ARROW + targetStepNumber;
+    }
+    setTextUDBL(text);
   }
 
   public Shape getShape() {
-    return new Shape(this).withText(new LabelShapeText(getText(), getInsets(), getForeground(), getFont()));
+    return new Shape(this)
+      .withText(new LabelShapeText(getText(), getInsets(), getForeground(), getFont()))
+      .add(createDeletionLine());
   }
 
-  public void setTextUDBL(String text) { UDBL.setTextUDBL(this, text); }
-  public void setForegroundUDBL(Color fg) { UDBL.setForegroundUDBL(this, fg); }
-  public void setBackgroundUDBL(Color fg) { UDBL.setBackgroundUDBL(this, fg); }
+  private void setTextUDBL(String text) { UDBL.setTextUDBL(this, text); }
+  private void setForegroundUDBL(Color fg) { UDBL.setForegroundUDBL(this, fg); }
+  private void setBackgroundUDBL(Color fg) { UDBL.setBackgroundUDBL(this, fg); }
   private void setBorderUDBL(Border border) { UDBL.setBorderUDBL(this, border); }
 
   @Override
   public String toString() {
     return "SchrittNummerLabel " + getText();
   }
+
 }

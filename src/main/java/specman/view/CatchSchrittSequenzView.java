@@ -36,15 +36,15 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   private void init(BreakSchrittView linkedBreakStep) {
     this.linkedBreakStep = linkedBreakStep;
-    ueberschrift.setId(linkedBreakStep.id.toString());
+    ueberschrift.setId(linkedBreakStep.id);
     linkedBreakStep.catchAnkoppeln(this);
     catchUeberschrift = new CatchUeberschrift(ueberschrift);
     ueberschrift.addEditAreasFocusListener(this);
   }
 
   @Override
-  protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, String initialeSchrittnummer) {
-    super.ueberschriftInitialisieren(editor, initialerText, "");
+  protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, SchrittID initialeSchrittnummer) {
+    super.ueberschriftInitialisieren(editor, initialerText, null);
   }
 
   @Override
@@ -71,7 +71,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public CatchBereich getParent() { return (CatchBereich) super.getParent(); }
 
   public void setId(SchrittID id) {
-    ueberschrift.setId(id.toString());
+    ueberschrift.setId(id);
     sequenzBasisId = id.naechsteEbene();
     renummerieren();
   }
