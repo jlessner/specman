@@ -44,7 +44,8 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   @Override
   protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, SchrittID initialeSchrittnummer) {
-    super.ueberschriftInitialisieren(editor, initialerText, null);
+    // Dummy SchrittID causes the heading to be created with step number label which will be updated later
+    super.ueberschriftInitialisieren(editor, initialerText, new SchrittID(0));
   }
 
   @Override

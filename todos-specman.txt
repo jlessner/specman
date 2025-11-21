@@ -1,5 +1,4 @@
 Aus UC-791
-- PDF-Exportdialog erscheint jedes Mal an ungünstiger Stelle auf dem Bildschirm. Das nervt, weil man ziemlich oft exportieren muss
 - Undo / Redo für Anlage von Schritten im Änderungsmodus braucht jeweils *zweimal* CTRL+Z bzw. CTRL+Y.
 - PDF-Option "Export beim Speichern"
 - PDF-Export muss auch Fehlermeldung liefern, wenn das Schreiben nicht funktioniert hat, z.B. weil das PDF grade geöffnet ist. Aktuell passiert einfach gar nicht und es kommt nur eine Exception auf Standard Out.
@@ -7,6 +6,7 @@ Aus UC-791
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x PDF-Exportdialog erscheint jedes Mal an ungünstiger Stelle auf dem Bildschirm. Das nervt, weil man ziemlich oft exportieren muss
 x Schrittnummerlabel für gelöschte Schritte und Ziel- und Quellschritte werden im PDF-Export nicht korrekt dargestellt
 x PDF-Export beim Speichern erfordert aber, dass der Export auch funktioniert, wenn man nicht einmal durchs Dokument gescrollt hat.
    Das macht aktuell Ärger in OrderedListItemEditArea, weil die das Rechteck für den nummerierten Prompt erst lazy beim Rendering angelegt
