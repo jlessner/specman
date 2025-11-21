@@ -116,7 +116,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		initComponents();
 
 		initShefController();
-		//initJWebengineController();
 
 		hauptSequenz = new SchrittSequenzView();
 
@@ -781,9 +780,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			undoManager.discardAllEdits();
 		}
 		catch (JsonProcessingException jpx) {
-			jpx.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+      displayException(jpx);
+		}
+    catch (IOException e) {
+      displayException(e);
 		}
 	}
 
@@ -837,7 +837,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			undoManager.discardAllEdits();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+      displayException(e);
 		}
 	}
 
@@ -1137,7 +1137,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			new GraphvizExporter("export.gv").export(model);
 		}
 		catch(IOException iox) {
-			iox.printStackTrace();
+      displayException(iox);
 		}
 	}
 
@@ -1160,16 +1160,21 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 					.add(hauptSequenz.getShapeSequence())
 					.add(breitenAnpasser.getShape())
 					.add(outro.getShape());
-				new PDFRenderer(selectedFile.getAbsolutePath(),
-					pdfExportChooser.getSelectedPageSize(),
-					pdfExportChooser.isPortrait(),
-					pdfExportChooser.getPaging(), zoomFaktor).render(all);
+        try {
+          new PDFRenderer(selectedFile.getAbsolutePath(),
+            pdfExportChooser.getSelectedPageSize(),
+            pdfExportChooser.isPortrait(),
+            pdfExportChooser.getPaging(), zoomFaktor).render(all);
+        }
+        catch(IOException iox) {
+          displayException(iox);
+        }
 				if (pdfExportChooser.displayResult()) {
 					try {
 						Desktop.getDesktop().open(selectedFile);
 					}
 					catch(IOException iox) {
-						iox.printStackTrace();
+            displayException(iox);
 					}
 				}
 			}
@@ -1351,5 +1356,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
   @Override
   public void resumeScrolling() {
     viewport.resumeScrolling();
+  }
+
+  private void displayException(Exception x) {
+    x.printStackTrace();
+    displayErrorMessage(x.getMessage());
+  }
+
+  private void displayErrorMessage(String message) {
+    JOptionPane.showMessageDialog(this, message, "Fehler", JOptionPane.ERROR_MESSAGE);
   }
 }

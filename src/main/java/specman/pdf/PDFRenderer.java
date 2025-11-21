@@ -61,7 +61,7 @@ public class PDFRenderer {
     }
   }
 
-  public void render(Shape rootShape) {
+  public void render(Shape rootShape) throws IOException {
     PageSize overlengthPagesize = initPdfCanvasAndScaleFactor(rootShape);
     int yTop = hasOverlength(overlengthPagesize)
       ? rootShape.getHeight()
@@ -98,21 +98,16 @@ public class PDFRenderer {
     return overlengthPagesize;
   }
 
-  private void render(Shape rootShape, Point renderOffset, PageSize overlengthPagesize) {
-    try {
-      drawShape(rootShape, renderOffset);
-      document.close();
-      pdfOutputStream.close();
+  private void render(Shape rootShape, Point renderOffset, PageSize overlengthPagesize) throws IOException {
+    drawShape(rootShape, renderOffset);
+    document.close();
+    pdfOutputStream.close();
 
-      tileOverlengthPage(overlengthPagesize);
+    tileOverlengthPage(overlengthPagesize);
 
-      FileOutputStream fos = new FileOutputStream(pdfFilename);
-      fos.write(pdfOutputStream.toByteArray());
-      fos.close();
-    }
-    catch(Exception x) {
-      x.printStackTrace();
-    }
+    FileOutputStream fos = new FileOutputStream(pdfFilename);
+    fos.write(pdfOutputStream.toByteArray());
+    fos.close();
   }
 
   private boolean hasOverlength(PageSize overlengthPagesize) {
