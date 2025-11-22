@@ -45,4 +45,6 @@ public interface EditorI extends FocusListener {
   void resumeScrolling();
 
   List<JTextComponent> queryAllTextComponents(JTextComponent tc);
+
+  void resyncStepnumberStyle();
 }

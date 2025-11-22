@@ -1,6 +1,7 @@
 package specman.undo;
 
 import specman.EditException;
+import specman.Specman;
 import specman.view.AbstractSchrittView;
 import specman.view.SchrittSequenzView;
 
@@ -19,10 +20,12 @@ public class UndoableSchrittVerschoben extends AbstractUndoableInteraction {
 
   @Override public void undoEdit() throws EditException {
     togglePosition();
+    Specman.instance().resyncStepnumberStyle();
   }
 
   @Override public void redoEdit() throws EditException {
     togglePosition();
+    Specman.instance().resyncStepnumberStyle();
   }
 
   protected void togglePosition() throws EditException {

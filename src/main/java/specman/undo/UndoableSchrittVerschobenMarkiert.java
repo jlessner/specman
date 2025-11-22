@@ -27,12 +27,7 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
       quellschritt.getParent().schrittEntfernen(quellschritt, Discard);
       step.aenderungsmarkierungenEntfernen();
     }
-    else {
-      // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht
-      // kaputt gehen, wenn der Schritt (im Rahmen von togglePosition) seine ID
-      // neu gesetzt bekommt.
-      step.resyncSchrittnummerStil();
-    }
+    Specman.instance().resyncStepnumberStyle();
   }
 
   @Override public void redoEdit() throws EditException {
@@ -41,10 +36,6 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
       originalParent.schrittZwischenschieben(quellschritt, Before, step);
     }
     togglePosition();
-    // TODO JL: Unschön, dass das hier notwendig ist. Der Stil sollte gar nicht
-    // kaputt gehen, wenn der Schritt (im Rahmen von togglePosition) seine ID
-    // neu gesetzt bekommt.
-    step.resyncSchrittnummerStil();
-    quellschritt.resyncSchrittnummerStil();
+    Specman.instance().resyncStepnumberStyle();
   }
 }

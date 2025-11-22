@@ -26,7 +26,6 @@ import java.awt.Point;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 import static specman.Specman.initialtext;
@@ -264,10 +263,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 			elseSequenz.hatUeberschrift(fragment);
 	}
 
-	@Override public void resyncSchrittnummerStil() {
-		super.resyncSchrittnummerStil();
-		getElseSequenz().resyncSchrittnummerStil();
-		getIfSequenz().resyncSchrittnummerStil();
+	@Override public void resyncStepnumberStyle() {
+		super.resyncStepnumberStyle();
+		getElseSequenz().resyncStepnumberStyle();
+		getIfSequenz().resyncStepnumberStyle();
 	}
 
 	@Override public void viewsNachinitialisieren() {

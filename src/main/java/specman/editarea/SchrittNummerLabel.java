@@ -12,7 +12,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.geom.Line2D;
 
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.Hintergrundfarbe_Geloescht;
@@ -47,7 +46,7 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
 
   public void setStepNumber(SchrittID stepNumber) {
     this.stepNumber = stepNumber;
-    assembleText();
+    assembleTextUDBL();
   }
 
   @Override
@@ -91,7 +90,7 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
     setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
     this.stepNumber = id;
     this.targetStepNumber = null;
-    assembleText();
+    assembleTextUDBL();
   }
 
   public void setTargetStyleUDBL(SchrittID quellschrittId) {
@@ -103,7 +102,7 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
 
   public void markAsTargetUDBL(SchrittID sourceStepNumber) {
     this.sourceStepNumber = sourceStepNumber;
-    assembleText();
+    assembleTextUDBL();
   }
 
   public void setSourceStyle(SchrittID zielschrittID) {
@@ -115,7 +114,7 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
 
   public void markAsSourceUDBL(SchrittID zielschrittID) {
     this.targetStepNumber = zielschrittID;
-    assembleText();
+    assembleTextUDBL();
   }
 
   public void setDeletedStyleUDBL(SchrittID id) {
@@ -127,11 +126,14 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
   }
 
   public void markAsDeletedUDBL() {
-    targetStepNumber = stepNumber;
-    assembleText();
+    // Only change and record undo action if necessary
+    if (targetStepNumber != stepNumber) {
+      targetStepNumber = stepNumber;
+      assembleTextUDBL();
+    }
   }
 
-  private void assembleText() {
+  private void assembleTextUDBL() {
     String text = String.valueOf(stepNumber);
     if (sourceStepNumber != null) {
       text = text + FROM_SOURCE_ARROW + sourceStepNumber;

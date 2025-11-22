@@ -427,42 +427,42 @@ public class DraggingLogic implements Serializable {
         else if (e.getSource().equals(specman.getEinfachenSchrittAnhaengen())) {
             referenceStep = sequenz.einfachenSchrittZwischenschieben(insertionPosition, referenceStep, specman);
             specman.newStepPostInit(referenceStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
+            specman.hauptSequenz.resyncStepnumberStyle();
         }
         else if (e.getSource().equals(specman.getWhileSchrittAnhaengen())) {
             referenceStep = sequenz.whileSchrittZwischenschieben(insertionPosition, referenceStep, specman);
             specman.newStepPostInit(referenceStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
+            specman.hauptSequenz.resyncStepnumberStyle();
         }
         else if (e.getSource().equals(specman.getWhileWhileSchrittAnhaengen())) {
             referenceStep = sequenz.whileWhileSchrittZwischenschieben(insertionPosition, referenceStep, specman);
             specman.newStepPostInit(referenceStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
+            specman.hauptSequenz.resyncStepnumberStyle();
         }
         else if (e.getSource().equals(specman.getIfElseSchrittAnhaengen())) {
             referenceStep = sequenz.ifElseSchrittZwischenschieben(insertionPosition, referenceStep, specman);
             specman.newStepPostInit(referenceStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
+            specman.hauptSequenz.resyncStepnumberStyle();
         }
         else if (e.getSource().equals(specman.getIfSchrittAnhaengen())) {
             referenceStep = sequenz.ifSchrittZwischenschieben(insertionPosition, referenceStep, specman);
             specman.newStepPostInit(referenceStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
+            specman.hauptSequenz.resyncStepnumberStyle();
         }
         else if (e.getSource().equals(specman.getCaseSchrittAnhaengen())) {
             referenceStep = sequenz.caseSchrittZwischenschieben(insertionPosition, referenceStep, specman);
             specman.newStepPostInit(referenceStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
+            specman.hauptSequenz.resyncStepnumberStyle();
         }
         else if (e.getSource().equals(specman.getSubsequenzSchrittAnhaengen())) {
             referenceStep = sequenz.subsequenzSchrittZwischenschieben(insertionPosition, referenceStep, specman);
             specman.newStepPostInit(referenceStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
+            specman.hauptSequenz.resyncStepnumberStyle();
         }
         else if (e.getSource().equals(specman.getBreakSchrittAnhaengen())) {
             referenceStep = sequenz.breakSchrittZwischenschieben(insertionPosition, referenceStep, specman);
             specman.newStepPostInit(referenceStep);
-            specman.hauptSequenz.resyncSchrittnummerStil();
+            specman.hauptSequenz.resyncStepnumberStyle();
         }
         else if (e.getSource().equals(specman.getCatchSchrittAnhaengen())) {
             // TODO JL: Catch
@@ -498,7 +498,7 @@ public class DraggingLogic implements Serializable {
                 movingStep.setQuellschrittUDBL(quellschritt);
                 movingStep.setZielschrittStilUDBL();
                 quellschritt.setZielschrittUDBL(movingStep);
-                specman.hauptSequenz.resyncSchrittnummerStil();
+                specman.hauptSequenz.resyncStepnumberStyle();
             }
             else {
                 SchrittSequenzView originalParent = movingStep.getParent();
