@@ -325,160 +325,130 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	private void actionListenerHinzufuegen() {
-		einfachenSchrittAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt);
-				resyncSchrittnummerStil();
-			}
+		einfachenSchrittAnhaengen.addAtomicActionListener(e -> {
+      dropWelcomeMessage();
+      AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      AbstractSchrittView schritt = (referenceStep != null)
+        ? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
+        : hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
+      newStepPostInit(schritt);
+      resyncSchrittnummerStil();
+    });
+
+		whileSchrittAnhaengen.addAtomicActionListener(e -> {
+      dropWelcomeMessage();
+      AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      AbstractSchrittView schritt = (referenceStep != null)
+        ? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
+        : hauptSequenz.whileSchrittAnhaengen(Specman.this);
+      newStepPostInit(schritt);
+      resyncSchrittnummerStil();
+    });
+
+		whileWhileSchrittAnhaengen.addAtomicActionListener(e -> {
+      dropWelcomeMessage();
+      AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      AbstractSchrittView schritt = (referenceStep != null)
+          ? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
+          : hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
+      newStepPostInit(schritt);
+      resyncSchrittnummerStil();
 		});
 
-		whileSchrittAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.whileSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt);
-				resyncSchrittnummerStil();
-			}
+		ifElseSchrittAnhaengen.addAtomicActionListener(e -> {
+      dropWelcomeMessage();
+      AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      AbstractSchrittView schritt = (referenceStep != null)
+          ? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
+          : hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
+      newStepPostInit(schritt);
+      resyncSchrittnummerStil();
+    });
+
+		ifSchrittAnhaengen.addAtomicActionListener(e -> {
+      dropWelcomeMessage();
+      AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      AbstractSchrittView schritt = (referenceStep != null)
+          ? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
+          : hauptSequenz.ifSchrittAnhaengen(Specman.this);
+      newStepPostInit(schritt);
+      resyncSchrittnummerStil();
 		});
 
-		whileWhileSchrittAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt);
-				resyncSchrittnummerStil();
-			}
+		caseSchrittAnhaengen.addAtomicActionListener(e -> {
+      dropWelcomeMessage();
+      AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      AbstractSchrittView schritt = (referenceStep != null)
+          ? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
+          : hauptSequenz.caseSchrittAnhaengen(Specman.this);
+      newStepPostInit(schritt);
+      resyncSchrittnummerStil();
 		});
 
-		ifElseSchrittAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt);
-				resyncSchrittnummerStil();
-			}
+		subsequenzSchrittAnhaengen.addAtomicActionListener(e -> {
+      dropWelcomeMessage();
+      AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      AbstractSchrittView schritt = (referenceStep != null)
+          ? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
+          : hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
+      newStepPostInit(schritt);
+      resyncSchrittnummerStil();
 		});
 
-		ifSchrittAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.ifSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt);
-				resyncSchrittnummerStil();
-			}
+		breakSchrittAnhaengen.addAtomicActionListener(e -> {
+      dropWelcomeMessage();
+      AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      AbstractSchrittView schritt = (referenceStep != null)
+          ? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
+          : hauptSequenz.breakSchrittAnhaengen(Specman.this);
+      newStepPostInit(schritt);
+      resyncSchrittnummerStil();
 		});
 
-		caseSchrittAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.caseSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt);
-				resyncSchrittnummerStil();
-			}
+		catchSchrittAnhaengen.addAtomicActionListener(e -> {
+      AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      if (referenceStep != null) { // Avoids placing a catch step as the first one in the diagramm
+        dropWelcomeMessage();
+        new CatchLinkDialog(null, referenceStep.getParent());
+      }
 		});
 
-		subsequenzSchrittAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt);
-				resyncSchrittnummerStil();
-			}
-		});
-
-		breakSchrittAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				AbstractSchrittView schritt = (referenceStep != null)
-						? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
-						: hauptSequenz.breakSchrittAnhaengen(Specman.this);
-				newStepPostInit(schritt);
-				resyncSchrittnummerStil();
-			}
-		});
-
-		catchSchrittAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				if (referenceStep != null) { // Avoids placing a catch step as the first one in the diagramm
-					dropWelcomeMessage();
-					new CatchLinkDialog(null, referenceStep.getParent());
-				}
-			}
-		});
-
-		caseAnhaengen.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dropWelcomeMessage();
-				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				if (!(schritt instanceof CaseSchrittView)) {
-					fehler("Kein Case-Schritt ausgewählt");
-					return;
-				}
-				CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
-				ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.headingToBranch(lastFocusedTextArea);
-				if (ausgewaehlterZweig == null) {
-					fehler("Kein Zweig ausgewählt");
-					return;
-				}
-				ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(Specman.this, ausgewaehlterZweig);
-				addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
-				schritt.skalieren(zoomFaktor, 100);
-				diagrammAktualisieren(schritt.getFirstEditArea());
-				resyncSchrittnummerStil();
-			}
+		caseAnhaengen.addAtomicActionListener(e -> {
+      dropWelcomeMessage();
+      AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      if (!(schritt instanceof CaseSchrittView)) {
+        fehler("Kein Case-Schritt ausgewählt");
+        return;
+      }
+      CaseSchrittView caseSchritt = (CaseSchrittView)schritt;
+      ZweigSchrittSequenzView ausgewaehlterZweig = caseSchritt.headingToBranch(lastFocusedTextArea);
+      if (ausgewaehlterZweig == null) {
+        fehler("Kein Zweig ausgewählt");
+        return;
+      }
+      ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(Specman.this, ausgewaehlterZweig);
+      addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
+      schritt.skalieren(zoomFaktor, 100);
+      diagrammAktualisieren(schritt.getFirstEditArea());
+      resyncSchrittnummerStil();
 		});
 
 		exportPDF.addActionListener((e -> {
             exportAsPDF();
         }));
 
-		einfaerben.addActionListener(e -> {
-            if (lastFocusedTextArea != null) {
-                AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
-                Color aktuelleHintergrundfarbe = schritt.getBackground();
-                int farbwert = aktuelleHintergrundfarbe.getRed() == 240 ? 255 : 240;
-                Color neueHintergrundfarbe = new Color(farbwert, farbwert, farbwert);
-                schritt.setBackgroundUDBL(neueHintergrundfarbe);
-                addEdit(new UndoableSchrittEingefaerbt(schritt, aktuelleHintergrundfarbe, neueHintergrundfarbe));
-            }
-        });
+		einfaerben.addAtomicActionListener(e -> {
+        if (lastFocusedTextArea != null) {
+            AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
+            Color aktuelleHintergrundfarbe = schritt.getBackground();
+            int farbwert = aktuelleHintergrundfarbe.getRed() == 240 ? 255 : 240;
+            Color neueHintergrundfarbe = new Color(farbwert, farbwert, farbwert);
+            schritt.setBackgroundUDBL(neueHintergrundfarbe);
+            addEdit(new UndoableSchrittEingefaerbt(schritt, aktuelleHintergrundfarbe, neueHintergrundfarbe));
+        }
+    });
 
-		loeschen.addActionListener(e -> {
+		loeschen.addAtomicActionListener(e -> {
 			if (lastFocusedTextArea == null) {
 				return;
 			}
@@ -503,31 +473,29 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 				}
 				else {
 					//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
-					try (UndoRecording ur = composeUndo()) {
-						if (schritt instanceof CaseSchrittView) {
-							CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-							ZweigSchrittSequenzView zweig = caseSchritt.headingToBranch(lastFocusedTextArea);
-							if (zweig != null) {
-								int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
-								undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
-							}
-						}
-						else if (schritt instanceof CatchBereich) {
-							CatchBereich catchBereich = (CatchBereich) schritt;
-							CatchSchrittSequenzView catchSequence = catchBereich.headingToBranch(lastFocusedTextArea);
-							if (catchSequence != null) {
-								catchSequence.removeOrMarkAsDeletedUDBL();
-								// No undo action required here. The undo composition of low-level changes covers everything
-							}
-						}
-						else if (isStepDeletionAllowed(schritt)) {
-							schritt.markStepnumberLinksAsDefect();
-							SchrittSequenzView sequenz = schritt.getParent();
-							int schrittIndex = sequenz.schrittEntfernen(schritt, Discard);
-							undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
-							resyncSchrittnummerStil();
-						}
-					}
+          if (schritt instanceof CaseSchrittView) {
+            CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
+            ZweigSchrittSequenzView zweig = caseSchritt.headingToBranch(lastFocusedTextArea);
+            if (zweig != null) {
+              int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
+              undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+            }
+          }
+          else if (schritt instanceof CatchBereich) {
+            CatchBereich catchBereich = (CatchBereich) schritt;
+            CatchSchrittSequenzView catchSequence = catchBereich.headingToBranch(lastFocusedTextArea);
+            if (catchSequence != null) {
+              catchSequence.removeOrMarkAsDeletedUDBL();
+              // No undo action required here. The undo composition of low-level changes covers everything
+            }
+          }
+          else if (isStepDeletionAllowed(schritt)) {
+            schritt.markStepnumberLinksAsDefect();
+            SchrittSequenzView sequenz = schritt.getParent();
+            int schrittIndex = sequenz.schrittEntfernen(schritt, Discard);
+            undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
+            resyncSchrittnummerStil();
+          }
 				}
       }
 			catch (EditException ex) {
@@ -535,17 +503,14 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
     });
 
-		toggleBorderType.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				if (schritt != null) {
-					SchrittSequenzView sequenz = schritt.getParent();
-					sequenz.toggleBorderType(schritt);
-					addEdit(new UndoableToggleStepBorder(Specman.this, schritt, sequenz));
-					diagrammAktualisieren(schritt.getFirstEditArea());
-				}
-			}
+		toggleBorderType.addAtomicActionListener(e -> {
+      AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      if (schritt != null) {
+        SchrittSequenzView sequenz = schritt.getParent();
+        sequenz.toggleBorderType(schritt);
+        addEdit(new UndoableToggleStepBorder(Specman.this, schritt, sequenz));
+        diagrammAktualisieren(schritt.getFirstEditArea());
+      }
 		});
 
 		speichern.addActionListener(new ActionListener() {
@@ -909,20 +874,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		toolBar.setFloatable(false); //ToDo Sidebar added
 		buttonBar = new JToolBar(JToolBar.VERTICAL); //ToDo Sidebar added
 
-		einfachenSchrittAnhaengen = new JButton();
-		whileSchrittAnhaengen = new JButton();
-		whileWhileSchrittAnhaengen = new JButton();
-		ifElseSchrittAnhaengen = new JButton();
-		ifSchrittAnhaengen = new JButton();
-		caseSchrittAnhaengen = new JButton();
-		subsequenzSchrittAnhaengen = new JButton();
-		breakSchrittAnhaengen = new JButton();
-		catchSchrittAnhaengen = new JButton();
-		caseAnhaengen = new JButton();
+		einfachenSchrittAnhaengen = new AtomicActionButton();
+		whileSchrittAnhaengen = new AtomicActionButton();
+		whileWhileSchrittAnhaengen = new AtomicActionButton();
+		ifElseSchrittAnhaengen = new AtomicActionButton();
+		ifSchrittAnhaengen = new AtomicActionButton();
+		caseSchrittAnhaengen = new AtomicActionButton();
+		subsequenzSchrittAnhaengen = new AtomicActionButton();
+		breakSchrittAnhaengen = new AtomicActionButton();
+		catchSchrittAnhaengen = new AtomicActionButton();
+		caseAnhaengen = new AtomicActionButton();
 		exportPDF = new JButton();
-		einfaerben = new JButton();
-		loeschen = new JButton();
-		toggleBorderType = new JButton();
+		einfaerben = new AtomicActionButton();
+		loeschen = new AtomicActionButton();
+		toggleBorderType = new AtomicActionButton();
 		review = new JButton();
 		birdsview = new JButton();
 		aenderungenVerfolgen = new JToggleButton();
@@ -1067,20 +1032,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JToolBar toolBar;
 	private JToolBar buttonBar; // Sidebar ergänzt
-	private JButton einfachenSchrittAnhaengen;
-	private JButton whileSchrittAnhaengen;
-	private JButton whileWhileSchrittAnhaengen;
-	private JButton ifElseSchrittAnhaengen;
-	private JButton ifSchrittAnhaengen;
-	private JButton caseSchrittAnhaengen;
-	private JButton subsequenzSchrittAnhaengen;
-	private JButton breakSchrittAnhaengen;
-	private JButton catchSchrittAnhaengen;
-	private JButton caseAnhaengen;
+	private AtomicActionButton einfachenSchrittAnhaengen;
+	private AtomicActionButton whileSchrittAnhaengen;
+	private AtomicActionButton whileWhileSchrittAnhaengen;
+	private AtomicActionButton ifElseSchrittAnhaengen;
+	private AtomicActionButton ifSchrittAnhaengen;
+	private AtomicActionButton caseSchrittAnhaengen;
+	private AtomicActionButton subsequenzSchrittAnhaengen;
+	private AtomicActionButton breakSchrittAnhaengen;
+	private AtomicActionButton catchSchrittAnhaengen;
+	private AtomicActionButton caseAnhaengen;
 	private JButton exportPDF;
-	private JButton einfaerben;
-	private JButton loeschen;
-	private JButton toggleBorderType;
+	private AtomicActionButton einfaerben;
+	private AtomicActionButton loeschen;
+	private AtomicActionButton toggleBorderType;
 	private JButton review;
 	private JButton birdsview;
 	private JButton aenderungenUebernehmen;

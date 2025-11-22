@@ -1,10 +1,11 @@
 Aus UC-791
-- Viele ungruppierte Undos / Redos bei Anlage von Schritten im Änderungsmodus braucht jeweils *zweimal* CTRL+Z bzw. CTRL+Y.
+- Update Labeltext in Quellschritt fehlt noch im Undo
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Viele ungruppierte Undos / Redos bei Anlage von Schritten im Änderungsmodus braucht jeweils *zweimal* CTRL+Z bzw. CTRL+Y.
 x PDF-Export muss Fehlermeldung liefern, wenn das Schreiben nicht funktioniert hat, z.B. weil das PDF grade geöffnet ist. Aktuell passiert einfach gar nicht und es kommt nur eine Exception auf Standard Out.
 x PDF-Exportdialog erscheint jedes Mal an ungünstiger Stelle auf dem Bildschirm. Das nervt, weil man ziemlich oft exportieren muss
 x Schrittnummerlabel für gelöschte Schritte und Ziel- und Quellschritte werden im PDF-Export nicht korrekt dargestellt
