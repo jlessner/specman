@@ -1,19 +1,12 @@
 Aus UC-791
-- Rücknahme von Löschung eines Schritts lässt den *Inhalt* als gelöscht markiert zurück.
-   Hintergrund und Label werden korrekt wieder hergestellt.
-   Das solle basierend auf dem neuen Konzept für Änderungsmarkierungen separat vom Text sauber überarbeitet werden. Beim
-    der bisherigen Implementierung gingen sowieso alle User-vergebenen Styilings verloren. Neue Grundidee:
-    - Löschstyling von Textareas eines gelöscht markierten Schritts werden nicht mehr im HTML-Inhalt repräsentiert
-    - Sie bilden ein "Overlay-Styling", wie für andere Änderungsmarkierungen auch.
-    - Bei Markierung als gelöscht wird ein Backup des bisherigen HTML-Inhalts gezogen, das beim Speichern herangezogen wird.
-    - Beim Lesen eines solchen Schritts wird der HTML-Inhalt gleich als Backup festgehalten.
-    - Beim Verwerfen von Änderungen wird der Inhalt der Textarea aus dem Backup wiederhergestellt und das Backup gelöscht.
-    - Ab dem Moment ist der sichtbare Inhalt wieder der "richtige" Inhalt.
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Als gelöscht markiertes Bild hat beim Laden von Datei keine Löschmarkierung (grauer Strich durch)
+x Rücknahme von Löschung eines Schritts lässt den *Inhalt* als gelöscht markiert zurück.
+   Hintergrund und Label werden korrekt wieder hergestellt.
 x Undo einer *wiederholten* Schrittverschiebung im Änderungsmodus führt zu Exception
 x Update Labeltext in Quellschritt fehlt noch im Undo
 x Viele ungruppierte Undos / Redos bei Anlage von Schritten im Änderungsmodus braucht jeweils *zweimal* CTRL+Z bzw. CTRL+Y.

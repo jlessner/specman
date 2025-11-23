@@ -67,11 +67,12 @@ import static specman.editarea.TextStyles.ganzerSchrittGeloeschtStil;
 import static specman.editarea.TextStyles.quellschrittStil;
 import static specman.editarea.TextStyles.stepnumberLinkStyleColor;
 
-public class TextEditArea extends JEditorPane implements EditArea {
+public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaModel_V001> {
     private static final String INITIAL_EMPTY_CONTENT_INDICATOR = "x";
 
     private WrappedElement hoveredElement;
     private Aenderungsart aenderungsart;
+    private TextEditAreaModel_V001 deletionBackup;
 
     public TextEditArea(TextEditAreaModel_V001 model, Font font) {
         this.aenderungsart = model.aenderungsart;
@@ -201,9 +202,10 @@ public class TextEditArea extends JEditorPane implements EditArea {
 
     @Override
     public void setGeloeschtMarkiertStilUDBL() {
-        aenderungenVerwerfen();
-        setStyleUDBL(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
-        setAenderungsartUDBL(Geloescht);
+      aenderungenVerwerfen();
+      setAenderungsartUDBL(Geloescht);
+      deletionBackup = getTextWithMarkups(true);
+      setStyleUDBL(ganzerSchrittGeloeschtStil, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE, false);
     }
 
     @Override
@@ -301,6 +303,13 @@ public class TextEditArea extends JEditorPane implements EditArea {
             if (!areaDetachedByMerge()) {
                 getParent().removeEditAreaUDBL(this);
             }
+        }
+        else if (aenderungsart == Geloescht) {
+            if (deletionBackup != null) {
+                setText(deletionBackup.text);
+                setEditable(true);
+            }
+          deletionBackup = null;
         }
         else {
             EditorI editor = Specman.instance();
@@ -515,8 +524,10 @@ public class TextEditArea extends JEditorPane implements EditArea {
     }
 
     @Override
-    public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
-        return getTextWithMarkups(formatierterText);
+    public TextEditAreaModel_V001 toModel(boolean formatierterText) {
+      return (aenderungsart == Geloescht)
+        ? deletionBackup
+        : getTextWithMarkups(formatierterText);
     }
 
     @Override
@@ -803,7 +814,12 @@ public class TextEditArea extends JEditorPane implements EditArea {
     public boolean enthaelt(InteractiveStepFragment fragment) { return this == fragment; }
 
     @Override public Aenderungsart getAenderungsart() { return aenderungsart; }
-    @Override public void setAenderungsart(Aenderungsart aenderungsart) { this.aenderungsart = aenderungsart; }
+    @Override public void setAenderungsart(Aenderungsart aenderungsart) {
+      this.aenderungsart = aenderungsart;
+      if (aenderungsart != Geloescht) {
+        deletionBackup = null;
+      }
+    }
     private void setAenderungsartUDBL(Aenderungsart aenderungsart) { UDBL.setAenderungsart(this, aenderungsart); }
 
     public Shape getShape() {

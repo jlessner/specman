@@ -2,6 +2,7 @@ package specman.editarea.markups;
 
 import specman.Specman;
 import specman.editarea.TextEditArea;
+import specman.editarea.TextStyles;
 import specman.editarea.document.WrappedDocument;
 import specman.model.v001.Markup_V001;
 import specman.undo.manager.UndoRecording;

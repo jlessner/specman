@@ -48,7 +48,7 @@ import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
  * the panel itself is black and the table cells are placed as children with a little
  * gap between them. This causes the black panel background to shine through the gaps,
  * creating the impression of lines. */
-public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI {
+public class TableEditArea extends JPanel implements EditArea<TableEditAreaModel_V001>, SpaltenContainerI {
   private static final int BORDER_THICKNESS = 7;
   private static final String TABLELINE_GAP = FORMLAYOUT_GAP;
   private static final String TABLELAYOUT_ROWSPEC = ZEILENLAYOUT_INHALT_SICHTBAR;
@@ -198,7 +198,7 @@ public class TableEditArea extends JPanel implements EditArea, SpaltenContainerI
   }
 
   @Override
-  public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
+  public TableEditAreaModel_V001 toModel(boolean formatierterText) {
     List<List<EditorContentModel_V001>> cellsModel = new ArrayList<>();
     for (List<EditContainer> row: cells) {
       List<EditorContentModel_V001> rowModel = row

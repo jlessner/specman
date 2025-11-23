@@ -11,7 +11,7 @@ import java.awt.event.FocusListener;
 import java.util.HashMap;
 import java.util.List;
 
-public interface EditArea extends InteractiveStepFragment {
+public interface EditArea<MODEL extends AbstractEditAreaModel_V001> extends InteractiveStepFragment {
   void addSchrittnummer(SchrittNummerLabel schrittNummer);
 
   int getWidth();
@@ -20,7 +20,7 @@ public interface EditArea extends InteractiveStepFragment {
 
   Component asComponent();
 
-  AbstractEditAreaModel_V001 toModel(boolean formatierterText);
+  MODEL toModel(boolean formatierterText);
 
   String getPlainText();
 

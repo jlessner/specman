@@ -27,7 +27,7 @@ import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Hinzugefuegt;
 import static specman.Aenderungsart.Untracked;
 
-abstract public class AbstractListItemEditArea extends JPanel implements EditArea {
+abstract public class AbstractListItemEditArea extends JPanel implements EditArea<ListItemEditAreaModel_V001> {
   static final int DEFAULT_PROMPT_SPACE = 20;
   protected EditContainer content;
   protected Aenderungsart aenderungsart;
@@ -84,7 +84,7 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   }
 
   @Override
-  public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
+  public ListItemEditAreaModel_V001 toModel(boolean formatierterText) {
     EditorContentModel_V001 contentModel = content.editorContent2Model(formatierterText);
     return new ListItemEditAreaModel_V001(contentModel, ordered(), aenderungsart);
   }

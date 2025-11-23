@@ -42,12 +42,14 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
+import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Untracked;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_FARBE;
 import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
 
-public class ImageEditArea extends JPanel implements EditArea, FocusListener, MouseListener, KeyListener, ComponentListener, SpaltenContainerI {
+public class ImageEditArea extends JPanel implements EditArea<ImageEditAreaModel_V001>,
+  FocusListener, MouseListener, KeyListener, ComponentListener, SpaltenContainerI {
   public static final String PERSISTED_IMAGETYPE = "png";
 
   private static final String AFTERIMAGELINE_GAP = FORMLAYOUT_GAP;
@@ -264,6 +266,10 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
       updateChangetypeAndDependentStylingUDBL(Aenderungsart.Geloescht);
       focusGlass.toDeleted();
     }
+    else if (aenderungsart == Geloescht) {
+      addGlassPanel();
+      focusGlass.toDeleted();
+    }
     else if (aenderungsart == Aenderungsart.Hinzugefuegt) {
       getParent().removeEditAreaUDBL(this); // Includes recording of required undos
     }
@@ -296,7 +302,7 @@ public class ImageEditArea extends JPanel implements EditArea, FocusListener, Mo
   public Component asComponent() { return this; }
 
   @Override
-  public AbstractEditAreaModel_V001 toModel(boolean formatierterText) {
+  public ImageEditAreaModel_V001 toModel(boolean formatierterText) {
     try {
       ByteArrayOutputStream bytes = new ByteArrayOutputStream();
       ImageIO.write(fullSizeImage, PERSISTED_IMAGETYPE, bytes);
