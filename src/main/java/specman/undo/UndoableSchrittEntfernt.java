@@ -25,13 +25,11 @@ public class UndoableSchrittEntfernt extends AbstractUndoableInteraction {
 	@Override
 	public void undoEdit() throws CannotUndoException {
 		sequenz.schrittHinzufuegen(schritt, schrittIndex);
-    Specman.instance().resyncStepnumberStyle();
 	}
 
 	@Override
 	public void redoEdit() throws EditException {
 		schrittIndex = sequenz.schrittEntfernen(schritt, Discard);
-    Specman.instance().resyncStepnumberStyle();
 	}
 
 	@Override

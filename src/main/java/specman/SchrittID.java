@@ -63,4 +63,8 @@ public class SchrittID {
 	public int hashCode() {
 		return Objects.hash(nummern);
 	}
+
+  public static String asString(SchrittID id) {
+    return id == null ? null : id.toString();
+  }
 }

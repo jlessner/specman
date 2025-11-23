@@ -188,7 +188,7 @@ public class EditContainer extends JPanel {
 		editAreas.forEach(EditArea::aenderungsmarkierungenEntfernen);
 		setBackground(BACKGROUND_COLOR_STANDARD);
 		if (schrittNummer != null) {
-			schrittNummer.setStandardStil(id);
+			schrittNummer.setStandardStyle(id);
 		}
 	}
 
@@ -327,9 +327,8 @@ public class EditContainer extends JPanel {
 
 	public Rectangle getStepNumberBounds() { return schrittNummer.getBounds(); }
 
-	public void markStepnumberAsDeleted() { schrittNummer.markAsDeletedUDBL(); }
-	public void markStepnumberAsTarget(SchrittID quellschrittId) { schrittNummer.markAsTargetUDBL(quellschrittId); }
-	public void markStepnumberAsSource(SchrittID zielschrittID) { schrittNummer.markAsSourceUDBL(zielschrittID); }
+	public void resyncStepnumberAsTargetUDBL(SchrittID quellschrittId) { schrittNummer.resyncSourceSuffixUDBL(quellschrittId); }
+	public void resyncStepnumberAsSourceUDBL(SchrittID zielschrittID) { schrittNummer.resyncTargetSuffixUDBL(zielschrittID); }
 
 	/** Required for iterations that may modify the list of edit areas. Working directly on the
 	 * list whould cause concurrent operation exceptions in these cases. The usage of this method
@@ -789,4 +788,5 @@ public class EditContainer extends JPanel {
     }
 
   }
+
 }

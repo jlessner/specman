@@ -429,9 +429,9 @@ public class SchrittSequenzView {
 		catchBereich.skalieren(prozentNeu, prozentAktuell);
 	}
 
-	public void resyncStepnumberStyle() {
+	public void resyncStepnumberStyleUDBL() {
 		for (AbstractSchrittView schritt : schritte) {
-			schritt.resyncStepnumberStyle();
+			schritt.resyncStepnumberStyleUDBL();
 		}
 	}
 

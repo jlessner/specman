@@ -332,7 +332,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
         ? referenceStep.getParent().einfachenSchrittZwischenschieben(After, referenceStep, Specman.this)
         : hauptSequenz.einfachenSchrittAnhaengen(Specman.this);
       newStepPostInit(schritt);
-      resyncStepnumberStyle();
     });
 
 		whileSchrittAnhaengen.addActionUDBLListener(e -> {
@@ -342,7 +341,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
         ? referenceStep.getParent().whileSchrittZwischenschieben(After, referenceStep, Specman.this)
         : hauptSequenz.whileSchrittAnhaengen(Specman.this);
       newStepPostInit(schritt);
-      resyncStepnumberStyle();
     });
 
 		whileWhileSchrittAnhaengen.addActionUDBLListener(e -> {
@@ -352,7 +350,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
           ? referenceStep.getParent().whileWhileSchrittZwischenschieben(After, referenceStep, Specman.this)
           : hauptSequenz.whileWhileSchrittAnhaengen(Specman.this);
       newStepPostInit(schritt);
-      resyncStepnumberStyle();
 		});
 
 		ifElseSchrittAnhaengen.addActionUDBLListener(e -> {
@@ -362,7 +359,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
           ? referenceStep.getParent().ifElseSchrittZwischenschieben(After, referenceStep, Specman.this)
           : hauptSequenz.ifElseSchrittAnhaengen(Specman.this);
       newStepPostInit(schritt);
-      resyncStepnumberStyle();
     });
 
 		ifSchrittAnhaengen.addActionUDBLListener(e -> {
@@ -372,7 +368,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
           ? referenceStep.getParent().ifSchrittZwischenschieben(After, referenceStep, Specman.this)
           : hauptSequenz.ifSchrittAnhaengen(Specman.this);
       newStepPostInit(schritt);
-      resyncStepnumberStyle();
 		});
 
 		caseSchrittAnhaengen.addActionUDBLListener(e -> {
@@ -382,7 +377,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
           ? referenceStep.getParent().caseSchrittZwischenschieben(After, referenceStep, Specman.this)
           : hauptSequenz.caseSchrittAnhaengen(Specman.this);
       newStepPostInit(schritt);
-      resyncStepnumberStyle();
 		});
 
 		subsequenzSchrittAnhaengen.addActionUDBLListener(e -> {
@@ -392,7 +386,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
           ? referenceStep.getParent().subsequenzSchrittZwischenschieben(After, referenceStep, Specman.this)
           : hauptSequenz.subsequenzSchrittAnhaengen(Specman.this);
       newStepPostInit(schritt);
-      resyncStepnumberStyle();
 		});
 
 		breakSchrittAnhaengen.addActionUDBLListener(e -> {
@@ -402,7 +395,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
           ? referenceStep.getParent().breakSchrittZwischenschieben(After, referenceStep, Specman.this)
           : hauptSequenz.breakSchrittAnhaengen(Specman.this);
       newStepPostInit(schritt);
-      resyncStepnumberStyle();
 		});
 
 		catchSchrittAnhaengen.addActionUDBLListener(e -> {
@@ -427,25 +419,25 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
         return;
       }
       ZweigSchrittSequenzView neuerZweig = caseSchritt.neuenZweigHinzufuegen(Specman.this, ausgewaehlterZweig);
+      resyncStepnumberStyleUDBL();
       addEdit(new UndoableZweigHinzugefuegt(Specman.this, neuerZweig, caseSchritt));
       schritt.skalieren(zoomFaktor, 100);
       diagrammAktualisieren(schritt.getFirstEditArea());
-      resyncStepnumberStyle();
 		});
 
 		exportPDF.addActionListener((e -> {
-            exportAsPDF();
-        }));
+      exportAsPDF();
+    }));
 
 		einfaerben.addActionUDBLListener(e -> {
-        if (lastFocusedTextArea != null) {
-            AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
-            Color aktuelleHintergrundfarbe = schritt.getBackground();
-            int farbwert = aktuelleHintergrundfarbe.getRed() == 240 ? 255 : 240;
-            Color neueHintergrundfarbe = new Color(farbwert, farbwert, farbwert);
-            schritt.setBackgroundUDBL(neueHintergrundfarbe);
-            addEdit(new UndoableSchrittEingefaerbt(schritt, aktuelleHintergrundfarbe, neueHintergrundfarbe));
-        }
+      if (lastFocusedTextArea != null) {
+        AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
+        Color aktuelleHintergrundfarbe = schritt.getBackground();
+        int farbwert = aktuelleHintergrundfarbe.getRed() == 240 ? 255 : 240;
+        Color neueHintergrundfarbe = new Color(farbwert, farbwert, farbwert);
+        schritt.setBackgroundUDBL(neueHintergrundfarbe);
+        addEdit(new UndoableSchrittEingefaerbt(schritt, aktuelleHintergrundfarbe, neueHintergrundfarbe));
+      }
     });
 
 		loeschen.addActionUDBLListener(e -> {
@@ -468,7 +460,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 						//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
 						if (schritt.getAenderungsart() != Aenderungsart.Geloescht) {
 								schrittAlsGeloeschtMarkierenUDBL(schritt);
-								resyncStepnumberStyle();
+								resyncStepnumberStyleUDBL();
 						}
 				}
 				else {
@@ -494,7 +486,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
             SchrittSequenzView sequenz = schritt.getParent();
             int schrittIndex = sequenz.schrittEntfernen(schritt, Discard);
             undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
-            resyncStepnumberStyle();
+            resyncStepnumberStyleUDBL();
           }
 				}
       }
@@ -627,11 +619,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	}
 
-  @Override
-	public void resyncStepnumberStyle() {
-		try (UndoRecording ur = pauseUndo()) {
-			hauptSequenz.resyncStepnumberStyle();
-		}
+	private void resyncStepnumberStyleUDBL() {
+    hauptSequenz.resyncStepnumberStyleUDBL();
 	}
 
 	public void addImageViaFileChooser() {
@@ -861,6 +850,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public void newStepPostInit(AbstractSchrittView newStep) {
+    resyncStepnumberStyleUDBL();
 		addEdit(new UndoableSchrittHinzugefuegt(newStep, newStep.getParent()));
 		newStep.skalieren(zoomFaktor, 100);
 		newStep.initInheritedTextFieldIndentions();

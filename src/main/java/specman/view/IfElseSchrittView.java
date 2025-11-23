@@ -263,10 +263,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 			elseSequenz.hatUeberschrift(fragment);
 	}
 
-	@Override public void resyncStepnumberStyle() {
-		super.resyncStepnumberStyle();
-		getElseSequenz().resyncStepnumberStyle();
-		getIfSequenz().resyncStepnumberStyle();
+	@Override public void resyncStepnumberStyleUDBL() {
+		super.resyncStepnumberStyleUDBL();
+		getElseSequenz().resyncStepnumberStyleUDBL();
+		getIfSequenz().resyncStepnumberStyleUDBL();
 	}
 
 	@Override public void viewsNachinitialisieren() {

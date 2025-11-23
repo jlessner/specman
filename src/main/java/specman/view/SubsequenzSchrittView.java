@@ -129,9 +129,9 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return model;
 	}
 
-	@Override public void resyncStepnumberStyle() {
-		super.resyncStepnumberStyle();
-		subsequenz.resyncStepnumberStyle();
+	@Override public void resyncStepnumberStyleUDBL() {
+		super.resyncStepnumberStyleUDBL();
+		subsequenz.resyncStepnumberStyleUDBL();
 	}
 
 	@Override public void viewsNachinitialisieren() {

@@ -20,12 +20,10 @@ public class UndoableSchrittVerschoben extends AbstractUndoableInteraction {
 
   @Override public void undoEdit() throws EditException {
     togglePosition();
-    Specman.instance().resyncStepnumberStyle();
   }
 
   @Override public void redoEdit() throws EditException {
     togglePosition();
-    Specman.instance().resyncStepnumberStyle();
   }
 
   protected void togglePosition() throws EditException {

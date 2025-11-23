@@ -13,6 +13,7 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
+import static specman.SchrittID.asString;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.Hintergrundfarbe_Geloescht;
 import static specman.editarea.TextStyles.Hintergrundfarbe_Schrittnummer;
@@ -27,11 +28,19 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
   private static final String TO_TARGET_ARROW = " > ";
   private static final String FROM_SOURCE_ARROW = " < ";
 
-  private SchrittID stepNumber, sourceStepNumber, targetStepNumber;
+  /** Position in the label text which separates a deleted part of the text from the rest.
+   * <br>
+   * A negative value indicates a source step label with the source step number in deleted
+   * style on the left and the target step number on the right. deletionCut (negated) is
+   * the last index of the leading deleted-styled text.
+   * <br>
+   * A positive value indicates a target step label with the target step on the left and
+   * the source step number in deleted style on the right. deletionCut is the first index
+   * of the trailing deleted-style text. */
+  Integer deletionCut;
 
   public SchrittNummerLabel(SchrittID stepNumber) {
     super(String.valueOf(stepNumber));
-    this.stepNumber = stepNumber;
 
     setFont(labelFont);
     setBackground(Hintergrundfarbe_Schrittnummer);
@@ -45,8 +54,23 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
   }
 
   public void setStepNumber(SchrittID stepNumber) {
-    this.stepNumber = stepNumber;
-    assembleTextUDBL();
+    String sourceSuffix = extractSourceSuffix();
+    String targetSuffix = extractTargetSuffix();
+    setTextUDBL(stepNumber.toString(), targetSuffix, sourceSuffix);
+  }
+
+  private String extractTargetSuffix() {
+    if (hasTargetSuffix()) {
+      return getText().substring(-deletionCut + TO_TARGET_ARROW.length());
+    }
+    return null;
+  }
+
+  private String extractSourceSuffix() {
+    if (hasSourceSuffix()) {
+      return getText().substring(deletionCut);
+    }
+    return null;
   }
 
   @Override
@@ -63,85 +87,115 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
   }
 
   private LineShape createDeletionLine() {
-    if (sourceStepNumber != null) {
-      return createDeletionLine(stepNumber.toString().length() + FROM_SOURCE_ARROW.length(), sourceStepNumber.toString().length());
-    }
-    else if (targetStepNumber != null) {
-      return createDeletionLine(0, stepNumber.toString().length());
+    Integer deletionStart = findDeletionStart();
+    Integer deletionEnd = findDeletionEnd();
+    if (deletionStart != null && deletionEnd != null) {
+      FontMetrics metrics = getFontMetrics(getFont());
+      int undeletedWidth = metrics.stringWidth(getText().substring(0, deletionStart));
+      int deletedWidth = metrics.stringWidth(getText().substring(deletionStart, deletionEnd));
+      return new LineShape(
+        undeletedWidth + 1,
+        getHeight() / 2,
+        undeletedWidth + deletedWidth + 1, getHeight() / 2)
+        .withColor(getForeground())
+        .withWidth(0.5f);
     }
     return null;
   }
 
-  private LineShape createDeletionLine(int fromTextIndex, int textLength) {
-    FontMetrics metrics = getFontMetrics(getFont());
-    int undeletedWidth = metrics.stringWidth(getText().substring(0, fromTextIndex));
-    int deletedWidth = metrics.stringWidth(getText().substring(fromTextIndex, fromTextIndex + textLength));
-    return new LineShape(
-      undeletedWidth + 1,
-      getHeight() / 2,
-      undeletedWidth + deletedWidth + 1, getHeight() / 2)
-      .withColor(getForeground())
-      .withWidth(0.5f);
+  private Integer findDeletionStart() {
+    if (hasSourceSuffix()) {
+      return deletionCut;
+    }
+    if (hasTargetSuffix() || hasDeletedStyle()) {
+      return 0;
+    }
+    return null;
   }
 
-  public void setStandardStil(SchrittID id) {
+  private Integer findDeletionEnd() {
+    if (hasTargetSuffix()) {
+      return -deletionCut-1;
+    }
+    else if (hasSourceSuffix() || hasDeletedStyle()) {
+      return getText().length();
+    }
+    return null;
+  }
+
+  private boolean hasDeletedStyle() {
+    return getBackground() == Hintergrundfarbe_Geloescht;
+  }
+
+  public void setStandardStyle(SchrittID id) {
     setBorder(STANDARD_BORDER);
     setBackground(Hintergrundfarbe_Schrittnummer);
     setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
-    this.stepNumber = id;
-    this.targetStepNumber = null;
-    assembleTextUDBL();
+    this.deletionCut = null;
+    setText(id.toString());
   }
 
   public void setTargetStyleUDBL(SchrittID quellschrittId) {
     setBorderUDBL(CHANGED_BORDER);
     setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
     setForegroundUDBL(Hintergrundfarbe_Geloescht);
-    markAsTargetUDBL(quellschrittId);
+    resyncSourceSuffixUDBL(quellschrittId);
   }
 
-  public void markAsTargetUDBL(SchrittID sourceStepNumber) {
-    this.sourceStepNumber = sourceStepNumber;
-    assembleTextUDBL();
+  public void resyncSourceSuffixUDBL(SchrittID sourceStepNumber) {
+    setTextUDBL(extractCore(), null, sourceStepNumber.toString());
+  }
+
+  private String extractCore() {
+    String text = getText();
+    if (deletionCut != null) {
+      return hasTargetSuffix()
+        ? text.substring(0, -deletionCut-1)
+        : text.substring(0, deletionCut - FROM_SOURCE_ARROW.length());
+    }
+    return text;
+  }
+
+  private boolean hasTargetSuffix() {
+    return deletionCut != null && deletionCut <= 0;
+  }
+
+  private boolean hasSourceSuffix() {
+    return deletionCut != null && !hasTargetSuffix();
   }
 
   public void setSourceStyle(SchrittID zielschrittID) {
     setBorder(DELETED_BORDER);
     setBackground(Hintergrundfarbe_Geloescht);
     setForeground(Schriftfarbe_Geloescht);
-    markAsSourceUDBL(zielschrittID);
+    setTextUDBL(getText(), asString(zielschrittID), null);
   }
 
-  public void markAsSourceUDBL(SchrittID zielschrittID) {
-    this.targetStepNumber = zielschrittID;
-    assembleTextUDBL();
+  private void setTextUDBL(String core, String targetSuffix, String sourceSuffix) {
+    if (targetSuffix != null) {
+      setDeletionCutUDBL((-core.length()) - 1);
+      setTextUDBL(core + TO_TARGET_ARROW + targetSuffix);
+    }
+    else if (sourceSuffix != null) {
+      String undeletedText = core + FROM_SOURCE_ARROW;
+      setDeletionCutUDBL(undeletedText.length());
+      setTextUDBL(undeletedText + sourceSuffix);
+    }
+    else {
+      setDeletionCutUDBL(null);
+      setTextUDBL(core);
+    }
+  }
+
+  public void resyncTargetSuffixUDBL(SchrittID zielschrittID) {
+    setTextUDBL(extractCore(), asString(zielschrittID), null);
   }
 
   public void setDeletedStyleUDBL(SchrittID id) {
     setBorderUDBL(DELETED_BORDER);
     setBackgroundUDBL(Hintergrundfarbe_Geloescht);
     setForegroundUDBL(Schriftfarbe_Geloescht);
-    stepNumber = id;
-    markAsDeletedUDBL();
-  }
-
-  public void markAsDeletedUDBL() {
-    // Only change and record undo action if necessary
-    if (targetStepNumber != stepNumber) {
-      targetStepNumber = stepNumber;
-      assembleTextUDBL();
-    }
-  }
-
-  private void assembleTextUDBL() {
-    String text = String.valueOf(stepNumber);
-    if (sourceStepNumber != null) {
-      text = text + FROM_SOURCE_ARROW + sourceStepNumber;
-    }
-    else if (targetStepNumber != null && targetStepNumber != stepNumber) {
-      text = text + TO_TARGET_ARROW + targetStepNumber;
-    }
-    setTextUDBL(text);
+    setTextUDBL(id.toString(), null, null);
   }
 
   public Shape getShape() {
@@ -150,6 +204,15 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
       .add(createDeletionLine());
   }
 
+  public Integer getDeletionCut() { return deletionCut; }
+  public void setDeletionCut(Integer deletionCut) { this.deletionCut = deletionCut; }
+
+  @Override
+  public void setText(String text) {
+    super.setText(text);
+  }
+
+  private void setDeletionCutUDBL(Integer deletionCut) { UDBL.setDeletionCutUDBL(this, deletionCut); }
   private void setTextUDBL(String text) { UDBL.setTextUDBL(this, text); }
   private void setForegroundUDBL(Color fg) { UDBL.setForegroundUDBL(this, fg); }
   private void setBackgroundUDBL(Color fg) { UDBL.setBackgroundUDBL(this, fg); }

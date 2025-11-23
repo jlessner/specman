@@ -384,11 +384,11 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		panel.remove(zweig.ueberschrift);
 	}
 
-	@Override public void resyncStepnumberStyle() {
-		super.resyncStepnumberStyle();
-		getSonstSequenz().resyncStepnumberStyle();
+	@Override public void resyncStepnumberStyleUDBL() {
+		super.resyncStepnumberStyleUDBL();
+		getSonstSequenz().resyncStepnumberStyleUDBL();
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
-			caseSequenz.resyncStepnumberStyle();
+			caseSequenz.resyncStepnumberStyleUDBL();
 		}
 
 	}

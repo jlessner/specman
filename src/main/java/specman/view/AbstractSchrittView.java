@@ -387,15 +387,12 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return quellschritt != null ? quellschritt.getId() : null;
 	}
 
-	public void resyncStepnumberStyle() {
-		if (getAenderungsart() == Geloescht) {
-			editContainer.markStepnumberAsDeleted();
+	public void resyncStepnumberStyleUDBL() {
+    if (getAenderungsart() == Aenderungsart.Quellschritt) {
+			editContainer.resyncStepnumberAsSourceUDBL(((QuellSchrittView)this).getZielschrittID());
 		}
-		if (getAenderungsart() == Aenderungsart.Quellschritt) {
-			editContainer.markStepnumberAsSource(((QuellSchrittView)this).getZielschrittID());
-		}
-		if (getAenderungsart() == Zielschritt) {
-			editContainer.markStepnumberAsTarget(getQuellschritt().getId());
+		else if (getAenderungsart() == Zielschritt) {
+			editContainer.resyncStepnumberAsTargetUDBL(getQuellschritt().getId());
 		}
 	}
 

@@ -46,5 +46,4 @@ public interface EditorI extends FocusListener {
 
   List<JTextComponent> queryAllTextComponents(JTextComponent tc);
 
-  void resyncStepnumberStyle();
 }

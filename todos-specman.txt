@@ -1,4 +1,5 @@
 Aus UC-791
+- Undo einer *wiederholten* Schrittverschiebung im Änderungsmodus führt zu Exception
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert

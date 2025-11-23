@@ -27,15 +27,12 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
       quellschritt.getParent().schrittEntfernen(quellschritt, Discard);
       step.aenderungsmarkierungenEntfernen();
     }
-    Specman.instance().resyncStepnumberStyle();
   }
 
   @Override public void redoEdit() throws EditException {
     if (quellschrittIstNeu) {
-      quellschritt = new QuellSchrittView(Specman.instance(), originalParent, step.getId());
       originalParent.schrittZwischenschieben(quellschritt, Before, step);
     }
     togglePosition();
-    Specman.instance().resyncStepnumberStyle();
   }
 }
