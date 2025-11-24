@@ -1,10 +1,10 @@
 Aus aktueller Anwendung
-- Pluszeichen für zugeklappte Schritte sind manchmal ohne erkennbare Änderung in dem Schritt gelb. Siehe UC-791 Stand 24.11.2025
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Pluszeichen für zugeklappte Schritte sind manchmal ohne erkennbare Änderung in dem Schritt gelb. Siehe UC-791 Stand 24.11.2025
 x Catch lässt sich nicht löschen
 x Als gelöscht markiertes Bild hat beim Laden von Datei keine Löschmarkierung (grauer Strich durch)
 x Rücknahme von Löschung eines Schritts lässt den *Inhalt* als gelöscht markiert zurück.
