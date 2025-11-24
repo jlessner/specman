@@ -255,7 +255,7 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
 
     private void findMarkups(WrappedElement e, java.util.List<Markup_V001> ergebnis, boolean nurErste) {
         MarkupType markupType = MarkupType.fromBackground(e);
-        if (markupType != null) {
+        if (markupType != null && markupType.marksChange()) {
             ergebnis.add(new Markup_V001(e.getStartOffset().toModel(), e.getEndOffset().toModel()-1, markupType));
             if (markupType.marksChange() && nurErste) {
                 return;

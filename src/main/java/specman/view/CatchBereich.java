@@ -144,6 +144,12 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   }
 
   public void zusammenklappenFuerReview() {
+    boolean anyChanges = catchSequences
+      .stream()
+      .anyMatch(sequence -> sequence.enthaeltAenderungsmarkierungen());
+    if (!anyChanges) {
+      klappen.init(true);
+    }
   }
 
   public void skalieren(int prozentNeu, int prozentAktuell) {
