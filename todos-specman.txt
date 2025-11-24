@@ -7,10 +7,6 @@ Aus aktueller Anwendung
 x Pluszeichen für zugeklappte Schritte sind manchmal ohne erkennbare Änderung in dem Schritt gelb. Siehe UC-791 Stand 24.11.2025
 x Catch lässt sich nicht löschen
 x Als gelöscht markiertes Bild hat beim Laden von Datei keine Löschmarkierung (grauer Strich durch)
-x Rücknahme von Löschung eines Schritts lässt den *Inhalt* als gelöscht markiert zurück.
-   Hintergrund und Label werden korrekt wieder hergestellt.
-x Undo einer *wiederholten* Schrittverschiebung im Änderungsmodus führt zu Exception
-x Update Labeltext in Quellschritt fehlt noch im Undo
 
 Abschluss für Go-Live
 - Tabellentexte werden initial nicht mit dem richtigen Font dargestellt. Erst nach Speichern und neu Laden sind sie korrekt
