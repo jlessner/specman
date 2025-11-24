@@ -9,7 +9,6 @@ x Catch lässt sich nicht löschen
 x Als gelöscht markiertes Bild hat beim Laden von Datei keine Löschmarkierung (grauer Strich durch)
 
 Abschluss für Go-Live
-- Tabellentexte werden initial nicht mit dem richtigen Font dargestellt. Erst nach Speichern und neu Laden sind sie korrekt
 - Wenn beim Split einer TextEditArea der *vordere* Textteil überflüssige Whitespaces enthält,
    dann wird der hintere Teil falsch kopiert. Für das Herstellen des hinteren Textteils wird nämlich intern zuerst der *ganze* Text
    kopiert und anschließend gekürzt. Das Kopieren bewirkt die Bereinigung, sodass die ursprüngliche Caret Position im kopierten Text
@@ -83,6 +82,7 @@ x PDF-Export
 - Vielleicht eine kleiner Top-Inset für Schritt-Texte, um die Überschneidung mit den Labels zu verringern?
 - Doku aktualisieren
 - Beschriftungen internationalisieren
+x Tabellentexte werden initial nicht mit dem richtigen Font dargestellt. Erst nach Speichern und neu Laden sind sie korrekt
 x Tabellen als separate Elemente analog Bilder
   - Nice to have: Einfärben von Zellen (statt Schritt), wenn Fokus in Tabellenzelle steht
   - Nice to have: Springen in die nächste Zelle durch Drücken von TAB

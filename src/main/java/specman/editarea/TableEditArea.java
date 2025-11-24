@@ -177,7 +177,7 @@ public class TableEditArea extends JPanel implements EditArea<TableEditAreaModel
   }
 
   private void addCell(int rowIndex, String content) {
-    TextEditArea initialContentArea = new TextEditArea(new TextEditAreaModel_V001(content), getFont());
+    TextEditArea initialContentArea = new TextEditArea(new TextEditAreaModel_V001(content), TextStyles.font);
     addCell(rowIndex, new EditContainer(Specman.instance(), initialContentArea, null));
   }
 

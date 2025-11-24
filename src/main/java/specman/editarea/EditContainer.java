@@ -103,6 +103,7 @@ public class EditContainer extends JPanel {
 	public EditContainer(EditorI editor, TextEditArea initialContent, SchrittID schrittId) {
 		this(editor, new EditorContentModel_V001(), schrittId);
 		addEditArea(initialContent, 0);
+    skalieren(editor.getZoomFactor(), 0);
 	}
 
 	public EditContainer(EditorI editor, EditorContentModel_V001 initialContent, SchrittID schrittId) {
