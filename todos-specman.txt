@@ -1,4 +1,5 @@
-Aus UC-791
+Aus aktueller Anwendung
+- Pluszeichen für zugeklappte Schritte sind manchmal ohne erkennbare Änderung in dem Schritt gelb. Siehe UC-791 Stand 24.11.2025
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
@@ -10,54 +11,16 @@ x Rücknahme von Löschung eines Schritts lässt den *Inhalt* als gelöscht mark
    Hintergrund und Label werden korrekt wieder hergestellt.
 x Undo einer *wiederholten* Schrittverschiebung im Änderungsmodus führt zu Exception
 x Update Labeltext in Quellschritt fehlt noch im Undo
-x Viele ungruppierte Undos / Redos bei Anlage von Schritten im Änderungsmodus braucht jeweils *zweimal* CTRL+Z bzw. CTRL+Y.
-x PDF-Export muss Fehlermeldung liefern, wenn das Schreiben nicht funktioniert hat, z.B. weil das PDF grade geöffnet ist. Aktuell passiert einfach gar nicht und es kommt nur eine Exception auf Standard Out.
-x PDF-Exportdialog erscheint jedes Mal an ungünstiger Stelle auf dem Bildschirm. Das nervt, weil man ziemlich oft exportieren muss
-x Schrittnummerlabel für gelöschte Schritte und Ziel- und Quellschritte werden im PDF-Export nicht korrekt dargestellt
-x PDF-Export beim Speichern erfordert aber, dass der Export auch funktioniert, wenn man nicht einmal durchs Dokument gescrollt hat.
-   Das macht aktuell Ärger in OrderedListItemEditArea, weil die das Rechteck für den nummerierten Prompt erst lazy beim Rendering angelegt
-   wird.
-x Kopplung von Dateiname und Seitenformat des letzten PDF-Exports an das Modell
-   UC-791 braucht A3 Querformat, also viel größer als andere kleine Usecases. Arbeitet man an mehreren Usecases gleichzeitig, vergisst man das Umstellen und erinnert sich auch nicht unbedingt, für welchen Usecase man welches Format ausgewählt hat.
-x Bei Drücken von DELETE, analoges Verhalten zu BACKSPACE
-x Schrittreferenzen werden im Outro und Catch-Blöcken des UC-791 nicht aktualisiert. Allgemein geht es aber.
-x Document.removeText() sorgt für ein Scrollen zu dem betreffenden Text. Das ist meistens nicht gewollt, z.B.
-  - Beim Ändern der Texte von Break-Schritte, was auch zur Änderung im Catch-Schritt führt
-  - Beim Speichern, wo über setText(getText()) der Inhalt aller Schritte bereinigt wird
-    Hier ist es so gelöst, dass die Urpspungsposition wieder hergestellt wird. Und damit man kein Hin und Her im UI
-    sieht, wird dafür die ganze Anzeige einmal kurz unsichtbar gemacht. Ziemlich unschön.
-x Merge einer Text Edit Area mit einem vorhergehenden List Ite fühlt sich nicht intuitiv an. Es bleibt ein Zeilenumbruch
-   zwischen den beiden gemergten Texten übrig. Der sollte weg.
-   Ursache liegt bei der *Anlage* neuer List Items. Da legt das JEditorPain aus noch unbekanntem Grund ein
-   <p style=\"margin-top: 0\">...</p> um den Text herum. Beim Merge bleibt dann korrekterweise ein Zeilenumbruch erhalten.
-x Unsaubere Trennung bei Drücken von RETURN innerhalb eines Listitem, das man grade neu angelegt hat. Wenn man die Datei erst einmal speichert, funktioniert es anschließend.
-x Falsche Caret-Position bei Drücken von RETURN in einem Listitem
-x Bei Entfernen einen Listitem-Grenze durch Drücken von BACKSPACE verschwindet etwaiger markierter Text nicht.
-x Bei Umwandlung von ListItem zu Text durch Drücken von BACKSPACE verschwindet das letzte Zeichen des Texts,
-   wenn es sich um das letzte Item einer Liste handelt, d.h. wenn es in dem Zuge mit einer nachfolgenden Text Area
-   zusammengeführt wird.
-x Focus in Tabellen durch Drücken von TAB verschieben
-   Geht in erster brauchbarer Form über CTRL+TAB als Standardfunktionalität von Swing
 
 Abschluss für Go-Live
+- Tabellentexte werden initial nicht mit dem richtigen Font dargestellt. Erst nach Speichern und neu Laden sind sie korrekt
 - Wenn beim Split einer TextEditArea der *vordere* Textteil überflüssige Whitespaces enthält,
    dann wird der hintere Teil falsch kopiert. Für das Herstellen des hinteren Textteils wird nämlich intern zuerst der *ganze* Text
    kopiert und anschließend gekürzt. Das Kopieren bewirkt die Bereinigung, sodass die ursprüngliche Caret Position im kopierten Text
    nicht mehr sauber den Index repräsentiert, bis wohin der vordere Textteil in der Kopie abgeschnitten werden muss.
 - Kleine, eigenartige Macke: Wenn man als allererste Operation nach dem Öffnen einer Datei einen neuen Textparagraphen einfügt, dann
    funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
-x Quellschritten fehlt im Label die Nummer des Zielschritts
-x Quellschritte sind ohne Content
-x Schrittnummerreferenzen gehen bei Annahme von Änderungen kaputt
-x Neu eingefügte, übergroße Bilder sind initial etwas zu groß, so dass man nicht an den linken Rand herankommt, um die Größe zu ändern
-x Hoch/Runterscrollen über Grenzen von EditAreas innerhalb eines Schritts
-x STRG+C bewirkt in Änderungsmodus eine Löschmarkierung des zuvor markierten Texts. Es sollte gar keine Textänderung erfolgen!
 - List Items als EditAreas
-  x Beim Anlegen: Sauberes Herausschneiden des Bereichs zwischen zwei harten Zeilenumbrüchen
-    Element currentElement = StyledDocument.getElement(caretPosition)
-    int startOffset = currentElement.getStartOffset();
-    int endOffset = currentElement.getEndOffset();
-  x Entfernen, wenn Caret sich bereits in einem Line Items befindet
   x Unterscheidung nummeriert / nicht nummeriert
   - Saubere Darstellung des Labels
     - Vertikal, nicht nummeriert: Mitte der ersten Zeile abhängig von der Zeilenhöhe - hängt von der größten Schrift in der ersten Zeile ab (-> JEditorPaneUtilities)
@@ -66,9 +29,7 @@ x STRG+C bewirkt in Änderungsmodus eine Löschmarkierung des zuvor markierten T
     - Wie groß machen wir die Schrift für Nummernlabel? In Word gibt's Regeln. Am besten erstmal: Standardgröße
     - Wie darstellen, wenn man im Änderungsmodus LI zu normalem Text macht
   x Undo / Redo für LI anlegen und LI entfernen
-  x PDF-Rendering - in dem Zuge LIRecordingListView und Konsorten entfernen
   - Irgendeine Idee für mehrstufige LIs?
-  x Alte LI-Buttons entfernen
 - Darstellung von Catch-Bereichen überarbeiten (siehe Powerpoint)
   - Wenn der Break-Schritt ohne Änderungsmodus angelegt wurde, die Catch-Sequence aber schon, dann hat die
      Überschrift der Case-Sequenz keine Änderungsmarkierung. Ist das richtig oder falsch?
@@ -86,31 +47,6 @@ x STRG+C bewirkt in Änderungsmodus eine Löschmarkierung des zuvor markierten T
   x PDF Export
   x Als gelöscht markierte Catch-Sequenz nicht mehr mit Breakschritt synchronisieren. Beim Zurücknehmen der Löschung ggf. resynchronisieren
   x Resizing der Spalten
-  x Balken werden initial von Datei nicht skaliert
-  x SchrittSequenzView(SchrittSequenzModel_V001 model): Case-Sequenzen wieder aufbauen
-  x SchrittSequenzView#populateModel: Case-Sequenzen aufnehmen
-  x KlappButton ist noch nicht zu sehen
-  x Schrittnummer in den Catch-Überschriften wird aus unbekanntem Grund nicht angezeigt
-  x queryUnlinkedBreakSteps für alle Schritttypen implementieren
-  x Catch-Sequence im Änderungsmodus entfernen
-     x UndoableCatchEntferntMarkiert
-     x Löschung zurücknehmen
-     x Löschung annehmen
-     x als gelöscht markieren
-     x verlinkten Break-schritt als gelöscht markieren -> Case-Sequenz ebenfalls als gelöscht markieren
-  x Übernehmen von Änderungen muss auch Catch-Sequenzen durchlaufen
-  x UndoableSchrittEntfernt muss für verlinkte Break-Schritte auch das Entfernen der Catch-Sequence umfassen. müsste durch
-     composeUndo eigentlich schon automatisch funktionieren
-  x UndoableCatchEntfernt implementieren
-  x UndoableCatchHinzugefuegt implementieren
-  x Auflösen der Verbindung beim Löschen von Catch-Sequenzen
-  x Verfahren der Verknüpfung von Break und Catch überarbeiten / säubern
-  x Catch-Sequenz entfernen
-  x Catch-Bereich unsichtbar machen, wenn die letzte Catch-Sequenz entfernt wird
-  x Schritt in Catch-Sequenz einfügen
-  x Schritt aus Catch-Sequenz entfernen
-  x Catch-Bereich erst sichtbar machen, wenn mindestens eine Catch-Sequenz drin steckt
-  x Zoom der Bars und der Sequenzen
 
 - Suche über ganzes Modell
   - FindReplaceAction.updateContextState korrekt implementieren
@@ -144,25 +80,6 @@ x PDF-Export
      wenn der Inhalt skaliert werden muss. Wenn das also sauber funktioniert, ist das Problem hier vielleicht weg.
   x Initiales Verzeichnis für PDF-Export = Ablageort der .nsd-Datei
   x Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen
-  x Renderfehler von gutenmorgen.xsd lösen:
-    x g von "Solange" bei 120% abgeschnitten
-    x Gelber Hintergrund von "auf Snooze stellen" nur halb hoch
-    x "Werktag" nicht zu sehen
-    x "Wochentag prüfen" und "Lust auf Kaffee" rechtsbündig statt zentriert
-  x Rendering von Bulletpoints und Zahlen für Listitems
-  x Überschriften erscheinen nach oben versetzt
-  x Text, der übermäßig viel Platz in der Höhe hat (wegen Nachbartext mit höherem Bedarf), wird am Fuß angezeigt statt am Kopf des Bereichs
-  x Anpassung der Fontgrößen aus Tags wie <font size="6">
-  x Abstände um eine H1 herum wachsen bei Änderung des UI-Zoomfaktors überproportional
-  x Fettschrift in PDF-Texten funktioniert nicht trotz gleichem Truetype-Font in Swing und PDF
-     So la la gelöst. UI morphed den regulären Font, html2pdf arbeitet mit 4 Fontfamilien (regular, bold, italic, bold+italic)
-  x Korrekte Behandlung von Zoomfaktor kombiniert mit Swing-zu-PDF-Skalierung
-  x Abgesetzte Darstellung
-  x rechtsbündige und zentrierte Texte nicht korrekt platziert
-  x Scrollposition aus der Positionierung im PDF herausrechnen
-  x Seitenumbrüche
-  x Texte über und unter Diagramm
-  x Bilder und unterstrukturierte EditContainer (aktuell nur 1. TextEditArea)
 - Neben Serif-Font auch Sans Serif und Monospace Font einbauen und alle anderen entfernen
   - Muss auch alles PDF-tauglich sein
 - Ordentliche Fehlermeldungsanzeige
@@ -170,7 +87,6 @@ x PDF-Export
 - Vielleicht eine kleiner Top-Inset für Schritt-Texte, um die Überschneidung mit den Labels zu verringern?
 - Doku aktualisieren
 - Beschriftungen internationalisieren
-x Zusätzliche Ablage aller Plain Texte im Modell / auf Datei zwecks Durchsuchbarkeit aus IDEs heraus
 x Tabellen als separate Elemente analog Bilder
   - Nice to have: Einfärben von Zellen (statt Schritt), wenn Fokus in Tabellenzelle steht
   - Nice to have: Springen in die nächste Zelle durch Drücken von TAB
@@ -178,16 +94,6 @@ x Tabellen als separate Elemente analog Bilder
   x Zurücknehmen hinzugefügter Zeilen und Spalten
   x Löschen neu hinzugefügter Zeilen und Spalten muss direkt Wirkung zeigen
   x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
-  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Spalten
-  x Gelöscht markierte Zeilen und Spalten dürfen keine Löschung mehr erlauben
-  x Gelöscht markierte Tabelle darf kein Löschen / Hinzufügen von Zeilen / Spalten mehr erlauben
-  x UndoableTableRemovedMarked
-  x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen einer Tabelle
-  x Hinzufügen / Löschen von Spalten (Löschen der letzten Spalte = Löschen der Tabelle)
-  x Undo / Redo für Hinzufügen / Löschen von Zeilen
-  x Hinzufügen / Löschen von Zeilen (Löschen der letzten Zeile = Löschen der Tabelle)
-  x Undo / Redo für Hinzufügen / Löschen von Zeilen
-  x Anpassung von Spaltenbreiten
 
 Bugs fixen
 - Nach dem Löschen eines Breakschritts mit verknüpfter Catch-Sequenz wird beim Undo zwar beides wieder hergestellt aber die Verknüpfung nicht
@@ -197,19 +103,6 @@ Bugs fixen
 x Fehler in UndoableSchrittVerschobenMarkiert.undoEdit:
    Bei neuem Quellschritt erfolgt ein Aufruf von step.aenderungsmarkierungenEntfernen();
    Dadurch gehen auch Änderungen *vor* der Verschiebung verloren.
-x Nach dem Annehmen von Änderungen sieht speziell gestylter Text wie z.B. Designanmerkungen (klein, kursiv) im Editor sauber aus,
-    ist aber im PDF u.U. stark zerstört.
-x Neue Texte in Tabellen sind im HTML eingefasst in <p style=\"margin-top: 0\"> TEXT </p>
-    Das führt zu einer verschobenen Darstellung im PDF-Export
-x Der Dialog für Schritt-Links hat keinen Scrollbalken und erlaubt folglich keine Schritte mit höheren Nummern zu adressieren
-x Doppeltes Einfügen durch DraggingLogic, wenn Fokus in einer Überschrift eines Zweigs steht
-- Da Änderungen im Text durch Textfarbe erkannt wird, bleiben beim Zurücknehmen von Änderungen eingefügte Zeilenumbrüche zurück
-- Gleiches Problem wie oben, nur andere Stelle: Exception beim Zurücknehmen von Einfügungen mit Zeilenumbrüchen:
-    Caused by: javax.swing.text.BadLocationException: Invalid remove
-        at java.desktop/javax.swing.text.AbstractDocument.handleRemove(AbstractDocument.java:634)
-        at java.desktop/javax.swing.text.AbstractDocument.remove(AbstractDocument.java:619)
-        at specman.editarea.TextEditArea.removeTextAndUnregisterStepnumberLinks(TextEditArea.java:580)
-        ... 44 more
 - Ändern des Paragraphtypen lässt sich nicht zurücknehmen
 x Letzter Zeilenumbruch in einem Schritt kann nicht entfernt werden
     - Problem ist, dass der Umbruch nicht entfernt werden kann, da der Offset angeblich größer als das Dokumentenende ist:
@@ -218,10 +111,6 @@ x Letzter Zeilenumbruch in einem Schritt kann nicht entfernt werden
       Eine Ausgabe von document.getText() mit den Offsets gibt jedoch den erwarteten Text (\n) zurück.
 x Beim Undo einer Verschiebung eines BreakSchritts im Änderungsmodus, wird die Schrittnummer im verlinkten Catch-Schritt nicht mehr gerendert
      Repaint des Diagramms bringt sie wieder zum Vorschein.
-x Wenn man einen Breakschritt mit angekoppeltem Catch-Schritt verschiebt, verschwinden der Catch-Schritt
-x Superhohe Break-Schritte sehen übel aus. Entsteht z.B. wenn in einem Case ein Fall nur durch einen einzelnen Breakschritt behandelt wird
-    (siehe BALI UC-715, Unbekannter Nachrichtentyp). Aktueller Workaround: leeren Schritt anhängen
-x Annehmen / Verwerfen von Änderungen schließt Intro und Outro nicht mit ein
 - Komplettes Rewrite von DraggingLogic
 - resyncSchrittnummerStil sollte nur beim Aufbau aus Modell verwendet werden. Ansonsten sollte beim (Neu-)Setzen der ID der Stil immer erhalten bleiben, abhängig von Geloescht und Quellschritt
 - Fokus setzen beim Entfernen des vorletzten Schritts
@@ -229,14 +118,7 @@ x Annehmen / Verwerfen von Änderungen schließt Intro und Outro nicht mit ein
 - Abfangen des Löschens des letzten Zweigs im Case
 - NumberStepBackground in RoundedBorderDecorator schwarz färben wenn Schritt gelöscht ist
 - 'Cannot invoke "specman.SpaltenResizer.getShape()" because "this.breitenAnpasser" is null' in PDF-Export with no diagram
-x Undo/Redo-Problem in Tabellen
-    Vorbereitung: Tabelle hinzufügen, Zeile hinzufügen, darin Text eintippen, Tabelle löschen
-    Den gesamten Vorgang über Undos zurücknehmen - klappt alles
-    Den gesamten Vorgang über Redos wieder herstellen - die Wiederherstellung des Texts klappt nicht
-    Dürfte daran liegen, dass UndoableTableRowAdded im redo eine völlig neue leer Zeile hinzufügt statt die ursprüngliche
-x Schriftfarbe initialer Texte ist beim Anlegen neuer Schritte nicht überall gelb
 x Hellgelber Hintergrund wird beim Laden von Datei nicht überall wieder hergestellt
-x Schrift ohne Änderungsmarkierung hat *weißen* Hintergrund, müsste aber *keinen* haben, damit die Hintergrundfarbe des Feldes durchscheint
 
 
 Auf längere Sicht - nicht notwendig für ersten Go-Live:
