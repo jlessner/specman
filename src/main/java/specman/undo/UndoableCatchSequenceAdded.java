@@ -22,5 +22,6 @@ public class UndoableCatchSequenceAdded extends AbstractUndoableInteraction {
   @Override
   protected void redoEdit() throws EditException {
     catchSequence.getParent().addCatchSequence(catchSequence, null, null);
+    catchSequence.reconnectToBreakstep();
   }
 }

@@ -92,14 +92,14 @@ x Tabellen als separate Elemente analog Bilder
   x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
 
 Bugs fixen
-- Nach dem Löschen eines Breakschritts mit verknüpfter Catch-Sequenz wird beim Undo zwar beides wieder hergestellt aber die Verknüpfung nicht
-   D.h. bei Redo bleibt die Catch-Sequenz zurück
+- Ändern des Paragraphtypen lässt sich nicht zurücknehmen
 - Falsche Fontgröße für "bar" im PDF-Export bei <font size="3">foo<span>bar</span></font>
    Vielleicht weil die Styles von span und font[size=3]>span beide passen
 x Fehler in UndoableSchrittVerschobenMarkiert.undoEdit:
    Bei neuem Quellschritt erfolgt ein Aufruf von step.aenderungsmarkierungenEntfernen();
    Dadurch gehen auch Änderungen *vor* der Verschiebung verloren.
-- Ändern des Paragraphtypen lässt sich nicht zurücknehmen
+x Nach dem Löschen eines Breakschritts mit verknüpfter Catch-Sequenz wird beim Undo zwar beides wieder hergestellt aber die Verknüpfung nicht
+   D.h. bei Redo bleibt die Catch-Sequenz zurück
 x Letzter Zeilenumbruch in einem Schritt kann nicht entfernt werden
     - Problem ist, dass der Umbruch nicht entfernt werden kann, da der Offset angeblich größer als das Dokumentenende ist:
       RemoveAction.actionPerformed(e) -> HTMLUtils.removeElement()Zeile199 - Es wird erkannt, dass der Offset des zu entfernenden Elements größer ist

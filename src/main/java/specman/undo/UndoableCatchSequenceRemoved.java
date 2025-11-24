@@ -19,6 +19,7 @@ public class UndoableCatchSequenceRemoved extends AbstractUndoableInteraction {
   @Override
   protected void undoEdit() throws EditException {
     catchSequence.getParent().addCatchSequence(catchSequence, catchIndex, backupSequencesWidthPercent);
+    catchSequence.reconnectToBreakstep();
   }
 
   @Override
