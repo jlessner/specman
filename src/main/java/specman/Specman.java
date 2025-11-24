@@ -471,6 +471,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
             if (zweig != null) {
               int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
               undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
+              return;
             }
           }
           else if (schritt instanceof CatchBereich) {
@@ -480,8 +481,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
               catchSequence.removeOrMarkAsDeletedUDBL();
               // No undo action required here. The undo composition of low-level changes covers everything
             }
+            return;
           }
-          else if (isStepDeletionAllowed(schritt)) {
+          if (isStepDeletionAllowed(schritt)) {
             schritt.markStepnumberLinksAsDefect();
             SchrittSequenzView sequenz = schritt.getParent();
             int schrittIndex = sequenz.schrittEntfernen(schritt, Discard);
