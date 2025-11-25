@@ -43,8 +43,6 @@ public class FontTest {
     ConverterProperties properties = new ConverterProperties();
     FontProvider fontProvider = new DefaultFontProvider(false, false, false);
 
-    // Wenn *beide* Fonts geladen werden, dann gewinnt *immer* Sitka.
-    // Auch bei HTML-Passagen, die explizit "Courier Prime" als Font-Family angeben.
     assertEquals(4, fontProvider.addDirectory("src/main/resources/fonts/courierprime"));
     assertEquals(4, fontProvider.addDirectory("src/main/resources/fonts/sitka"));
     assertEquals(4, fontProvider.addDirectory("src/main/resources/fonts/roboto"));
