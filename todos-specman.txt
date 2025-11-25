@@ -55,24 +55,21 @@ Abschluss für Go-Live
   x Ersetzung ist nicht atomar, sondern besteht aus Löschen des alten Inhalts, und Einsetzen des neuen Inhalts
      sollten wir für ein schöneres Undo besser machen
 x PDF-Export
-  - Font-Einschränkung wieder entfernen
-    Das Problem: der Sitka-Font ist nachwievor ein guter Default wegen der guten Renderingeigenschaften für UI *und* PDF.
-      Wenn man in FormattedShapeText aber wieder schreibt DefaultFontProvider(true, true, true) dann ist Sitka nicht mehr
-      der Defaultfont. Es gibt einen Konstruktor mit einem 4. Parameter zur Angabe der Default Font Familiy, den habe ich
-      aber noch nicht zum Fliegen gebracht. Man kommt dann trotz "Sitka" als defaultFontFamily in der Methode
-      FontSelector.bestMatch bei einem der anderen Fonts raus.
-    Und auch im UI ist "Default" etwas anderes als der Font, den man über JEditorPane.setFont einstellt, wenn man später
-      ein Stück Text markiert und explizit über das Menü auf den Default-Font umstellt, so dass im HTML steht
-      <font face=\"Default\">Schritt</font> Evt. muss man hier noch an das Stylesheet von HTMLEditorKit bzw. JEditorPane
-      dran.
-    Beides muss also noch sauber verstanden und verheiratet werden
+  - Fonts werden bei der PDF-Generierung in jeden einzelnen Paragrafen dubliziert eingebetten. Deswegen sind die
+     PDF-Dateien so riesig groß. Wie man die nur *einmalig* einbettet, habe ich noch nicht herausgefunden.
+  - Fonts im Auswahldialog mit Namen kombiniert aus Family und Eigenschaft darstellen:
+     - Sitka - Serif
+     - Roboto - Sans Serif
+     - Courier Prime - Monospace
+  - In einem Vorformatierten Absatz sollten uneingeschränkt Spaces möglich sein
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Springen über Schrittreferenzen im PDF
-  - Es kommt hin und wieder zu Zeilen, die im PDF etwas zu lang sind und dann in die nächste Zeile umbrechen
+  - Es kommt hin und wieder (inzwischen selten) zu Zeilen, die im PDF etwas zu lang sind und dann in die nächste Zeile umbrechen
      Kann man das Feld für den Text einfach etwas zu breit definieren? Besser der Text ragt gelegentlich rechts ein wenig
      raus als wenn er umbricht und den Text darunter unleserlich macht. Problem scheint aber hauptsächlich zu entstehen,
      wenn der Inhalt skaliert werden muss. Wenn das also sauber funktioniert, ist das Problem hier vielleicht weg.
+  x Font-Einschränkung wieder entfernen. Mindestens ein Sans Serif und ein Monospace Font müssen dabei sein
   x Initiales Verzeichnis für PDF-Export = Ablageort der .nsd-Datei
   x Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen
 - Neben Serif-Font auch Sans Serif und Monospace Font einbauen und alle anderen entfernen
