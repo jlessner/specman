@@ -13,7 +13,6 @@ import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedElement;
 import specman.editarea.document.WrappedPosition;
 import specman.editarea.markups.MarkupType;
-import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.Markup_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextEditAreaModel_V001;
@@ -62,7 +61,7 @@ import static specman.editarea.TextStyles.TEXT_BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.INDIKATOR_GELB;
 import static specman.editarea.TextStyles.INDIKATOR_GELOESCHT_MARKIERT;
 import static specman.editarea.TextStyles.changedStepnumberLinkHTMLColor;
-import static specman.editarea.TextStyles.font;
+import static specman.editarea.TextStyles.DEFAULTFONT;
 import static specman.editarea.TextStyles.ganzerSchrittGeloeschtStil;
 import static specman.editarea.TextStyles.quellschrittStil;
 import static specman.editarea.TextStyles.stepnumberLinkStyleColor;
@@ -532,7 +531,7 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
 
     @Override
     public void skalieren(int prozentNeu, int prozentAktuell) {
-        setFont(font.deriveFont((float) FONTSIZE * prozentNeu / 100));
+        setFont(DEFAULTFONT.deriveFont((float) FONTSIZE * prozentNeu / 100));
     }
 
     public TextEditArea split(WrappedPosition textPosition) {

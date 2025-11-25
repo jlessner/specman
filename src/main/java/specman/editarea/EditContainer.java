@@ -134,7 +134,7 @@ public class EditContainer extends JPanel {
 			EditArea editArea;
 			if (editAreaModel instanceof TextEditAreaModel_V001) {
 				TextEditAreaModel_V001 textEditAreaModel = (TextEditAreaModel_V001)editAreaModel;
-				editArea = new TextEditArea(textEditAreaModel, TextStyles.font);
+				editArea = new TextEditArea(textEditAreaModel, TextStyles.DEFAULTFONT);
 			}
 			else if (editAreaModel instanceof ImageEditAreaModel_V001) {
 				ImageEditAreaModel_V001 imageEditAreaModel = (ImageEditAreaModel_V001)editAreaModel;

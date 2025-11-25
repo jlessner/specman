@@ -7,7 +7,6 @@ import specman.EditorI;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
-import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.TableEditAreaModel_V001;
 import specman.model.v001.TextEditAreaModel_V001;
@@ -177,7 +176,7 @@ public class TableEditArea extends JPanel implements EditArea<TableEditAreaModel
   }
 
   private void addCell(int rowIndex, String content) {
-    TextEditArea initialContentArea = new TextEditArea(new TextEditAreaModel_V001(content), TextStyles.font);
+    TextEditArea initialContentArea = new TextEditArea(new TextEditAreaModel_V001(content), TextStyles.DEFAULTFONT);
     addCell(rowIndex, new EditContainer(Specman.instance(), initialContentArea, null));
   }
 

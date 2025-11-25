@@ -185,11 +185,14 @@ public class FormattedShapeText extends AbstractShapeText {
   public static void initFont(int uizoomfactor, float swing2pdfScaleFactor) {
     try {
       properties = new ConverterProperties();
+      // We explicetly do NOT want to use PDF standard fonts nor system fonts nor the built-in fonts of iText here,
+      // because the rendering is based on the UI layout. Using exactly the same fonts for UI and PDF has the best
+      // chances that the text lines are placed accurately in the PDF.
       fontProvider = new DefaultFontProvider(false, false, false);
 
-      fontProvider.addDirectory("src/main/resources/fonts/courierprime");
-      fontProvider.addDirectory("src/main/resources/fonts/sitka");
-      fontProvider.addDirectory("src/main/resources/fonts/roboto");
+      for (String fontfile: TextStyles.FONTFILES) {
+        fontProvider.addFont(FontProgramFactory.createFont(fontfile));
+      }
       fontProvider.addFont(FontProgramFactory.createFont()); // Helvetica for step labels
 
       properties.setFontProvider(fontProvider);

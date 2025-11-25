@@ -27,7 +27,7 @@ public class TestEditor extends JFrame {
 
     field = new JEditorPane();
     field.setContentType("text/html");
-    field.setFont(TextStyles.font.deriveFont(Fontsize.SWING_FONTSIZE));
+    field.setFont(TextStyles.DEFAULTFONT.deriveFont(Fontsize.SWING_FONTSIZE));
     field.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 
     field.addKeyListener(new KeyAdapter() {

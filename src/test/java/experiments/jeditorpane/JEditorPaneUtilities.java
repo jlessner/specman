@@ -7,7 +7,6 @@ import specman.editarea.TextStyles;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Element;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -35,7 +34,7 @@ public class JEditorPaneUtilities extends JFrame {
 
     field = new JEditorPane();
     field.setContentType("text/html");
-    field.setFont(TextStyles.font.deriveFont((float) 15));
+    field.setFont(TextStyles.DEFAULTFONT.deriveFont((float) 15));
     field.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
     pane.add(field, CC.xy(1, 2));
 

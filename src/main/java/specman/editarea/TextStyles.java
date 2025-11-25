@@ -28,49 +28,33 @@ public class TextStyles {
     public static MutableAttributeSet changedStepnumberLinkStylePDF = new SimpleAttributeSet();
     public static MutableAttributeSet deletedStepnumberLinkStyle = new SimpleAttributeSet();
 
-    /**
-     * The following font is part of the Specman delivery and turned out to be rendered
-     * almost identical in both Swing UI and PDF export. This is a crucial aspect as the
-     * sizes of the text boxes in PDF are directly derived from the sizes in Swing. So the
-     * text rendering within the boxes must match very well. It is not easy to find a font
-     * which guarantees that. E.g. using simply a font construction like
-     * <pre>new Font("Times New Roman", Font.PLAIN, FONTSIZE);</pre>
-     * and using "Times New Roman" also for PDF rendering, causes slightly different lengths
-     * of the text lines.
-     */
-    public static final String SERIF_FONTCOLLECTION_REGULAR = "fonts/Sitka.ttc";
-    public static final int FONT_INDEX = 4;
+    public static final java.util.List<String> FONTFILES = java.util.List.of(
+      "fonts/sitka/SitkaDisplay.ttf",
+      "fonts/sitka/SitkaDisplay-Italic.ttf",
+      "fonts/sitka/SitkaDisplay-Bold.ttf",
+      "fonts/sitka/SitkaDisplay-BoldItalic.ttf",
 
-    public static final String COURIER_FONTCOLLECTION_REGULAR = "fonts/Courier Prime.ttf";
+      "fonts/roboto/Roboto-Regular.ttf",
+      "fonts/roboto/Roboto-Italic.ttf",
+      "fonts/roboto/Roboto-Bold.ttf",
+      "fonts/roboto/Roboto-BoldItalic.ttf",
 
-    public static Font font;
+      "fonts/courierprime/CourierPrime.ttf",
+      "fonts/courierprime/CourierPrime-Italic.ttf",
+      "fonts/courierprime/CourierPrime-Bold.ttf",
+      "fonts/courierprime/CourierPrime-BoldItalic.ttf"
+    );
+
+    public static Font DEFAULTFONT;
 
     static {
         try {
-//          font = registerFont("fonts/noto/NotoSerif-Regular.ttf");
-//          registerFont("fonts/noto/NotoSerif-Italic.ttf");
-//          registerFont("fonts/noto/NotoSerif-Bold.ttf");
-//          registerFont("fonts/noto/NotoSerif-BoldItalic.ttf");
-//
-//          registerFont("fonts/noto/NotoSans-Regular.ttf");
-//          registerFont("fonts/noto/NotoSans-Italic.ttf");
-//          registerFont("fonts/noto/NotoSans-Bold.ttf");
-//          registerFont("fonts/noto/NotoSans-BoldItalic.ttf");
-
-          font = registerFont("fonts/sitka/SitkaDisplay.ttf");
-          registerFont("fonts/sitka/SitkaDisplay-Italic.ttf");
-          registerFont("fonts/sitka/SitkaDisplay-Bold.ttf");
-          registerFont("fonts/sitka/SitkaDisplay-BoldItalic.ttf");
-
-          registerFont("fonts/roboto/Roboto-Regular.ttf");
-          registerFont("fonts/roboto/Roboto-Italic.ttf");
-          registerFont("fonts/roboto/Roboto-Bold.ttf");
-          registerFont("fonts/roboto/Roboto-BoldItalic.ttf");
-
-          registerFont("fonts/courierprime/CourierPrime.ttf");
-          registerFont("fonts/courierprime/CourierPrime-Italic.ttf");
-          registerFont("fonts/courierprime/CourierPrime-Bold.ttf");
-          registerFont("fonts/courierprime/CourierPrime-BoldItalic.ttf");
+          for (String fontFile : FONTFILES) {
+            Font registeredFont = registerFont(fontFile);
+            if (DEFAULTFONT == null) {
+              DEFAULTFONT = registeredFont;
+            }
+          }
         }
         catch(Exception x) {
             x.printStackTrace();
