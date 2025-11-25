@@ -57,10 +57,10 @@ public class TextStyles {
 //          registerFont("fonts/noto/NotoSans-Bold.ttf");
 //          registerFont("fonts/noto/NotoSans-BoldItalic.ttf");
 
-          font = registerFont("fonts/sitka/SitkaText.ttf");
-          registerFont("fonts/sitka/SitkaText-Italic.ttf");
-          registerFont("fonts/sitka/SitkaText-Bold.ttf");
-          registerFont("fonts/sitka/SitkaText-BoldItalic.ttf");
+          font = registerFont("fonts/sitka/SitkaDisplay.ttf");
+          registerFont("fonts/sitka/SitkaDisplay-Italic.ttf");
+          registerFont("fonts/sitka/SitkaDisplay-Bold.ttf");
+          registerFont("fonts/sitka/SitkaDisplay-BoldItalic.ttf");
 
           registerFont("fonts/roboto/Roboto-Regular.ttf");
           registerFont("fonts/roboto/Roboto-Italic.ttf");
