@@ -186,11 +186,12 @@ public class FormattedShapeText extends AbstractShapeText {
     try {
       properties = new ConverterProperties();
       fontProvider = new DefaultFontProvider(false, false, false);
-      fontProvider.addFont(FontProgramFactory.createFont(TextStyles.SERIF_FONTCOLLECTION_REGULAR, TextStyles.FONT_INDEX, false));
-      fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaB.ttc", TextStyles.FONT_INDEX, false));
-      fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaI.ttc", TextStyles.FONT_INDEX, false));
-      fontProvider.addFont(FontProgramFactory.createFont("fonts/SitkaZ.ttc", TextStyles.FONT_INDEX, false));
-      fontProvider.addFont(FontProgramFactory.createFont()); // Helvetica
+
+      fontProvider.addDirectory("src/main/resources/fonts/courierprime");
+      fontProvider.addDirectory("src/main/resources/fonts/sitka");
+      fontProvider.addDirectory("src/main/resources/fonts/roboto");
+      fontProvider.addFont(FontProgramFactory.createFont()); // Helvetica for step labels
+
       properties.setFontProvider(fontProvider);
       initHTMLStyles(uizoomfactor, swing2pdfScaleFactor);
     }

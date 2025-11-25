@@ -21,7 +21,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Latest version is 8, but most example code in the web ist based on version 7 -->
-        <itext.version>7.2.5</itext.version>
+        <itext.version>9.4.0</itext.version>
     </properties>
 
     <dependencies>
@@ -132,7 +132,7 @@
             <groupId>com.itextpdf</groupId>
             <artifactId>html2pdf</artifactId>
             <!-- Different version from core. See https://kb.itextpdf.com/home/it7kb/compatibility-matrix for matching versions -->
-            <version>4.0.5</version>
+            <version>6.3.0</version>
         </dependency>
 
         <dependency>

@@ -169,12 +169,12 @@ public class Shape {
 
   protected PdfCanvas moveTo(Point p, Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas) {
     com.itextpdf.kernel.geom.Point pdfPoint = toPdfPoint(p, renderOffset, swing2pdfScaleFactor);
-    return pdfCanvas.moveTo(pdfPoint.x, pdfPoint.y);
+    return pdfCanvas.moveTo(pdfPoint.getX(), pdfPoint.getY());
   }
 
   protected PdfCanvas lineTo(Point p, Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas) {
     com.itextpdf.kernel.geom.Point pdfPoint = toPdfPoint(p, renderOffset, swing2pdfScaleFactor);
-    return pdfCanvas.lineTo(pdfPoint.x, pdfPoint.y);
+    return pdfCanvas.lineTo(pdfPoint.getX(), pdfPoint.getY());
   }
 
   protected com.itextpdf.kernel.geom.Point toPdfPoint(Point p, Point renderOffset, float swing2pdfScaleFactor) {

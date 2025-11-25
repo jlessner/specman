@@ -19,7 +19,7 @@ public class CircleShape extends Shape {
 
   public void runPath(Point renderOffset, float swing2pdfScaleFactor, PdfCanvas pdfCanvas) {
     com.itextpdf.kernel.geom.Point pdfCenter = toPdfPoint(path.get(0), renderOffset, swing2pdfScaleFactor);
-    pdfCanvas.circle(pdfCenter.x, pdfCenter.y, radius * swing2pdfScaleFactor);
+    pdfCanvas.circle(pdfCenter.getX(), pdfCenter.getY(), radius * swing2pdfScaleFactor);
   }
 
 }

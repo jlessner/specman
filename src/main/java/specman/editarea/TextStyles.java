@@ -6,8 +6,8 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.HTML;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
@@ -41,19 +41,52 @@ public class TextStyles {
     public static final String SERIF_FONTCOLLECTION_REGULAR = "fonts/Sitka.ttc";
     public static final int FONT_INDEX = 4;
 
+    public static final String COURIER_FONTCOLLECTION_REGULAR = "fonts/Courier Prime.ttf";
+
     public static Font font;
+
     static {
         try {
-            InputStream fontsStream = Specman.class.getClassLoader().getResourceAsStream(SERIF_FONTCOLLECTION_REGULAR);
-            Font[] fonts = Font.createFonts(fontsStream);
-            //Font[] fonts = Font.createFonts(new java.io.File(SERIF_FONTCOLLECTION_REGULAR));
-            font = fonts[FONT_INDEX];
+//          font = registerFont("fonts/noto/NotoSerif-Regular.ttf");
+//          registerFont("fonts/noto/NotoSerif-Italic.ttf");
+//          registerFont("fonts/noto/NotoSerif-Bold.ttf");
+//          registerFont("fonts/noto/NotoSerif-BoldItalic.ttf");
+//
+//          registerFont("fonts/noto/NotoSans-Regular.ttf");
+//          registerFont("fonts/noto/NotoSans-Italic.ttf");
+//          registerFont("fonts/noto/NotoSans-Bold.ttf");
+//          registerFont("fonts/noto/NotoSans-BoldItalic.ttf");
+
+          font = registerFont("fonts/sitka/SitkaText.ttf");
+          registerFont("fonts/sitka/SitkaText-Italic.ttf");
+          registerFont("fonts/sitka/SitkaText-Bold.ttf");
+          registerFont("fonts/sitka/SitkaText-BoldItalic.ttf");
+
+          registerFont("fonts/roboto/Roboto-Regular.ttf");
+          registerFont("fonts/roboto/Roboto-Italic.ttf");
+          registerFont("fonts/roboto/Roboto-Bold.ttf");
+          registerFont("fonts/roboto/Roboto-BoldItalic.ttf");
+
+          registerFont("fonts/courierprime/CourierPrime.ttf");
+          registerFont("fonts/courierprime/CourierPrime-Italic.ttf");
+          registerFont("fonts/courierprime/CourierPrime-Bold.ttf");
+          registerFont("fonts/courierprime/CourierPrime-BoldItalic.ttf");
         }
         catch(Exception x) {
             x.printStackTrace();
         }
     }
-    //public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
+
+    private static Font registerFont(String ttfFilename) throws FontFormatException, IOException {
+      try (InputStream fontsStream = Specman.class.getClassLoader().getResourceAsStream(ttfFilename)) {
+        Font font = Font.createFont(Font.TRUETYPE_FONT, fontsStream);
+        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont( font );
+        return font;
+      }
+    }
+
+
+  //public static Font font = new Font(Font.SERIF, Font.PLAIN, FONTSIZE);
     //public static Font font = new Font("Times New Roman", Font.PLAIN, FONTSIZE);
 
     public static Font labelFont = new Font(Font.SANS_SERIF, Font.BOLD, SCHRITTNR_FONTSIZE);
