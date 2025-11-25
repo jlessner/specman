@@ -14,7 +14,7 @@ import net.atlanticbb.tantlinger.ui.text.actions.FindReplaceAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLBlockActionWithMarkupRecovery;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLEditorActionFactory;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLElementPropertiesAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontAction;
+import net.atlanticbb.tantlinger.ui.text.actions.SpecmanHTMLFontAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontColorAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLHorizontalRuleAction;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLInlineAction;
@@ -236,7 +236,7 @@ public class HTMLEditorPane extends JPanel
     actionList.add(act);
     formatMenu.add(act);
 
-    act = new HTMLFontAction();
+    act = new SpecmanHTMLFontAction();
     actionList.add(act);
     formatMenu.add(act);
 
@@ -352,13 +352,14 @@ public class HTMLEditorPane extends JPanel
     formatToolBar.addSeparator();
 
     Vector fonts = new Vector();
-    fonts.add("Default");
-    fonts.add("serif");
-    fonts.add("sans-serif");
-    fonts.add("monospaced");
-    GraphicsEnvironment gEnv =
-        GraphicsEnvironment.getLocalGraphicsEnvironment();
-    fonts.addAll(Arrays.asList(gEnv.getAvailableFontFamilyNames()));
+    fonts.add("Sitka");
+    fonts.add("Roboto");
+    fonts.add("CourierPrime");
+
+    // No system fonts yet
+//    GraphicsEnvironment gEnv =
+//        GraphicsEnvironment.getLocalGraphicsEnvironment();
+//    fonts.addAll(Arrays.asList(gEnv.getAvailableFontFamilyNames()));
 
     fontFamilyCombo = new JComboBox(fonts);
     fontFamilyCombo.setPreferredSize(new Dimension(150, 22));

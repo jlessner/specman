@@ -52,6 +52,7 @@ public class FontTest {
 
     PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
     Document document = new Document(pdf);
+    document.setFontProvider(fontProvider);
 
     String html = "" +
         //"<html><head><style> body { font-family: sitka; } </style></head>\n" +
@@ -66,12 +67,17 @@ public class FontTest {
         "<font face=\"helvetica\">Helvetica by font element 123</font><br>" +
         "Plain 153te<i>ww</i>xtj<p><b>Bold textj</b>";
 
-    HtmlConverter.convertToPdf(html, pdf, properties);
+//    HtmlConverter.convertToPdf(html, pdf, properties);
 
-//    java.util.List<IElement> elements = HtmlConverter.convertToElements(html, properties);
-//    for (IElement element : elements) {
-//      document.add(new Paragraph().add((IBlockElement)element));
-//    }
+    java.util.List<IElement> elements = HtmlConverter.convertToElements(html, properties);
+    for (IElement element : elements) {
+      document.add(new Paragraph().add((IBlockElement)element));
+    }
+
+    elements = HtmlConverter.convertToElements(html, properties);
+    for (IElement element : elements) {
+      document.add(new Paragraph().add((IBlockElement)element));
+    }
 
     document.close();
     Desktop desktop = Desktop.getDesktop();
