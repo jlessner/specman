@@ -27,6 +27,8 @@ import net.atlanticbb.tantlinger.ui.text.actions.UnorderedListItemAction;
 import net.atlanticbb.tantlinger.ui.text.actions.SpecialCharAction;
 import net.atlanticbb.tantlinger.ui.text.actions.StepnumberLinkAction;
 import net.atlanticbb.tantlinger.ui.text.actions.TableAction;
+import net.atlanticbb.tantlinger.ui.text.dialogs.SpecmanHTMLFontDialog;
+import net.atlanticbb.tantlinger.ui.text.dialogs.SpecmanHTMLFontDialog.FontFamily;
 import novaworx.syntax.SyntaxFactory;
 import novaworx.textpane.SyntaxDocument;
 import novaworx.textpane.SyntaxGutter;
@@ -351,17 +353,7 @@ public class HTMLEditorPane extends JPanel
     formatToolBar.add(paragraphCombo);
     formatToolBar.addSeparator();
 
-    Vector fonts = new Vector();
-    fonts.add("Sitka");
-    fonts.add("Roboto");
-    fonts.add("CourierPrime");
-
-    // No system fonts yet
-//    GraphicsEnvironment gEnv =
-//        GraphicsEnvironment.getLocalGraphicsEnvironment();
-//    fonts.addAll(Arrays.asList(gEnv.getAvailableFontFamilyNames()));
-
-    fontFamilyCombo = new JComboBox(fonts);
+    fontFamilyCombo = new JComboBox(FontFamily.ALL_FONTS);
     fontFamilyCombo.setPreferredSize(new Dimension(150, 22));
     fontFamilyCombo.setMinimumSize(new Dimension(150, 22));
     fontFamilyCombo.setMaximumSize(new Dimension(150, 22));
@@ -891,8 +883,7 @@ public class HTMLEditorPane extends JPanel
 
         if(fontFamilyCombo.getSelectedIndex() != 0)
         {
-          HTMLUtils.setFontFamily(wysEditor, fontFamilyCombo.getSelectedItem().toString());
-
+          HTMLUtils.setFontFamily(wysEditor, ((FontFamily)fontFamilyCombo.getSelectedItem()).toFamiliyName());
         }
         else
         {

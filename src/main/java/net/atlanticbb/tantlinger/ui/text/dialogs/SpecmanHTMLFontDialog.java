@@ -2,6 +2,7 @@ package net.atlanticbb.tantlinger.ui.text.dialogs;
 
 import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.UIUtils;
+import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontSizeAction;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -17,11 +18,10 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
   private static Icon icon = UIUtils.getIcon("resources/images/x32/", "fontsize.png");
   private static String title;
   private static String desc;
-  private static final Integer[] SIZES;
   private JPanel jContentPane = null;
   private JLabel fontLabel = null;
   private JComboBox<FontFamily> fontCombo = null;
-  private JComboBox sizeCombo = null;
+  private JComboBox<String> sizeCombo = null;
   private JPanel stylePanel = null;
   private JCheckBox boldCB = null;
   private JCheckBox italicCB = null;
@@ -78,8 +78,7 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
   }
 
   public int getFontSize() {
-    Integer i = (Integer)this.sizeCombo.getSelectedItem();
-    return i;
+    return HTMLFontSizeAction.FONT_SIZES[this.sizeCombo.getSelectedIndex()];
   }
 
   public void setFontSize(int size) {
@@ -144,8 +143,8 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
       this.previewLabel.setBorder((Border)null);
     }
 
-    String font = this.fontCombo.getSelectedItem().toString();
-    Integer size = SIZES[this.sizeCombo.getSelectedIndex()];
+    String font = ((FontFamily)this.fontCombo.getSelectedItem()).toFamiliyName();
+    Integer size = HTMLFontSizeAction.FONT_SIZES[this.sizeCombo.getSelectedIndex()];
     Font f = new Font(font, style, size);
     this.previewLabel.setFont(f);
   }
@@ -210,8 +209,8 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
 
   private JComboBox getSizeCombo() {
     if (this.sizeCombo == null) {
-      this.sizeCombo = new JComboBox(SIZES);
-      this.sizeCombo.setSelectedItem(new Integer(12));
+      this.sizeCombo = new JComboBox(HTMLFontSizeAction.SIZES);
+      this.sizeCombo.setSelectedIndex(HTMLFontSizeAction.MEDIUM);
       this.sizeCombo.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent e) {
           SpecmanHTMLFontDialog.this.updatePreview();
@@ -339,13 +338,12 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
   static {
     title = i18n.str("font");
     desc = i18n.str("font_desc");
-    SIZES = new Integer[]{new Integer(8), new Integer(10), new Integer(12), new Integer(14), new Integer(18), new Integer(24), new Integer(36)};
   }
 
-  private static final class FontFamily {
-    public static final FontFamily SITKA = new FontFamily("Sitka - Serif", "Sitka");
+  public static final class FontFamily {
+    public static final FontFamily SITKA = new FontFamily("Sitka - Serif", "SitkaDisplay");
     public static final FontFamily ROBOTO = new FontFamily("Roboto - Sans Serif", "Roboto");
-    public static final FontFamily COURIER_PRIME = new FontFamily("Courier Prime - Monospace", "CourierPrime");
+    public static final FontFamily COURIER_PRIME = new FontFamily("Courier - Monospace", "CourierPrime");
 
     public static final Vector ALL_FONTS = new Vector(java.util.List.of(
       SITKA, ROBOTO, COURIER_PRIME
@@ -361,6 +359,6 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
     @Override
     public String toString() { return displayName; }
 
-    String toFamiliyName() { return this.familiyName; }
+    public String toFamiliyName() { return this.familiyName; }
   }
 }
