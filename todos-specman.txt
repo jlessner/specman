@@ -61,7 +61,12 @@ x PDF-Export
      - Sitka - Serif
      - Roboto - Sans Serif
      - Courier Prime - Monospace
+  - Auswahl der Fontgröße im Font-Auswahldialog nicht in Pixeln sondern in Größenklassen analog Größenbutton.
+     Default: Mittel (Size 2), analog Auswahlbutton
+  - Fonttyp-Combobox sorgt für Fokusverlust im aktuellen Textfeld, so dass die Auswahl nicht auf den selektierten Text
+     anwendbar ist. Im Fontgrößen-Button / Font-Farbendialog / Font-Auswahldialog besteht das Problem nicht
   - In einem Vorformatierten Absatz sollten uneingeschränkt Spaces möglich sein
+  - Vordefinierten Absatz im PDF-Stylesheet mit Top-Margin versehen. Der Text wird leicht nach oben verschoben angezeigt
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Springen über Schrittreferenzen im PDF
