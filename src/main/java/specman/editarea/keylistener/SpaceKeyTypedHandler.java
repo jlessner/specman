@@ -22,6 +22,7 @@ public class SpaceKeyTypedHandler extends AbstractKeyEventHandler {
    * the caret is placed <i>after</i> it. Otherwise, continuous typing of text whould
    * permanently refuse adding whitespaces. */
   void handle() {
+    //textArea.paragraphType();
     WrappedPosition caret = getWrappedCaretPosition();
     if (caret.isZero() ||
       Whitespace.at(caret) ||

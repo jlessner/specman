@@ -55,11 +55,10 @@ Abschluss für Go-Live
   x Ersetzung ist nicht atomar, sondern besteht aus Löschen des alten Inhalts, und Einsetzen des neuen Inhalts
      sollten wir für ein schöneres Undo besser machen
 x PDF-Export
-  - Fonttyp-Combobox sorgt für Fokusverlust im aktuellen Textfeld, sodass die Auswahl nicht auf den selektierten Text
-     anwendbar ist. Im Fontgrößen-Button / Font-Farbendialog / Font-Auswahldialog besteht das Problem nicht
   - In einem Vorformatierten Absatz sollten uneingeschränkt Spaces möglich sein
+     HTMLBlockAction#changeBlockType
   - Font-Auswahldialog breiter machen, damit man die Größenangaben komplett lesen kann
-  - Vordefinierten Absatz im PDF-Stylesheet mit Top-Margin versehen. Der Text wird leicht nach oben verschoben angezeigt
+  - Vorformatierten Absatz im PDF-Stylesheet mit Top-Margin versehen. Der Text wird leicht nach oben verschoben angezeigt
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Springen über Schrittreferenzen im PDF
@@ -67,6 +66,8 @@ x PDF-Export
      Kann man das Feld für den Text einfach etwas zu breit definieren? Besser der Text ragt gelegentlich rechts ein wenig
      raus als wenn er umbricht und den Text darunter unleserlich macht. Problem scheint aber hauptsächlich zu entstehen,
      wenn der Inhalt skaliert werden muss. Wenn das also sauber funktioniert, ist das Problem hier vielleicht weg.
+  x Fonttyp-Combobox sorgt für Fokusverlust im aktuellen Textfeld, sodass die Auswahl nicht auf den selektierten Text
+     anwendbar ist. Im Fontgrößen-Button / Font-Farbendialog / Font-Auswahldialog besteht das Problem nicht
   x Auswahl der Fontgröße im Font-Auswahldialog nicht in Pixeln, sondern in Größenklassen analog Größenbutton.
      Default: Mittel (Size 4), analog Auswahlbutton
   x Im Font-Auswahldialog zeigt die Vorschau nicht den richtigen Font, wenn man auf "Sitka" stellt.

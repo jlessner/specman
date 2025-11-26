@@ -1,6 +1,7 @@
 package specman.editarea;
 
 import net.atlanticbb.tantlinger.ui.text.CompoundUndoManager;
+import org.apache.commons.lang.StringUtils;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
@@ -27,14 +28,9 @@ import specman.view.AbstractSchrittView;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-import javax.swing.text.StyledEditorKit;
+import javax.swing.text.*;
 import javax.swing.text.html.CSS;
+import javax.swing.text.html.HTML;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -838,5 +834,18 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
 
     public WrappedDocument getWrappedDocument() {
         return new WrappedDocument((StyledDocument) getDocument());
+    }
+
+    @Override
+    public String toString() {
+      return StringUtils.abbreviate(getPlainText().replace("\n", " "), 20);
+    }
+
+    /** For playing around purposes only. Should disappear soon. */
+    public void _paragraphType() {
+      StyledDocument doc = (StyledDocument) getDocument();
+      Element paragraph = doc.getParagraphElement(getCaretPosition());
+      Object elementType = paragraph.getAttributes().getAttribute(HTML.Attribute.NAME);
+      System.out.println(elementType);
     }
 }
