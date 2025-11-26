@@ -11,6 +11,7 @@ import java.awt.event.ItemListener;
 import java.util.Vector;
 
 public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
+
   private static final long serialVersionUID = 1L;
   private static final I18n i18n = I18n.getInstance("net.atlanticbb.tantlinger.ui.text.dialogs");
   private static Icon icon = UIUtils.getIcon("resources/images/x32/", "fontsize.png");
@@ -19,7 +20,7 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
   private static final Integer[] SIZES;
   private JPanel jContentPane = null;
   private JLabel fontLabel = null;
-  private JComboBox fontCombo = null;
+  private JComboBox<FontFamily> fontCombo = null;
   private JComboBox sizeCombo = null;
   private JPanel stylePanel = null;
   private JCheckBox boldCB = null;
@@ -73,7 +74,7 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
   }
 
   public String getFontName() {
-    return this.fontCombo.getSelectedItem().toString();
+    return ((FontFamily)this.fontCombo.getSelectedItem()).toFamiliyName();
   }
 
   public int getFontSize() {
@@ -192,24 +193,16 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
 
   private JComboBox getFontCombo() {
     if (this.fontCombo == null) {
-      GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      String[] envfonts = gEnv.getAvailableFontFamilyNames();
-      Vector fonts = new Vector();
-      fonts.add("Sitka");
-      fonts.add("Roboto");
-      fonts.add("CourierPrime");
 
 // No system fonts yet
+//      GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//      String[] envfonts = gEnv.getAvailableFontFamilyNames();
 //      for(int i = 0; i < envfonts.length; ++i) {
 //        fonts.add(envfonts[i]);
 //      }
 
-      this.fontCombo = new JComboBox(fonts);
-      this.fontCombo.addItemListener(new ItemListener() {
-        public void itemStateChanged(ItemEvent e) {
-          SpecmanHTMLFontDialog.this.updatePreview();
-        }
-      });
+      this.fontCombo = new JComboBox(FontFamily.ALL_FONTS);
+      this.fontCombo.addItemListener(e -> SpecmanHTMLFontDialog.this.updatePreview());
     }
 
     return this.fontCombo;
@@ -347,5 +340,27 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
     title = i18n.str("font");
     desc = i18n.str("font_desc");
     SIZES = new Integer[]{new Integer(8), new Integer(10), new Integer(12), new Integer(14), new Integer(18), new Integer(24), new Integer(36)};
+  }
+
+  private static final class FontFamily {
+    public static final FontFamily SITKA = new FontFamily("Sitka - Serif", "Sitka");
+    public static final FontFamily ROBOTO = new FontFamily("Roboto - Sans Serif", "Roboto");
+    public static final FontFamily COURIER_PRIME = new FontFamily("Courier Prime - Monospace", "CourierPrime");
+
+    public static final Vector ALL_FONTS = new Vector(java.util.List.of(
+      SITKA, ROBOTO, COURIER_PRIME
+    ));
+
+    private final String displayName, familiyName;
+
+    FontFamily(String displayName, String familiyName) {
+      this.displayName = displayName;
+      this.familiyName = familiyName;
+    }
+
+    @Override
+    public String toString() { return displayName; }
+
+    String toFamiliyName() { return this.familiyName; }
   }
 }

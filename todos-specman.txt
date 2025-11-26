@@ -55,11 +55,7 @@ Abschluss für Go-Live
   x Ersetzung ist nicht atomar, sondern besteht aus Löschen des alten Inhalts, und Einsetzen des neuen Inhalts
      sollten wir für ein schöneres Undo besser machen
 x PDF-Export
-  - Fonts im Auswahldialog mit Namen kombiniert aus Family und Eigenschaft darstellen:
-     - Sitka - Serif
-     - Roboto - Sans Serif
-     - Courier Prime - Monospace
-  - Auswahl der Fontgröße im Font-Auswahldialog nicht in Pixeln sondern in Größenklassen analog Größenbutton.
+  - Auswahl der Fontgröße im Font-Auswahldialog nicht in Pixeln, sondern in Größenklassen analog Größenbutton.
      Default: Mittel (Size 2), analog Auswahlbutton
   - Fonttyp-Combobox sorgt für Fokusverlust im aktuellen Textfeld, so dass die Auswahl nicht auf den selektierten Text
      anwendbar ist. Im Fontgrößen-Button / Font-Farbendialog / Font-Auswahldialog besteht das Problem nicht
@@ -72,6 +68,10 @@ x PDF-Export
      Kann man das Feld für den Text einfach etwas zu breit definieren? Besser der Text ragt gelegentlich rechts ein wenig
      raus als wenn er umbricht und den Text darunter unleserlich macht. Problem scheint aber hauptsächlich zu entstehen,
      wenn der Inhalt skaliert werden muss. Wenn das also sauber funktioniert, ist das Problem hier vielleicht weg.
+  x Fonts im Auswahldialog mit Namen kombiniert aus Family und Eigenschaft darstellen:
+     x Sitka - Serif
+     x Roboto - Sans Serif
+     x Courier Prime - Monospace
   x PDF-Generierung ist seit der Wiederverwendung eingebetteter Fonts deutlich langsamer geworden. Anders herum
      hätte ich es erwartet. Woran liegt das?
   x Fonts werden bei der PDF-Generierung in jeden einzelnen Paragrafen dubliziert eingebetten. Deswegen sind die

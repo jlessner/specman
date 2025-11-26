@@ -371,13 +371,7 @@ public class HTMLEditorPane extends JPanel
 
     final JButton fontSizeButton = new JButton(UIUtils.getIcon(UIUtils.X16, "fontsize.png"));
     final JPopupMenu sizePopup = ActionUIFactory.getInstance().createPopupMenu(fontSizeActs);
-    ActionListener al = new ActionListener()
-    {
-      public void actionPerformed(ActionEvent e)
-      {
-        sizePopup.show(fontSizeButton, 0, fontSizeButton.getHeight());
-      }
-    };
+    ActionListener al = e -> sizePopup.show(fontSizeButton, 0, fontSizeButton.getHeight());
     fontSizeButton.addActionListener(al);
     configToolbarButton(fontSizeButton);
     formatToolBar.add(fontSizeButton);
