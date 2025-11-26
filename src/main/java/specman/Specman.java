@@ -2,6 +2,9 @@ package specman;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -1060,11 +1063,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	public static void main(String[] args) throws Exception {
+    setLookAndFeel();
 		File initialFileToOpen = readFileFromArgs(args);
 		new Specman(initialFileToOpen);
 	}
 
-	private static File readFileFromArgs(String[] args) {
+  private static void setLookAndFeel() {
+    try {
+      UIManager.setLookAndFeel(new FlatLightLaf());
+    } catch (UnsupportedLookAndFeelException ex) {
+      System.err.println("Failed to initialize LaF");
+    }
+  }
+
+  private static File readFileFromArgs(String[] args) {
 		if (args.length > 0) {
 			File file = new File(args[0]);
 			if (file.exists()) {

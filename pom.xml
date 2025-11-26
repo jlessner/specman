@@ -73,6 +73,12 @@
             <version>8.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5</version>
+        </dependency>
+
         <!-- always needed -->
         <dependency>
             <groupId>com.itextpdf</groupId>

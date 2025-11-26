@@ -27,7 +27,6 @@ import net.atlanticbb.tantlinger.ui.text.actions.UnorderedListItemAction;
 import net.atlanticbb.tantlinger.ui.text.actions.SpecialCharAction;
 import net.atlanticbb.tantlinger.ui.text.actions.StepnumberLinkAction;
 import net.atlanticbb.tantlinger.ui.text.actions.TableAction;
-import net.atlanticbb.tantlinger.ui.text.dialogs.SpecmanHTMLFontDialog;
 import net.atlanticbb.tantlinger.ui.text.dialogs.SpecmanHTMLFontDialog.FontFamily;
 import novaworx.syntax.SyntaxFactory;
 import novaworx.textpane.SyntaxDocument;
@@ -139,30 +138,6 @@ public class HTMLEditorPane extends JPanel
     this.centralUndoManager = centralUndoManager;
     CompoundUndoManager.setCentralUndoManager(centralUndoManager);
     initUI();
-  }
-
-  public HTMLEditorPane()
-  {
-    this(null);
-  }
-
-  public void setCaretPosition(int pos)
-  {
-    if(tabs.getSelectedIndex() == 0)
-    {
-      wysEditor.setCaretPosition(pos);
-      wysEditor.requestFocusInWindow();
-    }
-    else if(tabs.getSelectedIndex() == 1)
-    {
-      srcEditor.setCaretPosition(pos);
-      srcEditor.requestFocusInWindow();
-    }
-  }
-
-  public void setSelectedTab(int i)
-  {
-    tabs.setSelectedIndex(i);
   }
 
   private void initUI()
@@ -710,10 +685,6 @@ public class HTMLEditorPane extends JPanel
   }
 
 
-
-
-
-
   private class CaretHandler implements CaretListener
   {
     /* (non-Javadoc)
@@ -799,33 +770,6 @@ public class HTMLEditorPane extends JPanel
     }
   }
 
-  private class ChangeTabAction extends DefaultAction
-  {
-    /**
-     *
-     */
-    @Serial private static final long serialVersionUID = 1L;
-    int tab;
-    public ChangeTabAction(int tab)
-    {
-      super((tab == 0) ? i18n.str("rich_text") :
-          i18n.str("source"));
-      this.tab = tab;
-      putValue(ActionManager.BUTTON_TYPE, ActionManager.BUTTON_TYPE_VALUE_RADIO);
-    }
-
-    protected void execute(ActionEvent e)
-    {
-      tabs.setSelectedIndex(tab);
-      setSelected(true);
-    }
-
-    protected void contextChanged()
-    {
-      setSelected(tabs.getSelectedIndex() == tab);
-    }
-  }
-
   private class ParagraphComboHandler implements ActionListener
   {
     public void actionPerformed(ActionEvent e) {
@@ -836,21 +780,6 @@ public class HTMLEditorPane extends JPanel
       }
     }
   }
-
-//  private void recoverMarkups(MarkedCharSequence marksBackup) {
-//    if (marksBackup != null) {
-//      TextEditArea editArea = (TextEditArea) focusedEditor;
-//      List<Markup_V001> recoveredChangemarks = new MarkupRecovery(editArea.getWrappedDocument(), marksBackup).recover();
-//      new MarkupBackgroundStyleInitializer(editArea, recoveredChangemarks).styleChangedTextSections();
-//    }
-//  }
-//
-//  private MarkedCharSequence backupMarkups(Object htmlAction) {
-//    if (htmlAction instanceof HTMLBlockAction) {
-//      return ((TextEditArea)focusedEditor).findMarkups();
-//    }
-//    return null;
-//  }
 
   private class ParagraphComboRenderer extends DefaultListCellRenderer
   {
@@ -875,7 +804,7 @@ public class HTMLEditorPane extends JPanel
   {
     public void actionPerformed(ActionEvent e)
     {
-      if(e.getSource() == fontFamilyCombo && focusedEditor == wysEditor )
+      if(e.getSource() == fontFamilyCombo && focusedEditor != null)
       {
         //MutableAttributeSet tagAttrs = new SimpleAttributeSet();
         HTMLDocument document = (HTMLDocument)focusedEditor.getDocument();
@@ -883,11 +812,11 @@ public class HTMLEditorPane extends JPanel
 
         if(fontFamilyCombo.getSelectedIndex() != 0)
         {
-          HTMLUtils.setFontFamily(wysEditor, ((FontFamily)fontFamilyCombo.getSelectedItem()).toFamiliyName());
+          HTMLUtils.setFontFamily(focusedEditor, ((FontFamily)fontFamilyCombo.getSelectedItem()).toFamiliyName());
         }
         else
         {
-          HTMLUtils.setFontFamily(wysEditor, null);
+          HTMLUtils.setFontFamily(focusedEditor, null);
         }
         CompoundUndoManager.endCompoundEdit(document);
       }
