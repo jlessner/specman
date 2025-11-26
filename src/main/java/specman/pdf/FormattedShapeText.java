@@ -37,16 +37,20 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.itextpdf.layout.properties.Property.FONT_PROVIDER;
 import static specman.pdf.PDFRenderer.SWING2PDF_SCALEFACTOR_100PERCENT;
 
 public class FormattedShapeText extends AbstractShapeText {
   private static final String HTML2PDF_STYLESHEET = "stylesheets/specman-pdf.css";
   private static final Pattern FONTSIZE_PATTERN = Pattern.compile("(.*font-size:[\\s]*)([\\d\\.]+)(.+)");
 
-  static ConverterProperties properties;
   private static String htmlStyles;
 
   public static FontProvider fontProvider;
+
+  /** Purpose of EMPTY_CONVERSION_PROPERTIES see detailed comment in {@link #writeToPDF(Point, float, PdfCanvas, Document)}. */
+  private static final ConverterProperties EMPTY_CONVERSION_PROPERTIES = new ConverterProperties()
+    .setFontProvider(new DefaultFontProvider(false, false, false));
 
   private TextEditArea content;
 
@@ -73,12 +77,30 @@ public class FormattedShapeText extends AbstractShapeText {
         lineHtml = stylifyTextAlignment(lineHtml);
         lineHtml = removeMargin0Paragraphs(lineHtml);
         lineHtml = injectStylesheet(lineHtml);
-        java.util.List<IElement> elements = HtmlConverter.convertToElements(lineHtml, properties);
+
+        // Usage of EMPTY_CONVERSION_PROPERTIES see detailed comment below
+        java.util.List<IElement> elements = HtmlConverter.convertToElements(lineHtml, EMPTY_CONVERSION_PROPERTIES);
 
         // This turned out to sometimes happen with line items. The reason is not yet really clear.
         // It is probably concerned with copy/paste from MS Word documents. Up to now, simply ignoring
         // these cases didn't lead to missing text in PDF exports ;-)
         if (!elements.isEmpty()) {
+          IElement elementToPrint = elements.get(0);
+
+          // This looks wrong but is actually correct: We could have called HtmlConverter.convertToElements
+          // with passing ConverterProperties including the FontProvider. But then, each call would create
+          // its own FontProvider copy, causing the used fonts to be embedded once per element. The resulting
+          // PDF becomes horribly huge. To have all text elements share the same FontProvider (and thus the
+          // same embedded font subset), we have to set the FontProvider manually here.
+          // Passing an *empty* ConverterProperties to HtmlConverter.convertToElements is an important performance
+          // issue. Otherwise, the method internally produces a full-fledged yet unused DefaultFontProvider
+          // instance with all iText built-in and all system fonts which takes quite long. Passing an empty
+          // Font Provider saves the time.
+          // Special thanks go to ChatGPT for figuring this out ;-)
+          if (elementToPrint instanceof com.itextpdf.layout.IPropertyContainer) {
+            elementToPrint.setProperty(FONT_PROVIDER, fontProvider);
+          }
+
           Paragraph p = new Paragraph()
             .setMargin(0)
             .setMultipliedLeading(0.0f)
@@ -88,7 +110,7 @@ public class FormattedShapeText extends AbstractShapeText {
               (renderOffset.x + line.getX()) * swing2pdfScaleFactor,
               (renderOffset.y - line.getY() - line.getHeight()) * swing2pdfScaleFactor,
               paragraphWidth);
-          p.add((IBlockElement) elements.get(0));
+          p.add((IBlockElement) elementToPrint);
 
           document.add(p);
         }
@@ -151,14 +173,6 @@ public class FormattedShapeText extends AbstractShapeText {
       rowStart = rowEnd;
     }
 
-//    javax.swing.text.Document document = content.getDocument();
-//    for (int rowStart = 1; rowStart < document.getLength(); rowStart++) {
-//      Rectangle2D lineSpace = content.modelToView2D(rowStart);
-//      int rowEnd = Utilities.getRowEnd(content, rowStart);
-//      lines.add(new TextlineDimension(rowStart, rowEnd, lineSpace));
-//      rowStart = rowEnd;
-//    }
-
     return lines;
   }
 
@@ -184,10 +198,9 @@ public class FormattedShapeText extends AbstractShapeText {
 
   public static void initFont(int uizoomfactor, float swing2pdfScaleFactor) {
     try {
-      properties = new ConverterProperties();
       // We explicetly do NOT want to use PDF standard fonts nor system fonts nor the built-in fonts of iText here,
       // because the rendering is based on the UI layout. Using exactly the same fonts for UI and PDF has the best
-      // chances that the text lines are placed accurately in the PDF.
+      // chances that the text lines are placed accurately in the boxes for the diagramm steps.
       fontProvider = new DefaultFontProvider(false, false, false);
 
       for (String fontfile: TextStyles.FONTFILES) {
@@ -195,7 +208,6 @@ public class FormattedShapeText extends AbstractShapeText {
       }
       fontProvider.addFont(FontProgramFactory.createFont()); // Helvetica for step labels
 
-      properties.setFontProvider(fontProvider);
       initHTMLStyles(uizoomfactor, swing2pdfScaleFactor);
     }
     catch(IOException iox) {

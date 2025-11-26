@@ -55,8 +55,6 @@ Abschluss für Go-Live
   x Ersetzung ist nicht atomar, sondern besteht aus Löschen des alten Inhalts, und Einsetzen des neuen Inhalts
      sollten wir für ein schöneres Undo besser machen
 x PDF-Export
-  - Fonts werden bei der PDF-Generierung in jeden einzelnen Paragrafen dubliziert eingebetten. Deswegen sind die
-     PDF-Dateien so riesig groß. Wie man die nur *einmalig* einbettet, habe ich noch nicht herausgefunden.
   - Fonts im Auswahldialog mit Namen kombiniert aus Family und Eigenschaft darstellen:
      - Sitka - Serif
      - Roboto - Sans Serif
@@ -74,6 +72,10 @@ x PDF-Export
      Kann man das Feld für den Text einfach etwas zu breit definieren? Besser der Text ragt gelegentlich rechts ein wenig
      raus als wenn er umbricht und den Text darunter unleserlich macht. Problem scheint aber hauptsächlich zu entstehen,
      wenn der Inhalt skaliert werden muss. Wenn das also sauber funktioniert, ist das Problem hier vielleicht weg.
+  x PDF-Generierung ist seit der Wiederverwendung eingebetteter Fonts deutlich langsamer geworden. Anders herum
+     hätte ich es erwartet. Woran liegt das?
+  x Fonts werden bei der PDF-Generierung in jeden einzelnen Paragrafen dubliziert eingebetten. Deswegen sind die
+     PDF-Dateien so riesig groß. Wie man die nur *einmalig* einbettet, habe ich noch nicht herausgefunden.
   x Font-Einschränkung wieder entfernen. Mindestens ein Sans Serif und ein Monospace Font müssen dabei sein
   x Initiales Verzeichnis für PDF-Export = Ablageort der .nsd-Datei
   x Formatauswahl: A4/A3, Querformat/Hochformat, Tiling ja/nein, Auswahl in den Benutzereinstellungen

@@ -5,6 +5,7 @@ import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
 import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
+import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.font.TrueTypeFont;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
@@ -24,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static com.itextpdf.layout.properties.Property.FONT_PROVIDER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -73,33 +75,26 @@ public class FontTest {
   }
 
   @Test
-  void testHowToEmbedFontsOnlyOnceForAllParagraphs() throws Exception{
-    ConverterProperties properties = new ConverterProperties();
+  void testHowToEmbedFontsOnlyOnceForAllParagraphs() throws Exception {
+    ConverterProperties TIMESAVING_EMPTY_PROPS = new ConverterProperties()
+      .setFontProvider(new DefaultFontProvider(false, false, false));
+
     FontProvider fontProvider = new DefaultFontProvider(false, false, false);
     assertEquals(4, fontProvider.addDirectory("src/main/resources/fonts/sitka"));
-    properties.setFontProvider(fontProvider);
 
     PdfDocument pdf = new PdfDocument(new PdfWriter("sample.pdf"));
     Document document = new Document(pdf);
-    document.setFontProvider(fontProvider);
 
-    String html = "Hello World";
+    String html = "Hello World 123";
 
-    // Render HTML in separate paragraph
-    java.util.List<IElement> elements = HtmlConverter.convertToElements(html, properties);
-    for (IElement element : elements) {
-      document.add(new Paragraph().add((IBlockElement)element));
-    }
-
-    // Render same HTML once more in separate paragraph
-    // By Nov. 2025 this causes the Sitka font to be embedded a seconds time in the PDF
-    // In the rendered dokument press right mouse button, select document properties, fonts, and you will
-    // recognize that there are TWO embedded Sitka subgroups. In Specman it would be much more sufficient
-    // to embed the font only ONCE COMPLETELY for the whole document rather than a separate subgroup per
-    // paragraph.
-    elements = HtmlConverter.convertToElements(html, properties);
-    for (IElement element : elements) {
-      document.add(new Paragraph().add((IBlockElement)element));
+    for (int i = 0; i < 50; i++) {
+      java.util.List<IElement> elements = HtmlConverter.convertToElements(html, TIMESAVING_EMPTY_PROPS);
+      for (IElement element : elements) {
+        if (element instanceof com.itextpdf.layout.IPropertyContainer) {
+          element.setProperty(FONT_PROVIDER, fontProvider);
+        }
+        document.add(new Paragraph().add((IBlockElement)element));
+      }
     }
 
     document.close();
