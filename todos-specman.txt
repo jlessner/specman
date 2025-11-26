@@ -57,8 +57,6 @@ Abschluss für Go-Live
 x PDF-Export
   - In einem Vorformatierten Absatz sollten uneingeschränkt Spaces möglich sein
      HTMLBlockAction#changeBlockType
-  - Font-Auswahldialog breiter machen, damit man die Größenangaben komplett lesen kann
-  - Vorformatierten Absatz im PDF-Stylesheet mit Top-Margin versehen. Der Text wird leicht nach oben verschoben angezeigt
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
   - Nice to have: Springen über Schrittreferenzen im PDF
@@ -66,6 +64,8 @@ x PDF-Export
      Kann man das Feld für den Text einfach etwas zu breit definieren? Besser der Text ragt gelegentlich rechts ein wenig
      raus als wenn er umbricht und den Text darunter unleserlich macht. Problem scheint aber hauptsächlich zu entstehen,
      wenn der Inhalt skaliert werden muss. Wenn das also sauber funktioniert, ist das Problem hier vielleicht weg.
+  x Vorformatierten Absatz im PDF-Stylesheet mit Top-Margin versehen. Der Text wird leicht nach oben verschoben angezeigt
+  x Font-Auswahldialog breiter machen, damit man die Größenangaben komplett lesen kann
   x Fonttyp-Combobox sorgt für Fokusverlust im aktuellen Textfeld, sodass die Auswahl nicht auf den selektierten Text
      anwendbar ist. Im Fontgrößen-Button / Font-Farbendialog / Font-Auswahldialog besteht das Problem nicht
   x Auswahl der Fontgröße im Font-Auswahldialog nicht in Pixeln, sondern in Größenklassen analog Größenbutton.

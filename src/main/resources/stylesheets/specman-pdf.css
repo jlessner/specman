@@ -16,6 +16,8 @@ h4 { font-size: 13px; padding-bottom: 0px; margin-bottom: 0px; }
 h4>span { font-size: 13px; }
 h4>font>span { font-size: 13px; }
 
+pre { padding-bottom: 0px; margin-bottom: 0px; }
+
 font[size="7"] { font-size: 39.6px; padding-top: -10px; }
 font[size="7"]>span { font-size: 39.6px; padding-top: -10px; }
 font[size="7"]>span>strike { padding-top: -10px; }
