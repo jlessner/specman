@@ -841,11 +841,4 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
       return StringUtils.abbreviate(getPlainText().replace("\n", " "), 20);
     }
 
-    /** For playing around purposes only. Should disappear soon. */
-    public void _paragraphType() {
-      StyledDocument doc = (StyledDocument) getDocument();
-      Element paragraph = doc.getParagraphElement(getCaretPosition());
-      Object elementType = paragraph.getAttributes().getAttribute(HTML.Attribute.NAME);
-      System.out.println(elementType);
-    }
 }

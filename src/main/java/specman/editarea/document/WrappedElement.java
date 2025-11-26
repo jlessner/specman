@@ -39,4 +39,5 @@ public class WrappedElement {
   public AttributeSet getAttributes() { return element.getAttributes(); }
   public boolean isLeaf() { return element.isLeaf(); }
   public String getName() { return element.getName(); }
+  public WrappedElement getParentElement() { return new WrappedElement(element.getParentElement(), document); }
 }
