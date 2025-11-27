@@ -3,7 +3,7 @@ package specman.view;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
-import specman.StepID;
+import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -43,9 +43,9 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   }
 
   @Override
-  protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, StepID initialeSchrittnummer) {
+  protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, SchrittID initialeSchrittnummer) {
     // Dummy SchrittID causes the heading to be created with step number label which will be updated later
-    super.ueberschriftInitialisieren(editor, initialerText, new StepID(0));
+    super.ueberschriftInitialisieren(editor, initialerText, new SchrittID(0));
   }
 
   @Override
@@ -71,7 +71,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   @Override
   public CatchBereich getParent() { return (CatchBereich) super.getParent(); }
 
-  public void setId(StepID id) {
+  public void setId(SchrittID id) {
     ueberschrift.setId(id);
     sequenzBasisId = id.naechsteEbene();
     renummerieren();

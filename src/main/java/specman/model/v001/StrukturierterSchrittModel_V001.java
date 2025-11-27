@@ -1,7 +1,7 @@
 package specman.model.v001;
 
 import specman.Aenderungsart;
-import specman.StepID;
+import specman.SchrittID;
 import specman.view.RoundedBorderDecorationStyle;
 
 public class StrukturierterSchrittModel_V001 extends AbstractSchrittModel_V001 {
@@ -12,12 +12,12 @@ public class StrukturierterSchrittModel_V001 extends AbstractSchrittModel_V001 {
 	}
 
 	public StrukturierterSchrittModel_V001(
-			StepID id,
+			SchrittID id,
 			EditorContentModel_V001 inhalt,
 			int farbe,
 			Aenderungsart aenderungsart,
 			boolean zugeklappt,
-			StepID quellschrittID,
+			SchrittID quellschrittID,
 			RoundedBorderDecorationStyle decorationStyle) {
 		super(id, inhalt, farbe, aenderungsart, quellschrittID, decorationStyle);
 		this.zugeklappt = zugeklappt;

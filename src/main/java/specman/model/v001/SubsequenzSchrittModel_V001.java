@@ -1,7 +1,7 @@
 package specman.model.v001;
 
 import specman.Aenderungsart;
-import specman.StepID;
+import specman.SchrittID;
 import specman.view.RoundedBorderDecorationStyle;
 
 import java.util.List;
@@ -14,13 +14,13 @@ public class SubsequenzSchrittModel_V001 extends StrukturierterSchrittModel_V001
 	}
 
 	public SubsequenzSchrittModel_V001(
-		StepID id,
+		SchrittID id,
 		EditorContentModel_V001 inhalt,
 		int farbe,
 		Aenderungsart aenderungsart,
 		boolean zugeklappt,
 		SchrittSequenzModel_V001 subsequenz,
-		StepID quellschrittID,
+		SchrittID quellschrittID,
 		RoundedBorderDecorationStyle decorationStyle) {
 		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID, decorationStyle);
 		this.subsequenz = subsequenz;

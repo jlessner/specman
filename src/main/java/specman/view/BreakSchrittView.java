@@ -6,7 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import specman.Aenderungsart;
 import specman.EditorI;
-import specman.StepID;
+import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
@@ -31,7 +31,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	final FormLayout layout;
 	CatchSchrittSequenzView catchSequence;
 
-	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 content, StepID id, Aenderungsart aenderungsart) {
+	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 content, SchrittID id, Aenderungsart aenderungsart) {
 		super(editor, parent, content, id, aenderungsart);
 		panel = new JPanel() {
 			@Override
@@ -126,7 +126,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public void setId(StepID id) {
+	public void setId(SchrittID id) {
 		super.setId(id);
 		if (catchSequence != null) {
 			catchSequence.setId(id);

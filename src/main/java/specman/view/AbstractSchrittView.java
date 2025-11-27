@@ -3,7 +3,7 @@ package specman.view;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
-import specman.StepID;
+import specman.SchrittID;
 import specman.Specman;
 import specman.editarea.EditArea;
 import specman.model.v001.AbstractSchrittModel_V001;
@@ -58,7 +58,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	protected static final List<SchrittSequenzView> KEINE_SEQUENZEN = new ArrayList<SchrittSequenzView>();
 
 	protected final EditContainer editContainer;
-	protected StepID id;
+	protected SchrittID id;
 	protected Aenderungsart aenderungsart;
 	protected SchrittSequenzView parent;
 	protected RoundedBorderDecorator roundedBorderDecorator;
@@ -66,7 +66,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	private final java.util.List<TextEditArea> referencedByTextEditAreas = new ArrayList<>();
 
-	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialContent, StepID id, Aenderungsart aenderungsart) {
+	public AbstractSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialContent, SchrittID id, Aenderungsart aenderungsart) {
 		this.id = id;
 		this.aenderungsart = aenderungsart;
 		this.editContainer = new EditContainer(editor, initialContent, id);
@@ -88,20 +88,20 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		UDBL.setAenderungsart(this, aenderungsart);
 	}
 
-	public void setId(StepID id) {
-		StepID oldStepID = this.id;
+	public void setId(SchrittID id) {
+		SchrittID oldSchrittID = this.id;
 
 		this.id = id;
 		editContainer.setId(id);
 
-		if (!oldStepID.equals(id)) {
+		if (!oldSchrittID.equals(id)) {
 			for (TextEditArea textEditArea : referencedByTextEditAreas) {
-				textEditArea.updateStepnumberLink(oldStepID.toString(), id.toString());
+				textEditArea.updateStepnumberLink(oldSchrittID.toString(), id.toString());
 			}
 		}
 	}
 
-	public StepID newStepIDInSameSequence(RelativeStepPosition direction) {
+	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
 		return direction == RelativeStepPosition.After ? id.naechsteID() : id.sameID();
 	}
 
@@ -367,7 +367,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		return editContainer;
 	}
 
-	public StepID getId() {
+	public SchrittID getId() {
 		return id;
 	}
 
@@ -383,7 +383,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
 	public void setQuellschritt(QuellSchrittView quellschritt) { this.quellschritt = quellschritt; }
 
-	public StepID getQuellschrittID(){
+	public SchrittID getQuellschrittID(){
 		return quellschritt != null ? quellschritt.getId() : null;
 	}
 
@@ -421,11 +421,11 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
     editContainer.registerAllExistingStepnumbers();
 	}
 
-	public AbstractSchrittView findeSchrittZuId(StepID id) {
+	public AbstractSchrittView findeSchrittZuId(SchrittID id) {
 		return (this.id.equals(id)) ? this : null;
 	}
 
-	protected AbstractSchrittView findeSchrittZuIdIncludingSubSequences(StepID id, SchrittSequenzView... subsequenzen) {
+	protected AbstractSchrittView findeSchrittZuIdIncludingSubSequences(SchrittID id, SchrittSequenzView... subsequenzen) {
 		AbstractSchrittView result = (this.id.equals(id)) ? this : null;
 		if (result == null) {
 			for (SchrittSequenzView subsequenz: subsequenzen) {

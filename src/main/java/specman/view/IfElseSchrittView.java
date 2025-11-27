@@ -6,7 +6,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
-import specman.StepID;
+import specman.SchrittID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
@@ -39,7 +39,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	JPanel panelElse;
 	JPanel panelIf;
 
-	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, StepID id, Aenderungsart anderungsart, boolean withDefaultContent) {
+	protected IfElseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart anderungsart, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, anderungsart, createPanelLayout());
 		/** @author PVN */
 		leeresFeld = new JPanel();
@@ -72,7 +72,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		klappen.init(model.zugeklappt);
 	}
 
-	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, StepID id, Aenderungsart aenderungsart) {
+	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this(editor, parent, initialerText, id, aenderungsart, true);
 	}
 
@@ -136,15 +136,15 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 
 	@Override
-	public void setId(StepID id) {
+	public void setId(SchrittID id) {
 		super.setId(id);
-		StepID ifID = id.naechsteEbene();
-		StepID elseID = id.naechsteID().naechsteEbene();
+		SchrittID ifID = id.naechsteEbene();
+		SchrittID elseID = id.naechsteID().naechsteEbene();
 		ifSequenz.renummerieren(ifID);
 		elseSequenz.renummerieren(elseID);
 	}
 
-	public StepID newStepIDInSameSequence(RelativeStepPosition direction) {
+	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
 		return super.newStepIDInSameSequence(direction).naechsteID();
 	}
 
@@ -315,7 +315,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		return changesReverted;
 	}
 
-	@Override public AbstractSchrittView findeSchrittZuId(StepID id) {
+	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
 		return findeSchrittZuIdIncludingSubSequences(id, elseSequenz, ifSequenz);
 	}
 

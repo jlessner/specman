@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
-import specman.StepID;
+import specman.SchrittID;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -43,7 +43,7 @@ public class SchrittSequenzView {
 	public static final String ZEILENLAYOUT_LETZTER_SCHRITT = "fill:pref:grow";
 	public static final String ZEILENLAYOUT_CATCHBEREICH = "pref";
 
-	StepID sequenzBasisId;
+	SchrittID sequenzBasisId;
 	@NotNull Aenderungsart aenderungsart;
 	final JPanel sequenzBereich;
 	CatchBereich catchBereich;
@@ -57,10 +57,10 @@ public class SchrittSequenzView {
 	final AbstractSchrittView parent;
 
 	public SchrittSequenzView() {
-		this(null, new StepID(0));
+		this(null, new SchrittID(0));
 	}
 
-	public SchrittSequenzView(AbstractSchrittView parent, StepID sequenzBasisId) {
+	public SchrittSequenzView(AbstractSchrittView parent, SchrittID sequenzBasisId) {
 		this.parent = parent;
 		panel = new JPanel();
 		huellLayout = new FormLayout("10px:grow", ZEILENLAYOUT_LETZTER_SCHRITT + ", " + ZEILENLAYOUT_CATCHBEREICH);
@@ -110,7 +110,7 @@ public class SchrittSequenzView {
 
 	public JPanel getContainer() { return panel; }
 
-	private StepID naechsteSchrittID() {
+	private SchrittID naechsteSchrittID() {
 		if (schritte.size() > 0)
 			return schritte.get(schritte.size() - 1).newStepIDInSameSequence(After);
 		return sequenzBasisId.naechsteID();
@@ -314,7 +314,7 @@ public class SchrittSequenzView {
 
 	public void renummerieren() { renummerieren(sequenzBasisId); }
 
-	public void renummerieren(StepID sequenzBasisId) {
+	public void renummerieren(SchrittID sequenzBasisId) {
 		this.sequenzBasisId = sequenzBasisId;
 		if (schritte.size() > 0) {
 			AbstractSchrittView ersterSchritt = schritte.get(0);
@@ -441,7 +441,7 @@ public class SchrittSequenzView {
 		}
 	}
 
-	public AbstractSchrittView findeSchrittZuId(StepID id){
+	public AbstractSchrittView findeSchrittZuId(SchrittID id){
 		for(AbstractSchrittView schritt: schritte) {
 			AbstractSchrittView result = schritt.findeSchrittZuId(id);
 			if (result != null) {
