@@ -5,6 +5,8 @@ Aus aktueller Anwendung
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Durch neues Lock&Feel wird der Zielbalken beim Schritt-Dragging an der falschen Stellen angezeigt.
+   Platziert wird der Schritt hinterher korrekt, nur der Balken auf der GlassPane ist falsch positioniert.
 x Pluszeichen für zugeklappte Schritte sind manchmal ohne erkennbare Änderung in dem Schritt gelb. Siehe UC-791 Stand 24.11.2025
 x Catch lässt sich nicht löschen
 

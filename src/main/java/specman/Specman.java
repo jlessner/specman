@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -168,7 +169,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		// Falls jemand nicht aufgepasst hat und beim Initialisieren irgendwelche Funktionen verwendet hat,
 		// die schon etwas im Undo-Manager hinterlassen.
 		undoManager.discardAllEdits();
-		this.setGlassPane(new GlassPane((SwingUtilities.convertPoint(contentPane, 0, 0,this).y)-getJMenuBar().getHeight()));
+
+		this.setGlassPane(new GlassPane(SwingUtilities.convertPoint(contentPane, 0, 0,this).y, getJMenuBar().getHeight()));
 
 		configureKeyboardManager();
 		setupQuestionDialogWhenClosingWithoutSaving();
@@ -176,7 +178,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		openInitialFile(fileToOpen);
 	}
 
-	private void openInitialFile(File fileToOpen) {
+  private void locationToScreen(Component c) {
+    Point location = c.getLocation();
+    SwingUtilities.convertPointToScreen(location, this);
+    System.out.println(location);
+  }
+
+  private void openInitialFile(File fileToOpen) {
 		if (fileToOpen != null) {
 			diagrammLaden(fileToOpen);
 		}
