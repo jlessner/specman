@@ -3,7 +3,7 @@ package specman.undo.props;
 import specman.Aenderungsart;
 import specman.Specman;
 import specman.editarea.EditArea;
-import specman.editarea.StepnumberLabel;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.undo.AbstractUndoableInteraction;
 import specman.view.AbstractSchrittView;
 import specman.view.QuellSchrittView;

@@ -10,6 +10,7 @@ import specman.SchrittID;
 import specman.Specman;
 import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedPosition;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ImageEditAreaModel_V001;
@@ -532,15 +533,6 @@ public class EditContainer extends JPanel {
 		}
 	}
 
-	public void setCaretAtStart() {
-		requestFocus();
-		for (EditArea editArea : editAreas) {
-			if (editArea.isTextArea()) {
-				editArea.asTextArea().setCaretPosition(1);
-			}
-		}
-	}
-
 	public void setBackgroundUDBL(Color bg) {
 		UDBL.setBackgroundUDBL(this, bg);
 		if (editAreas != null) {
@@ -790,4 +782,9 @@ public class EditContainer extends JPanel {
 
   }
 
+  public void scrollTo() {
+    scrollRectToVisible(getBounds());
+    requestFocus();
+    getFirstEditArea().asTextArea().setCaretPosition(1);
+  }
 }

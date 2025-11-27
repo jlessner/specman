@@ -1,6 +1,6 @@
 package specman.undo.props;
 
-import specman.editarea.StepnumberLabel;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 
 public class UndoableSetDeletionCut extends UndoableSetProperty<Integer> {
 

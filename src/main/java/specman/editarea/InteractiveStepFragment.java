@@ -1,5 +1,7 @@
 package specman.editarea;
 
+import specman.editarea.stepnumberlabel.StepnumberLabel;
+
 /** Tag Interface für grafische Bestandteile eines Schritts, die Ziel einer
  * Interaktion sind, und über die man den betreffenden Schritt im Diagramm
  * suchen kann. Aktuell sind dies zum einen die {@link TextEditArea}s und

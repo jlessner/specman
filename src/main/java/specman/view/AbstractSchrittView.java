@@ -118,8 +118,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void scrollTo() {
-		editContainer.scrollRectToVisible(editContainer.getBounds());
-		editContainer.setCaretAtStart();
+    editContainer.scrollTo();
 	}
 
 	public specman.pdf.Shape getShape() {
@@ -534,4 +533,6 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	public List<JTextComponent> getTextAreas() { return editContainer.getTextAreas(); }
 
 	public List<BreakSchrittView> queryUnlinkedBreakSteps() { return new ArrayList<>(); }
+
+  public boolean refersToOtherStep() { return false; }
 }

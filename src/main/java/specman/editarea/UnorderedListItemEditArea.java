@@ -2,6 +2,7 @@ package specman.editarea;
 
 import specman.Aenderungsart;
 import specman.Specman;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.ListItemEditAreaModel_V001;
 import specman.pdf.CircleShape;
 

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import specman.draganddrop.DragMouseAdapter;
 import specman.draganddrop.GlassPane;
 import specman.editarea.EditArea;
+import specman.editarea.InteractiveStepFragment;
 import specman.editarea.markups.MarkupType;
 import specman.model.ModelEnvelope;
 import specman.model.v001.*;
@@ -1342,4 +1343,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
   private void displayErrorMessage(String message) {
     JOptionPane.showMessageDialog(this, message, "Fehler", JOptionPane.ERROR_MESSAGE);
   }
+
+  @Override
+  public AbstractSchrittView findStep(InteractiveStepFragment fragment) {
+    return hauptSequenz.findeSchritt(fragment);
+  }
+
 }

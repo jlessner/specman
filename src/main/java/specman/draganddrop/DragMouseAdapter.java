@@ -1,10 +1,11 @@
 package specman.draganddrop;
 
 import specman.Aenderungsart;
+import specman.editarea.stepnumberlabel.BreakCatchScrollMouseAdapter;
 import specman.EditException;
 import specman.Specman;
 import specman.editarea.InteractiveStepFragment;
-import specman.editarea.StepnumberLabel;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.JComponent;
@@ -32,12 +33,16 @@ public class DragMouseAdapter extends MouseAdapter {
 		this.draggingLogic = new DraggingLogic(specman);
 	}
 
+  @Override
 	public void mousePressed(MouseEvent e) {
+    if (BreakCatchScrollMouseAdapter.userWantsToScroll(e)) { return; }
 		setDummy(e);
 		dummy.setBounds(new Rectangle(150, 15));
 	}
 
+  @Override
 	public void mouseDragged(MouseEvent e) {
+    if (BreakCatchScrollMouseAdapter.userWantsToScroll(e)) { return; }
 		try {
 			if(checkEinzigerSchritt(e)){
 				draggingLogic.showInvalidCursor();
@@ -72,7 +77,9 @@ public class DragMouseAdapter extends MouseAdapter {
 		specman.window.setLocation(p);
 	}
 
+  @Override
 	public void mouseReleased(MouseEvent e) {
+    if (BreakCatchScrollMouseAdapter.userWantsToScroll(e)) { return; }
 		try {
 			if(checkEinzigerSchritt(e)){
 				specman.setCursor(Cursor.getDefaultCursor());
@@ -94,8 +101,9 @@ public class DragMouseAdapter extends MouseAdapter {
 		}
 	}
 
-
+  @Override
 	public void mouseEntered(MouseEvent e) {
+    if (BreakCatchScrollMouseAdapter.userWantsToScroll(e)) { return; }
 		if(e.getSource() instanceof StepnumberLabel) {
 			if(checkEinzigerSchritt(e)) {
 				draggingLogic.showInvalidCursor();
@@ -107,7 +115,9 @@ public class DragMouseAdapter extends MouseAdapter {
 
 	}
 
+  @Override
 	public void mouseExited(MouseEvent e) {
+    if (BreakCatchScrollMouseAdapter.userWantsToScroll(e)) { return; }
 		specman.setCursor(Cursor.getDefaultCursor());
 	}
 
@@ -145,7 +155,7 @@ public class DragMouseAdapter extends MouseAdapter {
 
 
 	private AbstractSchrittView labelToStep(InteractiveStepFragment label) {
-		return specman.hauptSequenz.findeSchritt(label);
+		return specman.findStep(label);
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {

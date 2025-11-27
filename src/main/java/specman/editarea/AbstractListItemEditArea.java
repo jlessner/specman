@@ -7,6 +7,7 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
 import specman.editarea.document.WrappedPosition;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ListItemEditAreaModel_V001;
 import specman.undo.UndoableListItemSplitted;

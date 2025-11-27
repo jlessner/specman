@@ -3,7 +3,7 @@ package specman.draganddrop;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.Specman;
-import specman.editarea.StepnumberLabel;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.editarea.EditContainer;
 import specman.undo.UndoableSchrittVerschoben;
 import specman.undo.UndoableSchrittVerschobenMarkiert;

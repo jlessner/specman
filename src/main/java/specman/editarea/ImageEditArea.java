@@ -8,6 +8,7 @@ import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
 import specman.editarea.focusmover.CrossEditAreaFocusMoverFromImage;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.ImageEditAreaModel_V001;
 import specman.pdf.Shape;
 import specman.pdf.ShapeImage;

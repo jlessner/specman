@@ -1,8 +1,9 @@
-package specman.editarea;
+package specman.editarea.stepnumberlabel;
 
 import specman.SchrittID;
 import specman.Specman;
 import specman.draganddrop.DragMouseAdapter;
+import specman.editarea.InteractiveStepFragment;
 import specman.pdf.LineShape;
 import specman.undo.props.UDBL;
 import specman.pdf.LabelShapeText;
@@ -61,6 +62,7 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
     DragMouseAdapter ada = new DragMouseAdapter((Specman)Specman.instance());
     addMouseListener(ada);
     addMouseMotionListener(ada);
+    addMouseListener(new BreakCatchScrollMouseAdapter());
   }
 
   public void setStepNumber(SchrittID stepNumber) {

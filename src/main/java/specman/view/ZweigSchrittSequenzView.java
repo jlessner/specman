@@ -130,4 +130,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		result.addAll(super.getTextAreas());
 		return result;
 	}
+
+  @Override
+  public void scrollTo() { ueberschrift.scrollTo(); }
 }

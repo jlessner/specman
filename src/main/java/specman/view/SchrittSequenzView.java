@@ -654,4 +654,8 @@ public class SchrittSequenzView {
 		}
 		return stepList;
 	}
+
+  public void scrollTo() {
+    schritte.get(0).scrollTo();
+  }
 }

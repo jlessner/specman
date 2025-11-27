@@ -14,6 +14,8 @@ import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedElement;
 import specman.editarea.document.WrappedPosition;
 import specman.editarea.markups.MarkupType;
+import specman.editarea.stepnumberlabel.BreakCatchScrollMouseAdapter;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.Markup_V001;
 import specman.model.v001.GeloeschtMarkierung_V001;
 import specman.model.v001.TextEditAreaModel_V001;
@@ -151,7 +153,7 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
         EditorI editor = Specman.instance();
         Cursor cursorToUse;
         if (editor.isKeyPressed(KeyEvent.VK_CONTROL) && stepnumberLinkStyleSet(hoveredElement)) {
-            cursorToUse = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+            cursorToUse = BreakCatchScrollMouseAdapter.SCROLL_CURSOR;
         } else {
             cursorToUse = Cursor.getDefaultCursor();
         }
@@ -163,9 +165,10 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
         toolTipManager.registerComponent(this);
     }
 
-    @Override public String getToolTipText() {
+    @Override
+    public String getToolTipText() {
         if (stepnumberLinkStyleSet(hoveredElement)) {
-            return "STRG+Klicken um Link zu folgen";
+            return BreakCatchScrollMouseAdapter.SCROLL_TOOLTIP;
         }
         return super.getToolTipText();
     }

@@ -171,4 +171,12 @@ public class BreakSchrittView extends AbstractSchrittView {
 	public void updateContent(EditorContentModel_V001 content) {
 		editContainer.setEditorContent(content);
 	}
+
+  public boolean refersToOtherStep() { return catchSequence != null; }
+
+  public void scrollToCatch() {
+    if (catchSequence != null) {
+      catchSequence.scrollTo();
+    }
+  }
 }

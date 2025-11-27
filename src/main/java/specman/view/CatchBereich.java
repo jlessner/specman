@@ -12,6 +12,7 @@ import specman.SpaltenResizer;
 import specman.Specman;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextStyles;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CatchBereichModel_V001;
 import specman.model.v001.CatchSchrittSequenzModel_V001;
@@ -301,5 +302,12 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     }
     return null;
   }
+
+  public void scrollToBreak(StepnumberLabel stepnumberLabel) {
+    CatchSchrittSequenzView catchSchrittSequenzView = headingToBranch(stepnumberLabel);
+    catchSchrittSequenzView.linkedBreakStep.scrollTo();
+  }
+
+  public boolean refersToOtherStep() { return true; }
 
 }

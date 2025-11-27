@@ -1,6 +1,7 @@
 package specman.editarea;
 
 import specman.Aenderungsart;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.pdf.Shape;
 

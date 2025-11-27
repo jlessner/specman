@@ -5,6 +5,8 @@ import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextEditArea;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
+import specman.view.CatchSchrittSequenzView;
+import specman.view.SchrittSequenzView;
 
 import javax.swing.JEditorPane;
 import javax.swing.text.JTextComponent;
@@ -30,7 +32,7 @@ public interface EditorI extends FocusListener {
 	void addEdit(UndoableEdit edit);
 	UndoRecording pauseUndo();
 	UndoRecording composeUndo();
-    void showError(EditException ex);
+  void showError(EditException ex);
 	AbstractSchrittView findStepByStepID(String stepnumberLinkID);
 	boolean isKeyPressed(int keyCode);
 	void setCursor(Cursor cursorToUse);
@@ -43,7 +45,6 @@ public interface EditorI extends FocusListener {
 	void toggleListItem(boolean ordered);
   void pauseScrolling();
   void resumeScrolling();
-
   List<JTextComponent> queryAllTextComponents(JTextComponent tc);
-
+  AbstractSchrittView findStep(InteractiveStepFragment fragment);
 }
