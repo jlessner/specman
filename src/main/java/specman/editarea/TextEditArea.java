@@ -30,7 +30,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.*;
 import javax.swing.text.html.CSS;
-import javax.swing.text.html.HTML;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -172,7 +171,7 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
     }
 
     @Override
-    public void addSchrittnummer(SchrittNummerLabel schrittNummer) {
+    public void addSchrittnummer(StepnumberLabel schrittNummer) {
         add(schrittNummer);
     }
 

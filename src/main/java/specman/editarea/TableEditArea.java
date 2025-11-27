@@ -542,7 +542,7 @@ public class TableEditArea extends JPanel implements EditArea<TableEditAreaModel
   }
 
   @Override public void setQuellStil() { /* Not required for tables - source steps only contain an empty text area */ }
-  @Override public void addSchrittnummer(SchrittNummerLabel schrittNummer) { add(schrittNummer); }
+  @Override public void addSchrittnummer(StepnumberLabel schrittNummer) { add(schrittNummer); }
   @Override public Component asComponent() { return this; }
   @Override public String getPlainText() { return ""; }
   @Override public TextEditArea asTextArea() { return null; }

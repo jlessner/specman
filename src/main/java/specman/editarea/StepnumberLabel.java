@@ -21,7 +21,7 @@ import static specman.editarea.TextStyles.SCHRITTNUMMER_VORDERGRUNDFARBE;
 import static specman.editarea.TextStyles.Schriftfarbe_Geloescht;
 import static specman.editarea.TextStyles.labelFont;
 
-public class SchrittNummerLabel extends JLabel implements InteractiveStepFragment {
+public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
   private static final Border STANDARD_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Schrittnummer);
   private static final Border CHANGED_BORDER = new MatteBorder(0, 2, 0, 1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
   private static final Border DELETED_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Geloescht);
@@ -49,7 +49,7 @@ public class SchrittNummerLabel extends JLabel implements InteractiveStepFragmen
    */
   private Integer deletionCut;
 
-  public SchrittNummerLabel(SchrittID stepNumber) {
+  public StepnumberLabel(SchrittID stepNumber) {
     super(String.valueOf(stepNumber));
 
     setFont(labelFont);

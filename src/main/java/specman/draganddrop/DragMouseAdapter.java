@@ -4,11 +4,10 @@ import specman.Aenderungsart;
 import specman.EditException;
 import specman.Specman;
 import specman.editarea.InteractiveStepFragment;
-import specman.editarea.SchrittNummerLabel;
+import specman.editarea.StepnumberLabel;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
@@ -97,7 +96,7 @@ public class DragMouseAdapter extends MouseAdapter {
 
 
 	public void mouseEntered(MouseEvent e) {
-		if(e.getSource() instanceof SchrittNummerLabel) {
+		if(e.getSource() instanceof StepnumberLabel) {
 			if(checkEinzigerSchritt(e)) {
 				draggingLogic.showInvalidCursor();
 			}

@@ -95,7 +95,7 @@ public class EditContainer extends JPanel {
 	private final List<EditArea> editAreas = new ArrayList<>();
 	private final List<FocusListener> editAreasFocusListeners = new ArrayList<>();
 	private final List<ComponentListener> editAreasComponentListeners = new ArrayList<>();
-	private final SchrittNummerLabel schrittNummer;
+	private final StepnumberLabel schrittNummer;
 	private FormLayout layout;
 	private Indentions indentions;
 	private boolean schrittNummerSichtbar = true;
@@ -108,7 +108,7 @@ public class EditContainer extends JPanel {
 
 	public EditContainer(EditorI editor, EditorContentModel_V001 initialContent, SchrittID schrittId) {
 		if (schrittId != null) {
-			schrittNummer = new SchrittNummerLabel(schrittId);
+			schrittNummer = new StepnumberLabel(schrittId);
 			setEnabled(false);
 		} else {
 			schrittNummer = null;

@@ -6,12 +6,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
-import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedPosition;
-import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ListItemEditAreaModel_V001;
-import specman.model.v001.TextEditAreaModel_V001;
 import specman.undo.UndoableListItemSplitted;
 import specman.undo.manager.UndoRecording;
 import specman.undo.props.UDBL;
@@ -222,6 +219,6 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   @Override public void setQuellStil() { /* Not required for list items - source steps only contain an empty text area */ }
   @Override public void setEditDecorationIndentions(Indentions indentions) { /* Nothing to do here */ }
   @Override public String getText() { return "list item"; }
-  @Override public void addSchrittnummer(SchrittNummerLabel schrittNummer) {}
+  @Override public void addSchrittnummer(StepnumberLabel schrittNummer) {}
 
 }

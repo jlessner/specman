@@ -3,8 +3,7 @@ package specman.undo.props;
 import specman.Aenderungsart;
 import specman.Specman;
 import specman.editarea.EditArea;
-import specman.editarea.SchrittNummerLabel;
-import specman.editarea.TextEditArea;
+import specman.editarea.StepnumberLabel;
 import specman.undo.AbstractUndoableInteraction;
 import specman.view.AbstractSchrittView;
 import specman.view.QuellSchrittView;
@@ -97,7 +96,7 @@ public class UDBL {
     }
   }
 
-  public static void setDeletionCutUDBL(SchrittNummerLabel label, Integer deletionCut) {
+  public static void setDeletionCutUDBL(StepnumberLabel label, Integer deletionCut) {
     Integer undoDeletionCut = label.getDeletionCut();
     if (!Objects.equals(undoDeletionCut, deletionCut)) {
       label.setDeletionCut(deletionCut);

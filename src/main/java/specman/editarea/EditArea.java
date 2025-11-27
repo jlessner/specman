@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface EditArea<MODEL extends AbstractEditAreaModel_V001> extends InteractiveStepFragment {
-  void addSchrittnummer(SchrittNummerLabel schrittNummer);
+  void addSchrittnummer(StepnumberLabel schrittNummer);
 
   int getWidth();
 

@@ -1,4 +1,5 @@
 Aus aktueller Anwendung
+- Springen zwischen Break und Catch über CTRL+Klick auf die Schrittnummer (analog Schrittreferenzen) wäre hilfreich
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
@@ -132,6 +133,15 @@ Auf längere Sicht - nicht notwendig für ersten Go-Live:
 - Spellchecker
 - Mehrere Changesets
 - Annehmen *einzelner* Änderungen
+- Unterbinden der Unternummerierung in ZweigSchrittSequenzen
+   Normalerweise erhalten die Schritte innerhalb von Subsequenzen eines strukturierten Schritts eine Unternummerierung.
+   Also ein If-Else-Schritt mit Nummer 3 hat in seinen If-Subsequenz mit den Schritten 3.1, 3.2 usw. und eine Else-Subsequenz
+   mit den Schritten 4.1, 4.2 usw. Man könnte das abschaltbar machen, sodass die Schritte in den Subsequenzen einfach die
+   Nummern 4, 5 usw. erhalten. Dadurch wirken sich Nummernänderungen zwar weitreichender aus, aber es ist manchmal
+   trotzdem übersichtlicher, wenn dafür die Verschachtelungstiefe in den Nummern geringer bleibt. Aktuell würde ich das
+   in BALI UC-791 verwenden wollen, um die Teilfunktionalitäten in der MS2-Fusion in Subsequenzen zu fassen, damit man sie
+   Blockweise zuklappen kann. Aber ohne dass dabei eine weitere Gliederungsebene in den Nummern entsteht, die an der Stelle
+   ohnehin schon sehr lang sind.
 
 Tipps und Tricks
 - Pixelgenauer Größenvergleich zwischen UI und PDF-Export geht mit 85,2% Zoomfaktor im Acrobat Reader

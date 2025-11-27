@@ -51,7 +51,7 @@ public class UnorderedListItemEditArea extends AbstractListItemEditArea {
   }
 
   @Override
-  public void addSchrittnummer(SchrittNummerLabel schrittNummer) {
+  public void addSchrittnummer(StepnumberLabel schrittNummer) {
   }
 
   @Override

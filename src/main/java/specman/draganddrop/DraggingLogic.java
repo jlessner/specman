@@ -3,7 +3,7 @@ package specman.draganddrop;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.Specman;
-import specman.editarea.SchrittNummerLabel;
+import specman.editarea.StepnumberLabel;
 import specman.editarea.EditContainer;
 import specman.undo.UndoableSchrittVerschoben;
 import specman.undo.UndoableSchrittVerschobenMarkiert;
@@ -172,8 +172,8 @@ public class DraggingLogic implements Serializable {
         Point p;
         //Abfrage,damit ein Schritt nicht auf oder in sich selbst verschoben werden kann
         //TODO Cursoranpassung funktioniert noch nicht
-        if (e.getSource() instanceof SchrittNummerLabel) {
-            SchrittNummerLabel label = (SchrittNummerLabel) e.getSource();
+        if (e.getSource() instanceof StepnumberLabel) {
+            StepnumberLabel label = (StepnumberLabel) e.getSource();
             AbstractSchrittView step = specman.getHauptSequenz().findeSchritt(label);
             Point checkPoint = SwingUtilities.convertPoint(step.getPanel(), 0, 0, specman);
             Rectangle rec = step.getPanel().getVisibleRect();
@@ -419,8 +419,8 @@ public class DraggingLogic implements Serializable {
     private void addNeuerSchritt(RelativeStepPosition insertionPosition, AbstractSchrittView referenceStep, MouseEvent e) throws EditException {
         SchrittSequenzView sequenz = referenceStep.getParent();
 
-        if (e.getSource() instanceof SchrittNummerLabel) { // i.e. dragging existing step to a different position
-            SchrittNummerLabel label = (SchrittNummerLabel) e.getSource();
+        if (e.getSource() instanceof StepnumberLabel) { // i.e. dragging existing step to a different position
+            StepnumberLabel label = (StepnumberLabel) e.getSource();
             moveStep(insertionPosition, referenceStep, label);
         }
 
@@ -469,7 +469,7 @@ public class DraggingLogic implements Serializable {
         }
     }
 
-    private void moveStep(RelativeStepPosition insertionPosition, AbstractSchrittView referenceStep, SchrittNummerLabel label)
+    private void moveStep(RelativeStepPosition insertionPosition, AbstractSchrittView referenceStep, StepnumberLabel label)
         throws EditException {
         try (UndoRecording ur = specman.composeUndo()) {
             AbstractSchrittView movingStep = specman.getHauptSequenz().findeSchritt(label);
