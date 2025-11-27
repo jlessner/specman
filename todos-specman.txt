@@ -1,10 +1,12 @@
 Aus aktueller Anwendung
-- Schrittlinks werden nicht korrekt abgespeichert!! Nach dem Laden der Datei sind sie weg.
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Klappbuttons sehen mit neuem Look&Feel komisch aus
+x PDF-Exportdialog erscheint jetzt manchmal hinter dem Hauptfenster
+x Schrittlinks werden nicht korrekt abgespeichert!! Nach dem Laden der Datei sind sie weg.
 x Springen zwischen Break und Catch über CTRL+Klick auf die Schrittnummer (analog Schrittreferenzen) wäre hilfreich
 x Durch neues Lock&Feel wird der Zielbalken beim Schritt-Dragging an der falschen Stellen angezeigt.
    Platziert wird der Schritt hinterher korrekt, nur der Balken auf der GlassPane ist falsch positioniert.
@@ -52,11 +54,6 @@ Abschluss für Go-Live
     ACHTUNG: wird im Moment auch ausgelöst, wenn wir im Suchdialog von einem Feld zum nächsten
       springen und im neuen Feld die Caretposition auf 0 setzen. Hier am besten mal schauen, warum
       das im Ursprungscode des Dialogs beim Ersetzen nicht auch schon ein Problem war.
-  - Verlorener Focus Problem: einen einfachen Schritt einfügen, dann wiederholt nach "bla" suchen.
-     Jedes 2. Mal nach der Meldung, dass kein Ergebnis vorliegt, kein Fokus mehr vorhanden und durch Klicken
-     in die Felder auch nicht wieder herstellbar.
-  x Ersetzung ist nicht atomar, sondern besteht aus Löschen des alten Inhalts, und Einsetzen des neuen Inhalts
-     sollten wir für ein schöneres Undo besser machen
 x PDF-Export
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
@@ -83,13 +80,13 @@ x PDF-Export
   x Fonts werden bei der PDF-Generierung in jeden einzelnen Paragrafen dubliziert eingebetten. Deswegen sind die
      PDF-Dateien so riesig groß. Wie man die nur *einmalig* einbettet, habe ich noch nicht herausgefunden.
   x Font-Einschränkung wieder entfernen. Mindestens ein Sans Serif und ein Monospace Font müssen dabei sein
-- Neben Serif-Font auch Sans Serif und Monospace Font einbauen und alle anderen entfernen
-  - Muss auch alles PDF-tauglich sein
 - Ordentliche Fehlermeldungsanzeige
 - Permanente Aktualisierung der Birdsview oder vielleicht erst mal Birdsview rausnehmen
 - Vielleicht eine kleiner Top-Inset für Schritt-Texte, um die Überschneidung mit den Labels zu verringern?
 - Doku aktualisieren
 - Beschriftungen internationalisieren
+x Neben Serif-Font auch Sans Serif und Monospace Font einbauen und alle anderen entfernen
+  x Muss auch alles PDF-tauglich sein
 x Tabellentexte werden initial nicht mit dem richtigen Font dargestellt. Erst nach Speichern und neu Laden sind sie korrekt
 x Tabellen als separate Elemente analog Bilder
   - Nice to have: Einfärben von Zellen (statt Schritt), wenn Fokus in Tabellenzelle steht

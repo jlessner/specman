@@ -6,6 +6,7 @@ import specman.model.v001.AbstractEditAreaModel_V001;
 import specman.pdf.Shape;
 
 import javax.swing.border.Border;
+import javax.swing.text.JTextComponent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.FocusListener;
@@ -77,5 +78,7 @@ public interface EditArea<MODEL extends AbstractEditAreaModel_V001> extends Inte
   default boolean isImageEditArea() { return false; }
 
   default AbstractListItemEditArea asListItemArea() { return null; };
+
+  List<JTextComponent> getTextAreas();
 
 }

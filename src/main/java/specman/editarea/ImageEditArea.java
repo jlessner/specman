@@ -24,6 +24,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ComponentEvent;
@@ -422,4 +423,8 @@ public class ImageEditArea extends JPanel implements EditArea<ImageEditAreaModel
     adaptImageSize();
     return vergroesserung;
   }
+
+  @Override
+  public List<JTextComponent> getTextAreas() { return List.of(); }
+
 }

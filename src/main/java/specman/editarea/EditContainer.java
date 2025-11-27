@@ -545,11 +545,9 @@ public class EditContainer extends JPanel {
 	}
 
 	public List<JTextComponent> getTextAreas() {
-		return editAreas
-			.stream()
-			.filter(editArea -> editArea.isTextArea())
-			.map(editArea -> editArea.asTextArea())
-			.collect(Collectors.toList());
+    List<JTextComponent> result = new ArrayList<>();
+    editAreas.stream().forEach(ea -> result.addAll(ea.getTextAreas()));
+    return result;
 	}
 
 	public int indexOf(EditArea initiatingEditArea) {

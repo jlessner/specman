@@ -6,14 +6,10 @@ import specman.Aenderungsart;
 import specman.EditorI;
 import specman.Specman;
 import specman.editarea.keylistener.TextEditAreaKeyListener;
-import specman.editarea.markups.MarkupBackgroundStyleInitializer;
-import specman.editarea.markups.MarkupRecovery;
-import specman.editarea.markups.MarkedChar;
-import specman.editarea.markups.MarkedCharSequence;
+import specman.editarea.markups.*;
 import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedElement;
 import specman.editarea.document.WrappedPosition;
-import specman.editarea.markups.MarkupType;
 import specman.editarea.stepnumberlabel.BreakCatchScrollMouseAdapter;
 import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.Markup_V001;
@@ -62,6 +58,8 @@ import static specman.editarea.TextStyles.DEFAULTFONT;
 import static specman.editarea.TextStyles.ganzerSchrittGeloeschtStil;
 import static specman.editarea.TextStyles.quellschrittStil;
 import static specman.editarea.TextStyles.stepnumberLinkStyleColor;
+import static specman.editarea.markups.MarkupSearchPurpose.All;
+import static specman.editarea.markups.MarkupSearchPurpose.FirstChangeOnly;
 
 public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaModel_V001> {
     private static final String INITIAL_EMPTY_CONTENT_INDICATOR = "x";
@@ -222,7 +220,7 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
         java.util.List<Markup_V001> markups = null;
         if (formatierterText) {
             cleanupText();
-            markups = findMarkups(false);
+            markups = findMarkups(All);
             text = getText();
         }
         else {
@@ -238,30 +236,30 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
         new MarkupBackgroundStyleInitializer(this, recoveredChangemarks).styleChangedTextSections();
     }
 
-    public java.util.List<Markup_V001> findMarkups(boolean nurErste) {
+    public java.util.List<Markup_V001> findMarkups(MarkupSearchPurpose searchPurpose) {
         java.util.List<Markup_V001> ergebnis = new ArrayList<>();
         WrappedDocument doc = getWrappedDocument();
         for (WrappedElement e : doc.getRootElements()) {
-            findMarkups(e, ergebnis, nurErste);
-            if (!ergebnis.isEmpty() && nurErste) {
+            findMarkups(e, ergebnis, searchPurpose);
+            if (!ergebnis.isEmpty() && searchPurpose.stopAfterFirstMatch()) {
                 break;
             }
         }
         return ergebnis;
     }
 
-    private void findMarkups(WrappedElement e, java.util.List<Markup_V001> ergebnis, boolean nurErste) {
+    private void findMarkups(WrappedElement e, java.util.List<Markup_V001> ergebnis, MarkupSearchPurpose searchPurpose) {
         MarkupType markupType = MarkupType.fromBackground(e);
-        if (markupType != null && markupType.marksChange()) {
+        if (markupType != null && markupType.matches(searchPurpose)) {
             ergebnis.add(new Markup_V001(e.getStartOffset().toModel(), e.getEndOffset().toModel()-1, markupType));
-            if (markupType.marksChange() && nurErste) {
+            if (markupType.matches(searchPurpose) && searchPurpose == FirstChangeOnly) {
                 return;
             }
         }
-        if (ergebnis.isEmpty() || !nurErste) {
+        if (ergebnis.isEmpty() || searchPurpose == All) {
             for (int i = 0; i < e.getElementCount(); i++) {
-                findMarkups(e.getElement(i), ergebnis, nurErste);
-                if (!ergebnis.isEmpty() && nurErste) {
+                findMarkups(e.getElement(i), ergebnis, searchPurpose);
+                if (!ergebnis.isEmpty() && searchPurpose.stopAfterFirstMatch()) {
                     break;
                 }
             }
@@ -694,7 +692,7 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
     @Override
     public boolean enthaeltAenderungsmarkierungen() {
         return aenderungsart.istAenderung()
-          || !findMarkups(true).isEmpty();
+          || !findMarkups(FirstChangeOnly).isEmpty();
     }
 
     private void scrollToStepnumber() {
@@ -843,4 +841,6 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
       return StringUtils.abbreviate(getPlainText().replace("\n", " "), 20);
     }
 
+  @Override
+  public List<JTextComponent> getTextAreas() { return List.of(this); }
 }

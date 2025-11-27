@@ -15,6 +15,7 @@ import specman.undo.manager.UndoRecording;
 import specman.undo.props.UDBL;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
@@ -221,5 +222,6 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
   @Override public void setEditDecorationIndentions(Indentions indentions) { /* Nothing to do here */ }
   @Override public String getText() { return "list item"; }
   @Override public void addSchrittnummer(StepnumberLabel schrittNummer) {}
+  @Override public List<JTextComponent> getTextAreas() { return content.getTextAreas(); }
 
 }

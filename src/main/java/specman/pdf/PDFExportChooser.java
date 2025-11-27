@@ -40,7 +40,7 @@ public class PDFExportChooser extends JFileChooser {
     Container contentPane = dialog.getContentPane();
     contentPane.add(pageOptions, BorderLayout.NORTH);
     dialog.pack();
-    dialog.setLocation(parent.getLocationOnScreen());
+    dialog.setLocationRelativeTo(parent);
     return dialog;
   }
 

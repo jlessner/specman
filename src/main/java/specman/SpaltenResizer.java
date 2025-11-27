@@ -35,7 +35,6 @@ public class SpaltenResizer extends JPanel {
 		this.container = container;
 		this.spalte = spalte;
 		setOpaque(false);
-		//setBackground(Color.RED);
 		setCursor(leftRightCursor);
 		addMouseListener(new MouseAdapter() {
 			@Override public void mouseReleased(MouseEvent e) {

@@ -7,10 +7,6 @@ import specman.Specman;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -20,43 +16,53 @@ import java.awt.image.BufferedImage;
  * Dieser Button dient dazu, unterstrukturierte Schritte auf und zuzuklappen.
  * Dafür würde man normalerweise von JToggleButton ableiten, aber leider hat diese Klasse
  * die Macke, dass man die Hintergrundfarbe im selektierten Zustand nicht individuell festlegen
- * kann. Die wollen wir aber als Indikator verwenden, ob ein Zusammenklappen entwaige Änderungen
- * verbirgt oder nicht. Also basteln wir uns aus einem JButton selber einen Toggle-Button.
+ * kann. Die wollen wir aber als Indikator verwenden, ob ein Zusammenklappen etwaige Änderungen
+ * verbirgt oder nicht. Nichtmal JButton ist als Basisklasse geeignet, weil dieser abhängig vom
+ * Look&Feel die Hintergrundfarbe Status-abhängig verändert. Also basteln wir uns aus einem
+ * JLabel selber einen Toggle-Button.
  *
  * @author less02
  */
-class KlappButton extends JButton implements ActionListener, MouseMotionListener, MouseListener {
-  private static final Icon initialIcon = Specman.readImageIcon("minus");
-  private static final Icon initialSelectedIcon = Specman.readImageIcon("plus");
-  public static final int MINIMUM_ICON_LENGTH = initialIcon.getIconHeight() + 2; // The minimum border is 1px top + bottom each
+public class KlappButton extends JLabel implements MouseMotionListener, MouseListener {
+  private static final Icon icon = Specman.readImageIcon("minus");
+  private static final Icon selectedIcon = Specman.readImageIcon("plus");
+  private static Icon iconScaled = icon;
+  private static Icon selectedIconScaled = selectedIcon;
+  public static final int MINIMUM_ICON_LENGTH = icon.getIconHeight() + 2; // The minimum border is 1px top + bottom each
 
   private final FormLayout layout;
   private final int klappzeile;
   private final KlappbarerBereichI klappbarerBereich;
   private final Container parent;
   private Color borderColor;
+  private boolean selected;
 
   public KlappButton(KlappbarerBereichI klappbarerBereich, Container parent, FormLayout layout, int klappzeile) {
-    super(initialIcon);
     this.parent = parent;
     this.layout = layout;
     this.klappzeile = klappzeile;
     this.klappbarerBereich = klappbarerBereich;
-    setSelectedIcon(initialSelectedIcon);
-    setMargin(new Insets(0, 0, 0, 0));
     setOpaque(true);
     hintergrundfarbeVonParentUebernehmen();
     setVisible(false);
-    addActionListener(this);
     addMouseListener(this);
     parent.addMouseMotionListener(this);
     parent.add(this);
     scale(Specman.instance().getZoomFactor(), 100);
   }
 
+  public boolean isSelected() {
+    return selected;
+  }
+
+  private void setSelected(boolean selected) {
+    this.selected = selected;
+    setIcon(selected ? selectedIconScaled : iconScaled);
+  }
+
   public void init(boolean zugeklappt) {
     if (zugeklappt && !isSelected()) {
-      doClick();
+      mouseClicked(null);
       setVisible(isSelected());
     }
   }
@@ -74,18 +80,6 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
     borderColor = backgroundColor.darker();
   }
 
-  @Override public void actionPerformed(ActionEvent e) {
-    setSelected(!isSelected());
-    if (isSelected()) {
-      boolean zuklappenVerbirgtAenderungen = klappbarerBereich.enthaeltAenderungsmarkierungen();
-      if (zuklappenVerbirgtAenderungen) {
-        setBackground(Color.yellow);
-      }
-    } else {
-      hintergrundfarbeVonParentUebernehmen();
-    }
-    refreshGeklappt();
-  }
 
   public void refreshGeklappt() {
     String benoetigtesZeilenLayout = isSelected() ?
@@ -122,6 +116,16 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
   }
 
   @Override public void mouseClicked(MouseEvent e) {
+    setSelected(!isSelected());
+    if (isSelected()) {
+      boolean zuklappenVerbirgtAenderungen = klappbarerBereich.enthaeltAenderungsmarkierungen();
+      if (zuklappenVerbirgtAenderungen) {
+        setBackground(Color.yellow);
+      }
+    } else {
+      hintergrundfarbeVonParentUebernehmen();
+    }
+    refreshGeklappt();
   }
 
   @Override public void mousePressed(MouseEvent e) {
@@ -133,29 +137,33 @@ class KlappButton extends JButton implements ActionListener, MouseMotionListener
   @Override public void mouseEntered(MouseEvent e) {
   }
 
-  public void scale(int newPercentage, int currentPercentage) {
+  public static void scaleIcons(int newPercentage, int currentPercentage) {
     if (newPercentage != currentPercentage) {
       // Get width & height by scaling the initial Icon length
-      int targetWidth = (int) Specman.instance().scale(initialIcon.getIconWidth());
-      int targetHeight = (int) Specman.instance().scale(initialIcon.getIconHeight());
+      int targetWidth = (int) Specman.instance().scale(icon.getIconWidth());
+      int targetHeight = (int) Specman.instance().scale(icon.getIconHeight());
 
       // Use the initial icon to prevent bad image quality through upscaling (e.g. 50% -> 100%)
       // Also no need for scaling when returning to the initial Icon
-      if (targetWidth == initialIcon.getIconWidth() && targetHeight == initialIcon.getIconHeight()) {
-        setIcon(initialIcon);
-        setSelectedIcon(initialSelectedIcon);
+      if (targetWidth == icon.getIconWidth() && targetHeight == icon.getIconHeight()) {
+        iconScaled = icon;
+        selectedIconScaled = selectedIcon;
       } else {
-        setIcon(resizeImage(initialIcon, targetWidth, targetHeight));
-        setSelectedIcon(resizeImage(initialSelectedIcon, targetWidth, targetHeight));
+        iconScaled = resizeImage(icon, targetWidth, targetHeight);
+        selectedIconScaled = resizeImage(selectedIcon, targetWidth, targetHeight);
       }
     }
+  }
+
+  public void scale(int newPercentage, int currentPercentage) {
+    setIcon(selected ? selectedIconScaled : iconScaled);
   }
 
   /**
    * Transforms an Icon into a BufferedImage to be able to scale the image to the desired dimensions.
    * Afterwards transforms it back for further usage.
    */
-  private Icon resizeImage(Icon icon, int targetWidth, int targetHeight) {
+  private static Icon resizeImage(Icon icon, int targetWidth, int targetHeight) {
     BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 
     Graphics graphic = bufferedImage.createGraphics();

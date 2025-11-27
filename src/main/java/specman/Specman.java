@@ -33,13 +33,7 @@ import specman.undo.UndoableZweigHinzugefuegt;
 import specman.undo.manager.SpecmanUndoManager;
 import specman.undo.manager.UndoRecording;
 import specman.undo.manager.UndoRecordingMode;
-import specman.view.AbstractSchrittView;
-import specman.view.CaseSchrittView;
-import specman.view.CatchBereich;
-import specman.view.CatchSchrittSequenzView;
-import specman.view.QuellSchrittView;
-import specman.view.SchrittSequenzView;
-import specman.view.ZweigSchrittSequenzView;
+import specman.view.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -686,9 +680,11 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		int bisherigerFaktor = zoomFaktor;
 		zoomFaktor = prozent;
 		zoomFaktorAnzeigeAktualisieren(prozent);
+    KlappButton.scaleIcons(prozent, bisherigerFaktor);
 		float diagrammbreite100Prozent = (float)diagrammbreite / bisherigerFaktor * 100;
 		int neueDiagrammbreite = (int)(diagrammbreite100Prozent * prozent / 100);
 		spaltenbreitenAnpassenNachMausDragging(neueDiagrammbreite - diagrammbreite, 0);
+    KlappButton.scaleIcons(prozent, bisherigerFaktor);
 		hauptSequenz.skalieren(prozent, bisherigerFaktor);
 		intro.skalieren(prozent, bisherigerFaktor);
 		outro.skalieren(prozent, bisherigerFaktor);
@@ -786,6 +782,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 			zoomFaktor = model.zoomFaktor;
 			zoomFaktorAnzeigeAktualisieren(zoomFaktor);
+      KlappButton.scaleIcons(zoomFaktor, 0);
 			diagrammbreite = model.breite;
 			intro.setEditorContent(model.intro);
 			outro.setEditorContent(model.outro);
@@ -1123,7 +1120,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			pdfExportChooser = new PDFExportChooser();
 		}
     pdfExportChooser.initFromModel(pdfExportOptions);
-		int result = pdfExportChooser.showSaveDialog(arbeitsbereich, diagrammDatei);
+		int result = pdfExportChooser.showSaveDialog(scrollPane, diagrammDatei);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			pdfExportChooser.safeUserPreferences();
       pdfExportOptions = pdfExportChooser.getExportOptions();

@@ -20,6 +20,7 @@ import specman.undo.props.UDBL;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusListener;
@@ -540,6 +541,15 @@ public class TableEditArea extends JPanel implements EditArea<TableEditAreaModel
 
   public boolean columnIsMarkedAs(int columnIndex, Aenderungsart aenderungsart) {
     return toColumn(columnIndex).stream().allMatch(cell -> cell.isMarkedAs(aenderungsart));
+  }
+
+  @Override
+  public List<JTextComponent> getTextAreas() {
+    List<JTextComponent> result = new ArrayList<>();
+    for (List<EditContainer> row : cells) {
+      row.stream().forEach(ec -> result.addAll(ec.getTextAreas()));
+    }
+    return result;
   }
 
   @Override public void setQuellStil() { /* Not required for tables - source steps only contain an empty text area */ }

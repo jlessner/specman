@@ -70,6 +70,11 @@ public class TextFinderDialog extends JDialog {
 
   public void initSearchCycle(JTextComponent tc) {
     this.allTextComponents = Specman.instance().queryAllTextComponents(tc);
+    String selectedText = tc.getSelectedText();
+    if (selectedText != null) {
+      txtFind1.setText(selectedText);
+      txtFind2.setText(selectedText);
+    }
     int monitorIndex = allTextComponents.indexOf(tc);
     this.setJTextComponent(monitorIndex);
   }

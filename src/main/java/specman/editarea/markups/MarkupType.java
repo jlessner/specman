@@ -1,6 +1,5 @@
 package specman.editarea.markups;
 
-import specman.editarea.TextStyles;
 import specman.editarea.document.WrappedElement;
 
 import javax.swing.text.AttributeSet;
@@ -12,6 +11,11 @@ public enum MarkupType {
   Changed, Steplink, ChangedSteplink;
 
   public boolean marksChange() { return this == Changed || this == ChangedSteplink; }
+
+  public boolean matches(MarkupSearchPurpose searchPurpose) {
+    return searchPurpose == searchPurpose.All ||
+      searchPurpose == searchPurpose.FirstChangeOnly && marksChange();
+  }
 
   public static MarkupType fromBackground(WrappedElement element) {
     String backgroundColorValue = getBackgroundColorFromElement(element);
