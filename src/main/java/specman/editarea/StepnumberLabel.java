@@ -1,6 +1,6 @@
 package specman.editarea;
 
-import specman.SchrittID;
+import specman.StepID;
 import specman.Specman;
 import specman.draganddrop.DragMouseAdapter;
 import specman.pdf.LineShape;
@@ -13,7 +13,7 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
-import static specman.SchrittID.asString;
+import static specman.StepID.asString;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.Hintergrundfarbe_Geloescht;
 import static specman.editarea.TextStyles.Hintergrundfarbe_Schrittnummer;
@@ -49,7 +49,7 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
    */
   private Integer deletionCut;
 
-  public StepnumberLabel(SchrittID stepNumber) {
+  public StepnumberLabel(StepID stepNumber) {
     super(String.valueOf(stepNumber));
 
     setFont(labelFont);
@@ -63,7 +63,7 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
     addMouseMotionListener(ada);
   }
 
-  public void setStepNumber(SchrittID stepNumber) {
+  public void setStepNumber(StepID stepNumber) {
     String sourceSuffix = extractSourceSuffix();
     String targetSuffix = extractTargetSuffix();
     setTextUDBL(stepNumber.toString(), targetSuffix, sourceSuffix);
@@ -145,7 +145,7 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
     return getBackground() == Hintergrundfarbe_Geloescht;
   }
 
-  public void setStandardStyle(SchrittID id) {
+  public void setStandardStyle(StepID id) {
     setBorder(STANDARD_BORDER);
     setBackground(Hintergrundfarbe_Schrittnummer);
     setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
@@ -153,14 +153,14 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
     setText(id.toString());
   }
 
-  public void setTargetStyleUDBL(SchrittID quellschrittId) {
+  public void setTargetStyleUDBL(StepID quellschrittId) {
     setBorderUDBL(CHANGED_BORDER);
     setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
     setForegroundUDBL(Hintergrundfarbe_Geloescht);
     resyncSourceSuffixUDBL(quellschrittId);
   }
 
-  public void resyncSourceSuffixUDBL(SchrittID sourceStepNumber) {
+  public void resyncSourceSuffixUDBL(StepID sourceStepNumber) {
     setTextUDBL(extractCore(), null, sourceStepNumber.toString());
   }
 
@@ -182,7 +182,7 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
     return deletionCut != null && !hasTargetSuffix();
   }
 
-  public void setSourceStyle(SchrittID zielschrittID) {
+  public void setSourceStyle(StepID zielschrittID) {
     setBorder(DELETED_BORDER);
     setBackground(Hintergrundfarbe_Geloescht);
     setForeground(Schriftfarbe_Geloescht);
@@ -205,11 +205,11 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
     }
   }
 
-  public void resyncTargetSuffixUDBL(SchrittID zielschrittID) {
+  public void resyncTargetSuffixUDBL(StepID zielschrittID) {
     setTextUDBL(extractCore(), asString(zielschrittID), null);
   }
 
-  public void setDeletedStyleUDBL(SchrittID id) {
+  public void setDeletedStyleUDBL(StepID id) {
     setBorderUDBL(DELETED_BORDER);
     setBackgroundUDBL(Hintergrundfarbe_Geloescht);
     setForegroundUDBL(Schriftfarbe_Geloescht);

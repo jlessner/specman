@@ -3,7 +3,7 @@ package specman.view;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
-import specman.SchrittID;
+import specman.StepID;
 import specman.editarea.EditContainer;
 import specman.pdf.LineShape;
 import specman.pdf.Shape;
@@ -68,14 +68,14 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
     return ueberschrift.aenderungenUebernehmen();
   }
 
-  public void aenderungsmarkierungenEntfernen(SchrittID id) {
+  public void aenderungsmarkierungenEntfernen(StepID id) {
     ueberschrift.aenderungsmarkierungenEntfernen(id);
     setBackground(BACKGROUND_COLOR_STANDARD);
   }
 
   public int aenderungenVerwerfen() { return ueberschrift.aenderungenVerwerfen(); }
 
-  public void alsGeloeschtMarkierenUDBL(SchrittID id) {
+  public void alsGeloeschtMarkierenUDBL(StepID id) {
     ueberschrift.setGeloeschtMarkiertStilUDBL(id);
     UDBL.setBackgroundUDBL(this, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
   }

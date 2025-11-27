@@ -6,7 +6,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import net.atlanticbb.tantlinger.shef.HTMLEditorPane;
 import specman.Aenderungsart;
 import specman.EditorI;
-import specman.SchrittID;
+import specman.StepID;
 import specman.Specman;
 import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedPosition;
@@ -100,15 +100,15 @@ public class EditContainer extends JPanel {
 	private Indentions indentions;
 	private boolean schrittNummerSichtbar = true;
 
-	public EditContainer(EditorI editor, TextEditArea initialContent, SchrittID schrittId) {
-		this(editor, new EditorContentModel_V001(), schrittId);
+	public EditContainer(EditorI editor, TextEditArea initialContent, StepID stepId) {
+		this(editor, new EditorContentModel_V001(), stepId);
 		addEditArea(initialContent, 0);
     skalieren(editor.getZoomFactor(), 0);
 	}
 
-	public EditContainer(EditorI editor, EditorContentModel_V001 initialContent, SchrittID schrittId) {
-		if (schrittId != null) {
-			schrittNummer = new StepnumberLabel(schrittId);
+	public EditContainer(EditorI editor, EditorContentModel_V001 initialContent, StepID stepId) {
+		if (stepId != null) {
+			schrittNummer = new StepnumberLabel(stepId);
 			setEnabled(false);
 		} else {
 			schrittNummer = null;
@@ -185,7 +185,7 @@ public class EditContainer extends JPanel {
 	 * Einfärbungen für <i>inhaltliche</i> Änderungen spielen hier keine Rolle. Diese werden
 	 * bereits <i>vor</i> dem Aufruf der Methode hier über {@link #aenderungenUebernehmen}
 	 * bzw. {@link #aenderungenVerwerfen()} behandelt. */
-	public void aenderungsmarkierungenEntfernen(SchrittID id) {
+	public void aenderungsmarkierungenEntfernen(StepID id) {
 		editAreas.forEach(EditArea::aenderungsmarkierungenEntfernen);
 		setBackground(BACKGROUND_COLOR_STANDARD);
 		if (schrittNummer != null) {
@@ -193,17 +193,17 @@ public class EditContainer extends JPanel {
 		}
 	}
 
-	public void setZielschrittStilUDBL(SchrittID quellschrittId) {
+	public void setZielschrittStilUDBL(StepID quellschrittId) {
 		schrittNummer.setTargetStyleUDBL(quellschrittId);
 	}
 
-	public void setQuellStil(SchrittID zielschrittID) {
+	public void setQuellStil(StepID zielschrittID) {
 		editAreas.forEach(ea -> ea.setQuellStil());
 		setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		schrittNummer.setSourceStyle(zielschrittID);
 	}
 
-	public void setGeloeschtMarkiertStilUDBL(SchrittID id) {
+	public void setGeloeschtMarkiertStilUDBL(StepID id) {
 		setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 		modifyableEditAreas().forEach(ea -> ea.setGeloeschtMarkiertStilUDBL());
 		if (schrittNummer != null) {
@@ -211,7 +211,7 @@ public class EditContainer extends JPanel {
 		}
 	}
 
-	public void setId(SchrittID id) {
+	public void setId(StepID id) {
 		schrittNummer.setStepNumber(id);
 	}
 
@@ -328,8 +328,8 @@ public class EditContainer extends JPanel {
 
 	public Rectangle getStepNumberBounds() { return schrittNummer.getBounds(); }
 
-	public void resyncStepnumberAsTargetUDBL(SchrittID quellschrittId) { schrittNummer.resyncSourceSuffixUDBL(quellschrittId); }
-	public void resyncStepnumberAsSourceUDBL(SchrittID zielschrittID) { schrittNummer.resyncTargetSuffixUDBL(zielschrittID); }
+	public void resyncStepnumberAsTargetUDBL(StepID quellschrittId) { schrittNummer.resyncSourceSuffixUDBL(quellschrittId); }
+	public void resyncStepnumberAsSourceUDBL(StepID zielschrittID) { schrittNummer.resyncTargetSuffixUDBL(zielschrittID); }
 
 	/** Required for iterations that may modify the list of edit areas. Working directly on the
 	 * list whould cause concurrent operation exceptions in these cases. The usage of this method

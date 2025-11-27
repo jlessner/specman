@@ -7,7 +7,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
-import specman.SchrittID;
+import specman.StepID;
 import specman.SpaltenContainerI;
 import specman.SpaltenResizer;
 import specman.Specman;
@@ -38,7 +38,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	SchrittSequenzView wiederholSequenz;
 	int balkenbreite;
 
-	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean mitUnteremBalken) {
+	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, StepID id, Aenderungsart aenderungsart, boolean mitUnteremBalken) {
 		super(editor, parent, initialerText, id, aenderungsart);
 		panel = new JPanel();
 		panel.setBackground(DIAGRAMM_LINE_COLOR);
@@ -74,7 +74,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, 3);
 	}
 
-	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id, Aenderungsart aenderungsart) {
+	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, StepID id, Aenderungsart aenderungsart) {
 		this(editor, parent, null, id, aenderungsart, false);
 		initWiederholsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
 	}
@@ -109,14 +109,14 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		layout.setColumnSpec(1, ColumnSpec.decode(balkenbreite + "px"));
 	}
 
-	protected SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
+	protected SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, StepID id) {
 		SchrittSequenzView sequenz = new SchrittSequenzView(this, id);
 		sequenz.einfachenSchrittAnhaengen(editor);
 		return sequenz;
 	}
 
 	@Override
-	public void setId(SchrittID id) {
+	public void setId(StepID id) {
 		super.setId(id);
 		wiederholSequenz.renummerieren(id.naechsteEbene());
 	}
@@ -208,7 +208,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		wiederholSequenz.viewsNachinitialisieren();
 	}
 
-	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+	@Override public AbstractSchrittView findeSchrittZuId(StepID id) {
 		return findeSchrittZuIdIncludingSubSequences(id, wiederholSequenz);
 	}
 

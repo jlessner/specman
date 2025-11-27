@@ -8,12 +8,12 @@ import java.util.Objects;
 /**
  * Die ID eines Schrittes ist aus mehreren laufenden Nummern aufgebaut, die der üblichen Notation wie 1.19.7 entsprechen
  */
-public class SchrittID {
+public class StepID {
 	public final List<Integer> nummern = new ArrayList<Integer>();
 
-	public SchrittID() {} // For Jackson only
+	public StepID() {} // For Jackson only
 
-	public SchrittID(Integer... nummern) {
+	public StepID(Integer... nummern) {
 		this.nummern.addAll(Arrays.asList(nummern));
 	}
 
@@ -27,25 +27,25 @@ public class SchrittID {
 		return b.substring(0, b.length() - 1);
 	}
 
-	public SchrittID naechsteID() {
+	public StepID naechsteID() {
 		Integer[] naechsteNummern = nummern.toArray(new Integer[0]);
 		naechsteNummern[naechsteNummern.length - 1]++;
-		return new SchrittID(naechsteNummern);
+		return new StepID(naechsteNummern);
 	}
 
-	public SchrittID vorhergehendeID() {
+	public StepID vorhergehendeID() {
 		Integer[] vorhergehendeNummern = nummern.toArray(new Integer[0]);
 		vorhergehendeNummern[vorhergehendeNummern.length - 1]--;
-		return new SchrittID(vorhergehendeNummern);
+		return new StepID(vorhergehendeNummern);
 	}
 
-	public SchrittID sameID() {
-		return new SchrittID(nummern.toArray(new Integer[0]));
+	public StepID sameID() {
+		return new StepID(nummern.toArray(new Integer[0]));
 	}
-	public SchrittID naechsteEbene() {
+	public StepID naechsteEbene() {
 		Integer[] naechsteNummern = nummern.toArray(new Integer[nummern.size()+1]);
 		naechsteNummern[naechsteNummern.length-1] = 0;
-		return new SchrittID(naechsteNummern);
+		return new StepID(naechsteNummern);
 	}
 
 	//Equals herstellen
@@ -55,8 +55,8 @@ public class SchrittID {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		SchrittID schrittID = (SchrittID) o;
-		return Objects.equals(nummern, schrittID.nummern);
+		StepID stepID = (StepID) o;
+		return Objects.equals(nummern, stepID.nummern);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class SchrittID {
 		return Objects.hash(nummern);
 	}
 
-  public static String asString(SchrittID id) {
+  public static String asString(StepID id) {
     return id == null ? null : id.toString();
   }
 }

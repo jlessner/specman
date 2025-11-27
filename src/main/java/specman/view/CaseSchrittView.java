@@ -8,7 +8,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
-import specman.SchrittID;
+import specman.StepID;
 import specman.SpaltenResizer;
 import specman.Specman;
 import specman.model.v001.AbstractSchrittModel_V001;
@@ -49,7 +49,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 	JPanel panelSonst; //neu
 	JPanel panelFall1; //neu
 
-	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, int numCases) {
+	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, StepID id, Aenderungsart aenderungsart, int numCases) {
 		super(editor, parent, initialerText, id, aenderungsart, createPanelLayout(numCases));
 		panel.add(editContainer, INITIAL_DUMMY);
 		/** @author PVN */
@@ -80,7 +80,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		spaltenResizerAnlegen(editor);
 	}
 
-	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
+	public CaseSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, StepID id, Aenderungsart aenderungsart) {
 		this(editor, parent, initialerText, id, aenderungsart, 2);
 		initCases(
 				editor,
@@ -165,18 +165,18 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 	}
 
 	@Override
-	public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
-		SchrittID id = super.newStepIDInSameSequence(direction);
+	public StepID newStepIDInSameSequence(RelativeStepPosition direction) {
+		StepID id = super.newStepIDInSameSequence(direction);
 		for (int i = 0; i < caseSequenzen.size(); i++)
 			id = id.naechsteID();
 		return id;
 	}
 
 	@Override
-	public void setId(SchrittID id) {
+	public void setId(StepID id) {
 		super.setId(id);
 		sonstSequenz.renummerieren(id.naechsteEbene());
-		SchrittID naechsteId = id.naechsteID();
+		StepID naechsteId = id.naechsteID();
 		for (SchrittSequenzView caseSequenz: caseSequenzen) {
 			caseSequenz.renummerieren(naechsteId.naechsteEbene());
 			naechsteId = naechsteId.naechsteID();
@@ -445,7 +445,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		}
 	}
 
-	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+	@Override public AbstractSchrittView findeSchrittZuId(StepID id) {
 		AbstractSchrittView result = findeSchrittZuIdIncludingSubSequences(
 				id, caseSequenzen.toArray(ZweigSchrittSequenzView[]::new));
 		return (result != null) ? result : sonstSequenz.findeSchrittZuId(id);

@@ -1,9 +1,8 @@
 package specman.view;
 
-import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
-import specman.SchrittID;
+import specman.StepID;
 import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.ZweigSchrittSequenzModel_V001;
@@ -30,13 +29,13 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		ueberschriftInitialisieren(editor, model.ueberschrift != null ? model.ueberschrift : null, null);
 	}
 
-	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, SchrittID sequenzBasisId, EditorContentModel_V001 initialerText) {
+	public ZweigSchrittSequenzView(EditorI editor, AbstractSchrittView parent, StepID sequenzBasisId, EditorContentModel_V001 initialerText) {
 		super(parent, sequenzBasisId);
 		ueberschriftInitialisieren(editor, initialerText, null);
 		this.aenderungsart = Specman.initialArt();
 	}
 
-	protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, SchrittID initialeSchrittnummer) {
+	protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, StepID initialeSchrittnummer) {
 		ueberschrift = new EditContainer(editor, initialerText, initialeSchrittnummer);
 		ueberschrift.addEditAreasFocusListener(editor);
 	}
@@ -69,7 +68,7 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 		return ueberschrift.enthaelt(fragment);
 	}
 
-	public SchrittID naechsteNachbarSequenzID() {
+	public StepID naechsteNachbarSequenzID() {
 		return sequenzBasisId.naechsteID();
 	}
 

@@ -1,7 +1,7 @@
 package specman.model.v001;
 
 import specman.Aenderungsart;
-import specman.SchrittID;
+import specman.StepID;
 import specman.view.RoundedBorderDecorationStyle;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 	}
 
 	public IfElseSchrittModel_V001(
-		SchrittID id,
+		StepID id,
 		EditorContentModel_V001 inhalt,
 		int farbe,
 		RoundedBorderDecorationStyle decorationStyle,
@@ -26,7 +26,7 @@ public class IfElseSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 		Aenderungsart aenderungsart,
 		ZweigSchrittSequenzModel_V001 ifSequenz,
 		ZweigSchrittSequenzModel_V001 elseSequenz,
-		float ifBreitenanteil, SchrittID quellschrittID) {
+		float ifBreitenanteil, StepID quellschrittID) {
 		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID, decorationStyle);
 		this.ifSequenz = ifSequenz;
 		this.elseSequenz = elseSequenz;

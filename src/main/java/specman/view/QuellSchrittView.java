@@ -2,7 +2,7 @@ package specman.view;
 
 import specman.Aenderungsart;
 import specman.EditorI;
-import specman.SchrittID;
+import specman.StepID;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.QuellSchrittModel_V001;
 import specman.undo.props.UDBL;
@@ -16,7 +16,7 @@ public class QuellSchrittView extends AbstractSchrittView {
 
     protected AbstractSchrittView zielschritt;
 
-    public QuellSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id) {
+    public QuellSchrittView(EditorI editor, SchrittSequenzView parent, StepID id) {
         //TODO JL: der "." sorgt für eine Mindesthöhe des Quellschritts. Muss noch gesäubert werden.
         //Die Höhe des Schrittnummer-Labels sollte die Höhe bestimmen.
         super(editor, parent, new EditorContentModel_V001(".", Aenderungsart.Quellschritt), id, Aenderungsart.Quellschritt);
@@ -48,7 +48,7 @@ public class QuellSchrittView extends AbstractSchrittView {
     @Override
     public JComponent getPanel() { return editContainer; }
 
-    public SchrittID getZielschrittID(){
+    public StepID getZielschrittID(){
         return zielschritt != null ? zielschritt.getId() : null;
     }
 

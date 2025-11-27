@@ -5,7 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
-import specman.SchrittID;
+import specman.StepID;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
@@ -29,7 +29,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	final FormLayout layout;
 	SchrittSequenzView subsequenz;
 
-	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
+	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, StepID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, aenderungsart);
 
 		editContainer.updateDecorationIndentions(new Indentions(TEXTEINRUECKUNG));
@@ -51,7 +51,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		}
 	}
 
-	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
+	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, StepID id, Aenderungsart aenderungsart) {
 		this(editor, parent, initialerText, id, aenderungsart, true);
 	}
 
@@ -62,7 +62,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		klappen.init(model.zugeklappt);
 	}
 
-	private SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, SchrittID id) {
+	private SchrittSequenzView einschrittigeInitialsequenz(EditorI editor, StepID id) {
 		SchrittSequenzView sequenz = new SchrittSequenzView(this, id);
 		sequenz.einfachenSchrittAnhaengen(editor);
 		return sequenz;
@@ -74,7 +74,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public void setId(SchrittID id) {
+	public void setId(StepID id) {
 		super.setId(id);
 		subsequenz.renummerieren(id.naechsteEbene());
 	}
@@ -139,7 +139,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		subsequenz.viewsNachinitialisieren();
 	}
 
-	@Override public AbstractSchrittView findeSchrittZuId(SchrittID id) {
+	@Override public AbstractSchrittView findeSchrittZuId(StepID id) {
 		return findeSchrittZuIdIncludingSubSequences(id, subsequenz);
 	}
 

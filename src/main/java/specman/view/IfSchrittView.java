@@ -5,7 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import specman.Aenderungsart;
 import specman.EditorI;
-import specman.SchrittID;
+import specman.StepID;
 import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.IfSchrittModel_V001;
@@ -31,7 +31,7 @@ import static specman.model.v001.EditorContentModel_V001.empty;
 public class IfSchrittView extends IfElseSchrittView {
 	int ifBreite;
 	
-	public IfSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerString, SchrittID id, Aenderungsart aenderungsart) {
+	public IfSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerString, StepID id, Aenderungsart aenderungsart) {
 		super(editor, parent, initialerString, id, aenderungsart, false);
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), empty()));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), EditContainer.right("Ja")));
@@ -40,7 +40,7 @@ public class IfSchrittView extends IfElseSchrittView {
 
 	public IfSchrittView(EditorI editor, SchrittSequenzView parent, IfSchrittModel_V001 model) {
 		super(editor, parent, model.inhalt, model.id, model.aenderungsart, false);
-		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new SchrittID(), empty()));
+		initIfSequenz(new ZweigSchrittSequenzView(editor, this, new StepID(), empty()));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		this.setBackgroundUDBL(new Color(model.farbe));
 		ifBreiteSetzen(model.leerBreite);
@@ -65,13 +65,13 @@ public class IfSchrittView extends IfElseSchrittView {
 	}
 
 	@Override
-	public void setId(SchrittID id) {
+	public void setId(StepID id) {
 		super.setId(id);
-		SchrittID elseID = id.naechsteEbene();
+		StepID elseID = id.naechsteEbene();
 		elseSequenz.renummerieren(elseID);
 	}
 	
-	@Override public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
+	@Override public StepID newStepIDInSameSequence(RelativeStepPosition direction) {
 		return id.naechsteID();
 	}
 
