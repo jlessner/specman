@@ -2,7 +2,6 @@ package specman.editarea.keylistener;
 
 import specman.Specman;
 import specman.editarea.TextEditArea;
-import specman.editarea.document.WrappedDocument;
 import specman.editarea.document.WrappedPosition;
 import specman.editarea.focusmover.CrossEditAreaFocusMoverFromText;
 import specman.view.AbstractSchrittView;
@@ -11,7 +10,6 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.CSS;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -22,8 +20,6 @@ import static specman.editarea.TextStyles.deletedStepnumberLinkStyle;
 import static specman.editarea.TextStyles.geaendertTextBackground;
 import static specman.editarea.TextStyles.geloeschtStil;
 import static specman.editarea.TextStyles.standardStil;
-import static specman.editarea.markups.CharType.ParagraphBoundary;
-import static specman.editarea.markups.CharType.Whitespace;
 
 public class TextEditAreaKeyListener extends AbstractKeyHandler implements KeyListener {
   public TextEditAreaKeyListener(TextEditArea textArea) {
@@ -64,17 +60,13 @@ public class TextEditAreaKeyListener extends AbstractKeyHandler implements KeyLi
 
   private void keyBackspacePressed(KeyEvent e) { new BackspaceKeyPressedHandler(textArea, e).handle(); }
 
-  private void keyDeletePressed(KeyEvent e) {
-    new DeleteKeyPressedHandler(textArea, e).handle();
-  }
+  private void keyDeletePressed(KeyEvent e) { new DeleteKeyPressedHandler(textArea, e).handle(); }
 
   private void keyPastePressed(KeyEvent e) {
     new PasteKeyPressedHandler(textArea, e).handle();
   }
 
-  private void keyEnterPressed(KeyEvent e) {
-    new EnterKeyPressedHandler(textArea, e).handle();
-  }
+  private void keyEnterPressed(KeyEvent e) { new EnterKeyPressedHandler(textArea, e).handle(); }
 
   private void keySpaceTyped(KeyEvent e) {
     new SpaceKeyTypedHandler(textArea, e).handle();
@@ -88,11 +80,7 @@ public class TextEditAreaKeyListener extends AbstractKeyHandler implements KeyLi
     }
   }
 
-  private void keyLeftPressed(KeyEvent e) {
-    if (skipToStepnumberLinkStart()) {
-      e.consume();
-    }
-  }
+  private void keyLeftPressed(KeyEvent e) { new LeftKeyPressedHandler(textArea, e).handle(); }
 
   private void keyUpPressed(KeyEvent e) {
     new CrossEditAreaFocusMoverFromText(textArea).moveFocusToPreceedingEditArea();
