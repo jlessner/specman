@@ -78,14 +78,14 @@ abstract class AbstractCrossEditAreaFocusMover<EDITAREATYPE extends EditArea> {
   }
 
   protected EditArea findSucceedingEditArea() {
-    EditArea preceedingEditArea = succeedingEditAreaInSameContainer(currentFocusArea);
-    if (preceedingEditArea == null) {
-      preceedingEditArea = findSucceedingEditAreaOfListItem(currentFocusArea);
+    EditArea succeedingEditArea = succeedingEditAreaInSameContainer(currentFocusArea);
+    if (succeedingEditArea == null) {
+      succeedingEditArea = findSucceedingEditAreaOfListItem(currentFocusArea);
     }
-    if (preceedingEditArea == null) {
-      preceedingEditArea = findSucceedingEditAreaOfTableItem(currentFocusArea);
+    if (succeedingEditArea == null) {
+      succeedingEditArea = findSucceedingEditAreaOfTableItem(currentFocusArea);
     }
-    return preceedingEditArea;
+    return succeedingEditArea;
   }
 
   protected EditArea findSucceedingEditAreaOfTableItem(EDITAREATYPE editAreaInTableItem) {

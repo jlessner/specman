@@ -15,12 +15,15 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 
+import static java.awt.Cursor.DEFAULT_CURSOR;
+import static java.awt.Cursor.getPredefinedCursor;
 import static specman.view.AbstractSchrittView.LINIENBREITE;
 
-public class SpaltenResizer extends JPanel {
+public class SpaltenResizer extends JPanel implements MouseListener {
 	Integer dragX;
 	final SpaltenContainerI container;
 	final int spalte;
@@ -31,23 +34,11 @@ public class SpaltenResizer extends JPanel {
 	}
 
 	public SpaltenResizer(SpaltenContainerI container, int spalte, EditorI editor) {
-		Cursor leftRightCursor = createLeftRightCursor();
+		createLeftRightCursor();
 		this.container = container;
 		this.spalte = spalte;
 		setOpaque(false);
-		setCursor(leftRightCursor);
-		addMouseListener(new MouseAdapter() {
-			@Override public void mouseReleased(MouseEvent e) {
-				if (dragX != null) {
-					int ermoeglichteVeraenderung = container.spaltenbreitenAnpassenNachMausDragging(e.getX(), spalte);
-					if (ermoeglichteVeraenderung != 0) {
-						editor.addEdit(new UndoableSpaltenbreiteAngepasst(container, ermoeglichteVeraenderung, spalte));
-					}
-					dragX = null;
-					editor.vertikalLinieSetzen(0, null);
-				}
-			}
-		});
+    addMouseListener(this);
 
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override public void mouseDragged(MouseEvent e) {
@@ -64,7 +55,32 @@ public class SpaltenResizer extends JPanel {
 		return leftRightCursor;
 	}
 
-	public Shape getShape() {
+  @Override public void mouseClicked(MouseEvent e) {}
+  @Override public void mousePressed(MouseEvent e) {}
+
+  @Override
+  public void mouseReleased(MouseEvent e) {
+      if (dragX != null) {
+        int ermoeglichteVeraenderung = container.spaltenbreitenAnpassenNachMausDragging(e.getX(), spalte);
+        if (ermoeglichteVeraenderung != 0) {
+          Specman.instance().addEdit(new UndoableSpaltenbreiteAngepasst(container, ermoeglichteVeraenderung, spalte));
+        }
+        dragX = null;
+        Specman.instance().vertikalLinieSetzen(0, null);
+      }
+  }
+
+  @Override
+  public void mouseEntered(MouseEvent e) {
+    Specman.instance().setCursor(leftRightCursor);
+  }
+
+  @Override
+  public void mouseExited(MouseEvent e) {
+    Specman.instance().setCursor(Cursor.getDefaultCursor());
+  }
+
+  public Shape getShape() {
 		return new LineShape(getX(), getY() + LINIENBREITE, getX(), getY() + getHeight() - LINIENBREITE);
 	}
 }
