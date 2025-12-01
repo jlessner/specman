@@ -98,6 +98,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JComponent welcomeMessage;
 	PDFExportChooser pdfExportChooser;
   PDFExportOptionsModel_V001 pdfExportOptions;
+  FocusHistory focusHistory = new FocusHistory();
 
 	//TODO window for dragging
 	public final JWindow window = new JWindow();
@@ -304,6 +305,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	@Override public void focusGained(FocusEvent e) {
 		setLastFocusedTextArea(e);
+    if (e.getSource() instanceof EditArea<?>) {
+      focusHistory.append(((EditArea<?>)e.getSource()).getParent());
+    }
 	}
 
 	@Override public void focusLost(FocusEvent e) {
@@ -319,7 +323,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	@Override
 	public void setLastFocusedTextArea(TextEditArea area) {
 		lastFocusedTextArea = area;
-	}
+  }
 
 	private void setDiagrammDatei(File diagrammDatei) {
 		this.diagrammDatei = diagrammDatei;
@@ -770,6 +774,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	public void diagrammLaden(File diagramFile) {
 		try {
+      focusHistory.clear();
 			aenderungenVerfolgen.setSelected(false);
 			dropWelcomeMessage();
 			postInitSchritte = new ArrayList<AbstractSchrittView>();
@@ -1346,4 +1351,26 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
     return hauptSequenz.findeSchritt(fragment);
   }
 
+  @Override
+  public void scrollBackwardInEditHistory() {
+    scrollToHistoricContainer(focusHistory.navigateBack());
+  }
+
+  @Override
+  public void scrollForwardInEditHistory() {
+    scrollToHistoricContainer(focusHistory.navigateForward());
+  }
+
+  private void scrollToHistoricContainer(EditContainer editContainer) {
+    if (editContainer != null &&
+      lastFocusedTextArea != null &&
+      editContainer != lastFocusedTextArea.getParent()) {
+      editContainer.scrollTo();
+    }
+  }
+
+  @Override
+  public void appendToEditHistory(EditContainer editContainer) {
+    focusHistory.append(editContainer);
+  }
 }

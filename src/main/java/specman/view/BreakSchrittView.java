@@ -176,6 +176,10 @@ public class BreakSchrittView extends AbstractSchrittView {
 
   public void scrollToCatch() {
     if (catchSequence != null) {
+      // The user might not have focussed anything in the break step before he scrolled to
+      // the catch sequence - so in case he want's to scroll back by CTRL+ALT+Left, we
+      // explicitly add the break step to the edit history here.
+      Specman.instance().appendToEditHistory(editContainer);
       catchSequence.scrollTo();
     }
   }

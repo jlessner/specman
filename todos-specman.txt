@@ -1,12 +1,14 @@
 Aus aktueller Anwendung
-- Cursor links springt nicht sauber über Schrittreferenzen hinweg.
-   Man kann ein Zeichen hinein navigieren, dafür springt der Cursor nicht weiter, wenn er am Anfang einer Referenz steht.
-   Cursor rechts geht einwandfrei.
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Fokushistorie
+   Ähnlich wie in intelliJ kann der User über Drücken von Strg+Alt+Links/Rechts zu den zuletzt verwendeten Schritte navigieren.
+x Cursor links springt nicht sauber über Schrittreferenzen hinweg.
+   Man kann ein Zeichen hinein navigieren, dafür springt der Cursor nicht weiter, wenn er am Anfang einer Referenz steht.
+   Cursor rechts geht einwandfrei.
 x Klappbuttons sehen mit neuem Look&Feel komisch aus
 x PDF-Exportdialog erscheint jetzt manchmal hinter dem Hauptfenster
 x Schrittlinks werden nicht korrekt abgespeichert!! Nach dem Laden der Datei sind sie weg.
@@ -145,12 +147,6 @@ Auf längere Sicht - nicht notwendig für ersten Go-Live:
    in BALI UC-791 verwenden wollen, um die Teilfunktionalitäten in der MS2-Fusion in Subsequenzen zu fassen, damit man sie
    Blockweise zuklappen kann. Aber ohne dass dabei eine weitere Gliederungsebene in den Nummern entsteht, die an der Stelle
    ohnehin schon sehr lang sind.
-- Fokushistorie
-   Ähnlich wie in intelliJ kann der User über Drücken von Strg+Alt+Links/Rechts zu den zuletzt verwendeten Schritte navigieren.
-   "Verwendet" heißt i.R.: hinein geklickt, d.h. die Historie füllt sich im Wesentlichen durch Fokuswechsel. Ausnahme wäre
-   das Anspringen von Schritten über Schrittreferenzen und Kopplung von Break und Catch. Da käme jeweils der auslösende Schritt
-   auch dann in die Historie, wenn der User den Fokus gar nicht hineinplatziert hat. Beim Navigieren durch Pfeil hoch und Pfeil
-   runter, sollte hingegen vmtl. nichts in die Historie gelangen, auch wenn dabei eine Schrittgrenze überschritten wird.
 
 Tipps und Tricks
 - Pixelgenauer Größenvergleich zwischen UI und PDF-Export geht mit 85,2% Zoomfaktor im Acrobat Reader

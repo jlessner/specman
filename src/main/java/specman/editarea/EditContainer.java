@@ -25,7 +25,7 @@ import specman.undo.UndoableEditAreaAdded;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ComponentListener;
@@ -781,8 +781,15 @@ public class EditContainer extends JPanel {
   }
 
   public void scrollTo() {
-    scrollRectToVisible(getBounds());
-    requestFocus();
-    getFirstEditArea().asTextArea().setCaretPosition(1);
+    // By Dec. 25, the first edit area is always a text area
+    TextEditArea firstArea = getFirstEditArea().asTextArea();
+    scrollRectToVisible(firstArea.getBounds());
+    // Setting the caret position may already cause scrolling, but only if the position
+    // is different from the one which is already set in that text edit area. That's why
+    // the scrolling above is also necessary.
+    firstArea.setCaretPosition(1);
+    // It is important to request the focus as otherwise the viewport may immediately
+    // scroll back to the edit area where we came from.
+    firstArea.requestFocus();
   }
 }

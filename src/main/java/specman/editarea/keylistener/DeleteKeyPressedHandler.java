@@ -26,7 +26,7 @@ class DeleteKeyPressedHandler extends AbstractRemovalKeyPressedHandler {
       handleTextDeletion();
       event.consume();
     }
-    else if (stepnumberLinkStyleSet(getWrappedSelectionStart().inc())) {
+    else if (stepnumberLinkStyleSet(getWrappedSelectionStart())) {
       removeStepnumberLinkAfter();
       event.consume();
     }

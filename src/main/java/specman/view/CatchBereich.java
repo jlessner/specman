@@ -305,6 +305,10 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   public void scrollToBreak(StepnumberLabel stepnumberLabel) {
     CatchSchrittSequenzView catchSchrittSequenzView = headingToBranch(stepnumberLabel);
+    // The user might not have focussed anything in the catch step sequence before he
+    // scrolled to the break step - so in case hwe want's to scroll back by CTRL+ALT+Left,
+    // we explicitely add the heading to the edit history here.
+    Specman.instance().appendToEditHistory(catchSchrittSequenzView.ueberschrift);
     catchSchrittSequenzView.linkedBreakStep.scrollTo();
   }
 

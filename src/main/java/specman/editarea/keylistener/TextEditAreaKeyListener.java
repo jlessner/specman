@@ -74,11 +74,7 @@ public class TextEditAreaKeyListener extends AbstractKeyHandler implements KeyLi
 
   private void keyTabPressed(KeyEvent e) { new TabKeyPressedHandler(textArea, e).handle(); }
 
-  private void keyRightPressed(KeyEvent e) {
-    if (skipToStepnumberLinkEnd()) {
-      e.consume();
-    }
-  }
+  private void keyRightPressed(KeyEvent e) { new RightKeyPressedHandler(textArea, e).handle(); }
 
   private void keyLeftPressed(KeyEvent e) { new LeftKeyPressedHandler(textArea, e).handle(); }
 

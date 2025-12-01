@@ -53,8 +53,8 @@ public class AbstractKeyHandler implements TextEditAreaAccessMixin {
 
   protected boolean skipToStepnumberLinkStart() {
     WrappedPosition selectionStart = getWrappedSelectionStart();
-    if (stepnumberLinkStyleSet(selectionStart)) {
-      setCaretPosition(getStartOffsetFromPosition(selectionStart).unwrap());
+    if (!selectionStart.isZero() && stepnumberLinkStyleSet(selectionStart.dec())) {
+      setCaretPosition(getStartOffsetFromPosition(selectionStart.dec()).unwrap());
       return true;
     }
     return false;

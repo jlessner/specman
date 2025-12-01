@@ -1,12 +1,11 @@
 package specman;
 
 import specman.editarea.EditArea;
+import specman.editarea.EditContainer;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextEditArea;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
-import specman.view.CatchSchrittSequenzView;
-import specman.view.SchrittSequenzView;
 
 import javax.swing.JEditorPane;
 import javax.swing.text.JTextComponent;
@@ -47,4 +46,7 @@ public interface EditorI extends FocusListener {
   void resumeScrolling();
   List<JTextComponent> queryAllTextComponents(JTextComponent tc);
   AbstractSchrittView findStep(InteractiveStepFragment fragment);
+  void scrollBackwardInEditHistory();
+  void scrollForwardInEditHistory();
+  void appendToEditHistory(EditContainer editContainer);
 }

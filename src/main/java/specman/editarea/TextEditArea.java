@@ -113,11 +113,11 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.isControlDown()) {
-                    if (stepnumberLinkStyleSet(getWrappedCaretPosition())) {
-                        scrollToStepnumber();
-                    }
+            if (e.isControlDown()) {
+                if (stepnumberLinkStyleSet(getWrappedCaretPosition())) {
+                    scrollToStepnumber();
                 }
+            }
             }
         });
     }
@@ -709,6 +709,11 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
                     "Springen nicht möglich", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        // The user might not have focussed anything in the current edit container before
+        // he clicked on a step link to scroll to another step. So in case he wants to
+        // scroll back by CTRL+ALT+Left, we explicitly add current edit area's container
+        // to the edit history here.
+        editor.appendToEditHistory(this.getParent());
         AbstractSchrittView step = editor.findStepByStepID(stepnumberLinkID);
         step.scrollTo();
     }
