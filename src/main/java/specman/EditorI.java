@@ -4,7 +4,6 @@ import specman.editarea.EditArea;
 import specman.editarea.EditContainer;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextEditArea;
-import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 
@@ -50,7 +49,7 @@ public interface EditorI extends FocusListener {
   void scrollBackwardInEditHistory();
   void scrollForwardInEditHistory();
   void appendToEditHistory(EditContainer editContainer);
-  void deleteStep(AbstractSchrittView currentStep, InteractiveStepFragment initiatingFragment);
+  void deleteStepUDBL(AbstractSchrittView currentStep, InteractiveStepFragment initiatingFragment);
   void resyncStepnumberStyleUDBL();
   int showConfirmDialog(String message, String title, int optionType);
 }

@@ -277,4 +277,8 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			.add(untererBalken)
 			.add(wiederholSequenz.getShapeSequence());
 	}
+
+  // Switching off sub-numbering is not yet supported for loops
+  public Boolean getSubNumbering() { return null; }
+
 }

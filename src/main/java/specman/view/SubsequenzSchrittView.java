@@ -28,6 +28,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	final KlappButton klappen;
 	final FormLayout layout;
 	SchrittSequenzView subsequenz;
+  boolean subNumbering = true;
 
 	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, aenderungsart);
@@ -196,4 +197,11 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 			.withBackgroundColor(panel.getBackground())
 			.add(subsequenz.getShapeSequence());
 	}
+
+  public Boolean getSubNumbering() { return subNumbering; }
+
+  @Override
+  public void toggleSubNumbering(boolean subNumbering) {
+    this.subNumbering = subNumbering;
+  }
 }

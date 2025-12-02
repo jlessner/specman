@@ -1307,8 +1307,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
   }
 
   @Override
-  public void deleteStep(AbstractSchrittView step, InteractiveStepFragment initiatingFragment) {
-    try {
+  public void deleteStepUDBL(AbstractSchrittView step, InteractiveStepFragment initiatingFragment) {
+    try(UndoRecording ur = composeUndo()) {
       new DeleteStepOperation(step, initiatingFragment).execute();
     }
     catch (EditException ex) {

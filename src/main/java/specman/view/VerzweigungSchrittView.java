@@ -151,4 +151,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		klappen.scale(prozentNeu, prozentAktuell);
 	}
 
+  // Switching off sub-numbering is not yet supported for branching steps
+  public Boolean getSubNumbering() { return null; }
+
 }

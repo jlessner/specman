@@ -23,9 +23,19 @@ public class StepnumberContextMenu implements MouseListener {
     popup = new JPopupMenu();
     delete = createDeleteItem();
     popup.add(delete);
-    toggleSubNumbering = new JCheckBoxMenuItem("Unternummerierung");
-    toggleSubNumbering.setState(true);
+    toggleSubNumbering = createSubnumberingItem();
     popup.add(toggleSubNumbering);
+  }
+
+  private JCheckBoxMenuItem createSubnumberingItem() {
+    JCheckBoxMenuItem item = new JCheckBoxMenuItem("Unternummerierung");
+    item.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        currentStep.toggleSubNumbering(toggleSubNumbering.getState());
+      }
+    });
+    return item;
   }
 
   private JMenuItem createDeleteItem() {
@@ -33,7 +43,7 @@ public class StepnumberContextMenu implements MouseListener {
     item.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        Specman.instance().deleteStep(currentStep, initiatingLabel);
+        Specman.instance().deleteStepUDBL(currentStep, initiatingLabel);
       }
     });
     return item;
@@ -56,7 +66,10 @@ public class StepnumberContextMenu implements MouseListener {
     this.currentStep = currentStep;
     this.initiatingLabel = initiatingLabel;
     this.delete.setEnabled(currentStep.getParent().allowsStepDeletion() && currentStep.getAenderungsart() != Aenderungsart.Geloescht);
-    this.toggleSubNumbering.setVisible(currentStep.isStrukturiert());
+    this.toggleSubNumbering.setVisible(currentStep.getSubNumbering() != null);
+    if (toggleSubNumbering.isVisible()) {
+      toggleSubNumbering.setState(currentStep.getSubNumbering());
+    }
   }
 
   @Override public void mousePressed(MouseEvent e) {}

@@ -535,4 +535,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	public List<BreakSchrittView> queryUnlinkedBreakSteps() { return new ArrayList<>(); }
 
   public boolean refersToOtherStep() { return false; }
+
+  public Boolean getSubNumbering() { return null; }
+
+  public void toggleSubNumbering(boolean subNumbering) {}
 }
