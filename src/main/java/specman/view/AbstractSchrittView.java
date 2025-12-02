@@ -469,7 +469,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 				getParent().schrittEntfernen(this, Move);
 				setId(getQuellschritt().newStepIDInSameSequence(After));
 				setParent(getQuellschritt().getParent());
-				getQuellschritt().getParent().schrittZwischenschieben(this, After, getQuellschritt());
+				getQuellschritt().getParent().insertStep(this, After, getQuellschritt());
 				getQuellschritt().getParent().schrittEntfernen(getQuellschritt(), Discard);
 				setQuellschrittUDBL(null);
 				break;
@@ -539,4 +539,9 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
   public Boolean getSubNumbering() { return null; }
 
   public void toggleSubNumbering(boolean subNumbering) {}
+
+  /** Method being called by a step's sub-sequence when either a step has been added to or removed
+   * from that sequence. If the step has switched of sub-numbering, it has to initiate renumbering
+   * of following steps in its own sequence. */
+  public void renumberFollowingSteps(SchrittSequenzView modifiedSubsequence) {}
 }

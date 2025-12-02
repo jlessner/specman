@@ -85,7 +85,7 @@ public class SchrittSequenzView {
     this.aenderungsart = model.aenderungsart;
 		for (AbstractSchrittModel_V001 schritt : model.schritte) {
 			AbstractSchrittView schrittView = AbstractSchrittView.baueSchrittView(editor, this, schritt);
-			schrittAnhaengen(schrittView);
+			appendStep(schrittView);
 			// TODO JL: Das hier ist schön einfach hinzuschreiben, aber ziemlich ineffizient
 			// Wir sollten schauen, ob das herstellen einer *initialen* Dekoration nicht leichtgewichtiger geht
 			if (schritt.decorationStyle != None) {
@@ -112,7 +112,7 @@ public class SchrittSequenzView {
 
 	private SchrittID naechsteSchrittID() {
 		if (schritte.size() > 0) {
-      return schritte.get(schritte.size() - 1).newStepIDInSameSequence(After);
+      return getLastStep().newStepIDInSameSequence(After);
     }
 		return sequenzBasisId.naechsteID();
 	}
@@ -127,52 +127,52 @@ public class SchrittSequenzView {
 	public AbstractSchrittView einfachenSchrittAnhaengen(EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("Neuer Schritt " + (schritte.size() + 1));
 		EinfacherSchrittView schritt = new EinfacherSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
-		return schrittAnhaengen(schritt);
+		return appendStep(schritt);
 	}
 
 	public AbstractSchrittView whileSchrittAnhaengen(EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("Neue Schleife " + (schritte.size() + 1));
 		WhileSchrittView schritt = new WhileSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
-		return schrittAnhaengen(schritt);
+		return appendStep(schritt);
 	}
 
 	public AbstractSchrittView whileWhileSchrittAnhaengen(EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("Neue Schleife " + (schritte.size() + 1));
 		WhileWhileSchrittView schritt = new WhileWhileSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
-		return schrittAnhaengen(schritt);
+		return appendStep(schritt);
 	}
 
 	public AbstractSchrittView ifElseSchrittAnhaengen(EditorI editor) {
 		EditorContentModel_V001 initialerText = EditContainer.center("If-Else " + (schritte.size()+1));
 		IfElseSchrittView schritt = new IfElseSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
-		return schrittAnhaengen(schritt);
+		return appendStep(schritt);
 	}
 
 	public AbstractSchrittView ifSchrittAnhaengen(EditorI editor) {
 		EditorContentModel_V001 initialerText = EditContainer.center("If " + (schritte.size()+1));
 		IfSchrittView schritt = new IfSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
-		return schrittAnhaengen(schritt);
+		return appendStep(schritt);
 	}
 
 	public AbstractSchrittView caseSchrittAnhaengen(EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("Case-" + (schritte.size()+1));
 		CaseSchrittView schritt = new CaseSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
-		return schrittAnhaengen(schritt);
+		return appendStep(schritt);
 	}
 
 	public AbstractSchrittView subsequenzSchrittAnhaengen(EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("<b>Subsequenz " + (schritte.size()+1) + "<b>");
 		SubsequenzSchrittView schritt = new SubsequenzSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
-		return schrittAnhaengen(schritt);
+		return appendStep(schritt);
 	}
 
 	public AbstractSchrittView breakSchrittAnhaengen(EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("<b>Exception " + (schritte.size()+1) + "<b>");
 		BreakSchrittView schritt = new BreakSchrittView(editor, this, initialerText, naechsteSchrittID(), Specman.initialArt());
-		return schrittAnhaengen(schritt);
+		return appendStep(schritt);
 	}
 
 	private void updateLayoutRowspecsForAllsStepsAndGaps() {
@@ -198,7 +198,7 @@ public class SchrittSequenzView {
 		return CC.xy(1, stepIndex * 2 + 1);
 	}
 
-	public AbstractSchrittView schrittAnhaengen(final AbstractSchrittView schritt) {
+	public AbstractSchrittView appendStep(final AbstractSchrittView schritt) {
 		schritt.schrittnummerSichtbarkeitSetzen(schrittnummernSichtbar);
 		if (schritte.size() != 0) {
 			sequenzbereichLayout.appendRow(RowSpec.decode(ZEILENLAYOUT_GAP));
@@ -207,7 +207,8 @@ public class SchrittSequenzView {
 		sequenzBereich.add(schritt.getDecoratedComponent(), constraints4step(schritte.size()));
 		schritte.add(schritt);
 		updateLayoutRowspecsForAllsStepsAndGaps();
-		return schritt;
+    renumberFollowingStepsInParent();
+    return schritt;
 	}
 
 	public AbstractSchrittView einfachenSchrittZwischenschieben(RelativeStepPosition insertionPosition,
@@ -215,21 +216,21 @@ public class SchrittSequenzView {
 		EditorContentModel_V001 initialerText = initialtext("Neuer Schritt " + (schritte.size() + 1));
 		EinfacherSchrittView schritt = new EinfacherSchrittView
 				(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
-		return schrittZwischenschieben(schritt, insertionPosition, referenceStep);
+		return insertStep(schritt, insertionPosition, referenceStep);
 	}
 
 	public AbstractSchrittView whileSchrittZwischenschieben(RelativeStepPosition insertionPosition,
 			AbstractSchrittView referenceStep, EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("Neue Schleife " + (schritte.size() + 1));
 		WhileSchrittView schritt = new WhileSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
-		return schrittZwischenschieben(schritt, insertionPosition, referenceStep);
+		return insertStep(schritt, insertionPosition, referenceStep);
 	}
 
 	public AbstractSchrittView whileWhileSchrittZwischenschieben(RelativeStepPosition insertionPosition,
 			AbstractSchrittView referenceStep, EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("Neue Schleife " + (schritte.size() + 1));
 		WhileWhileSchrittView schritt = new WhileWhileSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
-		return schrittZwischenschieben(schritt, insertionPosition, referenceStep);
+		return insertStep(schritt, insertionPosition, referenceStep);
 	}
 
 	public AbstractSchrittView ifElseSchrittZwischenschieben(RelativeStepPosition insertionPosition,
@@ -237,7 +238,7 @@ public class SchrittSequenzView {
 		EditorContentModel_V001 initialerText = EditContainer.center("Neue Bedingung " + (schritte.size()+1));
 		IfElseSchrittView schritt = new IfElseSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
-		return schrittZwischenschieben(schritt, insertionPosition, referenceStep);
+		return insertStep(schritt, insertionPosition, referenceStep);
 	}
 
 	public AbstractSchrittView ifSchrittZwischenschieben(RelativeStepPosition insertionPosition,
@@ -245,7 +246,7 @@ public class SchrittSequenzView {
 		EditorContentModel_V001 initialerText = EditContainer.center("Neue Bedingung " + (schritte.size()+1));
 		IfSchrittView schritt = new IfSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
-		return schrittZwischenschieben(schritt, insertionPosition, referenceStep);
+		return insertStep(schritt, insertionPosition, referenceStep);
 	}
 
 	public AbstractSchrittView caseSchrittZwischenschieben(RelativeStepPosition insertionPosition,
@@ -253,21 +254,21 @@ public class SchrittSequenzView {
 		EditorContentModel_V001 initialerText = initialtext("Case-" + (schritte.size()+1));
 		CaseSchrittView schritt = new CaseSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
 		schritt.initialeSchritteAnhaengen(editor);
-		return schrittZwischenschieben(schritt, insertionPosition, referenceStep);
+		return insertStep(schritt, insertionPosition, referenceStep);
 	}
 
 	public AbstractSchrittView subsequenzSchrittZwischenschieben(RelativeStepPosition insertionPosition,
 			AbstractSchrittView referenceStep, EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("<b>Subsequenz " + (schritte.size()+1) + "<b>");
 		SubsequenzSchrittView schritt = new SubsequenzSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
-		return schrittZwischenschieben(schritt, insertionPosition, referenceStep);
+		return insertStep(schritt, insertionPosition, referenceStep);
 	}
 
 	public AbstractSchrittView breakSchrittZwischenschieben(RelativeStepPosition insertionPosition,
 			AbstractSchrittView referenceStep, EditorI editor) {
 		EditorContentModel_V001 initialerText = initialtext("<b>Exception " + (schritte.size()+1) + "<b>");
 		BreakSchrittView schritt = new BreakSchrittView(editor, this, initialerText, referenceStep.newStepIDInSameSequence(insertionPosition), Specman.initialArt());
-		return schrittZwischenschieben(schritt, insertionPosition, referenceStep);
+		return insertStep(schritt, insertionPosition, referenceStep);
 	}
 
 	private int stepIndex(AbstractSchrittView schritt) {
@@ -281,7 +282,7 @@ public class SchrittSequenzView {
 		throw new IllegalArgumentException("Step " + schritt + " is not part of sequenz " + this);
 	}
 
-	public AbstractSchrittView schrittZwischenschieben(AbstractSchrittView newStep, RelativeStepPosition insertionPosition, AbstractSchrittView referenceStep) {
+	public AbstractSchrittView insertStep(AbstractSchrittView newStep, RelativeStepPosition insertionPosition, AbstractSchrittView referenceStep) {
 		newStep.schrittnummerSichtbarkeitSetzen(schrittnummernSichtbar);
 
 		int newStepOffset = (insertionPosition == After ? 1 : 0);
@@ -300,11 +301,18 @@ public class SchrittSequenzView {
 		schritte.add(newStepIndex, newStep);
 		updateFollowingStepDecoration(newStepIndex+1);
 		updateLayoutRowspecsForAllsStepsAndGaps();
-		folgeschritteRenummerieren(newStep);
+		renumberFollowingSteps(newStep);
+    renumberFollowingStepsInParent();
 		return newStep;
 	}
 
-	public void folgeschritteRenummerieren(AbstractSchrittView schritt) {
+  private void renumberFollowingStepsInParent() {
+    if (parent != null) {
+      parent.renumberFollowingSteps(this);
+    }
+  }
+
+  public void renumberFollowingSteps(AbstractSchrittView schritt) {
 		int i = schritte.indexOf(schritt);
 		for (i++; i<schritte.size(); i++) {
 			AbstractSchrittView folgeschritt = schritte.get(i);
@@ -320,7 +328,7 @@ public class SchrittSequenzView {
 		if (schritte.size() > 0) {
 			AbstractSchrittView ersterSchritt = schritte.get(0);
 			ersterSchritt.setId(sequenzBasisId.naechsteID());
-			folgeschritteRenummerieren(ersterSchritt);
+			renumberFollowingSteps(ersterSchritt);
 		}
 	}
 
@@ -345,6 +353,7 @@ public class SchrittSequenzView {
 		updateFollowingStepDecoration(schrittIndex);
 		updateLayoutRowspecsForAllsStepsAndGaps();
 		renummerieren(sequenzBasisId);
+    renumberFollowingStepsInParent();
 		AbstractSchrittView naechsterFokus = schritte.get(schrittIndex == 0 ? schrittIndex : schrittIndex-1);
 		Specman.instance().diagrammAktualisieren(naechsterFokus.getFirstEditArea());
 		return schrittIndex;
@@ -352,16 +361,16 @@ public class SchrittSequenzView {
 
 	public void schrittHinzufuegen(AbstractSchrittView schritt, int schrittIndex) {
 		if (schrittIndex == schritte.size()) {
-			schrittAnhaengen(schritt);
+			appendStep(schritt);
 		}
 		else {
 			if (schrittIndex == 0) {
 				AbstractSchrittView ersterSchritt = schritte.get(schrittIndex);
-				schrittZwischenschieben(schritt, Before, ersterSchritt);
+				insertStep(schritt, Before, ersterSchritt);
 			}
 			else {
 				AbstractSchrittView vorgaengerSchritt = schritte.get(schrittIndex-1);
-				schrittZwischenschieben(schritt, After, vorgaengerSchritt);
+				insertStep(schritt, After, vorgaengerSchritt);
 			}
 		}
 		Specman.instance().diagrammAktualisieren(schritt.getFirstEditArea());
@@ -669,5 +678,9 @@ public class SchrittSequenzView {
       .filter(s -> s.getAenderungsart() == Aenderungsart.Geloescht)
       .count();
     return schritte.size() - numStepsMarkedForDeletion > 1;
+  }
+
+  public AbstractSchrittView getLastStep() {
+    return schritte.get(schritte.size() - 1);
   }
 }

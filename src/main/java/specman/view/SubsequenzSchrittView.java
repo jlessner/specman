@@ -2,10 +2,7 @@ package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import specman.Aenderungsart;
-import specman.EditException;
-import specman.EditorI;
-import specman.SchrittID;
+import specman.*;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
@@ -203,5 +200,28 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
   @Override
   public void toggleSubNumbering(boolean subNumbering) {
     this.subNumbering = subNumbering;
+    if (subNumbering) {
+      subsequenz.renummerieren(this.id.naechsteEbene());
+    } else {
+      subsequenz.renummerieren(this.id.sameID());
+    }
+    getParent().renumberFollowingSteps(this);
+
+    // Required to ensure repaint and thus width resizing of all effected step number labels
+    Specman.instance().diagrammAktualisieren(null);
+  }
+
+  // TODO JL: this is only working correctly yet for relative position After
+  public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
+    if (direction == RelativeStepPosition.Before || subNumbering) {
+      return super.newStepIDInSameSequence(direction);
+    }
+    AbstractSchrittView lastStep = subsequenz.getLastStep();
+    return lastStep.getId().naechsteID();
+  }
+
+  @Override
+  public void renumberFollowingSteps(SchrittSequenzView modifiedSubsequence) {
+    getParent().renumberFollowingSteps(this);
   }
 }

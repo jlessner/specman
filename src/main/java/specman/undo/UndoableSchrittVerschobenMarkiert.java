@@ -1,7 +1,6 @@
 package specman.undo;
 
 import specman.EditException;
-import specman.Specman;
 import specman.view.AbstractSchrittView;
 import specman.view.QuellSchrittView;
 import specman.view.SchrittSequenzView;
@@ -31,7 +30,7 @@ public class UndoableSchrittVerschobenMarkiert extends UndoableSchrittVerschoben
 
   @Override public void redoEdit() throws EditException {
     if (quellschrittIstNeu) {
-      originalParent.schrittZwischenschieben(quellschritt, Before, step);
+      originalParent.insertStep(quellschritt, Before, step);
     }
     togglePosition();
   }

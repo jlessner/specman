@@ -346,7 +346,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		spaltenResizerAnlegen(editor);
 
 		setId(id);
-		parent.folgeschritteRenummerieren(this);
+		parent.renumberFollowingSteps(this);
 		klappen.refreshGeklappt();
 
 		editor.diagrammAktualisieren(null);

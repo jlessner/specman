@@ -484,7 +484,7 @@ public class DraggingLogic implements Serializable {
                 sourceSequence = movingStep.getParent();
                 if(movingStep.getQuellschritt() == null) {
                     quellschritt = new QuellSchrittView(specman, sourceSequence, movingStep.getId());
-                    sourceSequence.schrittZwischenschieben(quellschritt, Before, movingStep);
+                    sourceSequence.insertStep(quellschritt, Before, movingStep);
                 }
                 else {
                     quellschritt = movingStep.getQuellschritt();
@@ -493,7 +493,7 @@ public class DraggingLogic implements Serializable {
                 int originalIndex = originalParent.schrittEntfernen(movingStep, Move);
                 movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
                 movingStep.setParent(referenceStep.getParent());
-                targetSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);
+                targetSequence.insertStep(movingStep, insertionPosition, referenceStep);
                 specman.addEdit(new UndoableSchrittVerschobenMarkiert(movingStep, originalParent, originalIndex, quellschritt));
                 movingStep.setQuellschrittUDBL(quellschritt);
                 movingStep.setZielschrittStilUDBL();
@@ -505,7 +505,7 @@ public class DraggingLogic implements Serializable {
                 int originalIndex = originalParent.schrittEntfernen(movingStep, Move);
                 movingStep.setId(referenceStep.newStepIDInSameSequence(insertionPosition));
                 movingStep.setParent(referenceStep.getParent());
-                targetSequence.schrittZwischenschieben(movingStep, insertionPosition, referenceStep);
+                targetSequence.insertStep(movingStep, insertionPosition, referenceStep);
                 specman.addEdit(new UndoableSchrittVerschoben(movingStep, originalParent, originalIndex));
             }
         }
