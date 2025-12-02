@@ -25,12 +25,12 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	final KlappButton klappen;
 	final FormLayout layout;
 	SchrittSequenzView subsequenz;
-  /** A value of false means: the steps within this sub-sequence are not numbered on a lower level than this step itself.
-   * E.g. the steps in a sub-sequence step with number 2.3 have numbers 2.3.1, 2.3.2, and so on. With sub-numbering
-   * switched off, the sub steps get numbers 2.4, 2.5, and so on. As a consequence, the numbers of steps following this
+  /** A value of true means: the steps within this sub-sequence are not numbered on a lower level than this step itself
+   * as it is usual in Specman. E.g. the steps in a sub-sequence step with number 2.3 have numbers 2.3.1, 2.3.2, and so on.
+   * With flat-numbering, the sub steps get numbers 2.4, 2.5, and so on. As a consequence, the numbers of steps following this
    * sub-sequence step on the same level get numbers depending on the sub-sequence's size. That's not so nice, but on the
    * other hand switching off the sub-numbering save a numbering level. Which variant is better depends on the situation. */
-  boolean subNumbering = true;
+  boolean flatNumbering = false;
 
 	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
 		super(editor, parent, initialerText, id, aenderungsart);
@@ -199,11 +199,11 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 			.add(subsequenz.getShapeSequence());
 	}
 
-  public Boolean getSubNumbering() { return subNumbering; }
+  public Boolean getFlatNumbering() { return flatNumbering; }
 
   @Override
-  public void toggleSubNumbering(boolean subNumbering) {
-    this.subNumbering = subNumbering;
+  public void toggleFlatNumbering(boolean flatNumbering) {
+    this.flatNumbering = flatNumbering;
     renumberSubsequence();
     getParent().renumberFollowingSteps(this);
 
@@ -212,16 +212,16 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
   }
 
   private void renumberSubsequence() {
-    if (subNumbering) {
-      subsequenz.renummerieren(this.id.naechsteEbene());
-    } else {
+    if (flatNumbering) {
       subsequenz.renummerieren(this.id.sameID());
+    } else {
+      subsequenz.renummerieren(this.id.naechsteEbene());
     }
   }
 
   // TODO JL: this is only working correctly yet for relative position After
   public SchrittID newStepIDInSameSequence(RelativeStepPosition direction) {
-    if (direction == RelativeStepPosition.Before || subNumbering) {
+    if (direction == RelativeStepPosition.Before || !flatNumbering) {
       return super.newStepIDInSameSequence(direction);
     }
     AbstractSchrittView lastStep = subsequenz.getLastStep();
@@ -229,10 +229,10 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
   }
 
   @Override
-  /** If this sub-sequence step has turned off sub-numbering, any insertion or removal of steps
-   * in its sub-sequence effects the numbers of following steps of this step. */
+  /** If this sub-sequence step uses flat numbering, any insertion or removal of steps
+   * in its sub-sequence effects the numbers of following steps of this step itself. */
   public void renumberFollowingSteps(SchrittSequenzView modifiedSubsequence) {
-    if (!subNumbering) {
+    if (flatNumbering) {
       getParent().renumberFollowingSteps(this);
     }
   }

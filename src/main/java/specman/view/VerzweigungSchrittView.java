@@ -152,6 +152,6 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 	}
 
   // Switching off sub-numbering is not yet supported for branching steps
-  public Boolean getSubNumbering() { return null; }
+  public Boolean getFlatNumbering() { return null; }
 
 }

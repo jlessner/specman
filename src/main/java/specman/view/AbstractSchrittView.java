@@ -536,12 +536,12 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
   public boolean refersToOtherStep() { return false; }
 
-  public Boolean getSubNumbering() { return null; }
+  public Boolean getFlatNumbering() { return null; }
 
-  public void toggleSubNumbering(boolean subNumbering) {}
+  public void toggleFlatNumbering(boolean flatNumbering) {}
 
   /** Method being called by a step's sub-sequence when either a step has been added to or removed
-   * from that sequence. If the step has switched of sub-numbering, it has to initiate renumbering
+   * from that sequence. If the step uses flat numbering, it has to initiate renumbering
    * of following steps in its own sequence. */
   public void renumberFollowingSteps(SchrittSequenzView modifiedSubsequence) {}
 }

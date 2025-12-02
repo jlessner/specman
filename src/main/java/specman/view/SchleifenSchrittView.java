@@ -279,6 +279,6 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	}
 
   // Switching off sub-numbering is not yet supported for loops
-  public Boolean getSubNumbering() { return null; }
+  public Boolean getFlatNumbering() { return null; }
 
 }

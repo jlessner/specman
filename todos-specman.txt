@@ -15,14 +15,15 @@ Aus aktueller Anwendung
      Renummerierung in den Folgeschritten der Elternsequenz vor. War bisher auch nicht notwendig.
   x Einfügen eines Schritts *vor* dem SubsequenzSchritt führt in der Subsequenz wieder zu Unternummerierung, selbst wenn diese
      abgeschaltet ist. Sie zieht sich dann auch in die Folgeschritte weiter.
-  - Korrektes Verhalten beim Einfügen *vor* Referenzschritt checken (geht nur per Drag & Drop)
+  x Korrektes Verhalten beim Einfügen *vor* Referenzschritt checken (geht nur per Drag & Drop)
+     Ich kriege keine problematische Konstellation hin
   - Persistierung der Einstellung
   - Undo/Redo für Umschaltung der Unternummerierung
   - Checken: Verhalten betroffener Quellschritt-Labels / Zielschrittlabels bei Umnummerierung
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
-- Sortierung der Schritte im Auswahldialog für Schritterefenzen ist ungünstig. Vmtl. lexikografisch.
+- Sortierung der Schritte im Auswahldialog für Schrittrerefenzen ist ungünstig. Vmtl. lexikografisch.
 - Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
 x Fokushistorie
    Ähnlich wie in intelliJ kann der User über Drücken von Strg+Alt+Links/Rechts zu den zuletzt verwendeten Schritte navigieren.
