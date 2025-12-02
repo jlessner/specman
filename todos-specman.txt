@@ -6,7 +6,7 @@ Aus aktueller Anwendung
     Nummern 4, 5 usw. erhalten. Dadurch wirken sich Nummernänderungen zwar weitreichender aus, aber es ist manchmal
     trotzdem übersichtlicher, wenn dafür die Verschachtelungstiefe in den Nummern geringer bleibt. Aktuell würde ich das
     in BALI UC-791 verwenden wollen, um die Teilfunktionalitäten in der MS2-Fusion in Subsequenzen zu fassen, damit man sie
-    Blockweise zuklappen kann. Aber ohne dass dabei eine weitere Gliederungsebene in den Nummern entsteht, die an der Stelle
+    Blockweise zuklappen kann. Aber ohne, dass dabei eine weitere Gliederungsebene in den Nummern entsteht, die an der Stelle
     ohnehin schon sehr lang sind.
   x Kontextmenü für Schrittnummerlabel
   x Toggle-Menüitem für Umschaltung
@@ -15,6 +15,7 @@ Aus aktueller Anwendung
      Renummerierung in den Folgeschritten der Elternsequenz vor. War bisher auch nicht notwendig.
   - Einfügen eines Schritts *vor* dem SubsequenzSchritt führt in der Subsequenz wieder zu Unternummerierung, selbst wenn diese
      abgeschaltet ist. Sie zieht sich dann auch in die Folgeschritte weiter.
+  - Korrektes Verhalten beim Einfügen *vor* Referenzschritt checken (geht nur per Drag & Drop)
   - Persistierung der Einstellung
   - Undo/Redo für Umschaltung der Unternummerierung
   - Checken: Verhalten betroffener Quellschritt-Labels / Zielschrittlabels bei Umnummerierung
