@@ -29,7 +29,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
    * E.g. the steps in a sub-sequence step with number 2.3 have numbers 2.3.1, 2.3.2, and so on. With sub-numbering
    * switched off, the sub steps get numbers 2.4, 2.5, and so on. As a consequence, the numbers of steps following this
    * sub-sequence step on the same level get numbers depending on the sub-sequence's size. That's not so nice, but on the
-   * other hand switching of the sub-numbering save a numbering level. Which variant is better depends on the situation. */
+   * other hand switching off the sub-numbering save a numbering level. Which variant is better depends on the situation. */
   boolean subNumbering = true;
 
 	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
@@ -79,7 +79,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	@Override
 	public void setId(SchrittID id) {
 		super.setId(id);
-		subsequenz.renummerieren(id.naechsteEbene());
+    renumberSubsequence();
 	}
 
 	@Override
@@ -204,15 +204,19 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
   @Override
   public void toggleSubNumbering(boolean subNumbering) {
     this.subNumbering = subNumbering;
+    renumberSubsequence();
+    getParent().renumberFollowingSteps(this);
+
+    // Required to ensure repaint and thus width resizing of all effected step number labels
+    Specman.instance().diagrammAktualisieren(null);
+  }
+
+  private void renumberSubsequence() {
     if (subNumbering) {
       subsequenz.renummerieren(this.id.naechsteEbene());
     } else {
       subsequenz.renummerieren(this.id.sameID());
     }
-    getParent().renumberFollowingSteps(this);
-
-    // Required to ensure repaint and thus width resizing of all effected step number labels
-    Specman.instance().diagrammAktualisieren(null);
   }
 
   // TODO JL: this is only working correctly yet for relative position After

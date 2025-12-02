@@ -13,7 +13,7 @@ Aus aktueller Anwendung
   x Checken: Verhalten von Schrittreferenzen bei Umnummerierung
   x Einfügen / Löschen eines neuen Schritts in der Subsequenzview nimmt bei abgeschalteter Unternummerierung noch keine
      Renummerierung in den Folgeschritten der Elternsequenz vor. War bisher auch nicht notwendig.
-  - Einfügen eines Schritts *vor* dem SubsequenzSchritt führt in der Subsequenz wieder zu Unternummerierung, selbst wenn diese
+  x Einfügen eines Schritts *vor* dem SubsequenzSchritt führt in der Subsequenz wieder zu Unternummerierung, selbst wenn diese
      abgeschaltet ist. Sie zieht sich dann auch in die Folgeschritte weiter.
   - Korrektes Verhalten beim Einfügen *vor* Referenzschritt checken (geht nur per Drag & Drop)
   - Persistierung der Einstellung
@@ -39,6 +39,8 @@ x Pluszeichen für zugeklappte Schritte sind manchmal ohne erkennbare Änderung 
 x Catch lässt sich nicht löschen
 
 Abschluss für Go-Live
+- Wenn man einen Schritt aus einer Sequenz ohne abgesetzte Darstellung in eine Sequenz *mit* abgesetzter Darstellung zieht,
+   dann erhält der EditContainer des Schritts dabei nicht die notwendigen Insets. Nach Speichern und Laden ist natürlich alles OK.
 - Wenn beim Split einer TextEditArea der *vordere* Textteil überflüssige Whitespaces enthält,
    dann wird der hintere Teil falsch kopiert. Für das Herstellen des hinteren Textteils wird nämlich intern zuerst der *ganze* Text
    kopiert und anschließend gekürzt. Das Kopieren bewirkt die Bereinigung, sodass die ursprüngliche Caret Position im kopierten Text
