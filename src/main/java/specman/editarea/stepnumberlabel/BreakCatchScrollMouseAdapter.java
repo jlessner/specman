@@ -14,6 +14,8 @@ public class BreakCatchScrollMouseAdapter extends MouseAdapter {
   public static final String SCROLL_TOOLTIP = "STRG+Klicken um Link zu folgen";
   public static final Cursor SCROLL_CURSOR = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 
+  static BreakCatchScrollMouseAdapter instance = new BreakCatchScrollMouseAdapter();
+
   public static boolean userWantsToScroll(MouseEvent e) {
     return e.isControlDown() && e.getSource() instanceof StepnumberLabel;
   }

@@ -62,7 +62,8 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
     DragMouseAdapter ada = new DragMouseAdapter((Specman)Specman.instance());
     addMouseListener(ada);
     addMouseMotionListener(ada);
-    addMouseListener(new BreakCatchScrollMouseAdapter());
+    addMouseListener(BreakCatchScrollMouseAdapter.instance);
+    addMouseListener(StepnumberContextMenu.instance);
   }
 
   public void setStepNumber(SchrittID stepNumber) {

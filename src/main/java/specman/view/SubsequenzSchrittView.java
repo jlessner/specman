@@ -47,7 +47,8 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		//roundedBorderDecorator = new RoundedBorderDecorator(panel);
 
 		if (withDefaultContent) {
-			initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
+			//initSubsequenz(einschrittigeInitialsequenz(editor, id));
+      initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
 		}
 	}
 

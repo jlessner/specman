@@ -111,8 +111,9 @@ public class SchrittSequenzView {
 	public JPanel getContainer() { return panel; }
 
 	private SchrittID naechsteSchrittID() {
-		if (schritte.size() > 0)
-			return schritte.get(schritte.size() - 1).newStepIDInSameSequence(After);
+		if (schritte.size() > 0) {
+      return schritte.get(schritte.size() - 1).newStepIDInSameSequence(After);
+    }
 		return sequenzBasisId.naechsteID();
 	}
 
@@ -657,5 +658,16 @@ public class SchrittSequenzView {
 
   public void scrollTo() {
     schritte.get(0).scrollTo();
+  }
+
+  /** A step might only be deleted from a sequence if there remains at least
+   * one step which is not marked for deletion. Otherwise deletion of this last
+   * step would leave the sequence empty, which is not allowed. */
+  public boolean allowsStepDeletion() {
+    int numStepsMarkedForDeletion = (int)schritte
+      .stream()
+      .filter(s -> s.getAenderungsart() == Aenderungsart.Geloescht)
+      .count();
+    return schritte.size() - numStepsMarkedForDeletion > 1;
   }
 }

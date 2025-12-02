@@ -26,13 +26,14 @@ Abschluss für Go-Live
 - Kleine, eigenartige Macke: Wenn man als allererste Operation nach dem Öffnen einer Datei einen neuen Textparagraphen einfügt, dann
    funktoniert das Undo dafür nicht. Macht man davor (oder auch danach!) irgendeine andere rücknehmbare Operation, dann funktioniert es
 - List Items als EditAreas
-  x Unterscheidung nummeriert / nicht nummeriert
+  - Korrekte Begriffe in Combobox für ordered und unordered LI
   - Saubere Darstellung des Labels
     - Vertikal, nicht nummeriert: Mitte der ersten Zeile abhängig von der Zeilenhöhe - hängt von der größten Schrift in der ersten Zeile ab (-> JEditorPaneUtilities)
     - Vertikal, nummeriert: Baseline der ersten Zeile (-> JEditorPaneUtilities)
     - Horizontal: zoom-abhängiger rechter Abstand (sorgt für rechtsbündig bei nummeriert)
     - Wie groß machen wir die Schrift für Nummernlabel? In Word gibt's Regeln. Am besten erstmal: Standardgröße
     - Wie darstellen, wenn man im Änderungsmodus LI zu normalem Text macht
+  x Unterscheidung nummeriert / nicht nummeriert
   x Undo / Redo für LI anlegen und LI entfernen
   - Irgendeine Idee für mehrstufige LIs?
 - Darstellung von Catch-Bereichen überarbeiten (siehe Powerpoint)

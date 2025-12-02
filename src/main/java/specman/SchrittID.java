@@ -42,6 +42,7 @@ public class SchrittID {
 	public SchrittID sameID() {
 		return new SchrittID(nummern.toArray(new Integer[0]));
 	}
+
 	public SchrittID naechsteEbene() {
 		Integer[] naechsteNummern = nummern.toArray(new Integer[nummern.size()+1]);
 		naechsteNummern[naechsteNummern.length-1] = 0;

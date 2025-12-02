@@ -16,6 +16,7 @@ import specman.draganddrop.GlassPane;
 import specman.editarea.EditArea;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.markups.MarkupType;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.ModelEnvelope;
 import specman.model.v001.*;
 import specman.pdf.PDFExportChooser;
@@ -23,6 +24,7 @@ import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
 import specman.editarea.EditContainer;
 import specman.editarea.TextEditArea;
+import specman.stepops.DeleteStepOperation;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
 import specman.undo.UndoableSchrittEntfernt;
@@ -233,6 +235,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				if (undoManager.hasUnsavedChanges()) {
+
 					int dialogResult = JOptionPane.showConfirmDialog(Specman.instance,
 							"Änderungen am Dokument '" + getDiagramFilename() + "' vor dem Schließen speichern?" +
 									"\nIhre Änderungen gehen verloren, wenn Sie diese nicht speichern.",
@@ -451,60 +454,15 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
     });
 
 		loeschen.addActionUDBLListener(e -> {
-			if (lastFocusedTextArea == null) {
-				return;
-			}
-			try {
-				AbstractSchrittView schritt = hauptSequenz.findeSchritt(lastFocusedTextArea);
-				if (schritt == null) {
-						// Sollte nur der Fall sein, wenn man den Fokus im Intro oder Outro stehen hat
-						fehler("Ups - niemandem scheint das Feld zu gehören, in dem steht: " + lastFocusedTextArea.getText());
-						return;
-				}
-
-				//Der Teil wird nur durchlaufen, wenn die Aenderungsverfolgung aktiviert ist
-				if (instance != null
-					&& instance.aenderungenVerfolgen()
-					&& schritt.getAenderungsart() != Hinzugefuegt
-					&& !(schritt instanceof CatchBereich)) {
-						//Muss hinzugefügt werden um zu gucken ob die Markierung schon gesetzt wurde
-						if (schritt.getAenderungsart() != Aenderungsart.Geloescht) {
-								schrittAlsGeloeschtMarkierenUDBL(schritt);
-								resyncStepnumberStyleUDBL();
-						}
-				}
-				else {
-					//Hier erfolgt das richtige Löschen, Aenderungsverfolgung nicht aktiviert
-          if (schritt instanceof CaseSchrittView) {
-            CaseSchrittView caseSchritt = (CaseSchrittView) schritt;
-            ZweigSchrittSequenzView zweig = caseSchritt.headingToBranch(lastFocusedTextArea);
-            if (zweig != null) {
-              int zweigIndex = caseSchritt.zweigEntfernen(Specman.this, zweig);
-              undoManager.addEdit(new UndoableZweigEntfernt(Specman.this, zweig, caseSchritt, zweigIndex));
-              return;
-            }
-          }
-          else if (schritt instanceof CatchBereich) {
-            CatchBereich catchBereich = (CatchBereich) schritt;
-            CatchSchrittSequenzView catchSequence = catchBereich.headingToBranch(lastFocusedTextArea);
-            if (catchSequence != null) {
-              catchSequence.removeOrMarkAsDeletedUDBL();
-              // No undo action required here. The undo composition of low-level changes covers everything
-            }
-            return;
-          }
-          if (isStepDeletionAllowed(schritt)) {
-            schritt.markStepnumberLinksAsDefect();
-            SchrittSequenzView sequenz = schritt.getParent();
-            int schrittIndex = sequenz.schrittEntfernen(schritt, Discard);
-            undoManager.addEdit(new UndoableSchrittEntfernt(schritt, sequenz, schrittIndex));
-            resyncStepnumberStyleUDBL();
-          }
-				}
+      try {
+        if (lastFocusedTextArea == null) {
+          return;
+        }
+        new DeleteStepOperation(lastFocusedTextArea).execute();
       }
-			catch (EditException ex) {
-				showError(ex);
-			}
+      catch (EditException ex) {
+        showError(ex);
+      }
     });
 
 		toggleBorderType.addActionUDBLListener(e -> {
@@ -631,7 +589,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	}
 
-	private void resyncStepnumberStyleUDBL() {
+  @Override
+	public void resyncStepnumberStyleUDBL() {
     hauptSequenz.resyncStepnumberStyleUDBL();
 	}
 
@@ -671,13 +630,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			EditArea nextFocusArea = lastFocusedTextArea.toggleListItemUDBL(ordered, initialArt());
 			diagrammAktualisieren(nextFocusArea);
 		}
-	}
-
-  private void schrittAlsGeloeschtMarkierenUDBL(AbstractSchrittView schritt) throws EditException {
-		//Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
-		if (isStepDeletionAllowed(schritt)) {
-      schritt.alsGeloeschtMarkierenUDBL(this);
-    }
 	}
 
 	public int skalieren(int prozent) {
@@ -1244,26 +1196,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return caseAnhaengen;
 	}
 
-	public boolean isStepDeletionAllowed(AbstractSchrittView schritt) throws EditException {
-        int geloeschtzaehler = 1;
-        for (AbstractSchrittView suchSchritt : schritt.getParent().schritte) {
-            if (suchSchritt.getAenderungsart() == Aenderungsart.Geloescht) {
-                geloeschtzaehler++;
-            }
-        }
-        if (schritt.getParent().schritte.size() <= geloeschtzaehler) {
-            throw new EditException("Der letzte Schritt kann nicht entfernt werden.");
-        }
-        if (schritt.hasStepnumberLinks()) {
-            int dialogResult = JOptionPane.showConfirmDialog(this,
-                    "Der zu löschende Schritt wird referenziert. Möchten Sie den Schritt " +
-                            "wirklich löschen?\nDie Referenzen werden dann als 'Defekt' markiert.",
-                    "Verknüpfte Schrittreferenzen", JOptionPane.OK_CANCEL_OPTION);
-            return dialogResult == JOptionPane.OK_OPTION;
-        }
-        return true;
-	}
-
 	@Override public TextEditArea getLastFocusedTextArea() {
 		return lastFocusedTextArea;
 	}
@@ -1373,4 +1305,20 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
   public void appendToEditHistory(EditContainer editContainer) {
     focusHistory.append(editContainer);
   }
+
+  @Override
+  public void deleteStep(AbstractSchrittView step, InteractiveStepFragment initiatingFragment) {
+    try {
+      new DeleteStepOperation(step, initiatingFragment).execute();
+    }
+    catch (EditException ex) {
+      showError(ex);
+    }
+  }
+
+  @Override
+  public int showConfirmDialog(String message, String title, int optionType) {
+    return JOptionPane.showConfirmDialog(this, message, title, optionType);
+  }
+
 }
