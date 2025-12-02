@@ -25,6 +25,11 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	final KlappButton klappen;
 	final FormLayout layout;
 	SchrittSequenzView subsequenz;
+  /** A value of false means: the steps within this sub-sequence are not numbered on a lower level than this step itself.
+   * E.g. the steps in a sub-sequence step with number 2.3 have numbers 2.3.1, 2.3.2, and so on. With sub-numbering
+   * switched off, the sub steps get numbers 2.4, 2.5, and so on. As a consequence, the numbers of steps following this
+   * sub-sequence step on the same level get numbers depending on the sub-sequence's size. That's not so nice, but on the
+   * other hand switching of the sub-numbering save a numbering level. Which variant is better depends on the situation. */
   boolean subNumbering = true;
 
 	protected SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, boolean withDefaultContent) {
@@ -45,7 +50,6 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		//roundedBorderDecorator = new RoundedBorderDecorator(panel);
 
 		if (withDefaultContent) {
-			//initSubsequenz(einschrittigeInitialsequenz(editor, id));
       initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()));
 		}
 	}
@@ -221,7 +225,11 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
   }
 
   @Override
+  /** If this sub-sequence step has turned off sub-numbering, any insertion or removal of steps
+   * in its sub-sequence effects the numbers of following steps of this step. */
   public void renumberFollowingSteps(SchrittSequenzView modifiedSubsequence) {
-    getParent().renumberFollowingSteps(this);
+    if (!subNumbering) {
+      getParent().renumberFollowingSteps(this);
+    }
   }
 }
