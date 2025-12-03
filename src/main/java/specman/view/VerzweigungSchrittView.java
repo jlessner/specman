@@ -1,5 +1,6 @@
 package specman.view;
 
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 import specman.EditorI;
@@ -8,6 +9,7 @@ import specman.SpaltenContainerI;
 import specman.Specman;
 import specman.model.v001.EditorContentModel_V001;
 import specman.pdf.Shape;
+import specman.undo.props.UDBL;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,8 +22,12 @@ import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 /** Basisklasse für If, If/Else und Case */
 abstract public class VerzweigungSchrittView extends AbstractSchrittView implements SpaltenContainerI {
-	JPanel panel;
-	KlappButton klappen;
+  protected static final int CONTENTROW = 5;
+  protected static final int FILLERROW = CONTENTROW + 1;
+
+	final JPanel panel;
+  final BottomFiller filler;
+	final KlappButton klappen;
 	FormLayout panelLayout;
 
 	public VerzweigungSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart, FormLayout panelLayout) {
@@ -40,7 +46,11 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		panel.setLayout(panelLayout);
 		panel.addComponentListener(this);
 		panel.setEnabled(false);
-		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, 5, null);
+
+    filler = new BottomFiller(aenderungsart);
+    panel.add(filler, CC.xyw(1, FILLERROW, panelLayout.getColumnCount()));
+
+    klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, CONTENTROW, FILLERROW);
 		klappen.addComponentListener(new ComponentAdapter() {
 			// Kleine Sch�nheitsgeschichte: Der Klapp-Button liegt �ber der linken Dreieckslinie.
 			// Wenn der Button durch Mausbewegungen verschwindet, m�ssen wir daf�r sorgen, das dort,
@@ -52,7 +62,13 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		});
 	}
 
-	/** If the step is placed into a {@link RoundedBorderDecorator}, painting the step
+  @Override
+  public void setBackgroundUDBL(Color bg) {
+    super.setBackgroundUDBL(bg);
+    UDBL.setBackgroundUDBL(filler, bg);
+  }
+
+  /** If the step is placed into a {@link RoundedBorderDecorator}, painting the step
 	 * sometimes causes a corruption of the rounded corners. So we repaint the decorator
 	 * afterwards. However: we can't just call its repaint method which causes a
 	 * <i>recursive</i> repaint and thus an endless loop. So we only run a decoration

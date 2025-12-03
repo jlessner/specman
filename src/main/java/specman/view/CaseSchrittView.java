@@ -34,6 +34,7 @@ import static specman.Specman.initialtext;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.pdf.Shape.GAP_COLOR;
 import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
+import static specman.view.KlappButton.ZEILENLAYOUT_FILLER_HIDDEN;
 
 
 public class CaseSchrittView extends VerzweigungSchrittView {
@@ -142,7 +143,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 			spaltenSpec += ", 10px:grow, " + FORMLAYOUT_GAP;
 		spaltenSpec += ", 10px:grow";
 		return new FormLayout(spaltenSpec,
-				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
+				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + ZEILENLAYOUT_FILLER_HIDDEN);
 	}
 
 	/** @author PVN */

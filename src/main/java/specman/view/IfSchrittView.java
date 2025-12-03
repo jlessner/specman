@@ -58,12 +58,6 @@ public class IfSchrittView extends IfElseSchrittView {
 		elseSequenz.einfachenSchrittAnhaengen(editor);
 	}
 
-	protected static FormLayout createPanelLayout() {
-		FormLayout layout = IfElseSchrittView.createPanelLayout();
-		layout.setColumnSpec(1, ColumnSpec.decode(umgehungLayout()));
-		return layout;
-	}
-
 	@Override
 	public void setId(SchrittID id) {
 		super.setId(id);

@@ -29,6 +29,7 @@ import java.awt.event.FocusEvent;
 import java.util.List;
 
 import static specman.Specman.initialtext;
+import static specman.view.KlappButton.ZEILENLAYOUT_FILLER_HIDDEN;
 
 public class IfElseSchrittView extends VerzweigungSchrittView implements ComponentListener, SpaltenContainerI {
 	ZweigSchrittSequenzView ifSequenz;
@@ -91,7 +92,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	protected static FormLayout createPanelLayout() {
 		return new FormLayout(
 				"10px:grow, " + FORMLAYOUT_GAP + ", 10px:grow",
-				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
+				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + ZEILENLAYOUT_FILLER_HIDDEN);
 	}
 
 	protected void elseBedingungAnlegen(ZweigSchrittSequenzView elseSequenz) {

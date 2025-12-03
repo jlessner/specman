@@ -1,5 +1,7 @@
 package specman.view;
 
+import specman.Aenderungsart;
+
 import javax.swing.*;
 
 /** A bottom filler is a panel at the bottom of structured step which
@@ -10,4 +12,7 @@ import javax.swing.*;
  * folded step at the sequence end would cause the black background panel
  * become visible at the bottom. */
 public class BottomFiller extends JPanel {
+  public BottomFiller(Aenderungsart aenderungsart) {
+    setBackground(aenderungsart.toBackgroundColor());
+  }
 }

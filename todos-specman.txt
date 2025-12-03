@@ -28,12 +28,6 @@ x Catch lässt sich nicht löschen
 Abschluss für Go-Live
 - Wenn man zu einem Breakschritt bzw. einem Catch-Bereich springt oder einer Schrittreferenz folgt, dann kann sich das Ziel
    der Navigationdieser sich in einem zusammengeklappten Bereich befinden. Was machen wir dann? Aufklappen?
-- Ist der letzte Schritt einer Sequenz ein Subsequenzschritt, und klappt man diesen zusammen, verbleibt unterhalb
-   ein schwarzer Bereich, wenn parallele Sequenzen mehr Platz nach unten in Anspruch nehmen. Normalerweise verbraucht
-   immer der letzte Schritt einer Sequenz eine etwaige verbleibende Resthöhe, sodass eine weiße Fläche verbleibt.
-   	public static final String ZEILENLAYOUT_SCHRITT = "fill:pref";
-   	public static final String ZEILENLAYOUT_LETZTER_SCHRITT = "fill:pref:grow";
-   Ein zusammengeklappter Schritt tut das nicht.
 - Wenn man aus einem Break-Schritt heraus einen neuen Schritt anlegt, dann ist das keine atomare Operation.
    Der BreakSchritt hat einen Fokus-Listener, der beim Fokusverlust den Inhalt des Steps (unnötig) neu aufbaut, und
    das liegt nicht in der Undo-Composition für die Neuanlage.
@@ -129,6 +123,14 @@ x Tabellen als separate Elemente analog Bilder
   x Zurücknehmen hinzugefügter Zeilen und Spalten
   x Löschen neu hinzugefügter Zeilen und Spalten muss direkt Wirkung zeigen
   x Berücksichtigen von Änderungsmodus beim Hinzufügen / Löschen von Zeilen
+x Ist der letzte Schritt einer Sequenz ein Subsequenzschritt, und klappt man diesen zusammen, verbleibt unterhalb
+   ein schwarzer Bereich, wenn parallele Sequenzen mehr Platz nach unten in Anspruch nehmen.
+    x BottomFiller
+    x SubsequenzSchrittView
+    x VerweigungSchrittView
+    x SchleifenSchrittView
+    x Richtige Farbe nach dem Laden von Datei
+    x Entfärben bei Annahme der Änderungen
 
 Bugs fixen
 - Ändern des Paragraphtypen lässt sich nicht zurücknehmen

@@ -29,10 +29,12 @@ import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.pdf.Shape.GAP_COLOR;
 
 public class SchleifenSchrittView extends AbstractSchrittView implements SpaltenContainerI {
+  private static final int CONTENTROW = 3;
 
 	final JPanel panel;
 	final JPanel linkerBalken;
 	final JPanel untererBalken;
+  final BottomFiller filler;
 	final KlappButton klappen;
 	final FormLayout layout;
 	SchrittSequenzView wiederholSequenz;
@@ -67,11 +69,16 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 			panel.add(linkerBalken, CC.xywh(1, 1, 1, 3));
 			untererBalken = null;
 		}
+    layout.appendRow(RowSpec.decode(KlappButton.ZEILENLAYOUT_FILLER_HIDDEN));
+    int fillerRow = layout.getRowCount();
 
-		panel.addComponentListener(this);
+    panel.addComponentListener(this);
 		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 3));
 
-		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, 3, null);
+    filler = new BottomFiller(aenderungsart);
+    panel.add(filler, CC.xyw(1, fillerRow, layout.getColumnCount()));
+
+    klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, CONTENTROW, fillerRow);
 	}
 
 	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id, Aenderungsart aenderungsart) {
@@ -125,6 +132,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	public void setBackgroundUDBL(Color bg) {
 		super.setBackgroundUDBL(bg);
 		UDBL.setBackgroundUDBL(linkerBalken, bg);
+    UDBL.setBackgroundUDBL(filler, bg);
 		if (untererBalken != null) {
 			UDBL.setBackgroundUDBL(untererBalken, bg);
 		}

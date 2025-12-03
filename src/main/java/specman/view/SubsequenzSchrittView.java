@@ -8,6 +8,7 @@ import specman.model.v001.EditorContentModel_V001;
 import specman.model.v001.SubsequenzSchrittModel_V001;
 import specman.pdf.Shape;
 import specman.editarea.Indentions;
+import specman.undo.props.UDBL;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -17,6 +18,7 @@ import java.awt.event.ComponentEvent;
 import java.util.List;
 
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
+import static specman.view.KlappButton.ZEILENLAYOUT_FILLER_HIDDEN;
 
 public class SubsequenzSchrittView extends AbstractSchrittView {
 	public static final int TEXTEINRUECKUNG = 18;
@@ -43,13 +45,12 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		panel = new JPanel();
 		panel.setBackground(DIAGRAMM_LINE_COLOR);
 		layout = new FormLayout("10dlu:grow",
-				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + ZEILENLAYOUT_INHALT_VERBORGEN);
+				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + ZEILENLAYOUT_FILLER_HIDDEN);
 		panel.setLayout(layout);
 
 		panel.add(editContainer, CC.xy(1, 1));
 
-    filler = new BottomFiller();
-    filler.setBackground(aenderungsart.toBackgroundColor());
+    filler = new BottomFiller(aenderungsart);
     panel.add(filler, CC.xy(1, FILLERROW));
 
 		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, CONTENTROW, FILLERROW);
@@ -59,7 +60,13 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		}
 	}
 
-	public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
+  @Override
+  public void setBackgroundUDBL(Color bg) {
+    super.setBackgroundUDBL(bg);
+    UDBL.setBackgroundUDBL(filler, bg);
+  }
+
+  public SubsequenzSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 initialerText, SchrittID id, Aenderungsart aenderungsart) {
 		this(editor, parent, initialerText, id, aenderungsart, true);
 	}
 

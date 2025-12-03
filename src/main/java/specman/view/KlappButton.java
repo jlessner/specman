@@ -33,6 +33,7 @@ public class KlappButton extends JLabel implements MouseMotionListener, MouseLis
   private static Icon selectedIconScaled = selectedIcon;
   public static final int MINIMUM_ICON_LENGTH = icon.getIconHeight() + 2; // The minimum border is 1px top + bottom each
   public static final String ZEILENLAYOUT_FILLER_VISIBLE = "fill:0px:grow";
+  public static final String ZEILENLAYOUT_FILLER_HIDDEN = ZEILENLAYOUT_INHALT_VERBORGEN;
 
   private final FormLayout layout;
   private final int contentrow;
