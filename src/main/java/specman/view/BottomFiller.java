@@ -1,5 +1,7 @@
 package specman.view;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 
 import javax.swing.*;
@@ -12,7 +14,11 @@ import javax.swing.*;
  * folded step at the sequence end would cause the black background panel
  * become visible at the bottom. */
 public class BottomFiller extends JPanel {
-  public BottomFiller(Aenderungsart aenderungsart) {
+  final int row;
+
+  public BottomFiller(Aenderungsart aenderungsart, JPanel parent, FormLayout layout) {
+    row = layout.getRowCount();
+    parent.add(this, CC.xyw(1, row, layout.getColumnCount()));
     setBackground(aenderungsart.toBackgroundColor());
   }
 }

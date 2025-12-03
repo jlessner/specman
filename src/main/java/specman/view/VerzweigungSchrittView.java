@@ -23,7 +23,6 @@ import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 /** Basisklasse für If, If/Else und Case */
 abstract public class VerzweigungSchrittView extends AbstractSchrittView implements SpaltenContainerI {
   protected static final int CONTENTROW = 5;
-  protected static final int FILLERROW = CONTENTROW + 1;
 
 	final JPanel panel;
   final BottomFiller filler;
@@ -47,10 +46,8 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		panel.addComponentListener(this);
 		panel.setEnabled(false);
 
-    filler = new BottomFiller(aenderungsart);
-    panel.add(filler, CC.xyw(1, FILLERROW, panelLayout.getColumnCount()));
-
-    klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, CONTENTROW, FILLERROW);
+    filler = new BottomFiller(aenderungsart, panel, panelLayout);
+    klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, CONTENTROW, filler.row);
 		klappen.addComponentListener(new ComponentAdapter() {
 			// Kleine Sch�nheitsgeschichte: Der Klapp-Button liegt �ber der linken Dreieckslinie.
 			// Wenn der Button durch Mausbewegungen verschwindet, m�ssen wir daf�r sorgen, das dort,

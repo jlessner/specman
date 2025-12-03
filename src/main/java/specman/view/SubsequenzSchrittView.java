@@ -23,7 +23,6 @@ import static specman.view.KlappButton.ZEILENLAYOUT_FILLER_HIDDEN;
 public class SubsequenzSchrittView extends AbstractSchrittView {
 	public static final int TEXTEINRUECKUNG = 18;
   private static final int CONTENTROW = 3;
-  private static final int FILLERROW = CONTENTROW+1;
 
 	final JPanel panel;
   final BottomFiller filler;
@@ -50,10 +49,8 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 
 		panel.add(editContainer, CC.xy(1, 1));
 
-    filler = new BottomFiller(aenderungsart);
-    panel.add(filler, CC.xy(1, FILLERROW));
-
-		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, CONTENTROW, FILLERROW);
+    filler = new BottomFiller(aenderungsart, panel, layout);
+		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, CONTENTROW, filler.row);
 
 		if (withDefaultContent) {
       initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()), false);
