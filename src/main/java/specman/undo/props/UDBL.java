@@ -4,6 +4,7 @@ import specman.Aenderungsart;
 import specman.Specman;
 import specman.editarea.EditArea;
 import specman.editarea.stepnumberlabel.StepnumberLabel;
+import specman.editarea.stepnumberlabel.StepnumberLabel.LabelStructure;
 import specman.undo.AbstractUndoableInteraction;
 import specman.view.AbstractSchrittView;
 import specman.view.QuellSchrittView;
@@ -96,11 +97,11 @@ public class UDBL {
     }
   }
 
-  public static void setDeletionCutUDBL(StepnumberLabel label, Integer deletionCut) {
-    Integer undoDeletionCut = label.getDeletionCut();
-    if (!Objects.equals(undoDeletionCut, deletionCut)) {
-      label.setDeletionCut(deletionCut);
-      addEdit((new UndoableSetDeletionCut(label, undoDeletionCut)));
+  public static void setStructureUDBL(StepnumberLabel label, LabelStructure structure) {
+    LabelStructure undoStructure = label.getStructure();
+    if (!Objects.equals(undoStructure, structure)) {
+      label.setStructure(structure);
+      addEdit(new UndoableSetLabelStructure(label, undoStructure));
     }
   }
 

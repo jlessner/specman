@@ -15,11 +15,19 @@ Aus aktueller Anwendung
      Renummerierung in den Folgeschritten der Elternsequenz vor. War bisher auch nicht notwendig.
   x Einfügen eines Schritts *vor* dem SubsequenzSchritt führt in der Subsequenz wieder zu Unternummerierung, selbst wenn diese
      abgeschaltet ist. Sie zieht sich dann auch in die Folgeschritte weiter.
-  x Korrektes Verhalten beim Einfügen *vor* Referenzschritt checken (geht nur per Drag & Drop)
+  x Korektes Verhalten beim Einfügen *vor* Referenzschritt checken (geht nur per Drag & Drop)
      Ich kriege keine problematische Konstellation hin
-  - Persistierung der Einstellung
+  x Persistierung der Einstellung
+  - Verhalten betroffener Quellschritt- / Zielschrittlabels bei Umnummerierung
+     - Schritt aus flachnummerierte Sequenz ziehen -> Quell- und Zielschritt OK
+     - Umschalten auf Unternummerierung
+       -> Zielschrittnummer im Quellschritt noch fälschlich die alte, und ein Leerzeichen zu viel
+       -> Quellschrittnummer im Zielschritt noch fälschlich die alte
+     - Zurückschalten auf flache Nummerierung
+       -> Zielschritt wieder OK
+       -> Quellschritt jetzt wieder richtige Nummern aber zweimal String " > " dazwischen
+     - Wiederholtes Umschalten sorgt für immer mehr " > " im Quellschritt
   - Undo/Redo für Umschaltung der Unternummerierung
-  - Checken: Verhalten betroffener Quellschritt-Labels / Zielschrittlabels bei Umnummerierung
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert

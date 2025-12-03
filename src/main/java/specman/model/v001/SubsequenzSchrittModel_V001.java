@@ -8,9 +8,11 @@ import java.util.List;
 
 public class SubsequenzSchrittModel_V001 extends StrukturierterSchrittModel_V001 {
 	public final SchrittSequenzModel_V001 subsequenz;
-	
+  public final boolean flatNumbering;
+
 	@Deprecated public SubsequenzSchrittModel_V001() { // For Jackson only
 		subsequenz = null;
+    flatNumbering = false;
 	}
 
 	public SubsequenzSchrittModel_V001(
@@ -21,9 +23,11 @@ public class SubsequenzSchrittModel_V001 extends StrukturierterSchrittModel_V001
 		boolean zugeklappt,
 		SchrittSequenzModel_V001 subsequenz,
 		SchrittID quellschrittID,
-		RoundedBorderDecorationStyle decorationStyle) {
+		RoundedBorderDecorationStyle decorationStyle,
+    boolean flatNumbering) {
 		super(id, inhalt, farbe, aenderungsart, zugeklappt, quellschrittID, decorationStyle);
 		this.subsequenz = subsequenz;
+    this.flatNumbering = flatNumbering;
 	}
 
 	@Override public void addStepRecursively(List<AbstractSchrittModel_V001> allSteps) {

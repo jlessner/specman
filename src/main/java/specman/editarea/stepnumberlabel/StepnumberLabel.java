@@ -1,5 +1,6 @@
 package specman.editarea.stepnumberlabel;
 
+import org.apache.commons.lang.math.IntRange;
 import specman.SchrittID;
 import specman.Specman;
 import specman.draganddrop.DragMouseAdapter;
@@ -26,33 +27,16 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
   private static final Border STANDARD_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Schrittnummer);
   private static final Border CHANGED_BORDER = new MatteBorder(0, 2, 0, 1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
   private static final Border DELETED_BORDER = new MatteBorder(0, 2, 0, 1, Hintergrundfarbe_Geloescht);
-  private static final String TO_TARGET_ARROW = " > ";
-  private static final String FROM_SOURCE_ARROW = " < ";
+  private static final String SPACER = " ";
+  private static final String TO_TARGET_ARROW = SPACER + ">" + SPACER;
+  private static final String FROM_SOURCE_ARROW = SPACER + "<" + SPACER;
 
-  /** Position in the label text which separates a deleted substring of the text from the rest.
-   * <br>
-   * A negative value indicates a source step label with the source step number in deleted
-   * style on the left and the target step number on the right. deletionCut (negated) is
-   * the first index of the trailing text which is not deleted-styled. E.g. <br>
-   *   Label string "1.2 > 4" where substring "1.2" is displayed as deleted. deletionCut
-   *   is 3, so the deleted substring is extracted by substring(0, -deletionCut).
-   * <br>
-   * A positive value indicates a target step label with the target step on the left and
-   * the source step number in deleted style on the right. deletionCut is the first index
-   * of the trailing deleted-style text. E.g. <br>
-   *   Label string "4 < 1.2" where substring "1.2" is displayed as deleted. deletionCut
-   *   is 4, so the deleted substring is extracted by substring(deletionCut, getText().length).
-   * <br>
-   * Why so complicated? Because this way, the deletionCut integer alone is sufficient
-   * to determine which part of the label text is to be drawn with a deletion line and can
-   * easily be added to the undo system. Propper restauration of labels on undo / redo
-   * requires to add changes to the cut position to the undo buffer.
-   */
-  private Integer deletionCut;
+  private LabelStructure structure;
 
   public StepnumberLabel(SchrittID stepNumber) {
     super(String.valueOf(stepNumber));
 
+    structure = LabelStructure.Standard;
     setFont(labelFont);
     setBackground(Hintergrundfarbe_Schrittnummer);
     setBorder(STANDARD_BORDER);
@@ -67,23 +51,23 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
   }
 
   public void setStepNumber(SchrittID stepNumber) {
-    String sourceSuffix = extractSourceSuffix();
-    String targetSuffix = extractTargetSuffix();
-    setTextUDBL(stepNumber.toString(), targetSuffix, sourceSuffix);
+    NumberPair numbers = splitText();
+    setTextUDBL(stepNumber.toString(), numbers.related);
   }
 
-  private String extractTargetSuffix() {
-    if (hasTargetSuffix()) {
-      return getText().substring(findDelSubstringStart() + TO_TARGET_ARROW.length());
+  private NumberPair splitText() {
+    String text = getText();
+    if (structure != LabelStructure.Standard) {
+      int arrowStart = text.indexOf(SPACER);
+      // This might happen if the label structure has been updated from standard to source/target,
+      // but the text has not yet been updated accordingly.
+      if (arrowStart >= 0) {
+        return new NumberPair(
+          text.substring(0, arrowStart),
+          text.substring(arrowStart2RelatedNumberStart(arrowStart)));
+      }
     }
-    return null;
-  }
-
-  private String extractSourceSuffix() {
-    if (hasSourceSuffix()) {
-      return getText().substring(findDelSubstringStart());
-    }
-    return null;
+    return new NumberPair(text);
   }
 
   @Override
@@ -102,13 +86,12 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
   private LineShape createDeletionLine() {
     // + 1 turned out to produce a better vertical line placement
     int VERTICAL_LINE_PLACEMENT_OFFSET = 1;
+    IntRange delSubStringRange = findDelSubStringRange();
 
-    Integer delSubStringStart = findDelSubstringStart();
-    Integer delSubstringEnd = findDeSubstringEnd();
-    if (delSubStringStart != null && delSubstringEnd != null) {
+    if (delSubStringRange != null) {
       FontMetrics metrics = getFontMetrics(getFont());
-      int undeletedWidth = metrics.stringWidth(getText().substring(0, delSubStringStart));
-      int deletedWidth = metrics.stringWidth(getText().substring(delSubStringStart, delSubstringEnd));
+      int undeletedWidth = metrics.stringWidth(getText().substring(0, delSubStringRange.getMinimumInteger()));
+      int deletedWidth = metrics.stringWidth(getText().substring(delSubStringRange.getMinimumInteger(), delSubStringRange.getMaximumInteger()));
       return new LineShape(
         undeletedWidth + VERTICAL_LINE_PLACEMENT_OFFSET,
         getHeight() / 2,
@@ -120,103 +103,86 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
     return null;
   }
 
-  private Integer findDelSubstringStart() {
-    if (hasSourceSuffix()) {
-      return deletionCut;
-    }
-    if (hasTargetSuffix() || fullTextDeleted()) {
-      return 0;
-    }
-    return null;
-  }
-
   /** Important to remember: The end index of Java's String#substring method
-  * is the index of the first character NOT included in the substring. I.e.
+   * is the index of the first character NOT included in the substring. I.e.
    * a substring from index 0 to index 0 is an empty string. The end index
    * runs from 0 to */
-  private Integer findDeSubstringEnd() {
-    if (hasTargetSuffix()) {
-      return -deletionCut;
+  private IntRange findDelSubStringRange() {
+    if (structure == LabelStructure.Standard) {
+      if (fullTextDeleted()) {
+        return new IntRange(0, getText().length());
+      }
+      return null;
     }
-    else if (hasSourceSuffix() || fullTextDeleted()) {
-      return getText().length();
+    int arrowStart = getText().indexOf(SPACER);
+    if (structure == LabelStructure.Source) {
+      return new IntRange(0, arrowStart);
     }
-    return null;
+    return new IntRange(arrowStart2RelatedNumberStart(arrowStart), getText().length());
+  }
+
+  private int arrowStart2RelatedNumberStart(int arrowStart) {
+    return arrowStart + TO_TARGET_ARROW.length();
   }
 
   private boolean fullTextDeleted() {
-    return getBackground() == Hintergrundfarbe_Geloescht;
+    return structure == LabelStructure.Standard && getBackground() == Hintergrundfarbe_Geloescht;
   }
 
   public void setStandardStyle(SchrittID id) {
     setBorder(STANDARD_BORDER);
     setBackground(Hintergrundfarbe_Schrittnummer);
     setForeground(SCHRITTNUMMER_VORDERGRUNDFARBE);
-    this.deletionCut = null;
+    this.structure = LabelStructure.Standard;
     setText(id.toString());
   }
 
   public void setTargetStyleUDBL(SchrittID quellschrittId) {
+    setStructureUDBL(LabelStructure.Target);
     setBorderUDBL(CHANGED_BORDER);
     setBackgroundUDBL(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
     setForegroundUDBL(Hintergrundfarbe_Geloescht);
     resyncSourceSuffixUDBL(quellschrittId);
   }
 
-  public void resyncSourceSuffixUDBL(SchrittID sourceStepNumber) {
-    setTextUDBL(extractCore(), null, sourceStepNumber.toString());
-  }
-
-  private String extractCore() {
-    String text = getText();
-    if (deletionCut != null) {
-      return hasTargetSuffix()
-        ? text.substring(0, findDeSubstringEnd())
-        : text.substring(0, findDelSubstringStart() - FROM_SOURCE_ARROW.length());
-    }
-    return text;
-  }
-
-  private boolean hasTargetSuffix() {
-    return deletionCut != null && deletionCut <= 0;
-  }
-
-  private boolean hasSourceSuffix() {
-    return deletionCut != null && !hasTargetSuffix();
-  }
-
   public void setSourceStyle(SchrittID zielschrittID) {
+    setStructure(LabelStructure.Source);
     setBorder(DELETED_BORDER);
     setBackground(Hintergrundfarbe_Geloescht);
     setForeground(Schriftfarbe_Geloescht);
-    setTextUDBL(getText(), asString(zielschrittID), null);
+    NumberPair numbers = splitText();
+    setTextUDBL(numbers.own, asString(zielschrittID));
   }
 
-  private void setTextUDBL(String core, String targetSuffix, String sourceSuffix) {
-    if (targetSuffix != null) {
-      setDeletionCutUDBL(-core.length());
-      setTextUDBL(core + TO_TARGET_ARROW + targetSuffix);
-    }
-    else if (sourceSuffix != null) {
-      String undeletedText = core + FROM_SOURCE_ARROW;
-      setDeletionCutUDBL(undeletedText.length());
-      setTextUDBL(undeletedText + sourceSuffix);
+  private void setTextUDBL(String own, String related) {
+    if (structure == LabelStructure.Standard) {
+      setTextUDBL(own);
     }
     else {
-      setDeletionCutUDBL(null);
-      setTextUDBL(core);
+      String arrow = structure == LabelStructure.Target ? FROM_SOURCE_ARROW : TO_TARGET_ARROW;
+      setTextUDBL(own + arrow + related);
     }
   }
 
-  public void resyncTargetSuffixUDBL(SchrittID zielschrittID) {
-    setTextUDBL(extractCore(), asString(zielschrittID), null);
+  public void resyncTargetSuffixUDBL(SchrittID targetStepNumber) {
+    resyncRelatedStepNumberUDBL(targetStepNumber);
+  }
+
+  public void resyncSourceSuffixUDBL(SchrittID sourceStepNumber) {
+    resyncRelatedStepNumberUDBL(sourceStepNumber);
+  }
+
+  private void resyncRelatedStepNumberUDBL(SchrittID relatedStepNumber) {
+    NumberPair numbers = splitText();
+    setTextUDBL(numbers.own, relatedStepNumber.toString());
   }
 
   public void setDeletedStyleUDBL(SchrittID id) {
+    setStructureUDBL(LabelStructure.Standard);
     setBorderUDBL(DELETED_BORDER);
     setBackgroundUDBL(Hintergrundfarbe_Geloescht);
     setForegroundUDBL(Schriftfarbe_Geloescht);
-    setTextUDBL(id.toString(), null, null);
+    setTextUDBL(id.toString(), null);
   }
 
   public Shape getShape() {
@@ -225,10 +191,7 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
       .add(createDeletionLine());
   }
 
-  public Integer getDeletionCut() { return deletionCut; }
-  public void setDeletionCut(Integer deletionCut) { this.deletionCut = deletionCut; }
-
-  private void setDeletionCutUDBL(Integer deletionCut) { UDBL.setDeletionCutUDBL(this, deletionCut); }
+  private void setStructureUDBL(LabelStructure structure) { UDBL.setStructureUDBL(this, structure); }
   private void setTextUDBL(String text) { UDBL.setTextUDBL(this, text); }
   private void setForegroundUDBL(Color fg) { UDBL.setForegroundUDBL(this, fg); }
   private void setBackgroundUDBL(Color fg) { UDBL.setBackgroundUDBL(this, fg); }
@@ -239,4 +202,25 @@ public class StepnumberLabel extends JLabel implements InteractiveStepFragment {
     return "SchrittNummerLabel " + getText();
   }
 
+  public void setStructure(LabelStructure structure) { this.structure = structure; }
+
+  public LabelStructure getStructure() { return structure; }
+
+  public enum LabelStructure {
+    Standard, Source, Target;
+  }
+
+  private static class NumberPair {
+    final String own;
+    final String related;
+
+    NumberPair(String own, String related) {
+      this.own = own;
+      this.related = related;
+    }
+
+    NumberPair(String own) {
+      this(own, null);
+    }
+  }
 }
