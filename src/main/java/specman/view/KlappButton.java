@@ -12,6 +12,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
+import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
+import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_VERBORGEN;
+
 /**
  * Dieser Button dient dazu, unterstrukturierte Schritte auf und zuzuklappen.
  * Dafür würde man normalerweise von JToggleButton ableiten, aber leider hat diese Klasse
@@ -29,18 +32,21 @@ public class KlappButton extends JLabel implements MouseMotionListener, MouseLis
   private static Icon iconScaled = icon;
   private static Icon selectedIconScaled = selectedIcon;
   public static final int MINIMUM_ICON_LENGTH = icon.getIconHeight() + 2; // The minimum border is 1px top + bottom each
+  public static final String ZEILENLAYOUT_FILLER_VISIBLE = "fill:0px:grow";
 
   private final FormLayout layout;
-  private final int klappzeile;
+  private final int contentrow;
+  private final Integer fillerrow;
   private final KlappbarerBereichI klappbarerBereich;
   private final Container parent;
   private Color borderColor;
   private boolean selected;
 
-  public KlappButton(KlappbarerBereichI klappbarerBereich, Container parent, FormLayout layout, int klappzeile) {
+  public KlappButton(KlappbarerBereichI klappbarerBereich, Container parent, FormLayout layout, int contentrow, Integer fillerrow) {
     this.parent = parent;
     this.layout = layout;
-    this.klappzeile = klappzeile;
+    this.contentrow = contentrow;
+    this.fillerrow = fillerrow;
     this.klappbarerBereich = klappbarerBereich;
     setOpaque(true);
     hintergrundfarbeVonParentUebernehmen();
@@ -82,10 +88,18 @@ public class KlappButton extends JLabel implements MouseMotionListener, MouseLis
 
 
   public void refreshGeklappt() {
-    String benoetigtesZeilenLayout = isSelected() ?
-      AbstractSchrittView.ZEILENLAYOUT_INHALT_VERBORGEN :
-      AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
-    layout.setRowSpec(klappzeile, RowSpec.decode(benoetigtesZeilenLayout));
+    String requiredRowLayoutContent = isSelected()
+      ? ZEILENLAYOUT_INHALT_VERBORGEN
+      : ZEILENLAYOUT_INHALT_SICHTBAR;
+    layout.setRowSpec(contentrow, RowSpec.decode(requiredRowLayoutContent));
+
+    if (fillerrow != null) {
+      String requiredRowLayoutFiller = isSelected()
+        ? ZEILENLAYOUT_FILLER_VISIBLE
+        : ZEILENLAYOUT_INHALT_VERBORGEN;
+      layout.setRowSpec(fillerrow, RowSpec.decode(requiredRowLayoutFiller));
+    }
+
     klappbarerBereich.geklappt(!isSelected());
   }
 

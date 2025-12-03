@@ -63,7 +63,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     topBar.setBackground(TextStyles.Hintergrundfarbe_Deviderbar);
     topBar.setLayout(null);
 
-    klappen = new KlappButton(this, topBar, bereichLayout, 4);
+    klappen = new KlappButton(this, topBar, bereichLayout, 4, null);
 
     bereichPanel.addComponentListener(this);
 

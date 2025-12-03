@@ -91,7 +91,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	protected static FormLayout createPanelLayout() {
 		return new FormLayout(
 				"10px:grow, " + FORMLAYOUT_GAP + ", 10px:grow",
-				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref:grow, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR); /**@author PVN */
+				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 	}
 
 	protected void elseBedingungAnlegen(ZweigSchrittSequenzView elseSequenz) {

@@ -20,8 +20,11 @@ import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 public class SubsequenzSchrittView extends AbstractSchrittView {
 	public static final int TEXTEINRUECKUNG = 18;
+  private static final int CONTENTROW = 3;
+  private static final int FILLERROW = CONTENTROW+1;
 
 	final JPanel panel;
+  final BottomFiller filler;
 	final KlappButton klappen;
 	final FormLayout layout;
 	SchrittSequenzView subsequenz;
@@ -40,14 +43,16 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		panel = new JPanel();
 		panel.setBackground(DIAGRAMM_LINE_COLOR);
 		layout = new FormLayout("10dlu:grow",
-				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
+				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + ZEILENLAYOUT_INHALT_VERBORGEN);
 		panel.setLayout(layout);
 
 		panel.add(editContainer, CC.xy(1, 1));
 
-		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, 3);
+    filler = new BottomFiller();
+    filler.setBackground(aenderungsart.toBackgroundColor());
+    panel.add(filler, CC.xy(1, FILLERROW));
 
-		//roundedBorderDecorator = new RoundedBorderDecorator(panel);
+		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, CONTENTROW, FILLERROW);
 
 		if (withDefaultContent) {
       initSubsequenz(einschrittigeInitialsequenz(editor, id.naechsteEbene()), false);
@@ -74,7 +79,7 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	protected void initSubsequenz(SchrittSequenzView subsequenz, boolean flatNumbering) {
 		this.subsequenz = subsequenz;
     this.flatNumbering = flatNumbering;
-		panel.add(subsequenz.getContainer(), CC.xy(1, 3));
+		panel.add(subsequenz.getContainer(), CC.xy(1, CONTENTROW));
 	}
 
 	@Override
@@ -198,7 +203,8 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 	public Shape getShape() {
 		return super.getShape()
 			.withBackgroundColor(panel.getBackground())
-			.add(subsequenz.getShapeSequence());
+			.add(subsequenz.getShapeSequence())
+      .add(filler);
 	}
 
   public Boolean getFlatNumbering() { return flatNumbering; }

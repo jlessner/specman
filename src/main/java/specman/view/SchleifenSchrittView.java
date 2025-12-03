@@ -71,7 +71,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		panel.addComponentListener(this);
 		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 3));
 
-		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, 3);
+		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, 3, null);
 	}
 
 	public SchleifenSchrittView(EditorI editor, SchrittSequenzView parent, SchrittID id, Aenderungsart aenderungsart) {

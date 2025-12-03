@@ -40,7 +40,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		panel.setLayout(panelLayout);
 		panel.addComponentListener(this);
 		panel.setEnabled(false);
-		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, 5);
+		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, 5, null);
 		klappen.addComponentListener(new ComponentAdapter() {
 			// Kleine Sch�nheitsgeschichte: Der Klapp-Button liegt �ber der linken Dreieckslinie.
 			// Wenn der Button durch Mausbewegungen verschwindet, m�ssen wir daf�r sorgen, das dort,
@@ -66,7 +66,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 
 	protected static String layoutRowSpec1() {
 		int aktuellerZoomfaktor = Specman.instance().getZoomFactor();
-		return "fill:[" + (1 * aktuellerZoomfaktor / 100) + "dlu,pref]"; /**@author PVN */
+		return "fill:[" + (1 * aktuellerZoomfaktor / 100) + "dlu,pref]";
 	}
 
 	@Override
