@@ -48,13 +48,22 @@ public class QuellSchrittView extends AbstractSchrittView {
     @Override
     public JComponent getPanel() { return editContainer; }
 
-    public SchrittID getZielschrittID(){
-        return zielschritt != null ? zielschritt.getId() : null;
+    public SchrittID getZielschrittID() {
+      return zielschritt != null ? zielschritt.getId() : null;
     }
 
     public void setQuellStil() {
-        editContainer.setQuellStil(getZielschrittID());
-        setAenderungsart(Aenderungsart.Quellschritt);
+      editContainer.setQuellStil(getZielschrittID());
+      setAenderungsart(Aenderungsart.Quellschritt);
+    }
+
+    @Override
+    public void setId(SchrittID id) {
+      SchrittID oldId = getId();
+      super.setId(id);
+      if (zielschritt != null && !oldId.equals(id)) {
+        zielschritt.resyncStepnumberStyleUDBL();
+      }
     }
 
     public void setZielschrittUDBL(AbstractSchrittView zielschritt) { UDBL.setZielschrittUDBL(this, zielschritt); }

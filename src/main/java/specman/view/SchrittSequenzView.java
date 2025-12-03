@@ -319,6 +319,12 @@ public class SchrittSequenzView {
 			folgeschritt.setId(schritt.newStepIDInSameSequence(After));
 			schritt = folgeschritt;
 		}
+    // If the sequence is a sub-sequence within a step, we propagate the modification to the
+    // parent as the change might require cascading renumbering on higher levels in case of
+    // nested flat numbering
+    if (parent != null) {
+      parent.renumberFollowingSteps(this);
+    }
 	}
 
 	public void renummerieren() { renummerieren(sequenzBasisId); }
@@ -670,7 +676,7 @@ public class SchrittSequenzView {
   }
 
   /** A step might only be deleted from a sequence if there remains at least
-   * one step which is not marked for deletion. Otherwise deletion of this last
+   * one step which is not marked for deletion. Otherwise, deletion of this last
    * step would leave the sequence empty, which is not allowed. */
   public boolean allowsStepDeletion() {
     int numStepsMarkedForDeletion = (int)schritte

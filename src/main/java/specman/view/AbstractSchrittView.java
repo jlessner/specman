@@ -98,6 +98,9 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 			for (TextEditArea textEditArea : referencedByTextEditAreas) {
 				textEditArea.updateStepnumberLink(oldSchrittID.toString(), id.toString());
 			}
+      if (quellschritt != null) {
+        quellschritt.resyncStepnumberStyleUDBL();
+      }
 		}
 	}
 

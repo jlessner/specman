@@ -2,6 +2,8 @@ package specman.editarea.stepnumberlabel;
 
 import specman.Aenderungsart;
 import specman.Specman;
+import specman.undo.UndoableFlatNumberingToggled;
+import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
 
 import javax.swing.*;
@@ -32,7 +34,10 @@ public class StepnumberContextMenu implements MouseListener {
     item.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        currentStep.toggleFlatNumbering(toggleFlatNumbering.getState());
+        try (UndoRecording ur = Specman.instance().composeUndo()) {
+          currentStep.toggleFlatNumbering(toggleFlatNumbering.getState());
+          Specman.instance().addEdit(new UndoableFlatNumberingToggled(currentStep, toggleFlatNumbering.getState()));
+        }
       }
     });
     return item;
