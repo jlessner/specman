@@ -1,5 +1,10 @@
 Aus aktueller Anwendung
-- Unterbinden der Unternummerierung in Untersequenzen, zunächst SubsequenzSchrittView, später auch Schleifen und Zweige
+- PDF-Option "Export beim Speichern"
+- Hoch/Runterscrollen über Grenzen von Schritten wäre cool
+- Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
+- Sortierung der Schritte im Auswahldialog für Schrittrerefenzen ist ungünstig. Vmtl. lexikografisch.
+- Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Unterbinden der Unternummerierung in Untersequenzen, zunächst SubsequenzSchrittView, später auch Schleifen und Zweige
     Normalerweise erhalten die Schritte innerhalb von Subsequenzen eines strukturierten Schritts eine Unternummerierung.
     Also ein If-Else-Schritt mit Nummer 3 hat in seinen If-Subsequenz mit den Schritten 3.1, 3.2 usw. und eine Else-Subsequenz
     mit den Schritten 4.1, 4.2 usw. Man könnte das abschaltbar machen, sodass die Schritte in den Subsequenzen einfach die
@@ -22,11 +27,6 @@ Aus aktueller Anwendung
   x Undo/Redo für Umschaltung der Unternummerierung
   x Bei Schachtelung von Subsequenzen mit flacher Nummerierung muss eine Umnummerierung der inneren Sequenz an die äußere
      propagiert werden, um ggf. kaskadierend Folgeschritte neu zu nummerierend.
-- PDF-Option "Export beim Speichern"
-- Hoch/Runterscrollen über Grenzen von Schritten wäre cool
-- Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
-- Sortierung der Schritte im Auswahldialog für Schrittrerefenzen ist ungünstig. Vmtl. lexikografisch.
-- Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
 x Fokushistorie
    Ähnlich wie in intelliJ kann der User über Drücken von Strg+Alt+Links/Rechts zu den zuletzt verwendeten Schritte navigieren.
 x Cursor links springt nicht sauber über Schrittreferenzen hinweg.
@@ -42,6 +42,9 @@ x Pluszeichen für zugeklappte Schritte sind manchmal ohne erkennbare Änderung 
 x Catch lässt sich nicht löschen
 
 Abschluss für Go-Live
+- Wenn man aus einem Break-Schritt heraus einen neuen Schritt anlegt, dann ist das keine atomare Operation.
+   Der BreakSchritt hat einen Fokus-Listener, der beim Fokusverlust den Inhalt des Steps (unnötig) neu aufbaut, und
+   das liegt nicht in der Undo-Composition für die Neuanlage.
 - Redo einer Schrittverschiebung im Änderungsmodus funktioniert nicht, wenn Ziel und Quelle der Verschiebung nicht in der
    gleichen Sequenz liegen.
        Exception in thread "AWT-EventQueue-0" java.lang.IllegalArgumentException: Step 2.1 -
