@@ -2,6 +2,7 @@ package specman.view;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 import specman.Aenderungsart;
 
 import javax.swing.*;
@@ -16,7 +17,8 @@ import javax.swing.*;
 public class BottomFiller extends JPanel {
   final int row;
 
-  public BottomFiller(Aenderungsart aenderungsart, JPanel parent, FormLayout layout) {
+  public BottomFiller(JPanel parent, FormLayout layout, Aenderungsart aenderungsart) {
+    layout.appendRow(RowSpec.decode(KlappButton.ZEILENLAYOUT_FILLER_HIDDEN));
     row = layout.getRowCount();
     parent.add(this, CC.xyw(1, row, layout.getColumnCount()));
     setBackground(aenderungsart.toBackgroundColor());

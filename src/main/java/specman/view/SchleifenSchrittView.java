@@ -73,8 +73,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
     panel.addComponentListener(this);
 		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 3));
 
-    layout.appendRow(RowSpec.decode(KlappButton.ZEILENLAYOUT_FILLER_HIDDEN));
-    filler = new BottomFiller(aenderungsart, panel, layout);
+    filler = new BottomFiller(panel, layout, aenderungsart);
     klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, CONTENTROW, filler.row);
 	}
 

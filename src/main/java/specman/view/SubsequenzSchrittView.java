@@ -44,12 +44,12 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		panel = new JPanel();
 		panel.setBackground(DIAGRAMM_LINE_COLOR);
 		layout = new FormLayout("10dlu:grow",
-				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + ZEILENLAYOUT_FILLER_HIDDEN);
+				"fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 		panel.setLayout(layout);
 
 		panel.add(editContainer, CC.xy(1, 1));
 
-    filler = new BottomFiller(aenderungsart, panel, layout);
+    filler = new BottomFiller(panel, layout, aenderungsart);
 		klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, CONTENTROW, filler.row);
 
 		if (withDefaultContent) {

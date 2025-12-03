@@ -143,7 +143,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 			spaltenSpec += ", 10px:grow, " + FORMLAYOUT_GAP;
 		spaltenSpec += ", 10px:grow";
 		return new FormLayout(spaltenSpec,
-				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR + ", " + ZEILENLAYOUT_FILLER_HIDDEN);
+				layoutRowSpec1() + ", " + FORMLAYOUT_GAP + ", fill:pref, " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR);
 	}
 
 	/** @author PVN */

@@ -1,6 +1,5 @@
 package specman.view;
 
-import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.Aenderungsart;
 import specman.EditorI;
@@ -46,7 +45,7 @@ abstract public class VerzweigungSchrittView extends AbstractSchrittView impleme
 		panel.addComponentListener(this);
 		panel.setEnabled(false);
 
-    filler = new BottomFiller(aenderungsart, panel, panelLayout);
+    filler = new BottomFiller(panel, panelLayout, aenderungsart);
     klappen = new KlappButton(this, editContainer.getKlappButtonParent(), panelLayout, CONTENTROW, filler.row);
 		klappen.addComponentListener(new ComponentAdapter() {
 			// Kleine Sch�nheitsgeschichte: Der Klapp-Button liegt �ber der linken Dreieckslinie.
