@@ -661,7 +661,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	private void diagrammSpeichern(boolean dateiauswahlErzwingen) {
-		try {
+		try(ScrollPause sp = pauseScrolling()) {
 			if (diagrammDatei == null || dateiauswahlErzwingen) {
 				File verzeichnis = (diagrammDatei != null) ? diagrammDatei.getParentFile() : null;
 				JFileChooser fileChooser = new JFileChooser(verzeichnis);
@@ -683,10 +683,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			}
       // Generating the model includes cleaning up text edit areas which in turn runs setText which
       // in turn causes the scroll position to be changed. Therefore, the temporarily pause scrolling.
-      pauseScrolling();
 			StruktogrammModel_V001 model = generiereStruktogrammModel(true);
 			ModelEnvelope wrappedModel = wrapModel(model);
-      resumeScrolling();
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.enableDefaultTyping();
@@ -1260,13 +1258,8 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
   @Override
-  public void pauseScrolling() {
-    viewport.pauseScrolling();
-  }
-
-  @Override
-  public void resumeScrolling() {
-    viewport.resumeScrolling();
+  public ScrollPause pauseScrolling() {
+    return new ScrollPause(viewport);
   }
 
   private void displayException(Exception x) {

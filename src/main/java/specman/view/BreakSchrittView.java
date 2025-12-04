@@ -4,10 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 
-import specman.Aenderungsart;
-import specman.EditorI;
-import specman.SchrittID;
-import specman.Specman;
+import specman.*;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -119,9 +116,9 @@ public class BreakSchrittView extends AbstractSchrittView {
 	@Override
 	public void focusLost(FocusEvent e) {
 		if (catchSequence != null && aenderungsart != Aenderungsart.Geloescht) {
-      Specman.instance().pauseScrolling();
-			catchSequence.updateHeading(editContainer.editorContent2Model(true));
-      Specman.instance().resumeScrolling();
+      try(ScrollPause sp = Specman.instance().pauseScrolling()) {
+        catchSequence.updateHeading(editContainer.editorContent2Model(true));
+      }
 		}
 	}
 

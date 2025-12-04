@@ -5,6 +5,7 @@ import specman.editarea.TextEditArea;
 import javax.swing.*;
 import javax.swing.text.html.HTMLDocument;
 import java.awt.*;
+import java.util.Date;
 
 /** Removing text from {@link HTMLDocument}s implicetely causes updates of the view
  * position by default to make the addressed editor pane automatically visible.
@@ -27,7 +28,11 @@ public class PausableViewport extends JViewport {
 
   public void resumeScrolling() {
     if (!scrollingEnabled) {
-      SwingUtilities.invokeLater(() -> scrollingEnabled = true);
+      SwingUtilities.invokeLater(() -> {
+        if (!scrollingEnabled) {
+          scrollingEnabled = true;
+        }
+      });
     }
   }
 

@@ -2,6 +2,7 @@ package specman.draganddrop;
 
 import specman.Aenderungsart;
 import specman.EditException;
+import specman.ScrollPause;
 import specman.Specman;
 import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.editarea.EditContainer;
@@ -471,12 +472,13 @@ public class DraggingLogic implements Serializable {
 
     private void moveStep(RelativeStepPosition insertionPosition, AbstractSchrittView referenceStep, StepnumberLabel label)
         throws EditException {
-        try (UndoRecording ur = specman.composeUndo()) {
+        try (UndoRecording ur = specman.composeUndo(); ScrollPause sp = specman.pauseScrolling()) {
             AbstractSchrittView movingStep = specman.getHauptSequenz().findeSchritt(label);
             if (movingStep == referenceStep) {
                 // Step must not be placed before or after itself. Should not be possible by the dragging logic anyway.
                 return;
             }
+
             SchrittSequenzView targetSequence = referenceStep.getParent();
             if(specman.aenderungenVerfolgen() && movingStep.getAenderungsart() != Aenderungsart.Hinzugefuegt) {
                 SchrittSequenzView sourceSequence = movingStep.getParent();

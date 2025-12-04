@@ -1,6 +1,7 @@
 package specman.undo;
 
 import specman.EditException;
+import specman.ScrollPause;
 import specman.Specman;
 import specman.view.AbstractSchrittView;
 import specman.view.SchrittSequenzView;

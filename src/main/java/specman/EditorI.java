@@ -42,8 +42,7 @@ public interface EditorI extends FocusListener {
 	List<AbstractSchrittView> listAllSteps();
 	void addTable(int numColumns, int numRows);
 	void toggleListItem(boolean ordered);
-  void pauseScrolling();
-  void resumeScrolling();
+  ScrollPause pauseScrolling();
   List<JTextComponent> queryAllTextComponents(JTextComponent tc);
   AbstractSchrittView findStep(InteractiveStepFragment fragment);
   void scrollBackwardInEditHistory();

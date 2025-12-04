@@ -3,7 +3,8 @@ Aus aktueller Anwendung
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert
 - Sortierung der Schritte im Auswahldialog für Schrittrerefenzen ist ungünstig. Vmtl. lexikografisch.
-- Optionale Namen für implizite Subsequenzen. Oder Spacer mit Text aber ohne Nummer. Ist noch flexibler einsetzbar.
+x Verschieben eines Schritts, der in anderen Schritten referenziert wird, sorgt für unerwünschtes Scrollen zu diesen
+   anderen Schritten.
 x Unterbinden der Unternummerierung in Untersequenzen, zunächst SubsequenzSchrittView, später auch Schleifen und Zweige
   x Kontextmenü für Schrittnummerlabel
   x Toggle-Menüitem für Umschaltung

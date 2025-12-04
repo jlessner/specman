@@ -1,5 +1,6 @@
 package specman.view;
 
+import org.jruby.util.Join;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
