@@ -1,4 +1,4 @@
-package specman.stepops;
+package specman.modelops;
 
 import specman.Aenderungsart;
 import specman.EditException;

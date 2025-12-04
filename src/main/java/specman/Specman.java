@@ -2,9 +2,6 @@ package specman;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -16,7 +13,6 @@ import specman.draganddrop.GlassPane;
 import specman.editarea.EditArea;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.markups.MarkupType;
-import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.ModelEnvelope;
 import specman.model.v001.*;
 import specman.pdf.PDFExportChooser;
@@ -24,13 +20,11 @@ import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
 import specman.editarea.EditContainer;
 import specman.editarea.TextEditArea;
-import specman.stepops.DeleteStepOperation;
+import specman.modelops.DeleteStepOperation;
 import specman.undo.UndoableDiagrammSkaliert;
 import specman.undo.UndoableSchrittEingefaerbt;
-import specman.undo.UndoableSchrittEntfernt;
 import specman.undo.UndoableSchrittHinzugefuegt;
 import specman.undo.UndoableToggleStepBorder;
-import specman.undo.UndoableZweigEntfernt;
 import specman.undo.UndoableZweigHinzugefuegt;
 import specman.undo.manager.SpecmanUndoManager;
 import specman.undo.manager.UndoRecording;
@@ -69,14 +63,12 @@ import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.editarea.TextStyles.BACKGROUND_COLOR_STANDARD;
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 import static specman.view.RelativeStepPosition.After;
-import static specman.view.StepRemovalPurpose.Discard;
 
 /**
  * @author User #3
  */
 public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	public static final int INITIAL_DIAGRAMM_WIDTH = 700;
-	public static final String SPECMAN_VERSION = "0.0.1";
 	private static final String PROJEKTDATEI_EXTENSION = ".nsd";
 	private static final BasicStroke GESTRICHELTE_LINIE =
 			new BasicStroke(1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 1.0f, new float[] {10.0f, 10.0f }, 0f);
@@ -708,7 +700,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		ModelEnvelope envelope = new ModelEnvelope();
 		envelope.model = model;
 		envelope.modelType = model.getClass().getName();
-		envelope.specmanVersion = SPECMAN_VERSION;
+		envelope.specmanVersion = SpecmanVersion.getVersion();
 		return envelope;
 	}
 
@@ -984,7 +976,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		return dateiMenu;
 	}
 
-	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JToolBar toolBar;
 	private JToolBar buttonBar; // Sidebar ergänzt
 	private ActionUDBLButton einfachenSchrittAnhaengen;
@@ -1013,7 +1004,6 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	private JMenuItem exportAsPDFMenuItem;
 	private JMenuItem exportAsGraphvizMenuItem;
 	private JMenuItem exitMenuItem;
-	// JFormDesigner - End of variables declaration  //GEN-END:variables
 
 	private static Specman instance;
 

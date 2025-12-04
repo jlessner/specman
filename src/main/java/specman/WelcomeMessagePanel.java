@@ -8,13 +8,15 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.util.Properties;
 
 import static specman.editarea.TextStyles.DIAGRAMM_LINE_COLOR;
 
 public class WelcomeMessagePanel extends JLabel {
+
   public WelcomeMessagePanel() {
     setText("<html>"
-        + "<h2><i>Welcome to Specman " + Specman.SPECMAN_VERSION + "</i></h2><i>"
+        + "<h2><i>Welcome to Specman " + SpecmanVersion.getVersion() + "</i></h2><i>"
         + "This is the modelling area. Click a button from the steps palette and "
         + "drag the mouse to the position where you want to place the step. Alternatively "
         + "just click the button from the steps palette to add a step below the one "
@@ -30,4 +32,5 @@ public class WelcomeMessagePanel extends JLabel {
         new LineBorder(DIAGRAMM_LINE_COLOR, AbstractSchrittView.LINIENBREITE),
         new EmptyBorder(15, 15, 15, 15)));
   }
+
 }
