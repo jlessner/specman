@@ -8,6 +8,13 @@ Specman is a small Java 2D / Swing application, which builds to an executable JA
 
 ![Good Morning](./doc/goodmorning-screenshot.png "Good Morning Diagramm")
 
+A significant graphical difference to Nassi-Shneiderman diagramms is the representation of decisions nodes by diamonds as they are known from UML activity diagramms. The original Nassi-Shneiderman notation uses triangles which causes a little messy impression when they occur repeatedly in a diagramm.
+
+Every structured step within a diagramm may be folded up, to hide the details of its inner structure. The following screenhot shows how the "Good Morning" diagramm looks like when the first if/else step is folded up:
+
+![Good Morning Folded](./doc/goodmorning-screenshot-folded.png "Good Morning Diagramm Folded")
+
+
 ### File format ###
 
 The diagramm files have a JSON-based file format which makes them machine-readable e.g. to feed code generators or AI agent based programming pipelines. However, this is not the main intention of Specman. Specman is primarily designed to produce specifications which are both human-readable and technically exact, following the central ideas of Domain-Driven Design. Software gets _designed before implementation_, following basic clean code development principles. And these designs are represented on a way which allows business stakeholders to actively participate in the design process.
@@ -17,3 +24,5 @@ Specman provides a high-quality PDF export functionality, so that the diagramms 
 
 ### Change tracking ###
 The yellow highlighting in the screenshot above indicates changes which were made in change mode. Similar to Microsoft Word, e.g. deleting text in change mode does not actually cause the text do disappear but displayed as crossed out with a yellow background as if someone had marked the section with a text marker. Changes in a model can therefore immediately recognized by everybody.
+
+Folding up a struktured step which includes changee marks will cause the unfold-button beside the step number to be displayed with a yellow background. I.e. even if details are hidden, it is still visible that there are changes in the folded up section.
