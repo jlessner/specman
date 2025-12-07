@@ -16,7 +16,7 @@ public class SpecmanFontSizeAction extends HTMLFontSizeAction {
    * be initialized dynamically by rendering HTML strings with font-size 1, 2, 3,
    * etc. in an editor pane and then check which physical font sizes came out
    * of that. This might by machine-dependent. */
-  protected static int[] FONT_SIZES = new int[] { 8, 10, 12, DEFAULT_FONTSIZE, 19, 25, 38 };
+  public static int[] FONT_SIZES = new int[] { 8, 10, 12, DEFAULT_FONTSIZE, 19, 25, 38 };
 
   /** Must be duplicated here because the superclass field is private */
   protected int size;

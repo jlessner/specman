@@ -3,12 +3,15 @@ package net.atlanticbb.tantlinger.ui.text.dialogs;
 import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.UIUtils;
 import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontSizeAction;
+import net.atlanticbb.tantlinger.ui.text.actions.SpecmanFontSizeAction;
+import specman.Specman;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
@@ -82,7 +85,7 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
   }
 
   public void setFontSize(int size) {
-    this.sizeCombo.setSelectedItem(new Integer(size));
+    this.sizeCombo.setSelectedItem(swingFontsize2HTMLFontsize(size));
     this.updatePreview();
   }
 
@@ -184,10 +187,19 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
       this.jContentPane.add(this.getFontCombo(), gridBagConstraints1);
       this.jContentPane.add(this.getSizeCombo(), gridBagConstraints2);
       this.jContentPane.add(this.getStylePanel(), gridBagConstraints21);
-      this.sizeCombo.setSelectedItem(new Integer(this.previewLabel.getFont().getSize()));
     }
 
     return this.jContentPane;
+  }
+
+  private String swingFontsize2HTMLFontsize(int zoomedSwingFontsize) {
+    int swingFontsize = zoomedSwingFontsize * 100 / Specman.instance().getZoomFactor();
+    for (int i = 0; i < HTMLFontSizeAction.FONT_SIZES.length; ++i) {
+      if (SpecmanFontSizeAction.FONT_SIZES[i] == swingFontsize) {
+        return HTMLFontSizeAction.SIZES[i];
+      }
+    }
+    return HTMLFontSizeAction.SIZES[SpecmanFontSizeAction.DEFAULT_FONTSIZE_INDEX];
   }
 
   private JComboBox getFontCombo() {
@@ -210,7 +222,7 @@ public class SpecmanHTMLFontDialog extends HTMLOptionDialog {
   private JComboBox getSizeCombo() {
     if (this.sizeCombo == null) {
       this.sizeCombo = new JComboBox(HTMLFontSizeAction.SIZES);
-      this.sizeCombo.setSelectedIndex(HTMLFontSizeAction.MEDIUM);
+      this.sizeCombo.setSelectedIndex(SpecmanFontSizeAction.DEFAULT_FONTSIZE_INDEX);
       this.sizeCombo.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent e) {
           SpecmanHTMLFontDialog.this.updatePreview();

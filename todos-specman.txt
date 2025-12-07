@@ -27,8 +27,6 @@ x Pluszeichen für zugeklappte Schritte sind manchmal ohne erkennbare Änderung 
 x Catch lässt sich nicht löschen
 
 Abschluss für Go-Live
-- Beim öffnen der Dialoge für Fontgrößenänderung sind diese nicht korrekt initialisiert, wenn man einen anderen Zoomfaktor
-    als 100% eingestellt hat.
 - Wenn man zu einem Breakschritt bzw. einem Catch-Bereich springt oder einer Schrittreferenz folgt, dann kann sich das Ziel
    der Navigationdieser sich in einem zusammengeklappten Bereich befinden. Was machen wir dann? Aufklappen?
 - Wenn man aus einem Break-Schritt heraus einen neuen Schritt anlegt, dann ist das keine atomare Operation.
@@ -78,13 +76,14 @@ Abschluss für Go-Live
   x PDF Export
   x Als gelöscht markierte Catch-Sequenz nicht mehr mit Breakschritt synchronisieren. Beim Zurücknehmen der Löschung ggf. resynchronisieren
   x Resizing der Spalten
-
 - Suche über ganzes Modell
   - FindReplaceAction.updateContextState korrekt implementieren
     wird aufgerufen, wenn der User bei geöffnetem Dialog den Caret in einem Textfeld ändert
     ACHTUNG: wird im Moment auch ausgelöst, wenn wir im Suchdialog von einem Feld zum nächsten
       springen und im neuen Feld die Caretposition auf 0 setzen. Hier am besten mal schauen, warum
       das im Ursprungscode des Dialogs beim Ersetzen nicht auch schon ein Problem war.
+x Beim öffnen der Dialoge für Fontgrößenänderung sind diese nicht korrekt initialisiert, wenn man einen anderen Zoomfaktor
+    als 100% eingestellt hat.
 x PDF-Export
   - Nice to have: Seitenzahlen bei Tiling
   - Nice to have: Bulletpoints / Zahlen von Lineitems liegen nicht auf der Baseline des Lineitem-Texts
