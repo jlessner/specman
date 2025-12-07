@@ -1,5 +1,7 @@
 package specman.editarea;
 
+import net.atlanticbb.tantlinger.ui.text.actions.SpecmanFontSizeAction;
+import net.atlanticbb.tantlinger.ui.text.actions.SpecmanHTMLFontAction;
 import specman.Specman;
 
 import javax.swing.text.MutableAttributeSet;
@@ -12,7 +14,7 @@ import java.io.InputStream;
 import java.util.Locale;
 
 public class TextStyles {
-    public static final int FONTSIZE = 15;
+    public static final int FONTSIZE = SpecmanFontSizeAction.DEFAULT_FONTSIZE;
     public static final int SCHRITTNR_FONTSIZE = 10;
 
     public static MutableAttributeSet geaendertTextBackground = new SimpleAttributeSet();

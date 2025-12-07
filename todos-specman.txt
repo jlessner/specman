@@ -27,6 +27,8 @@ x Pluszeichen für zugeklappte Schritte sind manchmal ohne erkennbare Änderung 
 x Catch lässt sich nicht löschen
 
 Abschluss für Go-Live
+- Beim öffnen der Dialoge für Fontgrößenänderung sind diese nicht korrekt initialisiert, wenn man einen anderen Zoomfaktor
+    als 100% eingestellt hat.
 - Wenn man zu einem Breakschritt bzw. einem Catch-Bereich springt oder einer Schrittreferenz folgt, dann kann sich das Ziel
    der Navigationdieser sich in einem zusammengeklappten Bereich befinden. Was machen wir dann? Aufklappen?
 - Wenn man aus einem Break-Schritt heraus einen neuen Schritt anlegt, dann ist das keine atomare Operation.

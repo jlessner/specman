@@ -9,24 +9,7 @@ import net.atlanticbb.tantlinger.ui.text.HTMLUtils;
 import net.atlanticbb.tantlinger.ui.text.IndentationFilter;
 import net.atlanticbb.tantlinger.ui.text.SourceCodeEditor;
 import net.atlanticbb.tantlinger.ui.text.WysiwygHTMLEditorKit;
-import net.atlanticbb.tantlinger.ui.text.actions.ClearStylesAction;
-import net.atlanticbb.tantlinger.ui.text.actions.FindReplaceAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLBlockActionWithMarkupRecovery;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLEditorActionFactory;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLElementPropertiesAction;
-import net.atlanticbb.tantlinger.ui.text.actions.SpecmanHTMLFontAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLFontColorAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLHorizontalRuleAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLInlineAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLLineBreakAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLLinkAction;
-import net.atlanticbb.tantlinger.ui.text.actions.HTMLTextEditAction;
-import net.atlanticbb.tantlinger.ui.text.actions.ImageAction;
-import net.atlanticbb.tantlinger.ui.text.actions.OrderedListItemAction;
-import net.atlanticbb.tantlinger.ui.text.actions.UnorderedListItemAction;
-import net.atlanticbb.tantlinger.ui.text.actions.SpecialCharAction;
-import net.atlanticbb.tantlinger.ui.text.actions.StepnumberLinkAction;
-import net.atlanticbb.tantlinger.ui.text.actions.TableAction;
+import net.atlanticbb.tantlinger.ui.text.actions.*;
 import net.atlanticbb.tantlinger.ui.text.dialogs.SpecmanHTMLFontDialog.FontFamily;
 import novaworx.syntax.SyntaxFactory;
 import novaworx.textpane.SyntaxDocument;
@@ -200,7 +183,7 @@ public class HTMLEditorPane extends JPanel
 
     //create format menu
     formatMenu = new JMenu(i18n.str("format"));
-    lst = HTMLEditorActionFactory.createFontSizeActionList();//HTMLEditorActionFactory.createInlineActionList();
+    lst = SpecmanFontSizeActionFactory.createFontSizeActionList();
     actionList.addAll(lst);
     formatMenu.add(createMenu(lst, i18n.str("size")));
     fontSizeActions.addAll(lst);
