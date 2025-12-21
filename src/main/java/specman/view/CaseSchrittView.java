@@ -11,6 +11,7 @@ import specman.EditorI;
 import specman.SchrittID;
 import specman.SpaltenResizer;
 import specman.Specman;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
 import specman.model.v001.EditorContentModel_V001;

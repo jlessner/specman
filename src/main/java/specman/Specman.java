@@ -15,6 +15,8 @@ import specman.editarea.InteractiveStepFragment;
 import specman.editarea.markups.MarkupType;
 import specman.model.ModelEnvelope;
 import specman.model.v001.*;
+import specman.modelops.MoveBranchSequenceLeftOperation;
+import specman.modelops.MoveBranchSequenceRightOperation;
 import specman.pdf.PDFExportChooser;
 import specman.pdf.PDFRenderer;
 import specman.pdf.Shape;
@@ -1293,6 +1295,26 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
   public void deleteStepUDBL(AbstractSchrittView step, InteractiveStepFragment initiatingFragment) {
     try(UndoRecording ur = composeUndo()) {
       new DeleteStepOperation(step, initiatingFragment).execute();
+    }
+    catch (EditException ex) {
+      showError(ex);
+    }
+  }
+
+  @Override
+  public void moveBranchSequenceLeftUDBL(AbstractSchrittView step, InteractiveStepFragment initiatingFragment) {
+    try(UndoRecording ur = composeUndo()) {
+      new MoveBranchSequenceLeftOperation(step, initiatingFragment).execute();
+    }
+    catch (EditException ex) {
+      showError(ex);
+    }
+  }
+
+  @Override
+  public void moveBranchSequenceRightUDBL(AbstractSchrittView step, InteractiveStepFragment initiatingFragment) {
+    try(UndoRecording ur = composeUndo()) {
+      new MoveBranchSequenceRightOperation(step, initiatingFragment).execute();
     }
     catch (EditException ex) {
       showError(ex);

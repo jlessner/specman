@@ -314,4 +314,50 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   public boolean refersToOtherStep() { return true; }
 
+  @Override
+  public boolean allowsBranchSequenceMoveLeft(StepnumberLabel initiatingLabel) {
+    Integer sequenceIndex = findCatchSequenceIndex(initiatingLabel);
+    return sequenceIndex != null && sequenceIndex > 0;
+  }
+
+  @Override
+  public boolean allowsBranchSequenceMoveRight(StepnumberLabel initiatingLabel) {
+    Integer sequenceIndex = findCatchSequenceIndex(initiatingLabel);
+    return sequenceIndex != null && sequenceIndex < catchSequences.size() -1;
+  }
+
+  private Integer findCatchSequenceIndex(InteractiveStepFragment fragment) {
+    for (int i = 0; i < catchSequences.size(); i++) {
+      if (catchSequences.get(i).hatUeberschrift(fragment)) {
+        return i;
+      }
+    }
+    return null;
+  }
+
+  public void moveCatchSequenceLeft(InteractiveStepFragment fragment) {
+    Integer sequenceIndex = findCatchSequenceIndex(fragment);
+    if (sequenceIndex != null) {
+      moveCatchSequence(sequenceIndex, sequenceIndex-1);
+    }
+  }
+
+  public void moveCatchSequenceRight(InteractiveStepFragment fragment) {
+    Integer sequenceIndex = findCatchSequenceIndex(fragment);
+    if (sequenceIndex != null) {
+      moveCatchSequence(sequenceIndex, sequenceIndex+1);
+    }
+  }
+
+  private void moveCatchSequence(int fromIndex, int toIndex) {
+    CatchSchrittSequenzView catchSequence = catchSequences.get(fromIndex);
+    catchSequences.remove(fromIndex);
+    catchSequences.add(toIndex, catchSequence);
+    if (sequencesWidthPercent != null) {
+      Integer widthPercent = sequencesWidthPercent.get(fromIndex);
+      sequencesWidthPercent.remove(fromIndex);
+      sequencesWidthPercent.add(toIndex, widthPercent);
+    }
+    recomputeLayout();
+  }
 }

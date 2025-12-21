@@ -73,6 +73,7 @@ Abschluss für Go-Live
      manchmal nur verzögert. Werden die FokusListener sauber an allen Tabellenzellen propagiert? Sieht auf den ersten Blick OK aus
   - Übertragung einer Inhaltsänderung bei FocusLost kommt als separate Aktion in die Undo-Historie. Das ist nicht schön
   - Nice to have: *eine* Catch-Sequenz für *mehrere* Breaks, die Behandlung für verschiedene Fehler innerhalb einer Sequenz oft gleich ist
+  x Catch-Sequenzen in einem Catch-Bereich nac rechts und linkt schieben
   x PDF Export
   x Als gelöscht markierte Catch-Sequenz nicht mehr mit Breakschritt synchronisieren. Beim Zurücknehmen der Löschung ggf. resynchronisieren
   x Resizing der Spalten

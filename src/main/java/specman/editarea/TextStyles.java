@@ -94,8 +94,6 @@ public class TextStyles {
     public static final String INDIKATOR_GELB = toHTMLColor(AENDERUNGSMARKIERUNG_FARBE);
     public static final String INDIKATOR_GELOESCHT_MARKIERT = "line-through";
 
-    public static final String SPAN_GELOESCHT_MARKIERT = "<span style='text-decoration: " + INDIKATOR_GELOESCHT_MARKIERT + ";'>";
-
     public static final String INDIKATOR_GRAU = toHTMLColor(Hintergrundfarbe_Schrittnummer);
     public static final String INDIKATOR_SCHWARZ = toHTMLColor(SCHRITTNUMMER_HINTERGRUNDFARBE2);
     public static final String stepnumberLinkStyleHTMLColor = toHTMLColor(stepnumberLinkStyleColor);

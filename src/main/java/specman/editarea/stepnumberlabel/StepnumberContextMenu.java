@@ -15,6 +15,8 @@ import java.awt.event.MouseListener;
 public class StepnumberContextMenu implements MouseListener {
   private final JPopupMenu popup;
   private final JMenuItem delete;
+  private final JMenuItem left;
+  private final JMenuItem right;
   private final JCheckBoxMenuItem toggleFlatNumbering;
   private AbstractSchrittView currentStep;
   private StepnumberLabel initiatingLabel;
@@ -25,6 +27,10 @@ public class StepnumberContextMenu implements MouseListener {
     popup = new JPopupMenu();
     delete = createDeleteItem();
     popup.add(delete);
+    left = createLeftItem();
+    popup.add(left);
+    right = createRightItem();
+    popup.add(right);
     toggleFlatNumbering = createSubnumberingItem();
     popup.add(toggleFlatNumbering);
   }
@@ -54,6 +60,28 @@ public class StepnumberContextMenu implements MouseListener {
     return item;
   }
 
+  private JMenuItem createLeftItem() {
+    JMenuItem item = new JMenuItem("<-");
+    item.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        Specman.instance().moveBranchSequenceLeftUDBL(currentStep, initiatingLabel);
+      }
+    });
+    return item;
+  }
+
+  private JMenuItem createRightItem() {
+    JMenuItem item = new JMenuItem("->");
+    item.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        Specman.instance().moveBranchSequenceRightUDBL(currentStep, initiatingLabel);
+      }
+    });
+    return item;
+  }
+
   private StepnumberLabel label(MouseEvent e) {
     return (StepnumberLabel) e.getComponent();
   }
@@ -74,6 +102,19 @@ public class StepnumberContextMenu implements MouseListener {
     this.toggleFlatNumbering.setVisible(currentStep.getFlatNumbering() != null);
     if (toggleFlatNumbering.isVisible()) {
       toggleFlatNumbering.setState(currentStep.getFlatNumbering());
+    }
+    initLeftRightMenuItems();
+  }
+
+  private void initLeftRightMenuItems() {
+    boolean leftAllowed = currentStep.allowsBranchSequenceMoveLeft(initiatingLabel);
+    boolean rightAllowed = currentStep.allowsBranchSequenceMoveRight(initiatingLabel);
+    boolean leftOrRight = leftAllowed || rightAllowed;
+    this.left.setVisible(leftOrRight);
+    this.right.setVisible(leftOrRight);
+    if (leftOrRight) {
+      this.left.setEnabled(leftAllowed);
+      this.right.setEnabled(rightAllowed);
     }
   }
 

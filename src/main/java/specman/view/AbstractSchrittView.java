@@ -1,12 +1,12 @@
 package specman.view;
 
-import org.jruby.util.Join;
 import specman.Aenderungsart;
 import specman.EditException;
 import specman.EditorI;
 import specman.SchrittID;
 import specman.Specman;
 import specman.editarea.EditArea;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.AbstractSchrittModel_V001;
 import specman.model.v001.BreakSchrittModel_V001;
 import specman.model.v001.CaseSchrittModel_V001;
@@ -548,4 +548,18 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
    * from that sequence. If the step uses flat numbering, it has to initiate renumbering
    * of following steps in its own sequence. */
   public void renumberFollowingSteps(SchrittSequenzView modifiedSubsequence) {}
+
+  /** Returns true, if the passed initiating label addresses a branch sequence the
+   * position of which can be switched with another branch sequence at the left.
+   * This is the case e.g. for the label
+   * <ul>
+   *   <li>in a catch sequence heading which with at least one other catch sequence at the left</li>
+   *   <li>of any step being a direct child of a branch sequence in a case step with other case
+   *   sequences at the left</li>
+   *   <li>for any step being a direct child in the if-sequence of an if-else step</li>
+   * </ul>*/
+  public boolean allowsBranchSequenceMoveLeft(StepnumberLabel initiatingLabel) { return false; }
+
+  /** the opposite of {@link #allowsBranchSequenceMoveLeft(StepnumberLabel)} */
+  public boolean allowsBranchSequenceMoveRight(StepnumberLabel initiatingLabel) { return false; }
 }

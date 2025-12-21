@@ -1,6 +1,7 @@
 package specman.draganddrop;
 
 import specman.Aenderungsart;
+import specman.SchrittID;
 import specman.editarea.stepnumberlabel.BreakCatchScrollMouseAdapter;
 import specman.EditException;
 import specman.Specman;
@@ -166,7 +167,10 @@ public class DragMouseAdapter extends MouseAdapter {
 	private void setDummy(MouseEvent e) {
 		if(e.getSource() instanceof InteractiveStepFragment){
 			AbstractSchrittView step = labelToStep((InteractiveStepFragment)e.getSource());
-			dummy = new JTextField("Schritt "+step.getId().toString() );
+      SchrittID id = step.getId();
+      // ID is null in case of a catch area
+      String idString = id != null ? "Schritt " + step.getId() : " ";
+			dummy = new JTextField(idString);
 		}else {
 			dummy = new JTextField("Neuer Schritt");
 		}
