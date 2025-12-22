@@ -406,9 +406,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 		catchSchrittAnhaengen.addActionUDBLListener(e -> {
       AbstractSchrittView referenceStep = hauptSequenz.findeSchritt(lastFocusedTextArea);
+      CatchUeberschrift referenceCatchHeading = lastFocusedTextArea.containingCatchHeading();
       if (referenceStep != null) { // Avoids placing a catch step as the first one in the diagramm
         dropWelcomeMessage();
-        new CatchLinkDialog(null, referenceStep.getParent());
+        new CatchLinkDialog(null, referenceStep.getParent(), referenceCatchHeading);
       }
 		});
 

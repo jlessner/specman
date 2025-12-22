@@ -26,7 +26,7 @@ public class BreakSchrittView extends AbstractSchrittView {
 	
 	final JPanel panel;
 	final FormLayout layout;
-	CatchSchrittSequenzView catchSequence;
+	CatchUeberschrift catchHeading;
 
 	public BreakSchrittView(EditorI editor, SchrittSequenzView parent, EditorContentModel_V001 content, SchrittID id, Aenderungsart aenderungsart) {
 		super(editor, parent, content, id, aenderungsart);
@@ -109,15 +109,15 @@ public class BreakSchrittView extends AbstractSchrittView {
 		return model;
 	}
 
-	public void catchAnkoppeln(CatchSchrittSequenzView catchSequence) {
-		this.catchSequence = catchSequence;
+	public void catchAnkoppeln(CatchUeberschrift catchHeading) {
+		this.catchHeading = catchHeading;
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		if (catchSequence != null && aenderungsart != Aenderungsart.Geloescht) {
+		if (catchHeading != null && aenderungsart != Aenderungsart.Geloescht) {
       try(ScrollPause sp = Specman.instance().pauseScrolling()) {
-        catchSequence.updateHeading(editContainer.editorContent2Model(true));
+        catchHeading.updateFromBreakStepContent();
       }
 		}
 	}
@@ -125,24 +125,24 @@ public class BreakSchrittView extends AbstractSchrittView {
 	@Override
 	public void setId(SchrittID id) {
 		super.setId(id);
-		if (catchSequence != null) {
-			catchSequence.setId(id);
+		if (catchHeading != null) {
+			catchHeading.setId(id);
 		}
 	}
 
 	@Override
 	public void entfernen(SchrittSequenzView container, StepRemovalPurpose purpose) {
 		super.entfernen(container, purpose);
-		if (purpose == Discard && catchSequence != null) {
-			catchSequence.remove();
+		if (purpose == Discard && catchHeading != null) {
+      catchHeading.remove();
 		}
 	}
 
 	@Override
 	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
 		super.alsGeloeschtMarkierenUDBL(editor);
-		if (catchSequence != null) {
-			catchSequence.removeOrMarkAsDeletedUDBL();
+		if (catchHeading != null) {
+      catchHeading.removeOrMarkAsDeletedUDBL();
 		}
 	}
 
@@ -162,22 +162,22 @@ public class BreakSchrittView extends AbstractSchrittView {
 
 	@Override
 	public List<BreakSchrittView> queryUnlinkedBreakSteps() {
-		return (catchSequence == null) ? Arrays.asList(this) : Arrays.asList();
+		return (catchHeading == null) ? Arrays.asList(this) : Arrays.asList();
 	}
 
 	public void updateContent(EditorContentModel_V001 content) {
 		editContainer.setEditorContent(content);
 	}
 
-  public boolean refersToOtherStep() { return catchSequence != null; }
+  public boolean refersToOtherStep() { return catchHeading != null; }
 
   public void scrollToCatch() {
-    if (catchSequence != null) {
+    if (catchHeading != null) {
       // The user might not have focussed anything in the break step before he scrolled to
       // the catch sequence - so in case he want's to scroll back by CTRL+ALT+Left, we
       // explicitly add the break step to the edit history here.
       Specman.instance().appendToEditHistory(editContainer);
-      catchSequence.scrollTo();
+      catchHeading.scrollTo();
     }
   }
 }

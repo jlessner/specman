@@ -22,6 +22,7 @@ import specman.undo.UndoableStepnumberLinkRemoved;
 import specman.undo.manager.UndoRecording;
 import specman.undo.props.UDBL;
 import specman.view.AbstractSchrittView;
+import specman.view.CatchUeberschrift;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -848,4 +849,8 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
 
   @Override
   public List<JTextComponent> getTextAreas() { return List.of(this); }
+
+  public CatchUeberschrift containingCatchHeading() {
+    return getParent().containingCatchHeading();
+  }
 }

@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.SchrittID;
 import specman.editarea.EditContainer;
+import specman.model.v001.EditorContentModel_V001;
 import specman.pdf.LineShape;
 import specman.pdf.Shape;
 import specman.undo.props.UDBL;
@@ -24,10 +25,14 @@ import static specman.view.AbstractSchrittView.umgehungLayout;
 
 public class CatchUeberschrift extends JPanel implements ComponentListener {
   final EditContainer ueberschrift;
+  final CatchSchrittSequenzView catchSequence;
+  BreakSchrittView linkedBreakStep;
   final FormLayout layout;
 
-  public CatchUeberschrift(EditContainer ueberschrift) {
+  public CatchUeberschrift(EditContainer ueberschrift, BreakSchrittView linkedBreakStep, CatchSchrittSequenzView catchSequence) {
     this.ueberschrift = ueberschrift;
+    this.linkedBreakStep = linkedBreakStep;
+    this.catchSequence = catchSequence;
     this.setBackground(ueberschrift.getBackground());
     layout = new FormLayout(umgehungLayout() + ", 10px:grow", ZEILENLAYOUT_INHALT_SICHTBAR);
     setLayout(layout);
@@ -68,15 +73,15 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
     return ueberschrift.aenderungenUebernehmen();
   }
 
-  public void aenderungsmarkierungenEntfernen(SchrittID id) {
-    ueberschrift.aenderungsmarkierungenEntfernen(id);
+  public void aenderungsmarkierungenEntfernen() {
+    ueberschrift.aenderungsmarkierungenEntfernen(linkedBreakStep.id);
     setBackground(BACKGROUND_COLOR_STANDARD);
   }
 
   public int aenderungenVerwerfen() { return ueberschrift.aenderungenVerwerfen(); }
 
-  public void alsGeloeschtMarkierenUDBL(SchrittID id) {
-    ueberschrift.setGeloeschtMarkiertStilUDBL(id);
+  public void alsGeloeschtMarkierenUDBL() {
+    ueberschrift.setGeloeschtMarkiertStilUDBL(linkedBreakStep.id);
     UDBL.setBackgroundUDBL(this, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
   }
 
@@ -89,5 +94,54 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
     return new Shape(this)
       .add(ueberschrift.getShape())
       .add(buildTriangle());
+  }
+
+  public void disconnectLinkedBreakStep() {
+    linkedBreakStep.catchAnkoppeln(null);
+  }
+
+  public void updateLinkedBreakStepContent() {
+    EditorContentModel_V001 content = ueberschrift.editorContent2Model(true);
+    linkedBreakStep.updateContent(content);
+  }
+
+  public void updateFromBreakStepContent() {
+    if (!catchSequence.isDeleted()) {
+      EditorContentModel_V001 breakStepContent = linkedBreakStep.getEditorContent(true);
+      ueberschrift.setEditorContent(breakStepContent);
+    }
+  }
+
+  public SchrittID linkedBreakStepId() {
+    return linkedBreakStep.id;
+  }
+
+  public void scrollToBreak() {
+    linkedBreakStep.scrollTo();
+  }
+
+  public CatchSchrittSequenzView containingCatchSequence() {
+    return catchSequence;
+  }
+
+  public void setId(SchrittID id) {
+    ueberschrift.setId(id);
+    if (catchSequence.isPrimaryHeading(this)) {
+      catchSequence.setId(id);
+    }
+  }
+
+  public void remove() {
+    catchSequence.remove(this);
+  }
+
+  public void removeOrMarkAsDeletedUDBL() {
+    // TODO JL (see todos-specman.txt)
+  }
+
+  public void scrollTo() { ueberschrift.scrollTo(); }
+
+  public void connectLinkedBreakStep() {
+    linkedBreakStep.catchAnkoppeln(this);
   }
 }

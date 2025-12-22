@@ -689,4 +689,5 @@ public class SchrittSequenzView {
   public AbstractSchrittView getLastStep() {
     return schritte.get(schritte.size() - 1);
   }
+
 }

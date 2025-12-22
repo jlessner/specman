@@ -4,12 +4,7 @@ import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.HeaderPanel;
 import net.atlanticbb.tantlinger.ui.UIUtils;
 import org.apache.commons.lang.StringUtils;
-import specman.undo.UndoableCatchSequenceAdded;
-import specman.undo.UndoableCatchSequenceRemoved;
-import specman.view.AbstractSchrittView;
-import specman.view.BreakSchrittView;
-import specman.view.CatchSchrittSequenzView;
-import specman.view.SchrittSequenzView;
+import specman.view.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -37,11 +32,13 @@ public class CatchLinkDialog extends JDialog {
     private static final int MAXIMAL_REFERENCE_TEXTLENGTH = 60;
     private int hoveredIndex = -1;
     private SchrittSequenzView sequenz;
+    private CatchUeberschrift referenceCatchHeading;
     private final CustomListCellRenderer customListCellRenderer = new CustomListCellRenderer();
 
-    public CatchLinkDialog(Frame parent, SchrittSequenzView sequenz) {
+    public CatchLinkDialog(Frame parent, SchrittSequenzView sequenz, CatchUeberschrift referenceCatchHeading) {
         super(parent, title);
         this.sequenz = sequenz;
+        this.referenceCatchHeading = referenceCatchHeading;
         this.init();
         setLocationRelativeTo(parent);
         setVisible(true);
@@ -99,14 +96,21 @@ public class CatchLinkDialog extends JDialog {
     }
 
     private void listValueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting()) {
-            EditorI editor = Specman.instance();
-            BreakSchrittView breakStepToLink = ((JList<BreakSchrittView>) e.getSource()).getSelectedValue();
-            CatchSchrittSequenzView catchSequence = sequenz.catchSequenzAnhaengen(breakStepToLink);
-            AbstractSchrittView firstInCatchSequence = catchSequence.getSchritte().get(0);
-            editor.diagrammAktualisieren(firstInCatchSequence.getFirstEditArea());
-            CatchLinkDialog.this.setVisible(false);
+      if (e.getValueIsAdjusting()) {
+        EditorI editor = Specman.instance();
+        BreakSchrittView breakStepToLink = ((JList<BreakSchrittView>) e.getSource()).getSelectedValue();
+        CatchSchrittSequenzView catchSequence;
+        if (referenceCatchHeading != null) {
+          catchSequence = referenceCatchHeading.containingCatchSequence();
+          catchSequence.addCoCatch(referenceCatchHeading, breakStepToLink);
         }
+        else {
+          catchSequence = sequenz.catchSequenzAnhaengen(breakStepToLink);
+        }
+        AbstractSchrittView firstInCatchSequence = catchSequence.getSchritte().get(0);
+        editor.diagrammAktualisieren(firstInCatchSequence.getFirstEditArea());
+        CatchLinkDialog.this.setVisible(false);
+      }
     }
 
     private class CustomListCellRenderer extends JLabel implements ListCellRenderer<AbstractSchrittView> {

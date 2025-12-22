@@ -17,9 +17,9 @@ import java.util.List;
 import static specman.Aenderungsart.Untracked;
 
 /**
- * SchrittSequenzView, die einen Zweig in einer Verweigung durch If, If/Else oder Case
+ * SchrittSequenzView, die einen Zweig in einer Verzweigung durch If, If/Else oder Case
  * repräsentiert. Über die normale Schritt-Sequenz hinaus hat ein Zweig einen
- * Überschriftentext, den im Kopfteil des VerzweigungsSchritts angezeigt wird.
+ * Überschrifttext, der im Kopfteil des VerzweigungsSchritts angezeigt wird.
  */
 public class ZweigSchrittSequenzView extends SchrittSequenzView {
 	EditContainer ueberschrift;

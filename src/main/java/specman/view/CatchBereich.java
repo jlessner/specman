@@ -196,7 +196,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     sequencesPanel.removeAll();
     for (int c = 0; c < catchSequences.size(); c++) {
       CatchSchrittSequenzView catchSequence = catchSequences.get(c);
-      sequencesPanel.add(catchSequence.getCatchUeberschrift(), CC.xy(c*2 + 1, 1));
+      sequencesPanel.add(catchSequence.getHeadingPanel(), CC.xy(c*2 + 1, 1));
       sequencesPanel.add(catchSequence.sequenzBereich, CC.xy(c*2 + 1, 3));
     }
     for (int c = 0; c < catchSequences.size()-1; c++) {
@@ -214,7 +214,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
     Integer[] columnWidths = catchSequences
       .stream()
-      .map(seq -> seq.catchUeberschrift.getWidth())
+      .map(seq -> seq.primaryCatchHeading.getWidth())
       .toArray(Integer[]::new);
     List<Integer> recomputed = ColumnSpecByPercent.recomputePercents(columnWidths, vergroesserung, spalte);
     if (recomputed != null) {
@@ -272,10 +272,8 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   }
 
   public void populate(CatchBereichModel_V001 model) {
-    EditorI editor = Specman.instance();
     for (CatchSchrittSequenzModel_V001 seqModel: model.catchSequences) {
-      BreakSchrittView breakSchritt = (BreakSchrittView) getParent().findStepByStepID(seqModel.id.toString());
-      CatchSchrittSequenzView view = new CatchSchrittSequenzView(editor, this, seqModel, breakSchritt);
+      CatchSchrittSequenzView view = new CatchSchrittSequenzView(this, seqModel);
       addCatchSequence(view, null, null);
     }
     if (model.sequencesWidthPercent != null) {
@@ -294,7 +292,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
         .add(new Shape(bottomBar).withBackgroundColor(bottomBar.getBackground()));
       Shape sequencesShape = new Shape(sequencesPanel);
       for (CatchSchrittSequenzView seq: catchSequences) {
-        sequencesShape.add(seq.catchUeberschrift.getShape());
+        sequencesShape.add(seq.primaryCatchHeading.getShape());
         sequencesShape.add(seq.getShapeSequence());
       }
       shape.add(sequencesShape);
@@ -309,7 +307,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     // scrolled to the break step - so in case hwe want's to scroll back by CTRL+ALT+Left,
     // we explicitely add the heading to the edit history here.
     Specman.instance().appendToEditHistory(catchSchrittSequenzView.ueberschrift);
-    catchSchrittSequenzView.linkedBreakStep.scrollTo();
+    catchSchrittSequenzView.scrollToBreak();
   }
 
   public boolean refersToOtherStep() { return true; }
@@ -360,4 +358,5 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     }
     recomputeLayout();
   }
+
 }

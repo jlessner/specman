@@ -24,6 +24,7 @@ import specman.undo.UndoableEditAreaRemoved;
 import specman.undo.UndoableEditAreaAdded;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
+import specman.view.CatchUeberschrift;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -791,5 +792,14 @@ public class EditContainer extends JPanel {
     // It is important to request the focus as otherwise the viewport may immediately
     // scroll back to the edit area where we came from.
     firstArea.requestFocus();
+  }
+
+  public CatchUeberschrift containingCatchHeading() {
+    Container container = getParent();
+    if (container instanceof CatchUeberschrift ) {
+      return (CatchUeberschrift)container;
+    }
+    // TODO JL: check also for containing table edit area and list edit area and traverse upwards
+    return null;
   }
 }
