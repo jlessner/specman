@@ -6,7 +6,7 @@ Aus aktueller Anwendung
     x Primär, also inkl. Behandlungssequenz
     x Co, also nur Catch-Überschrift
   x Co-Catch entfernen, implizit durch Löschen des Breakschritts
-  - Hinzufügen hinter Co-Catch
+  - Hinzufügen hinter Co-Catch: lastFocusedTextArea wird nicht gesetzt
   - Co-Catch entfernen, explizit
   - Undo / Redo
   - Schreiben auf Datei
