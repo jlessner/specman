@@ -152,7 +152,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   /** Reconnecting is required for undo / redo operations. As a catch sequence may be removed
    * either <i>separately</i> or <i>combined with the linked breakstep</i>. Therefore the
    * catch sequence gets de-connected from its break step on removal. Otherwise the break step
-   * could not be connected with a new sequence. If this sequence here is restored a undo / redo,
+   * could not be connected with a new sequence. If this sequence here is restored by undo / redo,
    * the cut connection must be re-established. */
   public void reconnectToBreakstep() {
     linkedBreakStep.catchAnkoppeln(this);
