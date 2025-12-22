@@ -131,7 +131,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   }
 
   public void remove(CatchUeberschrift catchHeading) {
-    if (catchHeading != primaryCatchHeading) {
+    if (catchHeading == primaryCatchHeading) {
       remove();
     }
     else {

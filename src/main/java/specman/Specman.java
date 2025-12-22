@@ -319,6 +319,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 
 	@Override
 	public void setLastFocusedTextArea(TextEditArea area) {
+    System.out.println("Last focused area set to: " + area);
 		lastFocusedTextArea = area;
   }
 

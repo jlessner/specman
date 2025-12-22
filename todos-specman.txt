@@ -5,14 +5,14 @@ Aus aktueller Anwendung
   x Renummerierung bei Nummernänderung der Breakschritte
     x Primär, also inkl. Behandlungssequenz
     x Co, also nur Catch-Überschrift
+  x Co-Catch entfernen, implizit durch Löschen des Breakschritts
   - Hinzufügen hinter Co-Catch
-  - Entfernen, explizit
-  - Entfernen, implizit durch Löschen des Breakschritts
+  - Co-Catch entfernen, explizit
   - Undo / Redo
   - Schreiben auf Datei
   - Laden von Datei
   - PDF-Export
-  - Reorg / Renummerierung bei Entfernen der Primären Exception
+  - Reorg / Renummerierung bei Entfernen der Primären Exception während noch Co-Catchs existieren. Oberster Co wird neuer Primary
   - Änderungsmarkierung / Annehmen / Verwerfen
   - Undo / Redo mit Änderungsmarkierung
 - PDF-Option "Export beim Speichern"
