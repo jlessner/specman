@@ -6,8 +6,10 @@ Aus aktueller Anwendung
     x Primär, also inkl. Behandlungssequenz
     x Co, also nur Catch-Überschrift
   x Co-Catch entfernen, implizit durch Löschen des Breakschritts
-  - Hinzufügen hinter Co-Catch: lastFocusedTextArea wird nicht gesetzt
+  x Hinzufügen hinter Co-Catch: lastFocusedTextArea wird nicht gesetzt
+  x Hin- und Herscrollen zwischen Co-Catch und Break-Schritt
   - Co-Catch entfernen, explizit
+  - CatchBereich#headingToBranch auf Brauchbarkeit prüfen
   - Undo / Redo
   - Schreiben auf Datei
   - Laden von Datei

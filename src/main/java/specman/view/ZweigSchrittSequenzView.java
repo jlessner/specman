@@ -37,7 +37,6 @@ public class ZweigSchrittSequenzView extends SchrittSequenzView {
 
 	protected void ueberschriftInitialisieren(EditorI editor, EditorContentModel_V001 initialerText, SchrittID initialeSchrittnummer) {
 		ueberschrift = new EditContainer(editor, initialerText, initialeSchrittnummer);
-		ueberschrift.addEditAreasFocusListener(editor);
 	}
 
 	@Override

@@ -30,10 +30,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.*;
 import javax.swing.text.html.CSS;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -860,4 +857,5 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
       setGeloeschtMarkiertStilUDBL();
     }
   }
+
 }

@@ -4,8 +4,10 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.*;
 import specman.editarea.EditContainer;
+import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
+import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.CoCatchModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -220,10 +222,6 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     coCatchHeadings.stream().forEach(coCatchHeading -> coCatchHeading.connectLinkedBreakStep());
   }
 
-  public void scrollToBreak() {
-    primaryCatchHeading.scrollToBreak();
-  }
-
   public boolean contains(CatchUeberschrift catchHeading) {
     return primaryCatchHeading == catchHeading || coCatchHeadings.contains(catchHeading);
   }
@@ -247,4 +245,18 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     return catchUeberschrift == primaryCatchHeading;
   }
 
+  public boolean enthaelt(InteractiveStepFragment fragment) {
+    return headingFromFragment(fragment) != null;
+  }
+
+  CatchUeberschrift headingFromFragment(InteractiveStepFragment fragment) {
+    if (primaryCatchHeading.ueberschrift.enthaelt(fragment)) {
+      return primaryCatchHeading;
+    }
+    return coCatchHeadings
+      .stream()
+      .filter(cch -> cch.ueberschrift.enthaelt(fragment))
+      .findFirst()
+      .orElse(null);
+  }
 }

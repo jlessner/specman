@@ -72,7 +72,6 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		this.aenderungsart = aenderungsart;
 		this.editContainer = new EditContainer(editor, initialContent, id);
 		this.parent = parent;
-		editContainer.addEditAreasFocusListener(editor);
 		editContainer.addEditAreasFocusListener(this);
 		editContainer.addEditComponentListener(this);
 	}

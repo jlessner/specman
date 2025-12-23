@@ -120,6 +120,8 @@ public class EditContainer extends JPanel {
 		updateDecorationIndentions(new Indentions());
 
     skalieren(editor.getZoomFactor(), 0);
+
+    addEditAreasFocusListener(editor);
   }
 
 	private void initLayout(EditorContentModel_V001 content) {

@@ -25,6 +25,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static specman.ColumnSpecByPercent.allocPercent;
 import static specman.ColumnSpecByPercent.copyOf;
@@ -130,7 +131,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   public AbstractSchrittView findeSchritt(InteractiveStepFragment fragment) {
     for (CatchSchrittSequenzView seq: catchSequences) {
-      if (seq.ueberschrift.enthaelt(fragment)) {
+      if (seq.enthaelt(fragment)) {
         return this;
       }
       AbstractSchrittView result = seq.findeSchritt(fragment);
@@ -225,6 +226,15 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     return 0;
   }
 
+  private CatchUeberschrift headingFromFragment(InteractiveStepFragment fragment) {
+    return catchSequences
+      .stream()
+      .map(seq -> seq.headingFromFragment(fragment))
+      .filter(Objects::nonNull)
+      .findFirst()
+      .orElse(null);
+  }
+
   public CatchSchrittSequenzView headingToBranch(InteractiveStepFragment fragment) {
     return catchSequences
       .stream()
@@ -302,12 +312,13 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   }
 
   public void scrollToBreak(StepnumberLabel stepnumberLabel) {
+    CatchUeberschrift catchHeading = headingFromFragment(stepnumberLabel);
     CatchSchrittSequenzView catchSchrittSequenzView = headingToBranch(stepnumberLabel);
     // The user might not have focussed anything in the catch step sequence before he
     // scrolled to the break step - so in case hwe want's to scroll back by CTRL+ALT+Left,
     // we explicitely add the heading to the edit history here.
-    Specman.instance().appendToEditHistory(catchSchrittSequenzView.ueberschrift);
-    catchSchrittSequenzView.scrollToBreak();
+    Specman.instance().appendToEditHistory(catchHeading.ueberschrift);
+    catchHeading.scrollToBreak();
   }
 
   public boolean refersToOtherStep() { return true; }

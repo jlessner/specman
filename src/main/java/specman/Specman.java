@@ -145,12 +145,10 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 		intro = new EditContainer(this);
 		intro.setOpaque(false);
 		arbeitsbereich.add(intro, CC.xy(2, 2));
-		intro.addEditAreasFocusListener(this);
 
 		outro = new EditContainer(this);
 		outro.setOpaque(false);
 		arbeitsbereich.add(outro, CC.xy(2, 4));
-		outro.addEditAreasFocusListener(this);
 
 		scrollPane.setViewportView(arbeitsbereich);
 		actionListenerHinzufuegen();
