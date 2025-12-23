@@ -792,4 +792,8 @@ public class EditContainer extends JPanel {
     // scroll back to the edit area where we came from.
     firstArea.requestFocus();
   }
+
+  public void viewsNachinitialisieren() {
+    editAreas.forEach(ea -> ea.viewsNachinitialisieren());
+  }
 }

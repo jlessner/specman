@@ -848,4 +848,11 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
 
   @Override
   public List<JTextComponent> getTextAreas() { return List.of(this); }
+
+  @Override
+  public void viewsNachinitialisieren() {
+    if (aenderungsart == Geloescht) {
+      setGeloeschtMarkiertStilUDBL();
+    }
+  }
 }

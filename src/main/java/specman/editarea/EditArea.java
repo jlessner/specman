@@ -81,4 +81,5 @@ public interface EditArea<MODEL extends AbstractEditAreaModel_V001> extends Inte
 
   List<JTextComponent> getTextAreas();
 
+  void viewsNachinitialisieren();
 }

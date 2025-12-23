@@ -743,7 +743,9 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			neueSchritteNachinitialisieren();
 			quellZielZuweisung(model.queryAllSteps());
 			hauptSequenz.viewsNachinitialisieren();
+      intro.viewsNachinitialisieren();
       intro.registerAllExistingStepnumbers();
+      outro.viewsNachinitialisieren();
       outro.registerAllExistingStepnumbers();
 			aenderungenVerfolgen.setSelected(model.changeModeenabled);
 			recentFiles.add(diagramFile);

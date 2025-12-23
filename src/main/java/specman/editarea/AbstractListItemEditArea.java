@@ -192,6 +192,14 @@ abstract public class AbstractListItemEditArea extends JPanel implements EditAre
     return lastArea;
   }
 
+  @Override
+  public void viewsNachinitialisieren() {
+    if (aenderungsart == Geloescht) {
+      content.setGeloeschtMarkiertStilUDBL(null);
+    }
+    content.viewsNachinitialisieren();
+  }
+
   public EditArea getFirstEditArea() { return content.getFirstEditArea(); }
 
   public void removeEditAreaComponent(EditArea editArea) { content.removeEditAreaComponent(editArea); }
