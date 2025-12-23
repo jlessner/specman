@@ -8,15 +8,20 @@ Aus aktueller Anwendung
   x Co-Catch entfernen, implizit durch Löschen des Breakschritts
   x Hinzufügen hinter Co-Catch: lastFocusedTextArea wird nicht gesetzt
   x Hin- und Herscrollen zwischen Co-Catch und Break-Schritt
-  - Co-Catch entfernen, explizit
-  - CatchBereich#headingToBranch auf Brauchbarkeit prüfen
-  - Undo / Redo
-  - Schreiben auf Datei
-  - Laden von Datei
+  x Co-Catch entfernen, explizit
+  x Schreiben auf Datei
+  x Laden von Datei
   - PDF-Export
+  - Undo / Redo
   - Reorg / Renummerierung bei Entfernen der Primären Exception während noch Co-Catchs existieren. Oberster Co wird neuer Primary
-  - Änderungsmarkierung / Annehmen / Verwerfen
-  - Undo / Redo mit Änderungsmarkierung
+  - Änderungsmarkierung
+    - Hinzufügen
+    - Entfernen
+    - Annehmen
+    - Verwerfen
+    - Schreiben auf Datei
+    - Laden von Datei
+    - Undo / Redo
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert

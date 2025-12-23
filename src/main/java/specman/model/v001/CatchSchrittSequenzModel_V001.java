@@ -13,8 +13,8 @@ public class CatchSchrittSequenzModel_V001 extends ZweigSchrittSequenzModel_V001
     this.coCatches = null;
   }
 
-  public CatchSchrittSequenzModel_V001(SchrittID breakSchrittId, Aenderungsart aenderungsart, EditorContentModel_V001 ueberschrift) {
+  public CatchSchrittSequenzModel_V001(SchrittID breakSchrittId, Aenderungsart aenderungsart, EditorContentModel_V001 ueberschrift, List<CoCatchModel_V001> coCatches) {
     super(breakSchrittId, aenderungsart, null, ueberschrift);
-    coCatches = new ArrayList<>();
+    this.coCatches = coCatches;
   }
 }

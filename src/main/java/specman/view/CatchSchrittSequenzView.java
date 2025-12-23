@@ -7,7 +7,6 @@ import specman.editarea.EditContainer;
 import specman.editarea.InteractiveStepFragment;
 import specman.editarea.TextEditArea;
 import specman.editarea.TextStyles;
-import specman.editarea.stepnumberlabel.StepnumberLabel;
 import specman.model.v001.CatchSchrittSequenzModel_V001;
 import specman.model.v001.CoCatchModel_V001;
 import specman.model.v001.EditorContentModel_V001;
@@ -90,8 +89,28 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   private void initCoCatches(List<CoCatchModel_V001> coCatches) {
     if (coCatches != null) { // For compatibility with Specman versions < 1.0.2
-
+      int insertionIndex = 0;
+      for (CoCatchModel_V001 coCatchModel : coCatches) {
+        BreakSchrittView breakStepToLink = (BreakSchrittView) parent.getParent().findStepByStepID(coCatchModel.breakStepId.toString());
+        addCoCatch(insertionIndex, coCatchModel.heading, breakStepToLink);
+        insertionIndex++;
+      }
     }
+  }
+
+  public void addCoCatch(CatchUeberschrift referenceCatchHeading, BreakSchrittView breakStepToLink) {
+    int insertionIndex = coCatchHeadings.indexOf(referenceCatchHeading) + 1;
+    EditorContentModel_V001 breakStepContent = breakStepToLink.getEditorContent(true);
+    addCoCatch(insertionIndex, breakStepContent, breakStepToLink);
+    initHeadingsLayout();
+  }
+
+  public void addCoCatch(int insertionIndex, EditorContentModel_V001 heading, BreakSchrittView breakStepToLink) {
+    EditContainer coCatchHeadingContent = new EditContainer(Specman.instance(), heading, breakStepToLink.id);
+    coCatchHeadingContent.addEditAreasFocusListener(this);
+    CatchUeberschrift coCatchHeading = new CatchUeberschrift(coCatchHeadingContent, breakStepToLink, this);
+    coCatchHeadings.add(insertionIndex, coCatchHeading);
+    breakStepToLink.catchAnkoppeln(coCatchHeading);
   }
 
   @Override
@@ -138,6 +157,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     }
     else {
       coCatchHeadings.remove(catchHeading);
+      catchHeading.disconnectLinkedBreakStep();
       initHeadingsLayout();
     }
   }
@@ -201,10 +221,23 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   }
 
   public CatchSchrittSequenzModel_V001 generiereModel(boolean formatierterText) {
+    List<CoCatchModel_V001> coCatches = generateCoCatchModels(formatierterText);
     CatchSchrittSequenzModel_V001 model = new CatchSchrittSequenzModel_V001(
-      primaryCatchHeading.linkedBreakStepId(), aenderungsart, ueberschrift.editorContent2Model(formatierterText));
+      primaryCatchHeading.linkedBreakStepId(),
+      aenderungsart,
+      ueberschrift.editorContent2Model(formatierterText),
+      coCatches);
     populateModel(model, formatierterText);
     return model;
+  }
+
+  private List<CoCatchModel_V001> generateCoCatchModels(boolean formatierterText) {
+    return new ArrayList<>(coCatchHeadings
+      .stream()
+      .map(coCatchHeading -> new CoCatchModel_V001(
+        coCatchHeading.linkedBreakStepId(),
+        coCatchHeading.ueberschrift.editorContent2Model(formatierterText)))
+      .toList());
   }
 
   @Override
@@ -224,17 +257,6 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   public boolean contains(CatchUeberschrift catchHeading) {
     return primaryCatchHeading == catchHeading || coCatchHeadings.contains(catchHeading);
-  }
-
-  public void addCoCatch(CatchUeberschrift referenceCatchHeading, BreakSchrittView breakStepToLink) {
-    int insertionIndex = coCatchHeadings.indexOf(referenceCatchHeading) + 1;
-    EditorContentModel_V001 breakStepContent = breakStepToLink.getEditorContent(true);
-    EditContainer coCatchHeadingContent = new EditContainer(Specman.instance(), breakStepContent, breakStepToLink.id);
-    coCatchHeadingContent.addEditAreasFocusListener(this);
-    CatchUeberschrift coCatchHeading = new CatchUeberschrift(coCatchHeadingContent, breakStepToLink, this);
-    coCatchHeadings.add(insertionIndex, coCatchHeading);
-    breakStepToLink.catchAnkoppeln(coCatchHeading);
-    initHeadingsLayout();
   }
 
   public boolean isDeleted() {

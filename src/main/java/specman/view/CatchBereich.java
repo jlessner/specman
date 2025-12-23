@@ -226,19 +226,11 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     return 0;
   }
 
-  private CatchUeberschrift headingFromFragment(InteractiveStepFragment fragment) {
+  public CatchUeberschrift headingFromFragment(InteractiveStepFragment fragment) {
     return catchSequences
       .stream()
       .map(seq -> seq.headingFromFragment(fragment))
       .filter(Objects::nonNull)
-      .findFirst()
-      .orElse(null);
-  }
-
-  public CatchSchrittSequenzView headingToBranch(InteractiveStepFragment fragment) {
-    return catchSequences
-      .stream()
-      .filter(seq -> seq.hatUeberschrift(fragment))
       .findFirst()
       .orElse(null);
   }
@@ -313,7 +305,6 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
 
   public void scrollToBreak(StepnumberLabel stepnumberLabel) {
     CatchUeberschrift catchHeading = headingFromFragment(stepnumberLabel);
-    CatchSchrittSequenzView catchSchrittSequenzView = headingToBranch(stepnumberLabel);
     // The user might not have focussed anything in the catch step sequence before he
     // scrolled to the break step - so in case hwe want's to scroll back by CTRL+ALT+Left,
     // we explicitely add the heading to the edit history here.

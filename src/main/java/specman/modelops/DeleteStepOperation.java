@@ -63,10 +63,15 @@ public class DeleteStepOperation {
       }
       else if (step instanceof CatchBereich) {
         CatchBereich catchBereich = (CatchBereich) step;
-        CatchSchrittSequenzView catchSequence = catchBereich.headingToBranch(initiatingFragment);
-        if (catchSequence != null) {
-          catchSequence.removeOrMarkAsDeletedUDBL();
-          // No undo action required here. The undo composition of low-level changes covers everything
+        CatchUeberschrift catchHeading = catchBereich.headingFromFragment(initiatingFragment);
+        if (catchHeading != null) {
+          if (catchHeading.isPrimaryHeading()) {
+            catchHeading.containingCatchSequence().removeOrMarkAsDeletedUDBL();
+            // No undo action required here. The undo composition of low-level changes covers everything
+          }
+          else {
+            catchHeading.removeOrMarkAsDeletedUDBL();
+          }
         }
         return;
       }

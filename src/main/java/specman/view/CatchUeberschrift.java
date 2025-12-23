@@ -126,9 +126,13 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
 
   public void setId(SchrittID id) {
     ueberschrift.setId(id);
-    if (catchSequence.isPrimaryHeading(this)) {
+    if (isPrimaryHeading()) {
       catchSequence.setId(id);
     }
+  }
+
+  public boolean isPrimaryHeading() {
+    return catchSequence.isPrimaryHeading(this);
   }
 
   public void remove() {
@@ -136,7 +140,8 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
   }
 
   public void removeOrMarkAsDeletedUDBL() {
-    // TODO JL (see todos-specman.txt)
+    remove();
+    // TODO JL (undo recording)
   }
 
   public void scrollTo() { ueberschrift.scrollTo(); }
