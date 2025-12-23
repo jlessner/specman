@@ -11,7 +11,8 @@ Aus aktueller Anwendung
   x Co-Catch entfernen, explizit
   x Schreiben auf Datei
   x Laden von Datei
-  - PDF-Export
+  x Zoom in Co-Catches
+  x PDF-Export
   - Undo / Redo
   - Reorg / Renummerierung bei Entfernen der Primären Exception während noch Co-Catchs existieren. Oberster Co wird neuer Primary
   - Änderungsmarkierung

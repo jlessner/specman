@@ -123,6 +123,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public void skalieren(int prozentNeu, int prozentAktuell) {
     super.skalieren(prozentNeu, prozentAktuell);
     primaryCatchHeading.skalieren(prozentNeu, prozentAktuell);
+    coCatchHeadings.stream().forEach(coCatchHeading -> coCatchHeading.skalieren(prozentNeu, prozentAktuell));
   }
 
   protected void catchBereichInitialisieren() {
@@ -242,7 +243,13 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
 
   @Override
   public Shape getShapeSequence() {
-    return super.getShapeSequence();
+    Shape shape = super.getShapeSequence();
+    if (shape != null) {
+      for (CatchUeberschrift coCatchHeading : coCatchHeadings) {
+        shape = shape.add(coCatchHeading.getShape());
+      }
+    }
+    return shape;
   }
 
   /** Reconnecting is required for undo / redo operations. As a catch sequence may be removed
