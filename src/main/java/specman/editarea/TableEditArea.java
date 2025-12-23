@@ -552,6 +552,18 @@ public class TableEditArea extends JPanel implements EditArea<TableEditAreaModel
     return result;
   }
 
+  @Override
+  public void viewsNachinitialisieren() {
+    if (aenderungsart == Geloescht) {
+      for (List<EditContainer> row : cells) {
+        row.stream().forEach(ec -> ec.setGeloeschtMarkiertStilUDBL(null));
+      }
+    }
+    for (List<EditContainer> row : cells) {
+      row.stream().forEach(ec -> ec.viewsNachinitialisieren());
+    }
+  }
+
   @Override public void setQuellStil() { /* Not required for tables - source steps only contain an empty text area */ }
   @Override public void addSchrittnummer(StepnumberLabel schrittNummer) { add(schrittNummer); }
   @Override public Component asComponent() { return this; }

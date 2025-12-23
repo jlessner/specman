@@ -427,4 +427,10 @@ public class ImageEditArea extends JPanel implements EditArea<ImageEditAreaModel
   @Override
   public List<JTextComponent> getTextAreas() { return List.of(); }
 
+  @Override
+  public void viewsNachinitialisieren() {
+    if (aenderungsart == Geloescht) {
+      setGeloeschtMarkiertStilUDBL();
+    }
+  }
 }

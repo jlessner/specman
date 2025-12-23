@@ -400,13 +400,12 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 	}
 
 	public void viewsNachinitialisieren() {
-		if (aenderungsart != null) {
-			switch (aenderungsart) {
-				case Geloescht -> setGeloeschtMarkiertStilUDBL();
-				case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
-				case Zielschritt -> setZielschrittStilUDBL();
-			}
-		}
+    switch (aenderungsart) {
+      case Geloescht -> setGeloeschtMarkiertStilUDBL();
+      case Quellschritt -> ((QuellSchrittView) this).setQuellStil();
+      case Zielschritt -> setZielschrittStilUDBL();
+    }
+    editContainer.viewsNachinitialisieren();
 		registerAllExistingStepnumbers();
 	}
 

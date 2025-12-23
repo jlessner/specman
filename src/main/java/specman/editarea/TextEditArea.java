@@ -853,4 +853,11 @@ public class TextEditArea extends JEditorPane implements EditArea<TextEditAreaMo
   public CatchUeberschrift containingCatchHeading() {
     return getParent().containingCatchHeading();
   }
+
+  @Override
+  public void viewsNachinitialisieren() {
+    if (aenderungsart == Geloescht) {
+      setGeloeschtMarkiertStilUDBL();
+    }
+  }
 }

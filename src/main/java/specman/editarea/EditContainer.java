@@ -24,7 +24,6 @@ import specman.undo.UndoableEditAreaRemoved;
 import specman.undo.UndoableEditAreaAdded;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
-import specman.view.CatchUeberschrift;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -801,5 +800,9 @@ public class EditContainer extends JPanel {
     }
     // TODO JL: check also for containing table edit area and list edit area and traverse upwards
     return null;
+  }
+
+  public void viewsNachinitialisieren() {
+    editAreas.forEach(ea -> ea.viewsNachinitialisieren());
   }
 }
