@@ -360,4 +360,23 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     recomputeLayout();
   }
 
+  public boolean allowsCoCatchMoveUp(StepnumberLabel initiatingLabel) {
+    CatchUeberschrift catchHeading = headingFromFragment(initiatingLabel);
+    return catchHeading != null && catchHeading.allowsMoveUp();
+  }
+
+  public boolean allowsCoCatchMoveDown(StepnumberLabel initiatingLabel) {
+    CatchUeberschrift catchHeading = headingFromFragment(initiatingLabel);
+    return catchHeading != null && catchHeading.allowsMoveDown();
+  }
+
+  public void moveCoCatchUpUDBL(StepnumberLabel initiatingLabel) {
+    CatchUeberschrift catchHeading = headingFromFragment(initiatingLabel);
+    catchHeading.moveUpUDBL();
+  }
+
+  public void moveCoCatchDownUDBL(StepnumberLabel initiatingLabel) {
+    CatchUeberschrift catchHeading = headingFromFragment(initiatingLabel);
+    catchHeading.moveDownUDBL();
+  }
 }

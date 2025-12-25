@@ -153,4 +153,12 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
   public void connectLinkedBreakStep() {
     linkedBreakStep.catchAnkoppeln(this);
   }
+
+  public boolean allowsMoveUp() { return catchSequence.allowsMoveUp(this); }
+
+  public boolean allowsMoveDown() { return catchSequence.allowsMoveDown(this); }
+
+  public void moveUpUDBL() { catchSequence.moveUpUDBL(this); }
+
+  public void moveDownUDBL() { catchSequence.moveDownUDBL(this); }
 }

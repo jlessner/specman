@@ -26,6 +26,6 @@ public class UndoableCoCatchAdded extends AbstractUndoableInteraction {
 
   @Override
   protected void redoEdit() throws EditException {
-    catchSchrittSequenzView.addCoCatchForUndo(insertionIndex, coCatchHeading, breakStep);
+    catchSchrittSequenzView.addCoCatchUDBL(insertionIndex, coCatchHeading, breakStep);
   }
 }

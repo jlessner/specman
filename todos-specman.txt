@@ -26,8 +26,8 @@ Aus aktueller Anwendung
     x Co-Catch einfügen
     x Co-Catch entfernen
     x Balkenbreite ändern
-  - Co-Catches hoch und runter schieben, analog Catch-Sequenzen rechts und links
-    - Undo / Redo
+  x Co-Catches hoch und runter schieben, analog Catch-Sequenzen rechts und links
+    x Undo / Redo
   - Änderungsmarkierung
     - Hinzufügen
     - Entfernen

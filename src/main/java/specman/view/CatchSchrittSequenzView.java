@@ -138,6 +138,14 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     Specman.instance().addEdit(new UndoableCoCatchAdded(this, breakStepToLink, insertionIndex, coCatchHeading));
   }
 
+  public void addCoCatchUDBL(int insertionIndex, CatchUeberschrift coCatchHeading, BreakSchrittView breakStepToLink) {
+    coCatchHeadings.add(insertionIndex, coCatchHeading);
+    breakStepToLink.catchAnkoppeln(coCatchHeading);
+    initHeadingsLayout();
+    Specman.instance().addEdit(new UndoableCoCatchAdded(this, breakStepToLink, insertionIndex, coCatchHeading));
+    headingPanel.revalidate();
+  }
+
   private CatchUeberschrift addCoCatch(int insertionIndex, EditorContentModel_V001 heading, BreakSchrittView breakStepToLink) {
     EditContainer coCatchHeadingContent = new EditContainer(Specman.instance(), heading, breakStepToLink.id);
     coCatchHeadingContent.addEditAreasFocusListener(this);
@@ -145,12 +153,6 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     coCatchHeadings.add(insertionIndex, coCatchHeading);
     breakStepToLink.catchAnkoppeln(coCatchHeading);
     return coCatchHeading;
-  }
-
-  public void addCoCatchForUndo(int insertionIndex, CatchUeberschrift coCatchHeading, BreakSchrittView breakStepToLink) {
-    coCatchHeadings.add(insertionIndex, coCatchHeading);
-    breakStepToLink.catchAnkoppeln(coCatchHeading);
-    initHeadingsLayout();
   }
 
   @Override
@@ -352,4 +354,29 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
       .orElse(null);
   }
 
+  public boolean allowsMoveDown(CatchUeberschrift catchHeading) {
+    Integer index = coCatchHeadings.indexOf(catchHeading);
+    return index != null && index < coCatchHeadings.size() - 1;
+  }
+
+  public boolean allowsMoveUp(CatchUeberschrift catchHeading) {
+    Integer index = coCatchHeadings.indexOf(catchHeading);
+    return index != null && index > 0;
+  }
+
+  public void moveUpUDBL(CatchUeberschrift catchHeading) {
+    moveUDBL(catchHeading, -1);
+  }
+
+  public void moveDownUDBL(CatchUeberschrift catchHeading) {
+    moveUDBL(catchHeading, 1);
+  }
+
+  public void moveUDBL(CatchUeberschrift catchHeading, int delta) {
+    int index = coCatchHeadings.indexOf(catchHeading);
+    BreakSchrittView breakStep = catchHeading.linkedBreakStep;
+    removeUDBL(catchHeading);
+    addCoCatchUDBL(index + delta, catchHeading, breakStep);
+
+  }
 }

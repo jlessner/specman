@@ -5,8 +5,6 @@ import specman.view.BreakSchrittView;
 import specman.view.CatchSchrittSequenzView;
 import specman.view.CatchUeberschrift;
 
-import javax.swing.undo.UndoableEdit;
-
 public class UndoableCoCatchRemoved extends AbstractUndoableInteraction {
   private CatchSchrittSequenzView catchSchrittSequenzView;
   private BreakSchrittView breakStep;
@@ -22,7 +20,7 @@ public class UndoableCoCatchRemoved extends AbstractUndoableInteraction {
 
   @Override
   protected void undoEdit() throws EditException {
-    catchSchrittSequenzView.addCoCatchForUndo(deletionIndex, coCatchHeading, breakStep);
+    catchSchrittSequenzView.addCoCatchUDBL(deletionIndex, coCatchHeading, breakStep);
   }
 
   @Override

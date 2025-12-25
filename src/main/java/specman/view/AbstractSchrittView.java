@@ -560,4 +560,12 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 
   /** the opposite of {@link #allowsBranchSequenceMoveLeft(StepnumberLabel)} */
   public boolean allowsBranchSequenceMoveRight(StepnumberLabel initiatingLabel) { return false; }
+
+  public boolean allowsCoCatchMoveUp(StepnumberLabel initiatingLabel) { return false; }
+
+  public boolean allowsCoCatchMoveDown(StepnumberLabel initiatingLabel) { return false; }
+
+  public void moveCoCatchUpUDBL(StepnumberLabel initiatingLabel) {}
+
+  public void moveCoCatchDownUDBL(StepnumberLabel initiatingLabel) {}
 }

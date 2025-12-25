@@ -1,7 +1,9 @@
 package specman.editarea.stepnumberlabel;
 
 import specman.Aenderungsart;
+import specman.EditException;
 import specman.Specman;
+import specman.modelops.MoveBranchSequenceLeftOperation;
 import specman.undo.UndoableFlatNumberingToggled;
 import specman.undo.manager.UndoRecording;
 import specman.view.AbstractSchrittView;
@@ -17,6 +19,8 @@ public class StepnumberContextMenu implements MouseListener {
   private final JMenuItem delete;
   private final JMenuItem left;
   private final JMenuItem right;
+  private final JMenuItem up;
+  private final JMenuItem down;
   private final JCheckBoxMenuItem toggleFlatNumbering;
   private AbstractSchrittView currentStep;
   private StepnumberLabel initiatingLabel;
@@ -26,13 +30,27 @@ public class StepnumberContextMenu implements MouseListener {
   private StepnumberContextMenu() {
     popup = new JPopupMenu();
     delete = createDeleteItem();
-    popup.add(delete);
     left = createLeftItem();
-    popup.add(left);
     right = createRightItem();
-    popup.add(right);
+    up = createUpItem();
+    down = createDownItem();
     toggleFlatNumbering = createSubnumberingItem();
-    popup.add(toggleFlatNumbering);
+  }
+
+  private JMenuItem createUpItem() {
+    return createItem("Move up", "arrow-up", e -> {
+      try(UndoRecording ur = Specman.instance().composeUndo()) {
+        currentStep.moveCoCatchUpUDBL(initiatingLabel);
+      }
+    });
+  }
+
+  private JMenuItem createDownItem() {
+    return createItem("Move down", "arrow-down", e -> {
+      try(UndoRecording ur = Specman.instance().composeUndo()) {
+        currentStep.moveCoCatchDownUDBL(initiatingLabel);
+      }
+    });
   }
 
   private JCheckBoxMenuItem createSubnumberingItem() {
@@ -46,40 +64,31 @@ public class StepnumberContextMenu implements MouseListener {
         }
       }
     });
+    popup.add(item);
+    return item;
+  }
+
+  private JMenuItem createItem(String label, String iconBasename, ActionListener actionListener) {
+    ImageIcon icon = Specman.readImageIcon(iconBasename);
+    JMenuItem item = new JMenuItem(label, icon);
+    item.addActionListener(actionListener);
+    popup.add(item);
     return item;
   }
 
   private JMenuItem createDeleteItem() {
-    JMenuItem item = new JMenuItem("Löschen");
-    item.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        Specman.instance().deleteStepUDBL(currentStep, initiatingLabel);
-      }
-    });
-    return item;
+    return createItem("Löschen", "loeschen",
+      e -> Specman.instance().deleteStepUDBL(currentStep, initiatingLabel));
   }
 
   private JMenuItem createLeftItem() {
-    JMenuItem item = new JMenuItem("<-");
-    item.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        Specman.instance().moveBranchSequenceLeftUDBL(currentStep, initiatingLabel);
-      }
-    });
-    return item;
+    return createItem("Move left", "arrow-left",
+      e -> Specman.instance().moveBranchSequenceLeftUDBL(currentStep, initiatingLabel));
   }
 
   private JMenuItem createRightItem() {
-    JMenuItem item = new JMenuItem("->");
-    item.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        Specman.instance().moveBranchSequenceRightUDBL(currentStep, initiatingLabel);
-      }
-    });
-    return item;
+    return createItem("Move right", "arrow-right",
+      e -> Specman.instance().moveBranchSequenceRightUDBL(currentStep, initiatingLabel));
   }
 
   private StepnumberLabel label(MouseEvent e) {
@@ -104,6 +113,7 @@ public class StepnumberContextMenu implements MouseListener {
       toggleFlatNumbering.setState(currentStep.getFlatNumbering());
     }
     initLeftRightMenuItems();
+    initUpDownMenuItems();
   }
 
   private void initLeftRightMenuItems() {
@@ -115,6 +125,18 @@ public class StepnumberContextMenu implements MouseListener {
     if (leftOrRight) {
       this.left.setEnabled(leftAllowed);
       this.right.setEnabled(rightAllowed);
+    }
+  }
+
+  private void initUpDownMenuItems() {
+    boolean upAllowed = currentStep.allowsCoCatchMoveUp(initiatingLabel);
+    boolean downAllowed = currentStep.allowsCoCatchMoveDown(initiatingLabel);
+    boolean upOrDown = upAllowed || downAllowed;
+    this.up.setVisible(upOrDown);
+    this.down.setVisible(upOrDown);
+    if (upOrDown) {
+      this.up.setEnabled(upAllowed);
+      this.down.setEnabled(downAllowed);
     }
   }
 
