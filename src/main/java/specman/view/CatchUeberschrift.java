@@ -4,6 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.SchrittID;
+import specman.Specman;
 import specman.editarea.EditContainer;
 import specman.model.v001.EditorContentModel_V001;
 import specman.pdf.LineShape;
@@ -33,7 +34,8 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
     this.ueberschrift = ueberschrift;
     this.linkedBreakStep = linkedBreakStep;
     this.catchSequence = catchSequence;
-    this.setBackground(ueberschrift.getBackground());
+    this.setBackground(Specman.schrittHintergrund());
+    this.ueberschrift.setBackground(Specman.schrittHintergrund());
     layout = new FormLayout(umgehungLayout() + ", 10px:grow", ZEILENLAYOUT_INHALT_SICHTBAR);
     setLayout(layout);
     add(ueberschrift, CC.xy(2, 1));

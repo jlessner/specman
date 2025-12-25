@@ -252,7 +252,12 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
       return 1;
     }
     else {
-      return super.aenderungenUebernehmen(editor) + primaryCatchHeading.aenderungenUebernehmen();
+      int numChanges = super.aenderungenUebernehmen(editor)
+        + primaryCatchHeading.aenderungenUebernehmen();
+      for (CatchUeberschrift coCatchHeading : coCatchHeadings) {
+        numChanges += coCatchHeading.aenderungenUebernehmen();
+      }
+      return numChanges;
     }
   }
 
@@ -277,6 +282,9 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   @Override
   public void aenderungsmarkierungenEntfernen() {
     primaryCatchHeading.aenderungsmarkierungenEntfernen();
+    coCatchHeadings.forEach(cch -> cch.aenderungsmarkierungenEntfernen());
+    headingHeightEaterPanel.setBackground(TextStyles.BACKGROUND_COLOR_STANDARD);
+    headingRightBarPanel.setBackground(TextStyles.BACKGROUND_COLOR_STANDARD);
   }
 
   public CatchSchrittSequenzModel_V001 generiereModel(boolean formatierterText) {

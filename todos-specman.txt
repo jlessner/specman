@@ -29,9 +29,9 @@ Aus aktueller Anwendung
   x Co-Catches hoch und runter schieben, analog Catch-Sequenzen rechts und links
     x Undo / Redo
   - Änderungsmarkierung
-    - Hinzufügen
+    x Hinzufügen
     - Entfernen
-    - Annehmen
+    x Annehmen
     - Verwerfen
     - Schreiben auf Datei
     - Laden von Datei
