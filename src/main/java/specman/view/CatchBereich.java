@@ -294,7 +294,6 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
         .add(new Shape(bottomBar).withBackgroundColor(bottomBar.getBackground()));
       Shape sequencesShape = new Shape(sequencesPanel);
       for (CatchSchrittSequenzView seq: catchSequences) {
-        sequencesShape.add(seq.primaryCatchHeading.getShape());
         sequencesShape.add(seq.getShapeSequence());
       }
       shape.add(sequencesShape);

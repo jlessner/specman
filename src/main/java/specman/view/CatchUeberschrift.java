@@ -47,22 +47,26 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
   }
 
   private void dreieckZeichnen(Graphics2D g) {
-    g.setStroke(new BasicStroke(1));
+    g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
     g.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON);
     for (LineShape line: buildTriangle()) {
-      g.drawLine(line.start().x, line.start().y, line.end().x, line.end().y);
+      g.drawLine(
+        line.start().x, line.start().y,
+        line.end().x, line.end().y);
     }
   }
 
   private java.util.List<LineShape> buildTriangle() {
+    // Not sure why we have to shift the triangle a little.
+    int triangleLeft = -1;
     int hoehe = getHeight();
     int dreieckSpitzeY = hoehe / 2;
     int dreieckBasisX = ueberschrift.getX() - LINIENBREITE;
     return Arrays.asList(
-      new LineShape(0,  0,  dreieckBasisX,  dreieckSpitzeY),
-      new LineShape(dreieckBasisX,  dreieckSpitzeY, 0, hoehe));
+      new LineShape(triangleLeft,  triangleLeft,  dreieckBasisX,  dreieckSpitzeY),
+      new LineShape(dreieckBasisX,  dreieckSpitzeY, triangleLeft, hoehe));
   }
 
   public void skalieren(int prozentNeu, int prozentAktuell) {

@@ -20,14 +20,13 @@ Aus aktueller Anwendung
     x Resizer für Balkenbreite
     x Balkenbreite auf Datei schreiben
     x Balkenbreite von Datei lesen (ACHTUNG: Mit Null-Unterstützung für Kompatibilität!)
-  - Catch-Dreieck nur so hoch wie der Überschrifttext. Wird sonst fies hoch bei einfachen Catch-Sequenzen neben Catch-Sequenzen mit Co-Catches
+    x PDF-Rendering
+  x Catch-Dreieck nur so hoch wie der Überschrifttext. Wird sonst fies hoch bei einfachen Catch-Sequenzen neben Catch-Sequenzen mit Co-Catches
   - Co-Catches hoch und runter schieben, analog Catch-Sequenzen rechts und links
-  - Obersten Co-Catch nach oben schieben macht diesen zum primären Catch
-     - Reorg der Nummerierung wird notwendig
   - Undo / Redo
     - Co-Catch einfügen
     - Co-Catch entfernen
-    - Balkenbreite ändern
+    x Balkenbreite ändern
   - Änderungsmarkierung
     - Hinzufügen
     - Entfernen
@@ -36,6 +35,8 @@ Aus aktueller Anwendung
     - Schreiben auf Datei
     - Laden von Datei
     - Undo / Redo
+  - Obersten Co-Catch nach oben schieben macht diesen zum primären Catch
+     - Reorg der Nummerierung wird notwendig
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert

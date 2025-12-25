@@ -29,6 +29,7 @@ import static specman.view.AbstractSchrittView.*;
 public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements FocusListener, SpaltenContainerI {
   JPanel headingPanel;
   JPanel headingRightBarPanel;
+  JPanel headingHeightEaterPanel;
   FormLayout headingPanelLayout;
   CatchUeberschrift primaryCatchHeading;
   int headingRightBarWidth;
@@ -64,9 +65,9 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   }
 
   private void createHeadingsLayout() {
-    String rowSpecs = ZEILENLAYOUT_INHALT_SICHTBAR;
+    String rowSpecs = "fill:pref, fill:0px:grow";
     for (int i = 0; i < coCatchHeadings.size(); i++) {
-      rowSpecs += ", " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR;
+      rowSpecs += ", " + FORMLAYOUT_GAP + ", fill:pref";
     }
     String colSpecs = "fill:pref:grow";
     if (!coCatchHeadings.isEmpty()) {
@@ -79,12 +80,13 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   private void reassignHeadingsToLayout() {
     headingPanel.removeAll();
     headingPanel.add(primaryCatchHeading, CC.xyw(1, 1, headingPanelLayout.getColumnCount()));
+    headingPanel.add(headingHeightEaterPanel, CC.xywh(1, 2, headingPanelLayout.getColumnCount(), 1));
     if (!coCatchHeadings.isEmpty()) {
-      headingPanel.add(headingRightBarPanel, CC.xywh(3, 2, 1, headingPanelLayout.getRowCount()-1));
-      headingPanel.add(new SpaltenResizer(this), CC.xywh(2, 2, 1, headingPanelLayout.getRowCount()-1));
+      headingPanel.add(headingRightBarPanel, CC.xywh(3, 3, 1, headingPanelLayout.getRowCount()-2));
+      headingPanel.add(new SpaltenResizer(this), CC.xywh(2, 3, 1, headingPanelLayout.getRowCount()-2));
     }
     for (int i = 0; i < coCatchHeadings.size(); i++) {
-      headingPanel.add(coCatchHeadings.get(i), CC.xy(1, 3 + i * 2));
+      headingPanel.add(coCatchHeadings.get(i), CC.xy(1, 4 + i * 2));
     }
   }
 
@@ -106,6 +108,8 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     headingPanel.setBackground(TextStyles.DIAGRAMM_LINE_COLOR);
     headingRightBarPanel = new JPanel();
     headingRightBarPanel.setBackground(Specman.schrittHintergrund());
+    headingHeightEaterPanel = new JPanel();
+    headingHeightEaterPanel.setBackground(Specman.schrittHintergrund());
     this.headingRightBarWidth = headingRightBarWidth != null ? headingRightBarWidth : SPALTENLAYOUT_UMGEHUNG_GROESSE;
     ueberschrift.setId(linkedBreakStep.id);
     primaryCatchHeading = new CatchUeberschrift(ueberschrift, linkedBreakStep, this);
@@ -282,9 +286,15 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public Shape getShapeSequence() {
     Shape shape = super.getShapeSequence();
     if (shape != null) {
+      Shape headingShape = new Shape(headingPanel, this);
+      headingShape.add(primaryCatchHeading.getShape());
       for (CatchUeberschrift coCatchHeading : coCatchHeadings) {
-        shape = shape.add(coCatchHeading.getShape());
+        headingShape.add(coCatchHeading.getShape());
       }
+      headingShape
+        .add(headingRightBarPanel)
+        .add(headingHeightEaterPanel);
+      shape.add(headingShape);
     }
     return shape;
   }
