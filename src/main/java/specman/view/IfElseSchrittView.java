@@ -56,7 +56,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 				berechneHoeheFuerVollstaendigUnberuehrtenText();
 			}
 		});
-		panel.add(new SpaltenResizer(this, editor), CC.xywh(2, 1, 1, 5));
+		panel.add(new SpaltenResizer(this), CC.xywh(2, 1, 1, 5));
 		if(withDefaultContent) {
 			initIfSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteEbene(), initialtext("Ja")));
 			initElseSequenz(new ZweigSchrittSequenzView(editor, this, id.naechsteID().naechsteEbene(), EditContainer.right("Nein")));
@@ -65,7 +65,7 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 
 	public IfElseSchrittView(EditorI editor, SchrittSequenzView parent, IfElseSchrittModel_V001 model) {
 		this(editor, parent, model.inhalt, model.id, model.aenderungsart, false);
-		panel.add(new SpaltenResizer(this, editor), CC.xywh(2, 1, 1, 5));
+		panel.add(new SpaltenResizer(this), CC.xywh(2, 1, 1, 5));
 		initIfSequenz(new ZweigSchrittSequenzView(editor, this, model.ifSequenz));
 		initElseSequenz(new ZweigSchrittSequenzView(editor, this, model.elseSequenz));
 		setBackgroundUDBL(new Color(model.farbe));
@@ -116,13 +116,13 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 	}
 
 	@Override
-	public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
-		float angepassteIfBreite = ifSequenz.ueberschrift.getWidth() + vergroesserung;
-		float angepassteElseBreite = elseSequenz.ueberschrift.getWidth() - vergroesserung;
+	public int spaltenbreitenAnpassenNachMausDragging(int delta, int spalte) {
+		float angepassteIfBreite = ifSequenz.ueberschrift.getWidth() + delta;
+		float angepassteElseBreite = elseSequenz.ueberschrift.getWidth() - delta;
 		float angepassterIfBreitenanteil = ifBreitenanteil(angepassteIfBreite, angepassteElseBreite);
 		ifBreitenanteilSetzen(angepassterIfBreitenanteil);
 		Specman.instance().diagrammAktualisieren(null);
-		return vergroesserung;
+		return delta;
 	}
 
 	private float ifBreitenanteil(float ifBreite, float elseBreite) {

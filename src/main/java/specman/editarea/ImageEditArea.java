@@ -97,7 +97,7 @@ public class ImageEditArea extends JPanel implements EditArea<ImageEditAreaModel
     setLayout(new FormLayout("pref, " + AFTERIMAGELINE_GAP + ", pref:grow", "fill:pref:grow"));
     this.image = new JLabel();
     add(image, CC.xy(1, 1));
-    this.add(new SpaltenResizer(this, IRRELEVANT_COLUMNRESIZE_INDEX, editor), CC.xy(2, 1));
+    this.add(new SpaltenResizer(this, IRRELEVANT_COLUMNRESIZE_INDEX), CC.xy(2, 1));
     setBackground(aenderungsart.toBackgroundColor());
     image.setBorder(changetype2border());
     addComponentListener(this);
@@ -417,11 +417,11 @@ public class ImageEditArea extends JPanel implements EditArea<ImageEditAreaModel
   @Override public void componentHidden(ComponentEvent e) {}
 
   @Override
-  public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
-    float newIndividualScalePercent = 1 + (float)vergroesserung / scaledIcon.getIconWidth();
+  public int spaltenbreitenAnpassenNachMausDragging(int delta, int spalte) {
+    float newIndividualScalePercent = 1 + (float) delta / scaledIcon.getIconWidth();
     individualScalePercent *= newIndividualScalePercent;
     adaptImageSize();
-    return vergroesserung;
+    return delta;
   }
 
   @Override

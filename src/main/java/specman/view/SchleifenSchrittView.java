@@ -71,7 +71,7 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		}
 
     panel.addComponentListener(this);
-		panel.add(new SpaltenResizer(this, editor), CC.xy(2, 3));
+		panel.add(new SpaltenResizer(this), CC.xy(2, 3));
 
     filler = new BottomFiller(panel, layout, aenderungsart);
     klappen = new KlappButton(this, editContainer.getKlappButtonParent(), layout, CONTENTROW, filler.row);
@@ -100,11 +100,11 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 	}
 
 	@Override
-	public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
-		int angepassteBalkenBreite = linkerBalken.getWidth() + vergroesserung;
+	public int spaltenbreitenAnpassenNachMausDragging(int delta, int spalte) {
+		int angepassteBalkenBreite = linkerBalken.getWidth() + delta;
 		balkenbreiteSetzen(angepassteBalkenBreite);
 		Specman.instance().diagrammAktualisieren(null);
-		return vergroesserung;
+		return delta;
 	}
 
 	private void balkenbreiteSetzen(int balkenbreite) {

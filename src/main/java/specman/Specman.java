@@ -254,13 +254,13 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 	}
 
 	@Override
-	public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
-		diagrammbreite += vergroesserung;
+	public int spaltenbreitenAnpassenNachMausDragging(int delta, int spalte) {
+		diagrammbreite += delta;
 		diagrammbreiteSetzen(diagrammbreite);
 		diagrammAktualisieren(null);
 		dragX = null;
 		arbeitsbereich.repaint();
-		return vergroesserung;
+		return delta;
 	}
 
 	@Override
@@ -281,7 +281,7 @@ public class Specman extends JFrame implements EditorI, SpaltenContainerI {
 			arbeitsbereich.remove(hauptSequenzContainer);
 		}
 		else {
-			breitenAnpasser = new SpaltenResizer(this, this);
+			breitenAnpasser = new SpaltenResizer(this);
 			breitenAnpasser.setBackground(DIAGRAMM_LINE_COLOR);
 			breitenAnpasser.setOpaque(true);
 			arbeitsbereich.add(breitenAnpasser, CC.xy(3, 3));

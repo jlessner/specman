@@ -29,11 +29,11 @@ public class SpaltenResizer extends JPanel implements MouseListener {
 	final int spalte;
 	static Cursor leftRightCursor;
 
-	public SpaltenResizer(SpaltenContainerI container, EditorI editor) {
-		this(container, 0, editor);
+	public SpaltenResizer(SpaltenContainerI container) {
+		this(container, 0);
 	}
 
-	public SpaltenResizer(SpaltenContainerI container, int spalte, EditorI editor) {
+	public SpaltenResizer(SpaltenContainerI container, int spalte) {
 		createLeftRightCursor();
 		this.container = container;
 		this.spalte = spalte;
@@ -43,7 +43,7 @@ public class SpaltenResizer extends JPanel implements MouseListener {
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override public void mouseDragged(MouseEvent e) {
 				dragX = e.getX();
-				editor.vertikalLinieSetzen(dragX, SpaltenResizer.this);
+				Specman.instance().vertikalLinieSetzen(dragX, SpaltenResizer.this);
 			}
 		});
 	}

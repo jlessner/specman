@@ -122,7 +122,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 
 	private void spaltenResizerAnlegen(EditorI editor) {
 		for (int i = 0; i < caseSequenzen.size(); i++) {
-			panel.add(new SpaltenResizer(this, i, editor), CC.xywh(2 + 2*i, 4, 1, 2));
+			panel.add(new SpaltenResizer(this, i), CC.xywh(2 + 2*i, 4, 1, 2));
 		}
 	}
 
@@ -212,20 +212,20 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 	}
 
 	@Override
-	public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
+	public int spaltenbreitenAnpassenNachMausDragging(int delta, int spalte) {
 		ArrayList<Integer> spaltenBreiten = spaltenbreitenErmitteln();
-		if (spaltenBreiten.get(spalte) + vergroesserung < 0) {
-			vergroesserung = -spaltenBreiten.get(spalte);
+		if (spaltenBreiten.get(spalte) + delta < 0) {
+			delta = -spaltenBreiten.get(spalte);
 		}
-		else if (spaltenBreiten.get(spalte+1) - vergroesserung < 0) {
-			vergroesserung = spaltenBreiten.get(spalte+1);
+		else if (spaltenBreiten.get(spalte+1) - delta < 0) {
+			delta = spaltenBreiten.get(spalte+1);
 		}
-		spaltenBreiten.set(spalte, spaltenBreiten.get(spalte) + vergroesserung);
-		spaltenBreiten.set(spalte+1, spaltenBreiten.get(spalte+1) - vergroesserung);
+		spaltenBreiten.set(spalte, spaltenBreiten.get(spalte) + delta);
+		spaltenBreiten.set(spalte+1, spaltenBreiten.get(spalte+1) - delta);
 		List<Float> breitenAnteile = spaltenbreitenAnteileBerechnen(spaltenBreiten);
 		spaltenbreitenAnteileSetzen(breitenAnteile);
 		Specman.instance().diagrammAktualisieren(null);
-		return vergroesserung;
+		return delta;
 	}
 
 	private void spaltenbreitenAnteileSetzen(List<Float> breitenAnteile) {

@@ -70,11 +70,11 @@ public class IfSchrittView extends IfElseSchrittView {
 	}
 
 	@Override
-	public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
-		int angepassteIfBreite = ifSequenz.ueberschrift.getWidth() + vergroesserung;
+	public int spaltenbreitenAnpassenNachMausDragging(int delta, int spalte) {
+		int angepassteIfBreite = ifSequenz.ueberschrift.getWidth() + delta;
 		ifBreiteSetzen(angepassteIfBreite);
 		Specman.instance().diagrammAktualisieren(null);
-		return vergroesserung;
+		return delta;
 	}
 
 	private void ifBreiteSetzen(int angepassteIfBreite) {

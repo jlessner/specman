@@ -97,11 +97,11 @@ public class TableEditArea extends JPanel implements EditArea<TableEditAreaModel
     EditorI editor = Specman.instance();
     int resizerHeight = rows * 2;
     // Resizer for the whole table
-    tablePanel.add(new SpaltenResizer(this, WHOLETABLE_COLUMN_INDICATOR, editor), CC.xywh(1 + columns * 2, 1, 1, resizerHeight));
+    tablePanel.add(new SpaltenResizer(this, WHOLETABLE_COLUMN_INDICATOR), CC.xywh(1 + columns * 2, 1, 1, resizerHeight));
 
     // Resizers for all columns except the last one
     for (int c = 0; c < columns-1; c++) {
-      tablePanel.add(new SpaltenResizer(this, c, editor), CC.xywh(3 + c * 2, 1, 1, resizerHeight));
+      tablePanel.add(new SpaltenResizer(this, c), CC.xywh(3 + c * 2, 1, 1, resizerHeight));
     }
   }
 
@@ -306,13 +306,13 @@ public class TableEditArea extends JPanel implements EditArea<TableEditAreaModel
   }
 
   @Override
-  public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
-    if (vergroesserung != 0) {
+  public int spaltenbreitenAnpassenNachMausDragging(int delta, int spalte) {
+    if (delta != 0) {
       return spalte == WHOLETABLE_COLUMN_INDICATOR
-        ? updateTableWidthPercentage(vergroesserung)
-        : updateColumnsWidthPercentage(vergroesserung, spalte);
+        ? updateTableWidthPercentage(delta)
+        : updateColumnsWidthPercentage(delta, spalte);
     }
-    return vergroesserung;
+    return delta;
   }
 
   /** Widens the column of intrest by the number of passed pixels (respectively

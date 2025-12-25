@@ -1,6 +1,7 @@
 package specman.view;
 
 import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import specman.*;
 import specman.editarea.EditContainer;
@@ -23,13 +24,14 @@ import java.util.List;
 import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Hinzugefuegt;
 import static specman.ColumnSpecByPercent.copyOf;
-import static specman.view.AbstractSchrittView.FORMLAYOUT_GAP;
-import static specman.view.AbstractSchrittView.ZEILENLAYOUT_INHALT_SICHTBAR;
+import static specman.view.AbstractSchrittView.*;
 
-public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements FocusListener {
+public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements FocusListener, SpaltenContainerI {
   JPanel headingPanel;
+  JPanel headingRightBarPanel;
   FormLayout headingPanelLayout;
   CatchUeberschrift primaryCatchHeading;
+  int headingRightBarWidth;
 
   /** The co-catches are additional linked break steps which share the same catch sequence
    * with the primary linked break step. This is the correspondence to something like
@@ -66,21 +68,45 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     for (int i = 0; i < coCatchHeadings.size(); i++) {
       rowSpecs += ", " + FORMLAYOUT_GAP + ", " + ZEILENLAYOUT_INHALT_SICHTBAR;
     }
-    headingPanelLayout = new FormLayout("fill:pref:grow", rowSpecs);
+    String colSpecs = "fill:pref:grow";
+    if (!coCatchHeadings.isEmpty()) {
+      colSpecs += ", " + FORMLAYOUT_GAP + ", " + umgehungLayout(headingRightBarWidth);
+    }
+    headingPanelLayout = new FormLayout(colSpecs, rowSpecs);
     headingPanel.setLayout(headingPanelLayout);
   }
 
   private void reassignHeadingsToLayout() {
     headingPanel.removeAll();
-    headingPanel.add(primaryCatchHeading, CC.xy(1, 1));
+    headingPanel.add(primaryCatchHeading, CC.xyw(1, 1, headingPanelLayout.getColumnCount()));
+    if (!coCatchHeadings.isEmpty()) {
+      headingPanel.add(headingRightBarPanel, CC.xywh(3, 2, 1, headingPanelLayout.getRowCount()-1));
+      headingPanel.add(new SpaltenResizer(this), CC.xywh(2, 2, 1, headingPanelLayout.getRowCount()-1));
+    }
     for (int i = 0; i < coCatchHeadings.size(); i++) {
       headingPanel.add(coCatchHeadings.get(i), CC.xy(1, 3 + i * 2));
     }
   }
 
+  @Override
+  public int spaltenbreitenAnpassenNachMausDragging(int delta, int spalte) {
+    int newRightBarX = headingPanel.getWidth() - headingRightBarWidth + delta;
+    if (newRightBarX < headingPanel.getWidth()/2
+      || newRightBarX > headingPanel.getWidth()) {
+      return 0;
+    }
+
+    // The resizer is LEFT from the right bar, so the delta must be applied inversely
+    updateBarWidthInLayout(headingRightBarWidth - delta);
+    return delta;
+  }
+
   private void init(BreakSchrittView linkedBreakStep) {
     headingPanel = new JPanel();
     headingPanel.setBackground(TextStyles.DIAGRAMM_LINE_COLOR);
+    headingRightBarPanel = new JPanel();
+    headingRightBarPanel.setBackground(Specman.schrittHintergrund());
+    headingRightBarWidth = SPALTENLAYOUT_UMGEHUNG_GROESSE;
     ueberschrift.setId(linkedBreakStep.id);
     primaryCatchHeading = new CatchUeberschrift(ueberschrift, linkedBreakStep, this);
     linkedBreakStep.catchAnkoppeln(primaryCatchHeading);
@@ -124,6 +150,16 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     super.skalieren(prozentNeu, prozentAktuell);
     primaryCatchHeading.skalieren(prozentNeu, prozentAktuell);
     coCatchHeadings.stream().forEach(coCatchHeading -> coCatchHeading.skalieren(prozentNeu, prozentAktuell));
+    updateBarWidthInLayout(groesseUmrechnen(headingRightBarWidth, prozentNeu, prozentAktuell));
+  }
+
+  private void updateBarWidthInLayout(int headingRightBarWidth) {
+    this.headingRightBarWidth = headingRightBarWidth;
+    if (!coCatchHeadings.isEmpty()) {
+      String barWidthSpec = umgehungLayout(headingRightBarWidth);
+      headingPanelLayout.setColumnSpec(3, ColumnSpec.decode(barWidthSpec));
+      headingPanel.revalidate();
+    }
   }
 
   protected void catchBereichInitialisieren() {

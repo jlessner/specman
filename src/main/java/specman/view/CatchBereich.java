@@ -201,7 +201,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
       sequencesPanel.add(catchSequence.sequenzBereich, CC.xy(c*2 + 1, 3));
     }
     for (int c = 0; c < catchSequences.size()-1; c++) {
-      sequencesPanel.add(new SpaltenResizer(this, c, Specman.instance()), CC.xywh(c*2 + 2, 1, 1, 3));
+      sequencesPanel.add(new SpaltenResizer(this, c), CC.xywh(c*2 + 2, 1, 1, 3));
     }
   }
 
@@ -212,16 +212,16 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
   }
 
   @Override
-  public int spaltenbreitenAnpassenNachMausDragging(int vergroesserung, int spalte) {
+  public int spaltenbreitenAnpassenNachMausDragging(int delta, int spalte) {
     Integer[] columnWidths = catchSequences
       .stream()
       .map(seq -> seq.primaryCatchHeading.getWidth())
       .toArray(Integer[]::new);
-    List<Integer> recomputed = ColumnSpecByPercent.recomputePercents(columnWidths, vergroesserung, spalte);
+    List<Integer> recomputed = ColumnSpecByPercent.recomputePercents(columnWidths, delta, spalte);
     if (recomputed != null) {
       sequencesWidthPercent = recomputed;
       recomputeLayout();
-      return vergroesserung;
+      return delta;
     }
     return 0;
   }
