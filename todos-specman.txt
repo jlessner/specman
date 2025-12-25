@@ -13,13 +13,13 @@ Aus aktueller Anwendung
   x Laden von Datei
   x Zoom in Co-Catches
   x PDF-Export
-  - Rechter Balken
+  x Rechter Balken
     x Hinzufügen mit ersten Co-Catch
     x Entfernen mit letztem Co-Catch
     x Zoom für Balkenbreite
     x Resizer für Balkenbreite
-    - Balkenbreite auf Datei schreiben
-    - Balkenbreite von Datei lesen (ACHTUNG: Mit Null-Unzerstützung für Kompatibilität!)
+    x Balkenbreite auf Datei schreiben
+    x Balkenbreite von Datei lesen (ACHTUNG: Mit Null-Unterstützung für Kompatibilität!)
   - Catch-Dreieck nur so hoch wie der Überschrifttext. Wird sonst fies hoch bei einfachen Catch-Sequenzen neben Catch-Sequenzen mit Co-Catches
   - Co-Catches hoch und runter schieben, analog Catch-Sequenzen rechts und links
   - Obersten Co-Catch nach oben schieben macht diesen zum primären Catch

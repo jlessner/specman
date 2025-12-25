@@ -46,14 +46,14 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public CatchSchrittSequenzView(CatchBereich catchBereich, BreakSchrittView linkedBreakStep) {
     super(Specman.instance(), catchBereich, linkedBreakStep.id.naechsteEbene(), linkedBreakStep.getEditorContent(true));
     einfachenSchrittAnhaengen(Specman.instance());
-    init(linkedBreakStep);
+    init(linkedBreakStep, null);
     initHeadingsLayout();
   }
 
   public CatchSchrittSequenzView(AbstractSchrittView parent, CatchSchrittSequenzModel_V001 model) {
     super(Specman.instance(), parent, model);
     BreakSchrittView linkedBreakSchritt = (BreakSchrittView) parent.getParent().findStepByStepID(model.id.toString());
-    init(linkedBreakSchritt);
+    init(linkedBreakSchritt, model.headingRightBarWidth);
     initCoCatches(model.coCatches);
     initHeadingsLayout();
   }
@@ -101,12 +101,12 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     return delta;
   }
 
-  private void init(BreakSchrittView linkedBreakStep) {
+  private void init(BreakSchrittView linkedBreakStep, Integer headingRightBarWidth) {
     headingPanel = new JPanel();
     headingPanel.setBackground(TextStyles.DIAGRAMM_LINE_COLOR);
     headingRightBarPanel = new JPanel();
     headingRightBarPanel.setBackground(Specman.schrittHintergrund());
-    headingRightBarWidth = SPALTENLAYOUT_UMGEHUNG_GROESSE;
+    this.headingRightBarWidth = headingRightBarWidth != null ? headingRightBarWidth : SPALTENLAYOUT_UMGEHUNG_GROESSE;
     ueberschrift.setId(linkedBreakStep.id);
     primaryCatchHeading = new CatchUeberschrift(ueberschrift, linkedBreakStep, this);
     linkedBreakStep.catchAnkoppeln(primaryCatchHeading);
@@ -263,7 +263,8 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
       primaryCatchHeading.linkedBreakStepId(),
       aenderungsart,
       ueberschrift.editorContent2Model(formatierterText),
-      coCatches);
+      coCatches,
+      headingRightBarWidth);
     populateModel(model, formatierterText);
     return model;
   }
