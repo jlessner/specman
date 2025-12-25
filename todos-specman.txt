@@ -22,11 +22,12 @@ Aus aktueller Anwendung
     x Balkenbreite von Datei lesen (ACHTUNG: Mit Null-Unterstützung für Kompatibilität!)
     x PDF-Rendering
   x Catch-Dreieck nur so hoch wie der Überschrifttext. Wird sonst fies hoch bei einfachen Catch-Sequenzen neben Catch-Sequenzen mit Co-Catches
-  - Co-Catches hoch und runter schieben, analog Catch-Sequenzen rechts und links
-  - Undo / Redo
-    - Co-Catch einfügen
-    - Co-Catch entfernen
+  x Undo / Redo
+    x Co-Catch einfügen
+    x Co-Catch entfernen
     x Balkenbreite ändern
+  - Co-Catches hoch und runter schieben, analog Catch-Sequenzen rechts und links
+    - Undo / Redo
   - Änderungsmarkierung
     - Hinzufügen
     - Entfernen
@@ -37,6 +38,10 @@ Aus aktueller Anwendung
     - Undo / Redo
   - Obersten Co-Catch nach oben schieben macht diesen zum primären Catch
      - Reorg der Nummerierung wird notwendig
+  - Undo-Experience beim Löschen eines Co-Catchs (und einer Catch-Sequenz) verbessern
+    Das Klicken auf den Lösche-Button löst eine FocusLost und eine Synchronisation der Texte zwischen Catch und Break aus
+    Diese Aktionen landen in der Undo-Historie vor dem eigentlichen Löschen des Co-Catchs.
+    Man muss dann mehrfach klicken, um das eigentliche Undo auszulösen
 - PDF-Option "Export beim Speichern"
 - Hoch/Runterscrollen über Grenzen von Schritten wäre cool
 - Die meisten Texte im PDF-Export sind etwas zu klein, wenn man auf 120% Zoom exportiert

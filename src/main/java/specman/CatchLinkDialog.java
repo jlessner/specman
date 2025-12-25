@@ -4,6 +4,7 @@ import net.atlanticbb.tantlinger.i18n.I18n;
 import net.atlanticbb.tantlinger.ui.HeaderPanel;
 import net.atlanticbb.tantlinger.ui.UIUtils;
 import org.apache.commons.lang.StringUtils;
+import specman.undo.manager.UndoRecording;
 import specman.view.*;
 
 import javax.swing.*;
@@ -98,17 +99,19 @@ public class CatchLinkDialog extends JDialog {
     private void listValueChanged(ListSelectionEvent e) {
       if (e.getValueIsAdjusting()) {
         EditorI editor = Specman.instance();
-        BreakSchrittView breakStepToLink = ((JList<BreakSchrittView>) e.getSource()).getSelectedValue();
-        CatchSchrittSequenzView catchSequence;
-        if (referenceCatchHeading != null) {
-          catchSequence = referenceCatchHeading.containingCatchSequence();
-          catchSequence.addCoCatch(referenceCatchHeading, breakStepToLink);
+        try (UndoRecording ur = editor.composeUndo()) {
+          BreakSchrittView breakStepToLink = ((JList<BreakSchrittView>) e.getSource()).getSelectedValue();
+          CatchSchrittSequenzView catchSequence;
+          if (referenceCatchHeading != null) {
+            catchSequence = referenceCatchHeading.containingCatchSequence();
+            catchSequence.addCoCatchUDBL(referenceCatchHeading, breakStepToLink);
+          }
+          else {
+            catchSequence = sequenz.catchSequenzAnhaengenUDBL(breakStepToLink);
+          }
+          AbstractSchrittView firstInCatchSequence = catchSequence.getSchritte().get(0);
+          editor.diagrammAktualisieren(firstInCatchSequence.getFirstEditArea());
         }
-        else {
-          catchSequence = sequenz.catchSequenzAnhaengen(breakStepToLink);
-        }
-        AbstractSchrittView firstInCatchSequence = catchSequence.getSchritte().get(0);
-        editor.diagrammAktualisieren(firstInCatchSequence.getFirstEditArea());
         CatchLinkDialog.this.setVisible(false);
       }
     }

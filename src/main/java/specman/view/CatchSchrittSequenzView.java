@@ -13,6 +13,8 @@ import specman.model.v001.CoCatchModel_V001;
 import specman.model.v001.EditorContentModel_V001;
 import specman.pdf.Shape;
 import specman.undo.UndoableCatchSequenceRemoved;
+import specman.undo.UndoableCoCatchAdded;
+import specman.undo.UndoableCoCatchRemoved;
 
 import javax.swing.*;
 import java.awt.*;
@@ -128,19 +130,27 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     }
   }
 
-  public void addCoCatch(CatchUeberschrift referenceCatchHeading, BreakSchrittView breakStepToLink) {
+  public void addCoCatchUDBL(CatchUeberschrift referenceCatchHeading, BreakSchrittView breakStepToLink) {
     int insertionIndex = coCatchHeadings.indexOf(referenceCatchHeading) + 1;
     EditorContentModel_V001 breakStepContent = breakStepToLink.getEditorContent(true);
-    addCoCatch(insertionIndex, breakStepContent, breakStepToLink);
+    CatchUeberschrift coCatchHeading = addCoCatch(insertionIndex, breakStepContent, breakStepToLink);
     initHeadingsLayout();
+    Specman.instance().addEdit(new UndoableCoCatchAdded(this, breakStepToLink, insertionIndex, coCatchHeading));
   }
 
-  public void addCoCatch(int insertionIndex, EditorContentModel_V001 heading, BreakSchrittView breakStepToLink) {
+  private CatchUeberschrift addCoCatch(int insertionIndex, EditorContentModel_V001 heading, BreakSchrittView breakStepToLink) {
     EditContainer coCatchHeadingContent = new EditContainer(Specman.instance(), heading, breakStepToLink.id);
     coCatchHeadingContent.addEditAreasFocusListener(this);
     CatchUeberschrift coCatchHeading = new CatchUeberschrift(coCatchHeadingContent, breakStepToLink, this);
     coCatchHeadings.add(insertionIndex, coCatchHeading);
     breakStepToLink.catchAnkoppeln(coCatchHeading);
+    return coCatchHeading;
+  }
+
+  public void addCoCatchForUndo(int insertionIndex, CatchUeberschrift coCatchHeading, BreakSchrittView breakStepToLink) {
+    coCatchHeadings.add(insertionIndex, coCatchHeading);
+    breakStepToLink.catchAnkoppeln(coCatchHeading);
+    initHeadingsLayout();
   }
 
   @Override
@@ -185,25 +195,31 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public void removeOrMarkAsDeletedUDBL() {
     EditorI editor = Specman.instance();
     if (aenderungsart == Hinzugefuegt || !editor.aenderungenVerfolgen()) {
-      remove();
+      removeUDBL();
     }
     else {
       alsGeloeschtMarkierenUDBL(editor);
     }
   }
 
-  public void remove(CatchUeberschrift catchHeading) {
+  public void removeUDBL(CatchUeberschrift catchHeading) {
     if (catchHeading == primaryCatchHeading) {
-      remove();
+      removeUDBL();
     }
     else {
+      int deletionIndex = coCatchHeadings.indexOf(catchHeading);
       coCatchHeadings.remove(catchHeading);
       catchHeading.disconnectLinkedBreakStep();
       initHeadingsLayout();
+      Specman.instance().addEdit(new UndoableCoCatchRemoved(this, catchHeading.linkedBreakStep, catchHeading, deletionIndex));
     }
   }
 
-  public void remove() {
+  public void removeOrMarkAsDeletedUDBL(CatchUeberschrift catchHeading) {
+    removeUDBL(catchHeading);
+  }
+
+  public void removeUDBL() {
     CatchBereich catchBereich = getParent();
     List<Integer> backupSequencesWidthPercent = copyOf(catchBereich.sequencesWidthPercent);
     int catchIndex = catchBereich.catchEntfernen(this);
@@ -230,7 +246,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   @Override
   public int aenderungenUebernehmen(EditorI editor) throws EditException {
     if (aenderungsart == Geloescht) {
-      remove();
+      removeUDBL();
       return 1;
     }
     else {
@@ -335,4 +351,5 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
       .findFirst()
       .orElse(null);
   }
+
 }

@@ -164,7 +164,7 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     klappen.scale(prozentNeu, prozentAktuell);
   }
 
-  public CatchSchrittSequenzView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
+  public CatchSchrittSequenzView catchSequenzAnhaengenUDBL(BreakSchrittView breakStepToLink) {
     List<Integer> originalSequencesWidthPercents = copyOf(sequencesWidthPercent);
     CatchSchrittSequenzView catchSequence = new CatchSchrittSequenzView(this, breakStepToLink);
     addCatchSequence(catchSequence, null, null);

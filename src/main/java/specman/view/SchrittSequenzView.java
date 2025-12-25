@@ -618,8 +618,8 @@ public class SchrittSequenzView {
 
 	private Shape getCatchShape() { return (catchBereich != null) ? catchBereich.getShape() : null; }
 
-	public CatchSchrittSequenzView catchSequenzAnhaengen(BreakSchrittView breakStepToLink) {
-		return catchBereich.catchSequenzAnhaengen(breakStepToLink);
+	public CatchSchrittSequenzView catchSequenzAnhaengenUDBL(BreakSchrittView breakStepToLink) {
+		return catchBereich.catchSequenzAnhaengenUDBL(breakStepToLink);
 	}
 
 	public List<BreakSchrittView> queryUnlinkedBreakSteps() {

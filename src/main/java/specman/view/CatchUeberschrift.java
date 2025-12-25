@@ -141,12 +141,11 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
   }
 
   public void remove() {
-    catchSequence.remove(this);
+    catchSequence.removeUDBL(this);
   }
 
   public void removeOrMarkAsDeletedUDBL() {
-    remove();
-    // TODO JL (undo recording)
+    catchSequence.removeOrMarkAsDeletedUDBL(this);
   }
 
   public void scrollTo() { ueberschrift.scrollTo(); }
