@@ -13,8 +13,18 @@ Aus aktueller Anwendung
   x Laden von Datei
   x Zoom in Co-Catches
   x PDF-Export
+  - Rechter Balken
+    - Zoom für Balkenbreite
+    - Resizer für Balkenbreite
+    - Balkenbreite auf Datei schreiben
+    - Balkenbreite von Datei lesen (ACHTUNG: Mit Null-Unzerstützung für Kompatibilität!)
+  - Co-Catches hoch und runter schieben, analog Catch-Sequenzen rechts und links
+  - Obersten Co-Catch nach oben schieben macht diesen zum primären Catch
+     - Reorg der Nummerierung wird notwendig
   - Undo / Redo
-  - Reorg / Renummerierung bei Entfernen der Primären Exception während noch Co-Catchs existieren. Oberster Co wird neuer Primary
+    - Co-Catch einfügen
+    - Co-Catch entfernen
+    - Balkenbreite ändern
   - Änderungsmarkierung
     - Hinzufügen
     - Entfernen
