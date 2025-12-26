@@ -207,7 +207,7 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
 		setAenderungsartUDBL(Zielschritt);
 	}
 
-	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+	public void alsGeloeschtMarkierenUDBL() {
 		setGeloeschtMarkiertStilUDBL();
 	}
 

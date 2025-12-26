@@ -491,9 +491,9 @@ public class SchrittSequenzView {
 		return changesReverted;
 	}
 
-	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+	public void alsGeloeschtMarkierenUDBL() {
 		for (AbstractSchrittView schritt: schritte) {
-			schritt.alsGeloeschtMarkierenUDBL(editor);
+			schritt.alsGeloeschtMarkierenUDBL();
 		}
 		setAenderungsartUDBL(Aenderungsart.Geloescht);
 	}

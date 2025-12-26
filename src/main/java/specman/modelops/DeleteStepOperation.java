@@ -102,7 +102,7 @@ public class DeleteStepOperation {
   private void schrittAlsGeloeschtMarkierenUDBL(AbstractSchrittView schritt) throws EditException {
     //Es wird geschaut, ob der Schritt nur noch alleine ist und überhaupt gelöscht werden darf
     if (isStepDeletionAllowed(schritt)) {
-      schritt.alsGeloeschtMarkierenUDBL(editor);
+      schritt.alsGeloeschtMarkierenUDBL();
     }
   }
 

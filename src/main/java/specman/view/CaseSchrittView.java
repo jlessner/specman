@@ -403,7 +403,8 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 		}
 	}
 
-	@Override public void alsGeloeschtMarkierenUDBL(EditorI editor) {
+	@Override public void alsGeloeschtMarkierenUDBL() {
+    EditorI editor = Specman.instance();
 		ZweigSchrittSequenzView zweig = headingToBranch(editor.getLastFocusedTextArea());
 		if (zweig != null) {
 			if (zweig.getAenderungsart() == Aenderungsart.Hinzugefuegt) {
@@ -422,7 +423,7 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 				System.err.println("Es m\u00FCssen mindestens 2 F\u00E4lle bestehen bleiben");
 			}
 			else {
-				zweig.alsGeloeschtMarkierenUDBL(editor);
+				zweig.alsGeloeschtMarkierenUDBL();
 				if (zweig == caseSequenzen.get(0)) {
 					UDBL.setBackgroundUDBL(panelFall1, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
 					UDBL.repaint(panel);
@@ -431,11 +432,11 @@ public class CaseSchrittView extends VerzweigungSchrittView {
 			return;
 		}
 
-		sonstSequenz.alsGeloeschtMarkierenUDBL(editor);
+		sonstSequenz.alsGeloeschtMarkierenUDBL();
 		for (ZweigSchrittSequenzView caseSequenz : caseSequenzen) {
-			caseSequenz.alsGeloeschtMarkierenUDBL(editor);
+			caseSequenz.alsGeloeschtMarkierenUDBL();
 		}
-		super.alsGeloeschtMarkierenUDBL(editor);
+		super.alsGeloeschtMarkierenUDBL();
 	}
 
 	@Override public void aenderungsmarkierungenEntfernen() {

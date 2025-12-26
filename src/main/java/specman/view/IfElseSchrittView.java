@@ -276,10 +276,10 @@ public class IfElseSchrittView extends VerzweigungSchrittView implements Compone
 		ifSequenz.viewsNachinitialisieren();
 	}
 
-	@Override public void alsGeloeschtMarkierenUDBL(EditorI editor) {
-		elseSequenz.alsGeloeschtMarkierenUDBL(editor);
-		ifSequenz.alsGeloeschtMarkierenUDBL(editor);
-		super.alsGeloeschtMarkierenUDBL(editor);
+	@Override public void alsGeloeschtMarkierenUDBL() {
+		elseSequenz.alsGeloeschtMarkierenUDBL();
+		ifSequenz.alsGeloeschtMarkierenUDBL();
+		super.alsGeloeschtMarkierenUDBL();
 	}
 
 	@Override public void aenderungsmarkierungenEntfernen() {

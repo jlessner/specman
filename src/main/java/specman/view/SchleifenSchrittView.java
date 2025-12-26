@@ -228,9 +228,9 @@ public class SchleifenSchrittView extends AbstractSchrittView implements Spalten
 		return changesReverted;
 	}
 
-	@Override public void alsGeloeschtMarkierenUDBL(EditorI editor) {
-		wiederholSequenz.alsGeloeschtMarkierenUDBL(editor);
-		super.alsGeloeschtMarkierenUDBL(editor);
+	@Override public void alsGeloeschtMarkierenUDBL() {
+		wiederholSequenz.alsGeloeschtMarkierenUDBL();
+		super.alsGeloeschtMarkierenUDBL();
 	}
 
 	@Override

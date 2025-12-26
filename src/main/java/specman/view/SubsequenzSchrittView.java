@@ -169,9 +169,9 @@ public class SubsequenzSchrittView extends AbstractSchrittView {
 		return changesReverted;
 	}
 
-	@Override public void alsGeloeschtMarkierenUDBL(EditorI editor) {
-		subsequenz.alsGeloeschtMarkierenUDBL(editor);
-		super.alsGeloeschtMarkierenUDBL(editor);
+	@Override public void alsGeloeschtMarkierenUDBL() {
+		subsequenz.alsGeloeschtMarkierenUDBL();
+		super.alsGeloeschtMarkierenUDBL();
 	}
 
 	protected void updateTextfieldDecorationIndentions(Indentions indentions) {

@@ -139,8 +139,8 @@ public class BreakSchrittView extends AbstractSchrittView {
 	}
 
 	@Override
-	public void alsGeloeschtMarkierenUDBL(EditorI editor) {
-		super.alsGeloeschtMarkierenUDBL(editor);
+	public void alsGeloeschtMarkierenUDBL() {
+		super.alsGeloeschtMarkierenUDBL();
 		if (catchHeading != null) {
       catchHeading.removeOrMarkAsDeletedUDBL();
 		}

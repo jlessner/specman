@@ -26,6 +26,7 @@ import java.util.List;
 import static specman.Aenderungsart.Geloescht;
 import static specman.Aenderungsart.Hinzugefuegt;
 import static specman.ColumnSpecByPercent.copyOf;
+import static specman.editarea.TextStyles.AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE;
 import static specman.view.AbstractSchrittView.*;
 
 public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements FocusListener, SpaltenContainerI {
@@ -200,7 +201,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
       removeUDBL();
     }
     else {
-      alsGeloeschtMarkierenUDBL(editor);
+      alsGeloeschtMarkierenUDBL();
     }
   }
 
@@ -233,6 +234,9 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   @Override
   protected void ueberschriftAlsGeloeschtMarkierenUDBL() {
     primaryCatchHeading.alsGeloeschtMarkierenUDBL();
+    coCatchHeadings.forEach(cch -> cch.alsGeloeschtMarkierenUDBL());
+    headingHeightEaterPanel.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
+    headingRightBarPanel.setBackground(AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
   }
 
   @Override public void focusGained(FocusEvent e) {}
