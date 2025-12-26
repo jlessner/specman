@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static specman.Aenderungsart.Geloescht;
 import static specman.ColumnSpecByPercent.allocPercent;
 import static specman.ColumnSpecByPercent.copyOf;
 import static specman.ColumnSpecByPercent.releasePercent;
@@ -379,4 +380,13 @@ public class CatchBereich extends AbstractSchrittView implements KlappbarerBerei
     CatchUeberschrift catchHeading = headingFromFragment(initiatingLabel);
     catchHeading.moveDownUDBL();
   }
+
+  public boolean allowsDeletion(StepnumberLabel initiatingLabel) {
+    CatchUeberschrift catchHeading = headingFromFragment(initiatingLabel);
+    if (catchHeading != null) {
+      return catchHeading.allowsDeletion();
+    }
+    return super.allowsDeletion(initiatingLabel);
+  }
+
 }

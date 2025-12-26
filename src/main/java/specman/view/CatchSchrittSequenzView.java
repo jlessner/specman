@@ -221,7 +221,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public void removeOrMarkAsDeletedUDBL(CatchUeberschrift catchHeading) {
     EditorI editor = Specman.instance();
     if (catchHeading.changetype == Hinzugefuegt || !editor.aenderungenVerfolgen()) {
-      removeUDBL();
+      removeUDBL(catchHeading);
     }
     else {
       catchHeading.alsGeloeschtMarkierenUDBL();
@@ -381,13 +381,13 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   }
 
   public boolean allowsMoveDown(CatchUeberschrift catchHeading) {
-    Integer index = coCatchHeadings.indexOf(catchHeading);
-    return index != null && index < coCatchHeadings.size() - 1;
+    int index = coCatchHeadings.indexOf(catchHeading);
+    return index >= 0 && index < coCatchHeadings.size() - 1;
   }
 
   public boolean allowsMoveUp(CatchUeberschrift catchHeading) {
-    Integer index = coCatchHeadings.indexOf(catchHeading);
-    return index != null && index > 0;
+    int index = coCatchHeadings.indexOf(catchHeading);
+    return index > 0;
   }
 
   public void moveUpUDBL(CatchUeberschrift catchHeading) {
@@ -404,5 +404,9 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     removeUDBL(catchHeading);
     addCoCatchUDBL(index + delta, catchHeading, breakStep);
 
+  }
+
+  public boolean allowsDeletion(CatchUeberschrift catchHeading) {
+    return !isDeleted() && !catchHeading.isDeleted();
   }
 }

@@ -107,7 +107,7 @@ public class StepnumberContextMenu implements MouseListener {
   private void initMenuForStep(AbstractSchrittView currentStep, StepnumberLabel initiatingLabel) {
     this.currentStep = currentStep;
     this.initiatingLabel = initiatingLabel;
-    this.delete.setEnabled(currentStep.getParent().allowsStepDeletion() && currentStep.getAenderungsart() != Aenderungsart.Geloescht);
+    this.delete.setEnabled(currentStep.allowsDeletion(initiatingLabel));
     this.toggleFlatNumbering.setVisible(currentStep.getFlatNumbering() != null);
     if (toggleFlatNumbering.isVisible()) {
       toggleFlatNumbering.setState(currentStep.getFlatNumbering());

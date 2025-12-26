@@ -568,4 +568,8 @@ abstract public class AbstractSchrittView implements KlappbarerBereichI, Compone
   public void moveCoCatchUpUDBL(StepnumberLabel initiatingLabel) {}
 
   public void moveCoCatchDownUDBL(StepnumberLabel initiatingLabel) {}
+
+  public boolean allowsDeletion(StepnumberLabel initiatingLabel) {
+    return getParent().allowsStepDeletion() && aenderungsart != Geloescht;
+  }
 }
