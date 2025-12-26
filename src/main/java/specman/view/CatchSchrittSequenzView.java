@@ -49,14 +49,14 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public CatchSchrittSequenzView(CatchBereich catchBereich, BreakSchrittView linkedBreakStep) {
     super(Specman.instance(), catchBereich, linkedBreakStep.id.naechsteEbene(), linkedBreakStep.getEditorContent(true));
     einfachenSchrittAnhaengen(Specman.instance());
-    init(linkedBreakStep, null);
+    init(linkedBreakStep, null, Specman.initialArt());
     initHeadingsLayout();
   }
 
   public CatchSchrittSequenzView(AbstractSchrittView parent, CatchSchrittSequenzModel_V001 model) {
     super(Specman.instance(), parent, model);
     BreakSchrittView linkedBreakSchritt = (BreakSchrittView) parent.getParent().findStepByStepID(model.id.toString());
-    init(linkedBreakSchritt, model.headingRightBarWidth);
+    init(linkedBreakSchritt, model.headingRightBarWidth, model.aenderungsart);
     initCoCatches(model.coCatches);
     initHeadingsLayout();
   }
@@ -105,16 +105,16 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     return delta;
   }
 
-  private void init(BreakSchrittView linkedBreakStep, Integer headingRightBarWidth) {
+  private void init(BreakSchrittView linkedBreakStep, Integer headingRightBarWidth, Aenderungsart initialChangetype) {
     headingPanel = new JPanel();
     headingPanel.setBackground(TextStyles.DIAGRAMM_LINE_COLOR);
     headingRightBarPanel = new JPanel();
-    headingRightBarPanel.setBackground(Specman.schrittHintergrund());
+    headingRightBarPanel.setBackground(initialChangetype.toBackgroundColor());
     headingHeightEaterPanel = new JPanel();
-    headingHeightEaterPanel.setBackground(Specman.schrittHintergrund());
+    headingHeightEaterPanel.setBackground(initialChangetype.toBackgroundColor());
     this.headingRightBarWidth = headingRightBarWidth != null ? headingRightBarWidth : SPALTENLAYOUT_UMGEHUNG_GROESSE;
     ueberschrift.setId(linkedBreakStep.id);
-    primaryCatchHeading = new CatchUeberschrift(ueberschrift, linkedBreakStep, this);
+    primaryCatchHeading = new CatchUeberschrift(ueberschrift, linkedBreakStep, this, initialChangetype);
     linkedBreakStep.catchAnkoppeln(primaryCatchHeading);
     ueberschrift.addEditAreasFocusListener(this);
   }
@@ -124,7 +124,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
       int insertionIndex = 0;
       for (CoCatchModel_V001 coCatchModel : coCatches) {
         BreakSchrittView breakStepToLink = (BreakSchrittView) parent.getParent().findStepByStepID(coCatchModel.breakStepId.toString());
-        addCoCatch(insertionIndex, coCatchModel.heading, breakStepToLink);
+        addCoCatch(insertionIndex, coCatchModel.heading, breakStepToLink, coCatchModel.changetype);
         insertionIndex++;
       }
     }
@@ -133,7 +133,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public void addCoCatchUDBL(CatchUeberschrift referenceCatchHeading, BreakSchrittView breakStepToLink) {
     int insertionIndex = coCatchHeadings.indexOf(referenceCatchHeading) + 1;
     EditorContentModel_V001 breakStepContent = breakStepToLink.getEditorContent(true);
-    CatchUeberschrift coCatchHeading = addCoCatch(insertionIndex, breakStepContent, breakStepToLink);
+    CatchUeberschrift coCatchHeading = addCoCatch(insertionIndex, breakStepContent, breakStepToLink, Specman.initialArt());
     initHeadingsLayout();
     Specman.instance().addEdit(new UndoableCoCatchAdded(this, breakStepToLink, insertionIndex, coCatchHeading));
   }
@@ -146,10 +146,10 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
     headingPanel.revalidate();
   }
 
-  private CatchUeberschrift addCoCatch(int insertionIndex, EditorContentModel_V001 heading, BreakSchrittView breakStepToLink) {
+  private CatchUeberschrift addCoCatch(int insertionIndex, EditorContentModel_V001 heading, BreakSchrittView breakStepToLink, Aenderungsart changetype) {
     EditContainer coCatchHeadingContent = new EditContainer(Specman.instance(), heading, breakStepToLink.id);
     coCatchHeadingContent.addEditAreasFocusListener(this);
-    CatchUeberschrift coCatchHeading = new CatchUeberschrift(coCatchHeadingContent, breakStepToLink, this);
+    CatchUeberschrift coCatchHeading = new CatchUeberschrift(coCatchHeadingContent, breakStepToLink, this, changetype);
     coCatchHeadings.add(insertionIndex, coCatchHeading);
     breakStepToLink.catchAnkoppeln(coCatchHeading);
     return coCatchHeading;
@@ -265,6 +265,9 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   public int aenderungenVerwerfen(EditorI editor) throws EditException {
     Aenderungsart lastChangetype = aenderungsart;
     int changesReverted = super.aenderungenVerwerfen(editor) + primaryCatchHeading.aenderungenVerwerfen();
+    for (CatchUeberschrift coCatchHeading : modifyableCoCatchHeadings()) {
+      changesReverted += coCatchHeading.aenderungenVerwerfen();
+    }
     if (lastChangetype == Geloescht) {
       // While the catch sequences was marked as deleted, its heading was not synchronized
       // with the linked break step's content. So when we have rolled back a deletion, we
@@ -272,6 +275,13 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
       updateHeadings();
     }
     return changesReverted;
+  }
+
+  /** Required for iterations that may modify the list of headings.
+   * Working directly on the list whould cause concurrent operation exceptions
+   * in these cases. */
+  private List<CatchUeberschrift> modifyableCoCatchHeadings() {
+    return new ArrayList<>(coCatchHeadings);
   }
 
   private void updateHeadings() {
@@ -302,9 +312,7 @@ public class CatchSchrittSequenzView extends ZweigSchrittSequenzView implements 
   private List<CoCatchModel_V001> generateCoCatchModels(boolean formatierterText) {
     return new ArrayList<>(coCatchHeadings
       .stream()
-      .map(coCatchHeading -> new CoCatchModel_V001(
-        coCatchHeading.linkedBreakStepId(),
-        coCatchHeading.ueberschrift.editorContent2Model(formatierterText)))
+      .map(coCatchHeading -> coCatchHeading.toModel(formatierterText))
       .toList());
   }
 

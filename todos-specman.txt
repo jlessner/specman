@@ -30,11 +30,15 @@ Aus aktueller Anwendung
     x Undo / Redo
   - Änderungsmarkierung
     x Hinzufügen
+      x Annehmen
+      x Verwerfen
+      x Schreiben auf Datei
+      x Laden von Datei
     - Entfernen
-    x Annehmen
-    - Verwerfen
-    - Schreiben auf Datei
-    - Laden von Datei
+      - Annehmen
+      - Verwerfen
+      - Schreiben auf Datei
+      - Laden von Datei
     - Undo / Redo
   - Obersten Co-Catch nach oben schieben macht diesen zum primären Catch
      - Reorg der Nummerierung wird notwendig
