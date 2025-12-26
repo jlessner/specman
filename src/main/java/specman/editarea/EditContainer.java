@@ -505,8 +505,8 @@ public class EditContainer extends JPanel {
 		return index;
 	}
 
-	public void setEditorContent(EditorContentModel_V001 intro) {
-		initLayoutAndEditAreas(intro);
+	public void setEditorContent(EditorContentModel_V001 content) {
+		initLayoutAndEditAreas(content);
 	}
 
 	public void addEditComponentListener(ComponentListener componentListener) {

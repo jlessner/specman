@@ -28,18 +28,18 @@ Aus aktueller Anwendung
     x Balkenbreite ändern
   x Co-Catches hoch und runter schieben, analog Catch-Sequenzen rechts und links
     x Undo / Redo
-  - Änderungsmarkierung
+  x Änderungsmarkierung
     x Hinzufügen
       x Annehmen
       x Verwerfen
       x Schreiben auf Datei
       x Laden von Datei
-    - Entfernen
-      - Annehmen
-      - Verwerfen
-      - Schreiben auf Datei
-      - Laden von Datei
-    - Undo / Redo
+    x Entfernen
+      x Annehmen
+      x Verwerfen
+      x Schreiben auf Datei
+      x Laden von Datei
+    x Undo / Redo
   - Obersten Co-Catch nach oben schieben macht diesen zum primären Catch
      - Reorg der Nummerierung wird notwendig
   - Undo-Experience beim Löschen eines Co-Catchs (und einer Catch-Sequenz) verbessern

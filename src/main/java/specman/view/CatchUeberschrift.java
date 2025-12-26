@@ -40,6 +40,9 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
     this.changetype = changetype;
     this.setBackground(changetype.toBackgroundColor());
     this.ueberschrift.setBackground(changetype.toBackgroundColor());
+    if (changetype == Aenderungsart.Geloescht) {
+      ueberschrift.setGeloeschtMarkiertStilUDBL(linkedBreakStep.id);
+    }
     layout = new FormLayout(umgehungLayout() + ", 10px:grow", ZEILENLAYOUT_INHALT_SICHTBAR);
     setLayout(layout);
     add(ueberschrift, CC.xy(2, 1));
@@ -81,7 +84,13 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
   }
 
   public int aenderungenUebernehmen() {
-    int numChanges = changetype.asNumChanges() + ueberschrift.aenderungenUebernehmen();
+    int numChanges = changetype.asNumChanges();
+    if (changetype == Aenderungsart.Geloescht) {
+      remove();
+    }
+    else {
+      numChanges += ueberschrift.aenderungenUebernehmen();
+    }
     changetype = Aenderungsart.Untracked;
     return numChanges;
   }
@@ -102,6 +111,7 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
   }
 
   public void alsGeloeschtMarkierenUDBL() {
+    changetype = Aenderungsart.Geloescht;
     ueberschrift.setGeloeschtMarkiertStilUDBL(linkedBreakStep.id);
     UDBL.setBackgroundUDBL(this, AENDERUNGSMARKIERUNG_HINTERGRUNDFARBE);
   }
@@ -122,12 +132,14 @@ public class CatchUeberschrift extends JPanel implements ComponentListener {
   }
 
   public void updateLinkedBreakStepContent() {
-    EditorContentModel_V001 content = ueberschrift.editorContent2Model(true);
-    linkedBreakStep.updateContent(content);
+    if (changetype != Aenderungsart.Geloescht) {
+      EditorContentModel_V001 content = ueberschrift.editorContent2Model(true);
+      linkedBreakStep.updateContent(content);
+    }
   }
 
   public void updateFromBreakStepContent() {
-    if (!catchSequence.isDeleted()) {
+    if (!catchSequence.isDeleted() && changetype != Aenderungsart.Geloescht) {
       EditorContentModel_V001 breakStepContent = linkedBreakStep.getEditorContent(true);
       ueberschrift.setEditorContent(breakStepContent);
     }
