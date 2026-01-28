@@ -6,7 +6,7 @@
 
     <groupId>de.specman</groupId>
     <artifactId>specman</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -224,6 +224,12 @@
                                 <echo
                                     file="src/main/resources/specman-version.properties"
                                     message="version=${project.version}${line.separator}by=${user.name}${line.separator}"/>
+                                <echo
+                                    file="target/specman.bat"
+                                    message="@echo off${line.separator}javaw -jar %SPECMAN_HOME%\specman-${project.version}-jar-with-dependencies.jar %1${line.separator}"/>
+                                <echo
+                                    file="target/specman.sh"
+                                    message="#!/bin/sh${line.separator}javaw -jar $SPECMAN_HOME/specman-${project.version}-jar-with-dependencies.jar $1${line.separator}"/>
                             </target>
                         </configuration>
                         <goals>

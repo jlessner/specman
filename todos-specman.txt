@@ -1,4 +1,7 @@
 Aus aktueller Anwendung
+- Page-up / Page-down geht nicht
+- Fokus ist nach dem Öffnen auf der Zoom-Kombobox. Wenn man also noch dem Öffnen einer Datei auf Page-down / Page-up drückt, ändert man den Zoomfaktor, statt dass man auf dem Wege Scrollen kann
+- Beim Suchen wird die gefundene Stelle im Text nicht markiert. Könnte allerdings ein reines Linux-Problem sein.
 - Multi-Catch
   x Hinzufügen hinter primärer Überschrift
   x Synch der Texte in Co-Catchs - Break-Schritt braucht Info zur Catch-Überschrift
